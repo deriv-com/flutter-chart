@@ -17,7 +17,7 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
   bool _showMACD = false;
 
   int _bollingerPeriod = 20;
-  double _bollingerDeviation = 2.0;
+  double _bollingerDeviation = 2;
   final MovingAverageType _bollingerMAType = MovingAverageType.simple;
 
   int _rsiPeriod = 14;
@@ -62,7 +62,6 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
           period: _rsiPeriod,
           lineStyle: const LineStyle(
             color: Colors.blue,
-            thickness: 1,
           ),
           oscillatorLinesConfig: const OscillatorLinesConfig(
             overboughtValue: 70,
@@ -70,7 +69,6 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
             overboughtStyle: LineStyle(color: Colors.red),
             oversoldStyle: LineStyle(color: Colors.green),
           ),
-          showZones: true,
         ),
       );
     }
@@ -120,7 +118,7 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
   @override
   Widget buildControls() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -128,8 +126,8 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
           // Use Wrap for flexible layout of indicator toggles
           Wrap(
             alignment: WrapAlignment.center,
-            spacing: 20.0,
-            runSpacing: 12.0,
+            spacing: 20,
+            runSpacing: 12,
             children: [
               _buildIndicatorToggle('Bollinger Bands:', _showBollingerBands,
                   (value) {
@@ -156,7 +154,7 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
           if (_showBollingerBands) ...[
             const SizedBox(height: 16),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -186,7 +184,7 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -195,8 +193,8 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
                   Expanded(
                     child: Slider(
                       value: _bollingerDeviation,
-                      min: 1.0,
-                      max: 4.0,
+                      min: 1,
+                      max: 4,
                       divisions: 6,
                       label: _bollingerDeviation.toString(),
                       onChanged: (value) {
@@ -219,7 +217,7 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
           if (_showRSI) ...[
             const SizedBox(height: 16),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

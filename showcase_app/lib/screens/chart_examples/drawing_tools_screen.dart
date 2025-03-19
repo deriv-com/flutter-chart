@@ -30,7 +30,9 @@ class _DrawingToolsScreenState
   }
 
   void _initializeDrawingTools() {
-    if (_isInitialized) return;
+    if (_isInitialized) {
+      return;
+    }
 
     setState(() {
       _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
@@ -69,7 +71,9 @@ class _DrawingToolsScreenState
   }
 
   void _showDrawingToolsDialog() {
-    if (!_isInitialized) return;
+    if (!_isInitialized) {
+      return;
+    }
 
     _drawingTools.init();
 
@@ -101,7 +105,9 @@ class _DrawingToolsScreenState
   }
 
   void _addDrawingTool() {
-    if (!_isInitialized || _selectedDrawingTool == null) return;
+    if (!_isInitialized || _selectedDrawingTool == null) {
+      return;
+    }
 
     _drawingTools.onDrawingToolSelection(_selectedDrawingTool!);
     _drawingToolsRepo.update();
@@ -113,7 +119,7 @@ class _DrawingToolsScreenState
   @override
   Widget buildControls() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

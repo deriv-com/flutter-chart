@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 
 /// Model class for a feature item in the showcase app.
 class FeatureItem {
+
+  /// Initialize a feature item.
+  const FeatureItem({
+    required this.title,
+    required this.description,
+    required this.icon,
+    required this.screen,
+  });
   /// The title of the feature.
   final String title;
 
@@ -13,12 +21,4 @@ class FeatureItem {
 
   /// The screen widget to navigate to when the feature is selected.
   final Widget screen;
-
-  /// Initialize a feature item.
-  const FeatureItem({
-    required this.title,
-    required this.description,
-    required this.icon,
-    required this.screen,
-  });
 }

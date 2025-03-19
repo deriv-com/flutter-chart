@@ -4,6 +4,7 @@ import 'base_chart_screen.dart';
 
 /// A custom theme that extends the default dark theme.
 class CustomDarkTheme extends ChartDefaultDarkTheme {
+  /// Initialize the custom dark theme.
   CustomDarkTheme({
     required this.customGridColor,
     required this.customPositiveColor,
@@ -11,9 +12,13 @@ class CustomDarkTheme extends ChartDefaultDarkTheme {
     required this.customBackgroundColor,
   });
 
+/// custom grid color
   final Color customGridColor;
+  /// Custom positive color.
   final Color customPositiveColor;
+  /// Custom negative color.
   final Color customNegativeColor;
+  /// Custom background color.
   final Color customBackgroundColor;
 
   @override
@@ -51,6 +56,7 @@ class CustomDarkTheme extends ChartDefaultDarkTheme {
 
 /// A custom theme that extends the default light theme.
 class CustomLightTheme extends ChartDefaultLightTheme {
+  /// Initialize the custom light theme.
   CustomLightTheme({
     required this.customGridColor,
     required this.customPositiveColor,
@@ -58,9 +64,16 @@ class CustomLightTheme extends ChartDefaultLightTheme {
     required this.customBackgroundColor,
   });
 
+  /// custom grid color
   final Color customGridColor;
+
+  /// Custom positive color.
   final Color customPositiveColor;
+
+  /// Custom negative color.
   final Color customNegativeColor;
+
+  /// Custom background color.
   final Color customBackgroundColor;
 
   @override
@@ -202,7 +215,7 @@ class _ThemeCustomizationScreenState
   @override
   Widget buildControls() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

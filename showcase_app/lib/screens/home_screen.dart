@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: ListView.builder(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         itemCount: _featureItems.length,
         itemBuilder: (context, index) {
           final item = _featureItems[index];
@@ -35,7 +35,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildFeatureCard(BuildContext context, FeatureItem item) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 16.0),
+      margin: const EdgeInsets.only(bottom: 16),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
@@ -59,7 +59,7 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

@@ -24,7 +24,9 @@ class _MarkersScreenState extends BaseChartScreenState<MarkersScreen> {
   }
 
   void _addSampleMarkers() {
-    if (ticks.isEmpty) return;
+    if (ticks.isEmpty) {
+      return;
+    }
 
     // Add some up and down markers at strategic points
     for (int i = 10; i < ticks.length; i += 20) {
@@ -59,7 +61,9 @@ class _MarkersScreenState extends BaseChartScreenState<MarkersScreen> {
   }
 
   void _addMarker(MarkerDirection direction) {
-    if (ticks.isEmpty) return;
+    if (ticks.isEmpty) {
+      return;
+    }
 
     final lastTick = ticks.last;
 
@@ -103,14 +107,14 @@ class _MarkersScreenState extends BaseChartScreenState<MarkersScreen> {
   @override
   Widget buildControls() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Wrap(
             alignment: WrapAlignment.center,
-            spacing: 10.0,
-            runSpacing: 10.0,
+            spacing: 10,
+            runSpacing: 10,
             children: [
               SizedBox(
                 height: 40,

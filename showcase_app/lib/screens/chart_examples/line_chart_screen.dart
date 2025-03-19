@@ -13,7 +13,7 @@ class LineChartScreen extends BaseChartScreen {
 
 class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
   bool _hasArea = true;
-  double _thickness = 2.0;
+  double _thickness = 2;
   Color _lineColor = Colors.blue;
 
   @override
@@ -41,7 +41,7 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
   @override
   Widget buildControls() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -63,8 +63,8 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
               Expanded(
                 child: Slider(
                   value: _thickness,
-                  min: 1.0,
-                  max: 5.0,
+                  min: 1,
+                  max: 5,
                   divisions: 4,
                   label: _thickness.toString(),
                   onChanged: (value) {
@@ -94,7 +94,7 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
 
   Widget _buildColorButton(Color color) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: InkWell(
         onTap: () {
           setState(() {

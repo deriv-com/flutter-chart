@@ -40,7 +40,7 @@ class _HollowCandleScreenState
   @override
   Widget buildControls() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -84,7 +84,7 @@ class _HollowCandleScreenState
     final currentColor = isPositive ? _positiveColor : _negativeColor;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: InkWell(
         onTap: () {
           setState(() {

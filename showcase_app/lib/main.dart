@@ -15,11 +15,10 @@ class ShowcaseApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Deriv Chart Showcase',
+      title: 'Deriv Chart Showcase App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF85ACB0),
-          brightness: Brightness.light,
         ),
         useMaterial3: true,
       ),
@@ -30,9 +29,7 @@ class ShowcaseApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
-      // Add localization delegates to fix the ChartLocalization error
       localizationsDelegates: const [
         ChartLocalization.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -40,7 +37,7 @@ class ShowcaseApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('en'), // English
+        Locale('en'),
       ],
       home: HomeScreen(),
     );

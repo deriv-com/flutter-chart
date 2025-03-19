@@ -46,49 +46,45 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
       return;
     }
 
-    try {
-      final lastTick = ticks.last;
+    final lastTick = ticks.last;
 
-      // Calculate a price level in the middle of the range
-      final quotes = ticks.map((tick) => tick.quote).toList();
-      final minQuote = quotes.reduce((a, b) => a < b ? a : b);
-      final maxQuote = quotes.reduce((a, b) => a > b ? a : b);
-      final midQuote = (minQuote + maxQuote) / 2;
+    // Calculate a price level in the middle of the range
+    final quotes = ticks.map((tick) => tick.quote).toList();
+    final minQuote = quotes.reduce((a, b) => a < b ? a : b);
+    final maxQuote = quotes.reduce((a, b) => a > b ? a : b);
+    final midQuote = (minQuote + maxQuote) / 2;
 
-      _horizontalBarrier = HorizontalBarrier(midQuote,
-          title: 'Price Level',
-          style: HorizontalBarrierStyle(
-            color: _horizontalBarrierColor,
-            isDashed: _isDashed,
-          ),
-          visibility: HorizontalBarrierVisibility.normal,
-          longLine: true);
-
-      _verticalBarrier = VerticalBarrier.onTick(
-        lastTick,
-        title: 'Time Point',
-        longLine: true,
-        style: VerticalBarrierStyle(
-          color: _verticalBarrierColor,
+    _horizontalBarrier = HorizontalBarrier(midQuote,
+        title: 'Price Level',
+        style: HorizontalBarrierStyle(
+          color: _horizontalBarrierColor,
           isDashed: _isDashed,
         ),
-      );
+        visibility: HorizontalBarrierVisibility.normal);
 
-      _tickIndicator = TickIndicator(
-        lastTick,
-        style: const HorizontalBarrierStyle(
-          color: Colors.orange,
-          labelShape: LabelShape.pentagon,
-          hasBlinkingDot: true,
-          hasArrow: false,
-        ),
-        visibility: HorizontalBarrierVisibility.keepBarrierLabelVisible,
-      );
+    _verticalBarrier = VerticalBarrier.onTick(
+      lastTick,
+      title: 'Time Point',
+      style: VerticalBarrierStyle(
+        color: _verticalBarrierColor,
+        isDashed: _isDashed,
+      ),
+    );
 
-      // Force a rebuild to show the barriers
-      if (mounted) setState(() {});
-    } catch (e) {
-      debugPrint('Error initializing barriers: $e');
+    _tickIndicator = TickIndicator(
+      lastTick,
+      style: const HorizontalBarrierStyle(
+        color: Colors.orange,
+        labelShape: LabelShape.pentagon,
+        hasBlinkingDot: true,
+        hasArrow: false,
+      ),
+      visibility: HorizontalBarrierVisibility.keepBarrierLabelVisible,
+    );
+
+    // Force a rebuild to show the barriers
+    if (mounted) {
+      setState(() {});
     }
   }
 
@@ -100,7 +96,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
         isHorizontal ? _horizontalBarrierColor : _verticalBarrierColor;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+      padding: const EdgeInsets.symmetric(horizontal: 4),
       child: InkWell(
         onTap: () {
           setState(() {
@@ -133,27 +129,15 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
     final List<ChartAnnotation<ChartObject>> annotations = [];
 
     if (_showHorizontalBarrier && ticks.isNotEmpty) {
-      try {
-        annotations.add(_horizontalBarrier);
-      } catch (e) {
-        debugPrint('Error adding horizontal barrier: $e');
-      }
+      annotations.add(_horizontalBarrier);
     }
 
     if (_showVerticalBarrier && ticks.isNotEmpty) {
-      try {
-        annotations.add(_verticalBarrier);
-      } catch (e) {
-        debugPrint('Error adding vertical barrier: $e');
-      }
+      annotations.add(_verticalBarrier);
     }
 
     if (_showTickIndicator && ticks.isNotEmpty) {
-      try {
-        annotations.add(_tickIndicator);
-      } catch (e) {
-        debugPrint('Error adding tick indicator: $e');
-      }
+      annotations.add(_tickIndicator);
     }
 
     return DerivChart(
@@ -185,7 +169,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
   @override
   Widget buildControls() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,

@@ -14,7 +14,7 @@ class ChartDataProvider {
     final baseTimestamp = DateTime.now()
         .subtract(Duration(minutes: count))
         .millisecondsSinceEpoch;
-    double lastQuote = 100.0;
+    double lastQuote = 100;
 
     for (int i = 0; i < count; i++) {
       final timestamp = baseTimestamp + i * 60000; // 1 minute intervals
@@ -34,7 +34,7 @@ class ChartDataProvider {
     final List<Candle> candles = [];
     final baseTimestamp =
         DateTime.now().subtract(Duration(hours: count)).millisecondsSinceEpoch;
-    double lastClose = 100.0;
+    double lastClose = 100;
 
     for (int i = 0; i < count; i++) {
       final timestamp = baseTimestamp + i * 3600000; // 1 hour intervals
@@ -63,7 +63,9 @@ class ChartDataProvider {
 
   /// Generate sample barriers.
   static List<ChartAnnotation<ChartObject>> generateBarriers(List<Tick> ticks) {
-    if (ticks.isEmpty) return [];
+    if (ticks.isEmpty) {
+      return [];
+    }
 
     final lastTick = ticks.last;
     final quotes = ticks.map((tick) => tick.quote).toList();
@@ -77,7 +79,6 @@ class ChartDataProvider {
         midQuote,
         title: 'Middle',
         style: const HorizontalBarrierStyle(
-          color: Color(0xFF00A79E),
           isDashed: false,
         ),
         visibility: HorizontalBarrierVisibility.normal,
@@ -87,10 +88,8 @@ class ChartDataProvider {
       VerticalBarrier.onTick(
         ticks[ticks.length ~/ 2],
         title: 'Mid-point',
-        longLine: true,
         style: const VerticalBarrierStyle(
           color: Color(0xFFFF6444),
-          isDashed: true,
         ),
       ),
 
