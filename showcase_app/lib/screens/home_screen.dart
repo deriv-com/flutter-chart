@@ -109,13 +109,15 @@ class HomeScreen extends StatelessWidget {
     ),
     FeatureItem(
       title: 'Technical Indicators',
-      description: 'Charts with technical indicators like Bollinger Bands, RSI, and MACD.',
+      description:
+          'Charts with technical indicators like Bollinger Bands, RSI, and MACD.',
       icon: Icons.analytics,
       screen: const IndicatorsScreen(),
     ),
     FeatureItem(
       title: 'Barriers',
-      description: 'Charts with horizontal and vertical barriers and tick indicators.',
+      description:
+          'Charts with horizontal and vertical barriers and tick indicators.',
       icon: Icons.horizontal_rule,
       screen: const BarriersScreen(),
     ),

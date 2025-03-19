@@ -11,7 +11,9 @@ class ChartDataProvider {
   /// Generate a list of sample ticks.
   static List<Tick> generateTicks({int count = 100}) {
     final List<Tick> ticks = [];
-    final baseTimestamp = DateTime.now().subtract(Duration(minutes: count)).millisecondsSinceEpoch;
+    final baseTimestamp = DateTime.now()
+        .subtract(Duration(minutes: count))
+        .millisecondsSinceEpoch;
     double lastQuote = 100.0;
 
     for (int i = 0; i < count; i++) {
@@ -30,21 +32,22 @@ class ChartDataProvider {
   /// Generate a list of sample candles.
   static List<Candle> generateCandles({int count = 100}) {
     final List<Candle> candles = [];
-    final baseTimestamp = DateTime.now().subtract(Duration(hours: count)).millisecondsSinceEpoch;
+    final baseTimestamp =
+        DateTime.now().subtract(Duration(hours: count)).millisecondsSinceEpoch;
     double lastClose = 100.0;
 
     for (int i = 0; i < count; i++) {
       final timestamp = baseTimestamp + i * 3600000; // 1 hour intervals
-      
+
       // Generate realistic OHLC data with random walk
       final change = (_random.nextDouble() - 0.5) * 5.0;
       final open = lastClose;
       final close = open + change;
       final high = max(open, close) + _random.nextDouble() * 2.0;
       final low = min(open, close) - _random.nextDouble() * 2.0;
-      
+
       lastClose = close;
-      
+
       candles.add(Candle(
         epoch: timestamp,
         open: open,
@@ -61,13 +64,13 @@ class ChartDataProvider {
   /// Generate sample barriers.
   static List<ChartAnnotation<ChartObject>> generateBarriers(List<Tick> ticks) {
     if (ticks.isEmpty) return [];
-    
+
     final lastTick = ticks.last;
     final quotes = ticks.map((tick) => tick.quote).toList();
     final minQuote = quotes.reduce(min);
     final maxQuote = quotes.reduce(max);
     final midQuote = (minQuote + maxQuote) / 2;
-    
+
     return [
       // Horizontal barrier at the middle price
       HorizontalBarrier(
@@ -79,7 +82,7 @@ class ChartDataProvider {
         ),
         visibility: HorizontalBarrierVisibility.normal,
       ),
-      
+
       // Vertical barrier at a random tick
       VerticalBarrier.onTick(
         ticks[ticks.length ~/ 2],
@@ -90,7 +93,7 @@ class ChartDataProvider {
           isDashed: true,
         ),
       ),
-      
+
       // Tick indicator at the last tick
       TickIndicator(
         lastTick,
@@ -107,13 +110,16 @@ class ChartDataProvider {
 
   /// Generate sample markers.
   static MarkerSeries generateMarkers(List<Tick> ticks) {
-    if (ticks.isEmpty) return MarkerSeries(SplayTreeSet<Marker>(), markerIconPainter: MultipliersMarkerIconPainter());
-    
+    if (ticks.isEmpty)
+      return MarkerSeries(SplayTreeSet<Marker>(),
+          markerIconPainter: MultipliersMarkerIconPainter());
+
     final markers = SplayTreeSet<Marker>();
-    
+
     // Add some up and down markers at strategic points
     for (int i = 10; i < ticks.length; i += 20) {
-      final direction = i % 40 == 10 ? MarkerDirection.up : MarkerDirection.down;
+      final direction =
+          i % 40 == 10 ? MarkerDirection.up : MarkerDirection.down;
       markers.add(Marker(
         direction: direction,
         epoch: ticks[i].epoch,
@@ -121,7 +127,8 @@ class ChartDataProvider {
         onTap: () {},
       ));
     }
-    
-    return MarkerSeries(markers, markerIconPainter: MultipliersMarkerIconPainter());
+
+    return MarkerSeries(markers,
+        markerIconPainter: MultipliersMarkerIconPainter());
   }
 }

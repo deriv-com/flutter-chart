@@ -15,15 +15,15 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
   bool _showHorizontalBarrier = true;
   bool _showVerticalBarrier = true;
   bool _showTickIndicator = true;
-  
+
   late HorizontalBarrier _horizontalBarrier;
   late VerticalBarrier _verticalBarrier;
   late TickIndicator _tickIndicator;
-  
+
   Color _horizontalBarrierColor = Colors.green;
   Color _verticalBarrierColor = Colors.red;
   bool _isDashed = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -32,40 +32,38 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
       _initializeBarriers();
     });
   }
-  
+
   @override
   void didUpdateWidget(BarriersScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     // Reinitialize barriers when the widget updates
     _initializeBarriers();
   }
-  
+
   void _initializeBarriers() {
     if (ticks.isEmpty) {
       debugPrint('Ticks list is empty, cannot initialize barriers');
       return;
     }
-    
+
     try {
       final lastTick = ticks.last;
-      
+
       // Calculate a price level in the middle of the range
       final quotes = ticks.map((tick) => tick.quote).toList();
       final minQuote = quotes.reduce((a, b) => a < b ? a : b);
       final maxQuote = quotes.reduce((a, b) => a > b ? a : b);
       final midQuote = (minQuote + maxQuote) / 2;
-      
-      _horizontalBarrier = HorizontalBarrier(
-        midQuote,
-        title: 'Price Level',
-        style: HorizontalBarrierStyle(
-          color: _horizontalBarrierColor,
-          isDashed: _isDashed,
-        ),
-        visibility: HorizontalBarrierVisibility.normal,
-        longLine: true
-      );
-      
+
+      _horizontalBarrier = HorizontalBarrier(midQuote,
+          title: 'Price Level',
+          style: HorizontalBarrierStyle(
+            color: _horizontalBarrierColor,
+            isDashed: _isDashed,
+          ),
+          visibility: HorizontalBarrierVisibility.normal,
+          longLine: true);
+
       _verticalBarrier = VerticalBarrier.onTick(
         lastTick,
         title: 'Time Point',
@@ -75,7 +73,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
           isDashed: _isDashed,
         ),
       );
-      
+
       _tickIndicator = TickIndicator(
         lastTick,
         style: const HorizontalBarrierStyle(
@@ -86,20 +84,21 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
         ),
         visibility: HorizontalBarrierVisibility.keepBarrierLabelVisible,
       );
-      
+
       // Force a rebuild to show the barriers
       if (mounted) setState(() {});
     } catch (e) {
       debugPrint('Error initializing barriers: $e');
     }
   }
-  
+
   @override
   String getTitle() => 'Chart with Barriers';
 
   Widget _buildColorButton(Color color, {required bool isHorizontal}) {
-    final currentColor = isHorizontal ? _horizontalBarrierColor : _verticalBarrierColor;
-    
+    final currentColor =
+        isHorizontal ? _horizontalBarrierColor : _verticalBarrierColor;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: InkWell(
@@ -132,7 +131,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
   @override
   Widget buildChart() {
     final List<ChartAnnotation<ChartObject>> annotations = [];
-    
+
     if (_showHorizontalBarrier && ticks.isNotEmpty) {
       try {
         annotations.add(_horizontalBarrier);
@@ -140,7 +139,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
         debugPrint('Error adding horizontal barrier: $e');
       }
     }
-    
+
     if (_showVerticalBarrier && ticks.isNotEmpty) {
       try {
         annotations.add(_verticalBarrier);
@@ -148,7 +147,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
         debugPrint('Error adding vertical barrier: $e');
       }
     }
-    
+
     if (_showTickIndicator && ticks.isNotEmpty) {
       try {
         annotations.add(_tickIndicator);
@@ -156,7 +155,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
         debugPrint('Error adding tick indicator: $e');
       }
     }
-    
+
     return DerivChart(
       key: const Key('barriers_chart'),
       mainSeries: LineSeries(ticks, style: const LineStyle(hasArea: true)),
@@ -167,8 +166,9 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
       activeSymbol: 'BARRIERS_CHART',
     );
   }
-  
-  Widget _buildBarrierToggle(String label, bool value, ValueChanged<bool> onChanged) {
+
+  Widget _buildBarrierToggle(
+      String label, bool value, ValueChanged<bool> onChanged) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -198,7 +198,8 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
                 child: Container(
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.only(right: 16),
-                  child: _buildBarrierToggle('Horizontal:', _showHorizontalBarrier, (value) {
+                  child: _buildBarrierToggle(
+                      'Horizontal:', _showHorizontalBarrier, (value) {
                     setState(() {
                       _showHorizontalBarrier = value;
                     });
@@ -209,7 +210,8 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
                 child: Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.only(left: 16),
-                  child: _buildBarrierToggle('Vertical:', _showVerticalBarrier, (value) {
+                  child: _buildBarrierToggle('Vertical:', _showVerticalBarrier,
+                      (value) {
                     setState(() {
                       _showVerticalBarrier = value;
                     });
@@ -218,7 +220,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
               ),
             ],
           ),
-          
+
           // Second row: Tick toggle centered
           Container(
             alignment: Alignment.center,
@@ -229,7 +231,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
               });
             }),
           ),
-          
+
           // Third row: Dashed toggle and H-Color
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -264,7 +266,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
               ),
             ],
           ),
-          
+
           // Fourth row: V-Color centered
           Container(
             alignment: Alignment.center,

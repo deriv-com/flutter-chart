@@ -15,16 +15,16 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
   bool _showBollingerBands = true;
   bool _showRSI = true;
   bool _showMACD = false;
-  
+
   int _bollingerPeriod = 20;
   double _bollingerDeviation = 2.0;
   MovingAverageType _bollingerMAType = MovingAverageType.simple;
-  
+
   int _rsiPeriod = 14;
-  
+
   // Create an indicators repository to manage indicators
   late final Repository<IndicatorConfig> _indicatorsRepo;
-  
+
   @override
   void initState() {
     super.initState();
@@ -32,15 +32,15 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
       createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
       sharedPrefKey: 'indicators_screen',
     );
-    
+
     // Add initial indicators
     _updateIndicators();
   }
-  
+
   void _updateIndicators() {
     // Clear existing indicators
     _indicatorsRepo.clear();
-    
+
     // Add Bollinger Bands if enabled
     if (_showBollingerBands) {
       _indicatorsRepo.add(
@@ -54,7 +54,7 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
         ),
       );
     }
-    
+
     // Add RSI if enabled
     if (_showRSI) {
       _indicatorsRepo.add(
@@ -74,7 +74,7 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
         ),
       );
     }
-    
+
     // Add MACD if enabled
     if (_showMACD) {
       _indicatorsRepo.add(
@@ -85,7 +85,7 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
       );
     }
   }
-  
+
   @override
   String getTitle() => 'Chart with Indicators';
 
@@ -101,8 +101,9 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
       activeSymbol: 'INDICATORS_CHART',
     );
   }
-  
-  Widget _buildIndicatorToggle(String label, bool value, ValueChanged<bool> onChanged) {
+
+  Widget _buildIndicatorToggle(
+      String label, bool value, ValueChanged<bool> onChanged) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -130,7 +131,8 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
             spacing: 20.0,
             runSpacing: 12.0,
             children: [
-              _buildIndicatorToggle('Bollinger Bands:', _showBollingerBands, (value) {
+              _buildIndicatorToggle('Bollinger Bands:', _showBollingerBands,
+                  (value) {
                 setState(() {
                   _showBollingerBands = value;
                   _updateIndicators();
@@ -177,7 +179,8 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
                   ),
                   SizedBox(
                     width: 30,
-                    child: Text(_bollingerPeriod.toString(), textAlign: TextAlign.center),
+                    child: Text(_bollingerPeriod.toString(),
+                        textAlign: TextAlign.center),
                   ),
                 ],
               ),
@@ -206,7 +209,8 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
                   ),
                   SizedBox(
                     width: 30,
-                    child: Text(_bollingerDeviation.toString(), textAlign: TextAlign.center),
+                    child: Text(_bollingerDeviation.toString(),
+                        textAlign: TextAlign.center),
                   ),
                 ],
               ),
@@ -238,7 +242,8 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
                   ),
                   SizedBox(
                     width: 30,
-                    child: Text(_rsiPeriod.toString(), textAlign: TextAlign.center),
+                    child: Text(_rsiPeriod.toString(),
+                        textAlign: TextAlign.center),
                   ),
                 ],
               ),

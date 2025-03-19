@@ -19,7 +19,8 @@ class _CandleChartScreenState extends BaseChartScreenState<CandleChartScreen> {
   String getTitle() => 'Candle Chart';
 
   // Create an empty indicators repository to ensure no indicators are shown
-  final Repository<IndicatorConfig> _emptyIndicatorsRepo = AddOnsRepository<IndicatorConfig>(
+  final Repository<IndicatorConfig> _emptyIndicatorsRepo =
+      AddOnsRepository<IndicatorConfig>(
     createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
     sharedPrefKey: 'candle_chart_indicators',
   );
@@ -81,14 +82,15 @@ class _CandleChartScreenState extends BaseChartScreenState<CandleChartScreen> {
           width: 120, // Fixed width for labels to ensure alignment
           child: Text(label),
         ),
-        ...colors.map((color) => _buildColorButton(color, isPositive: isPositive)),
+        ...colors
+            .map((color) => _buildColorButton(color, isPositive: isPositive)),
       ],
     );
   }
 
   Widget _buildColorButton(Color color, {required bool isPositive}) {
     final currentColor = isPositive ? _positiveColor : _negativeColor;
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: InkWell(

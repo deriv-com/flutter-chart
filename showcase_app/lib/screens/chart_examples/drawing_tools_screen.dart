@@ -22,12 +22,13 @@ class DrawingToolsScreen extends BaseChartScreen {
   State<DrawingToolsScreen> createState() => _DrawingToolsScreenState();
 }
 
-class _DrawingToolsScreenState extends BaseChartScreenState<DrawingToolsScreen> {
+class _DrawingToolsScreenState
+    extends BaseChartScreenState<DrawingToolsScreen> {
   final DrawingTools _drawingTools = DrawingTools();
   late final Repository<DrawingToolConfig> _drawingToolsRepo;
   DrawingToolConfig? _selectedDrawingTool;
   bool _isInitialized = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -36,21 +37,22 @@ class _DrawingToolsScreenState extends BaseChartScreenState<DrawingToolsScreen> 
       _initializeDrawingTools();
     });
   }
-  
+
   void _initializeDrawingTools() {
     if (_isInitialized) return;
-    
+
     setState(() {
       _drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
-        createAddOn: (Map<String, dynamic> map) => DrawingToolConfig.fromJson(map),
+        createAddOn: (Map<String, dynamic> map) =>
+            DrawingToolConfig.fromJson(map),
         sharedPrefKey: 'drawing_tools_screen',
       );
-      
+
       _drawingTools.drawingToolsRepo = _drawingToolsRepo;
       _isInitialized = true;
     });
   }
-  
+
   @override
   String getTitle() => 'Drawing Tools';
 
@@ -61,7 +63,7 @@ class _DrawingToolsScreenState extends BaseChartScreenState<DrawingToolsScreen> 
         child: CircularProgressIndicator(),
       );
     }
-    
+
     return DerivChart(
       key: const Key('drawing_tools_chart'),
       mainSeries: LineSeries(ticks, style: const LineStyle(hasArea: true)),
@@ -74,12 +76,12 @@ class _DrawingToolsScreenState extends BaseChartScreenState<DrawingToolsScreen> 
       theme: ChartDefaultDarkTheme(), // Explicitly set dark theme
     );
   }
-  
+
   void _showDrawingToolsDialog() {
     if (!_isInitialized) return;
-    
+
     _drawingTools.init();
-    
+
     // Create a simpler dialog with the necessary localization
     showDialog<void>(
       context: context,
@@ -106,10 +108,10 @@ class _DrawingToolsScreenState extends BaseChartScreenState<DrawingToolsScreen> 
       ),
     );
   }
-  
+
   void _addDrawingTool() {
     if (!_isInitialized || _selectedDrawingTool == null) return;
-    
+
     _drawingTools.onDrawingToolSelection(_selectedDrawingTool!);
     _drawingToolsRepo.update();
     setState(() {
@@ -129,7 +131,7 @@ class _DrawingToolsScreenState extends BaseChartScreenState<DrawingToolsScreen> 
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           const SizedBox(height: 16),
-          
+
           if (!_isInitialized)
             const Center(
               child: Column(
@@ -192,14 +194,15 @@ class _DrawingToolsScreenState extends BaseChartScreenState<DrawingToolsScreen> 
                     ),
                     const SizedBox(width: 16),
                     ElevatedButton(
-                      onPressed: _selectedDrawingTool != null ? _addDrawingTool : null,
+                      onPressed:
+                          _selectedDrawingTool != null ? _addDrawingTool : null,
                       child: const Text('Add'),
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Manage drawings button
                 ElevatedButton.icon(
                   onPressed: _showDrawingToolsDialog,
@@ -208,9 +211,9 @@ class _DrawingToolsScreenState extends BaseChartScreenState<DrawingToolsScreen> 
                 ),
               ],
             ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Instructions
           const Text(
             'Select a drawing tool from the dropdown and click "Add" to start drawing on the chart. '
@@ -219,9 +222,9 @@ class _DrawingToolsScreenState extends BaseChartScreenState<DrawingToolsScreen> 
             textAlign: TextAlign.center,
             style: TextStyle(fontStyle: FontStyle.italic),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Available tools
           const Text(
             'Available Drawing Tools:',

@@ -16,19 +16,20 @@ class MarkersScreen extends BaseChartScreen {
 class _MarkersScreenState extends BaseChartScreenState<MarkersScreen> {
   final SplayTreeSet<Marker> _markers = SplayTreeSet<Marker>();
   ActiveMarker? _activeMarker;
-  
+
   @override
   void initState() {
     super.initState();
     _addSampleMarkers();
   }
-  
+
   void _addSampleMarkers() {
     if (ticks.isEmpty) return;
-    
+
     // Add some up and down markers at strategic points
     for (int i = 10; i < ticks.length; i += 20) {
-      final direction = i % 40 == 10 ? MarkerDirection.up : MarkerDirection.down;
+      final direction =
+          i % 40 == 10 ? MarkerDirection.up : MarkerDirection.down;
       _markers.add(Marker(
         direction: direction,
         epoch: ticks[i].epoch,
@@ -37,7 +38,7 @@ class _MarkersScreenState extends BaseChartScreenState<MarkersScreen> {
       ));
     }
   }
-  
+
   void _onMarkerTap(Tick tick) {
     setState(() {
       _activeMarker = ActiveMarker(
@@ -56,12 +57,12 @@ class _MarkersScreenState extends BaseChartScreenState<MarkersScreen> {
       );
     });
   }
-  
+
   void _addMarker(MarkerDirection direction) {
     if (ticks.isEmpty) return;
-    
+
     final lastTick = ticks.last;
-    
+
     setState(() {
       _markers.add(Marker(
         direction: direction,
@@ -71,14 +72,14 @@ class _MarkersScreenState extends BaseChartScreenState<MarkersScreen> {
       ));
     });
   }
-  
+
   void _clearMarkers() {
     setState(() {
       _markers.clear();
       _activeMarker = null;
     });
   }
-  
+
   @override
   String getTitle() => 'Chart with Markers';
 

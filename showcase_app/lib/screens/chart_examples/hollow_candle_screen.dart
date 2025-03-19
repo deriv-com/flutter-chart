@@ -11,7 +11,8 @@ class HollowCandleScreen extends BaseChartScreen {
   State<HollowCandleScreen> createState() => _HollowCandleScreenState();
 }
 
-class _HollowCandleScreenState extends BaseChartScreenState<HollowCandleScreen> {
+class _HollowCandleScreenState
+    extends BaseChartScreenState<HollowCandleScreen> {
   Color _positiveColor = Colors.green;
   Color _negativeColor = Colors.red;
 
@@ -73,14 +74,15 @@ class _HollowCandleScreenState extends BaseChartScreenState<HollowCandleScreen> 
           width: 120, // Fixed width for labels to ensure alignment
           child: Text(label),
         ),
-        ...colors.map((color) => _buildColorButton(color, isPositive: isPositive)),
+        ...colors
+            .map((color) => _buildColorButton(color, isPositive: isPositive)),
       ],
     );
   }
 
   Widget _buildColorButton(Color color, {required bool isPositive}) {
     final currentColor = isPositive ? _positiveColor : _negativeColor;
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: InkWell(

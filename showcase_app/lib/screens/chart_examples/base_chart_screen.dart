@@ -9,26 +9,27 @@ abstract class BaseChartScreen extends StatefulWidget {
 }
 
 /// Base state class for all chart example screens.
-abstract class BaseChartScreenState<T extends BaseChartScreen> extends State<T> {
+abstract class BaseChartScreenState<T extends BaseChartScreen>
+    extends State<T> {
   /// The chart controller.
   final ChartController controller = ChartController();
-  
+
   /// The chart data.
   late List<Tick> ticks;
-  
+
   /// The chart candles.
   late List<Candle> candles;
-  
+
   @override
   void initState() {
     super.initState();
     ticks = ChartDataProvider.generateTicks();
     candles = ChartDataProvider.generateCandles();
   }
-  
+
   /// Build the chart widget.
   Widget buildChart();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,10 +47,10 @@ abstract class BaseChartScreenState<T extends BaseChartScreen> extends State<T> 
       ),
     );
   }
-  
+
   /// Get the title of the chart screen.
   String getTitle();
-  
+
   /// Build the controls for the chart.
   Widget buildControls() {
     return const SizedBox(height: 50);

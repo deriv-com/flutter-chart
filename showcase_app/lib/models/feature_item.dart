@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 class FeatureItem {
   /// The title of the feature.
   final String title;
-  
+
   /// The description of the feature.
   final String description;
-  
+
   /// The icon to display for the feature.
   final IconData icon;
-  
+
   /// The screen widget to navigate to when the feature is selected.
   final Widget screen;
 
