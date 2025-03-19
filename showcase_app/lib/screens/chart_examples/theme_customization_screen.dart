@@ -12,12 +12,15 @@ class CustomDarkTheme extends ChartDefaultDarkTheme {
     required this.customBackgroundColor,
   });
 
-/// custom grid color
+  /// custom grid color
   final Color customGridColor;
+
   /// Custom positive color.
   final Color customPositiveColor;
+
   /// Custom negative color.
   final Color customNegativeColor;
+
   /// Custom background color.
   final Color customBackgroundColor;
 

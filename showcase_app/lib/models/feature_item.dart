@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 /// Model class for a feature item in the showcase app.
 class FeatureItem {
-
   /// Initialize a feature item.
   const FeatureItem({
     required this.title,
@@ -10,6 +9,7 @@ class FeatureItem {
     required this.icon,
     required this.screen,
   });
+
   /// The title of the feature.
   final String title;
 
