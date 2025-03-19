@@ -110,9 +110,10 @@ class ChartDataProvider {
 
   /// Generate sample markers.
   static MarkerSeries generateMarkers(List<Tick> ticks) {
-    if (ticks.isEmpty)
+    if (ticks.isEmpty) {
       return MarkerSeries(SplayTreeSet<Marker>(),
           markerIconPainter: MultipliersMarkerIconPainter());
+    }
 
     final markers = SplayTreeSet<Marker>();
 

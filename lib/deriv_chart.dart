@@ -129,3 +129,4 @@ export 'src/widgets/market_selector/market_selector.dart';
 export 'src/widgets/market_selector/market_selector_button.dart';
 export 'src/widgets/market_selector/models.dart';
 export 'src/widgets/market_selector/symbol_icon.dart';
+export 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';

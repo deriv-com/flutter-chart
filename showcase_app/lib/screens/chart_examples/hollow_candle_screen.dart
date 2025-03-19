@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:showcase_app/screens/chart_examples/base_chart_screen.dart';
+import 'base_chart_screen.dart';
 
 /// Screen that displays a hollow candle chart example.
 class HollowCandleScreen extends BaseChartScreen {

@@ -2,16 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:provider/provider.dart';
-import 'package:showcase_app/screens/chart_examples/base_chart_screen.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/horizontal/horizontal_drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/ray/ray_drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/rectangle/rectangle_drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/channel/channel_drawing_tool_config.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/fibfan/fibfan_drawing_tool_config.dart';
+import 'base_chart_screen.dart';
 
 /// Screen that displays information about drawing tools.
 class DrawingToolsScreen extends BaseChartScreen {
@@ -87,7 +78,7 @@ class _DrawingToolsScreenState
       context: context,
       builder: (BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        localizationsDelegates: [
+        localizationsDelegates: const [
           ChartLocalization.delegate,
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
@@ -255,7 +246,7 @@ class _DrawingToolsScreenState
     return Chip(
       avatar: Icon(icon, size: 18),
       label: Text(label),
-      backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
     );
   }
 }

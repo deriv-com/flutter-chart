@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:showcase_app/utils/chart_data_provider.dart';
+import '../../utils/chart_data_provider.dart';
 
 /// Base class for all chart example screens.
 abstract class BaseChartScreen extends StatefulWidget {

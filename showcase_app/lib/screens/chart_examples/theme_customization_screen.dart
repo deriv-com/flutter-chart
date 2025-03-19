@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:showcase_app/screens/chart_examples/base_chart_screen.dart';
+import 'base_chart_screen.dart';
 
 /// A custom theme that extends the default dark theme.
 class CustomDarkTheme extends ChartDefaultDarkTheme {

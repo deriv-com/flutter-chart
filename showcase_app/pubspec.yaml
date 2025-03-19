@@ -11,7 +11,10 @@ dependencies:
     sdk: flutter
   deriv_chart:
     path: ../
-  cupertino_icons: ^1.0.2
+  provider: ^6.0.5
+  flutter_localizations:
+    sdk: flutter
+  pref: ^2.7.1
 
 dev_dependencies:
   flutter_test:

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:showcase_app/screens/home_screen.dart';
+import 'screens/home_screen.dart';
 
 void main() {
   runApp(const ShowcaseApp());
@@ -34,7 +33,7 @@ class ShowcaseApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       // Add localization delegates to fix the ChartLocalization error
-      localizationsDelegates: [
+      localizationsDelegates: const [
         ChartLocalization.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

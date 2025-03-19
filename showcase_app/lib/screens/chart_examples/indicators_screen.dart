@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:showcase_app/screens/chart_examples/base_chart_screen.dart';
+import 'base_chart_screen.dart';
 
 /// Screen that displays a chart with indicators.
 class IndicatorsScreen extends BaseChartScreen {
@@ -18,7 +18,7 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
 
   int _bollingerPeriod = 20;
   double _bollingerDeviation = 2.0;
-  MovingAverageType _bollingerMAType = MovingAverageType.simple;
+  final MovingAverageType _bollingerMAType = MovingAverageType.simple;
 
   int _rsiPeriod = 14;
 
@@ -78,9 +78,9 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
     // Add MACD if enabled
     if (_showMACD) {
       _indicatorsRepo.add(
-        MACDIndicatorConfig(
-          lineStyle: const LineStyle(color: Colors.blue),
-          signalLineStyle: const LineStyle(color: Colors.red),
+        const MACDIndicatorConfig(
+          lineStyle: LineStyle(color: Colors.blue),
+          signalLineStyle: LineStyle(color: Colors.red),
         ),
       );
     }
