@@ -40,7 +40,8 @@ class MarkerGroupSeries extends MarkerSeries {
           .where(
             (MarkerGroup group) =>
                 group.markers.isNotEmpty &&
-                group.markers.last.epoch >= leftEpoch,
+                group.markers.last.epoch >= leftEpoch &&
+                group.markers.first.epoch <= rightEpoch,
           )
           .toList();
     } else {
