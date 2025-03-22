@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/vertical_barrier/vertical_barrier.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -76,11 +77,12 @@ class CombinedBarrier extends HorizontalBarrier {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
+    ChartScaleModel chartScaleModel,
   ) {
-    super.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
+        theme, chartScaleModel);
 
-    verticalBarrier.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    verticalBarrier.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartScaleModel);
   }
 }

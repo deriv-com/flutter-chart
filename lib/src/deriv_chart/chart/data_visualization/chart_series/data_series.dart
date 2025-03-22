@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/functions/min_max_calculator.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -314,14 +315,15 @@ abstract class DataSeries<T extends Tick> extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
+    ChartScaleModel chartScaleModel,
   ) {
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
-      super.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+      super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
+          theme, chartScaleModel);
     });
 
-    _lastTickIndicator?.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    _lastTickIndicator?.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartScaleModel);
 
     // Prevent re-animating indicators that haven't changed.
     if (animationInfo.currentTickPercent == 1) {

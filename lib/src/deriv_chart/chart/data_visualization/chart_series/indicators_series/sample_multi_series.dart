@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -70,14 +71,15 @@ class SampleMultiSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
+    ChartScaleModel chartScaleModel,
   ) {
-    super.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
+        theme, chartScaleModel);
 
-    series1.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    series2.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    series1.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
+        theme, chartScaleModel);
+    series2.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
+        theme, chartScaleModel);
   }
 
   @override
