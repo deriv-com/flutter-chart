@@ -54,9 +54,8 @@ class PainterProps {
   /// in a more "zoomed in" view (more pixels per time unit), while higher values
   /// result in a more "zoomed out" view (fewer pixels per time unit).
   ///
-  /// This property may be null in certain contexts where the horizontal scale
-  /// is determined by other means.
-  final double? msPerPx;
+  /// Specifies the zoom level of the chart.
+  final double msPerPx;
 
   @override
   String toString() {

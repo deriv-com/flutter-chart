@@ -264,8 +264,13 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
       granularity: widget.granularity,
       chartAxisConfig: widget.chartAxisConfig,
     );
+    // Calculate default msPerPx based on granularity and default interval width (which defaults to 20 pixels), msPerPx could be null in situations like when data fit mode is enabled.
+    final double defaultMsPerPx =
+        widget.granularity / widget.chartAxisConfig.defaultIntervalWidth;
+
     final ChartScaleModel _chartScaleModel = ChartScaleModel(
-        granularity: widget.granularity, msPerPx: widget.msPerPx);
+        granularity: widget.granularity,
+        msPerPx: widget.msPerPx ?? defaultMsPerPx);
 
     final List<Series>? overlaySeries =
         _getIndicatorSeries(widget.overlayConfigs);

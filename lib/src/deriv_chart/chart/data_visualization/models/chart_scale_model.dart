@@ -24,11 +24,9 @@ class ChartScaleModel {
   /// @param granularity The time interval (in milliseconds) between consecutive data points.
   ///        This is a required parameter as it's fundamental to the chart's time scale.
   /// @param msPerPx The number of milliseconds represented by one pixel on the x-axis.
-  ///        This can be null in contexts where the horizontal scale is determined by
-  ///        other means.
   const ChartScaleModel({
     required this.granularity,
-    this.msPerPx,
+    required this.msPerPx,
   });
 
   /// The number of milliseconds represented by one pixel on the x-axis.
@@ -42,9 +40,8 @@ class ChartScaleModel {
   /// - A value of 60000 means each pixel represents 1 minute
   /// - A value of 3600000 means each pixel represents 1 hour
   ///
-  /// This property may be null in certain contexts where the horizontal scale
-  /// is determined by other means.
-  final double? msPerPx;
+  /// Specifies the zoom level of the chart.
+  final double msPerPx;
 
   /// The time interval (in milliseconds) between consecutive data points.
   ///
@@ -69,10 +66,7 @@ class ChartScaleModel {
   /// appropriately at different zoom levels. Higher zoom values make elements appear
   /// larger, while lower values make them smaller.
   ///
-  /// If `msPerPx` is null, a default zoom factor of 1 is returned.
-  double get zoom => msPerPx == null
-      ? 1
-      : convertRange(msPerPx! / granularity, 0, 1, 0.8, 1.2);
+  double get zoom => convertRange(msPerPx / granularity, 0, 1, 0.8, 1.2);
 
   /// Creates a `PainterProps` instance from this model's scaling parameters.
   ///

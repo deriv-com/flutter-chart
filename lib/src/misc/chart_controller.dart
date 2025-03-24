@@ -34,7 +34,7 @@ typedef ToggleXScrollBlock = Function({required bool isXScrollBlocked});
 typedef ToggleDataFitMode = Function({required bool enableDataFit});
 
 /// To get msPerPx
-typedef GetMsPerPx = double? Function();
+typedef GetMsPerPx = double Function();
 
 /// Chart widget's controller.
 class ChartController {
