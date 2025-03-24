@@ -86,8 +86,11 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       opacity = calculateOpacity(startPoint.dx, exitPoint?.dx);
     }
 
+    final Paint paint = Paint()
+      ..color = markerGroup.style.backgroundColor.withOpacity(opacity);
+
     _drawBarriers(
-        canvas, size, points, markerGroup.style, opacity, painterProps);
+        canvas, size, points, markerGroup.style, opacity, painterProps, paint);
 
     for (final ChartMarker marker in markerGroup.markers) {
       final Offset center = points[marker.markerType!] ??
@@ -102,7 +105,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       }
 
       _drawMarker(canvas, size, theme, marker, center, markerGroup.style,
-          painterProps.zoom, opacity);
+          painterProps.zoom, opacity, paint);
     }
   }
 
@@ -124,10 +127,14 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// @param style The style to apply to the barriers.
   /// @param opacity The opacity to apply to the barriers.
   /// @param painterProps Properties that affect how barriers are rendered.
-  void _drawBarriers(Canvas canvas, Size size, Map<MarkerType, Offset> points,
-      MarkerStyle style, double opacity, PainterProps painterProps) {
-    final Color color = style.backgroundColor.withOpacity(opacity);
-    final Paint paint = Paint()..color = color;
+  void _drawBarriers(
+      Canvas canvas,
+      Size size,
+      Map<MarkerType, Offset> points,
+      MarkerStyle style,
+      double opacity,
+      PainterProps painterProps,
+      Paint paint) {
     final Offset? _entryOffset = points[MarkerType.entry];
     final Offset? _entryTickOffset = points[MarkerType.entryTick];
     final Offset? _startOffset = points[MarkerType.start];
@@ -142,7 +149,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           _startOffset.dx,
           _entryOffset.dx,
           _startOffset.dy,
-          color,
+          paint.color,
           1,
           dashWidth: 1,
           dashSpace: 1,
@@ -162,7 +169,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           canvas,
           _entryOffset,
           _entryTickOffset,
-          color,
+          paint.color,
           1,
           dashWidth: 2,
           dashSpace: 2,
@@ -174,7 +181,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           canvas,
           _exitOffset,
           _endOffset,
-          color,
+          paint.color,
           1,
           dashWidth: 2,
           dashSpace: 2,
@@ -205,11 +212,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       Offset anchor,
       MarkerStyle style,
       double zoom,
-      double opacity) {
-    final Color color = style.backgroundColor.withOpacity(opacity);
-
-    final Paint paint = Paint()..color = color;
-
+      double opacity,
+      Paint paint) {
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
       switch (marker.markerType) {
         case MarkerType.activeStart:
@@ -221,7 +225,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           break;
         case MarkerType.entry:
         case MarkerType.entryTick:
-          _drawEntryPoint(canvas, theme, anchor, color, zoom, opacity);
+          _drawEntryPoint(canvas, theme, anchor, paint.color, zoom, opacity);
           break;
         case MarkerType.end:
           paintEndMarker(canvas, theme, anchor - Offset(1, 20 * zoom),
