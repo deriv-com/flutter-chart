@@ -33,7 +33,7 @@ class MarkerGroup implements Comparable<MarkerGroup> {
     this.markers, {
     required this.type,
     this.id,
-    Map<String, dynamic>? props,
+    this.props = const MarkerProps(),
     this.style = const MarkerStyle(
       activeMarkerText: TextStyle(
         color: Colors.black,
@@ -41,7 +41,7 @@ class MarkerGroup implements Comparable<MarkerGroup> {
         height: 1.4,
       ),
     ),
-  }) : props = MarkerProps.fromMap(props);
+  });
 
   /// The list of ChartMarker objects that belong to this group.
   /// These markers are related to each other and are treated as a cohesive unit.

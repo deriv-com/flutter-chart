@@ -125,17 +125,6 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     }
   }
 
-  /// Determines if the marker group has persistent borders configured.
-  ///
-  /// Persistent borders remain visible even when they extend beyond the
-  /// visible chart area, providing context for off-screen price levels.
-  ///
-  /// @param markerGroup The marker group to check
-  /// @return bool True if the marker group has persistent borders
-  bool _hasPersistentBorders(MarkerGroup markerGroup) {
-    return markerGroup.props.hasPersistentBorders;
-  }
-
   /// Draws shaded barriers between high and low price levels.
   ///
   /// This is the core visualization method for accumulator contracts, rendering:
@@ -174,7 +163,7 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
   }) {
     final double endTop = size.height;
 
-    final bool hasPersistentBorders = _hasPersistentBorders(markerGroup);
+    final bool hasPersistentBorders = markerGroup.props.hasPersistentBorders;
 
     final bool isTopVisible =
         top < endTop && (top >= 0 || !hasPersistentBorders);

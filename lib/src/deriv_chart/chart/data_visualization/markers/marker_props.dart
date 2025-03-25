@@ -23,28 +23,6 @@ class MarkerProps {
     this.hasPersistentBorders = false,
   });
 
-  /// Creates a `MarkerProps` instance from a map of property values.
-  ///
-  /// This factory constructor provides a convenient way to deserialize marker
-  /// properties from a map representation, such as when loading configuration
-  /// from storage or receiving it from an API.
-  ///
-  /// If the provided map is null, a default `MarkerProps` instance is returned
-  /// with all properties set to their default values.
-  ///
-  /// @param map A map containing property values, where keys are property names
-  ///        and values are the corresponding property values.
-  /// @return A new `MarkerProps` instance with properties set according to the map.
-  factory MarkerProps.fromMap(Map<String, dynamic>? map) {
-    if (map == null) {
-      return const MarkerProps();
-    }
-
-    return MarkerProps(
-      hasPersistentBorders: map['hasPersistentBorders'] as bool? ?? false,
-    );
-  }
-
   /// Whether barriers associated with this marker should be drawn even when
   /// they're outside the visible area of the chart.
   ///
@@ -57,19 +35,4 @@ class MarkerProps {
   /// within the visible area of the chart, which can improve performance by
   /// reducing the number of elements that need to be rendered.
   final bool hasPersistentBorders;
-
-  /// Converts this `MarkerProps` instance to a map representation.
-  ///
-  /// This method provides a convenient way to serialize marker properties to
-  /// a map representation, which can be useful for storing configuration,
-  /// sending it over a network, or passing it between different parts of the
-  /// application.
-  ///
-  /// @return A map containing all properties of this instance, where keys are
-  ///         property names and values are the corresponding property values.
-  Map<String, dynamic> toMap() {
-    return {
-      'hasPersistentBorders': hasPersistentBorders,
-    };
-  }
 }
