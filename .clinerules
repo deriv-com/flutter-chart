@@ -1,0 +1,201 @@
+# Base Configuration for Deriv Chart Flutter Project
+
+## ROLE DEFINITION
+
+role: PRINCIPAL ENGINEER
+specialization: Flutter, Dart, Financial Charts, Technical Analysis, Custom Painting, Performance Optimization
+
+---
+
+## PROJECT ARCHITECTURE
+
+### Chart Components
+
+1. Core Components:
+   - **Chart Widget**: Main canvas for rendering financial data
+   - **BasicChart**: Base implementation for single series rendering
+   - **MainChart**: Extends BasicChart, handles multiple ChartData and crosshair
+   - **BottomChart**: For indicators with different Y-scale
+   - **DerivChart**: Wrapper with UI for indicators and drawing tools
+
+2. Data Representation:
+   - **ChartData**: Abstract base for any paintable chart data
+     - Indicators implement this interface
+     - Each indicator defines its own painting logic
+     - Handles its own data calculations and rendering
+   - **DataSeries**: For single list of sorted data (by epoch)
+   - **Series**: Base class for multiple data list paintings
+
+3. Coordinate System:
+   - **X-Axis**: Based on rightBoundEpoch and msPerPx
+   - **Y-Axis**: Uses topBoundQuote and bottomBoundQuote
+   - **Conversion Functions**: Transform epoch/quote to canvas coordinates
+
+### Rendering Pipeline
+
+1. Data Input:
+   - Ticks: {epoch, quote}
+   - OHLC: {epoch, open, high, low, close}
+
+2. Visualization Process:
+   ```
+   Data Input → ChartData → DataSeries/Series → Painters → Canvas
+   ```
+
+3. Painter Hierarchy:
+   - **SeriesPainter**: Base painter class
+   - **DataPainter**: Common painting functionality
+   - Specialized Painters:
+     - LinePainter
+     - CandlePainter
+     - ScatterPainter
+     - BarrierPainters
+     - MarkerPainter
+
+4. Update Cycle:
+   a. Component Notification
+   b. Y-Axis Range Calculation
+   c. Coordinate Conversion
+   d. Canvas Painting
+
+5. Indicator Implementation:
+   - Extends ChartData for custom indicators
+   - Implements painting logic in CustomPainter
+   - Handles own data calculations
+   - Uses coordinate system for positioning
+   - Can define custom Y-axis scaling
+
+---
+
+## DEVELOPMENT GUIDELINES
+
+code_organization:
+  description: Follow the established project structure
+  lib/:
+    - src/:
+        - deriv_chart/:  # Core chart functionality
+            - chart/     # Chart components
+            - models/    # Data models
+            - painters/  # Custom painters
+            - utils/     # Utility functions
+        - add_ons/      # Additional features
+        - misc/         # Miscellaneous helpers
+        - theme/        # Theming system
+        - widgets/      # Reusable widgets
+    - l10n/            # Localization
+    - generated/       # Generated files
+
+custom_painting:
+  description: Optimize chart rendering using CustomPainter
+  guidelines:
+    - Implement efficient painting logic
+    - Use proper coordinate transformation
+    - Cache calculations when possible
+    - Implement shouldRepaint correctly
+    - Handle indicator-specific rendering
+  example: |
+    class CandlePainter extends CustomPainter {
+      @override
+      void paint(Canvas canvas, Size size) {
+        // Efficient painting implementation
+      }
+
+      @override
+      bool shouldRepaint(covariant CustomPainter oldDelegate) {
+        // Proper comparison implementation
+        return true;
+      }
+    }
+
+---
+
+## PERFORMANCE OPTIMIZATION
+
+performance_guidelines:
+  description: Ensure smooth chart rendering and interaction
+  rules:
+    - Use const constructors when possible
+    - Implement efficient CustomPainter logic
+    - Cache calculations and painting operations
+    - Use RepaintBoundary appropriately
+    - Profile and optimize render performance
+    - Implement proper data windowing for large datasets
+    - Optimize coordinate transformations
+    - Efficient handling of real-time data updates
+    - Optimize indicator calculations
+    - Cache complex technical analysis results
+
+---
+
+## DOCUMENTATION
+
+documentation_requirements:
+  description: Maintain comprehensive documentation
+  rules:
+    - Document all public APIs
+    - Include usage examples
+    - Document complex algorithms
+    - Keep README.md updated
+    - Document performance considerations
+    - Document indicator implementations
+  example: |
+    /// An implementation of ChartData that renders technical indicators.
+    /// 
+    /// Handles its own data calculations and painting logic while using
+    /// the chart's coordinate system for proper positioning.
+    class TechnicalIndicator implements ChartData {
+      // Implementation
+    }
+
+---
+
+## SECURITY
+
+security_guidelines:
+  description: Ensure secure implementation
+  rules:
+    - Validate all input data
+    - Sanitize data before rendering
+    - Handle errors gracefully
+    - Protect sensitive calculations
+    - Implement proper error boundaries
+    - Use secure random number generation for technical indicators
+
+---
+
+## ERROR HANDLING
+
+error_handling:
+  description: Implement comprehensive error handling
+  patterns:
+    - Use try-catch blocks for error-prone operations
+    - Provide meaningful error messages
+    - Handle edge cases in calculations
+    - Implement graceful fallbacks
+    - Log errors appropriately
+  example: |
+    try {
+      final indicator = calculateIndicator(data);
+      return indicator;
+    } catch (e) {
+      debugPrint('Error calculating indicator: $e');
+      return null;
+    }
+
+---
+
+## VERSION CONTROL
+
+version_control:
+  commit_guidelines:
+    - Use semantic versioning
+    - Write clear commit messages
+    - Keep commits focused and atomic
+    - Reference issues in commits
+  commit_message_format: |
+    <type>: <description>
+
+    - Detailed explanation
+    - Additional context
+
+    Fixes #issue_number
