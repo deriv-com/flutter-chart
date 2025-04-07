@@ -16,9 +16,9 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
   bool _showVerticalBarrier = true;
   bool _showTickIndicator = true;
 
-  late HorizontalBarrier _horizontalBarrier;
-  late VerticalBarrier _verticalBarrier;
-  late TickIndicator _tickIndicator;
+  HorizontalBarrier? _horizontalBarrier;
+  VerticalBarrier? _verticalBarrier;
+  TickIndicator? _tickIndicator;
 
   Color _horizontalBarrierColor = Colors.green;
   Color _verticalBarrierColor = Colors.red;
@@ -128,16 +128,16 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
   Widget buildChart() {
     final List<ChartAnnotation<ChartObject>> annotations = [];
 
-    if (_showHorizontalBarrier && ticks.isNotEmpty) {
-      annotations.add(_horizontalBarrier);
+    if (_showHorizontalBarrier && ticks.isNotEmpty && _horizontalBarrier != null) {
+      annotations.add(_horizontalBarrier!);
     }
 
-    if (_showVerticalBarrier && ticks.isNotEmpty) {
-      annotations.add(_verticalBarrier);
+    if (_showVerticalBarrier && ticks.isNotEmpty && _verticalBarrier != null) {
+      annotations.add(_verticalBarrier!);
     }
 
-    if (_showTickIndicator && ticks.isNotEmpty) {
-      annotations.add(_tickIndicator);
+    if (_showTickIndicator && ticks.isNotEmpty && _tickIndicator != null) {
+      annotations.add(_tickIndicator!);
     }
 
     return DerivChart(

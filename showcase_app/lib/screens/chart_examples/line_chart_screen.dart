@@ -16,7 +16,7 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
   double _thickness = 2;
   Color _lineColor = Colors.blue;
   bool _showTickIndicator = true;
-  late TickIndicator _tickIndicator;
+  TickIndicator? _tickIndicator;
 
   @override
   void initState() {
@@ -66,8 +66,8 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
   Widget buildChart() {
     final List<ChartAnnotation<ChartObject>> annotations = [];
 
-    if (_showTickIndicator && ticks.isNotEmpty) {
-      annotations.add(_tickIndicator);
+    if (_showTickIndicator && ticks.isNotEmpty && _tickIndicator != null) {
+      annotations.add(_tickIndicator!);
     }
 
     return DerivChart(

@@ -20,7 +20,7 @@ class _LineChartWithIndicatorScreenState
   bool _showSMA = true;
   int _smaPeriod = 14;
   bool _showTickIndicator = true;
-  late TickIndicator _tickIndicator;
+  TickIndicator? _tickIndicator;
 
   // Create an indicators repository to manage indicators
   late final Repository<IndicatorConfig> _indicatorsRepo;
@@ -100,8 +100,8 @@ class _LineChartWithIndicatorScreenState
   Widget buildChart() {
     final List<ChartAnnotation<ChartObject>> annotations = [];
 
-    if (_showTickIndicator && ticks.isNotEmpty) {
-      annotations.add(_tickIndicator);
+    if (_showTickIndicator && ticks.isNotEmpty && _tickIndicator != null) {
+      annotations.add(_tickIndicator!);
     }
 
     return DerivChart(
