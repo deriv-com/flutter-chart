@@ -128,7 +128,9 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
   Widget buildChart() {
     final List<ChartAnnotation<ChartObject>> annotations = [];
 
-    if (_showHorizontalBarrier && ticks.isNotEmpty && _horizontalBarrier != null) {
+    if (_showHorizontalBarrier &&
+        ticks.isNotEmpty &&
+        _horizontalBarrier != null) {
       annotations.add(_horizontalBarrier!);
     }
 
