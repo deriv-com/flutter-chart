@@ -141,7 +141,7 @@ export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/ohlc_p
 export 'src/deriv_chart/chart/data_visualization/chart_series/ohlc_series/ohlc_painting.dart';
 export 'src/deriv_chart/chart/data_visualization/chart_series/data_painter.dart';
 export 'src/theme/chart_default_theme.dart';
-export 'package:deriv_chart/src/models/chart_config.dart';
+export 'src/models/chart_config.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/accumulator_marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/digit_marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/tick_marker_icon_painter.dart';
@@ -152,4 +152,5 @@ export 'src/deriv_chart/chart/helpers/paint_functions/paint_start_marker.dart';
 export 'src/deriv_chart/chart/helpers/paint_functions/paint_vertical_line.dart';
 export 'src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_props.dart';
-export 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
+export 'src/theme/colors.dart';
+export 'src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';

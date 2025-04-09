@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
+import '../../widgets/color_picker_widget.dart';
 import 'base_chart_screen.dart';
 
 /// A custom theme that extends the default dark theme.
@@ -174,44 +175,10 @@ class _ThemeCustomizationScreenState
 
   Widget _buildColorPicker(
       String label, Color currentColor, Function(Color) onColorChanged) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 120,
-          child: Text(label),
-        ),
-        const SizedBox(width: 8),
-        Wrap(
-          spacing: 8,
-          children: [
-            _buildColorButton(Colors.red, currentColor, onColorChanged),
-            _buildColorButton(Colors.green, currentColor, onColorChanged),
-            _buildColorButton(Colors.blue, currentColor, onColorChanged),
-            _buildColorButton(Colors.purple, currentColor, onColorChanged),
-            _buildColorButton(Colors.orange, currentColor, onColorChanged),
-            _buildColorButton(Colors.teal, currentColor, onColorChanged),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildColorButton(
-      Color color, Color currentColor, Function(Color) onColorChanged) {
-    return InkWell(
-      onTap: () => onColorChanged(color),
-      child: Container(
-        width: 24,
-        height: 24,
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: currentColor == color ? Colors.white : Colors.transparent,
-            width: 2,
-          ),
-        ),
-      ),
+    return DerivColorPicker(
+      label: label,
+      selectedColor: currentColor,
+      onColorChanged: onColorChanged,
     );
   }
 
