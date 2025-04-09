@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:provider/provider.dart';
 import 'base_chart_screen.dart';
