@@ -66,7 +66,7 @@ class _DrawingToolsScreenState
       activeSymbol: 'DRAWING_TOOLS_CHART',
       drawingTools: _drawingTools,
       drawingToolsRepo: _drawingToolsRepo,
-      theme: ChartDefaultDarkTheme(), // Explicitly set dark theme
+      theme: ChartDefaultDarkTheme(),
     );
   }
 
@@ -77,27 +77,15 @@ class _DrawingToolsScreenState
 
     _drawingTools.init();
 
-    // Create a simpler dialog with the necessary localization
     showDialog<void>(
       context: context,
-      builder: (BuildContext context) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        localizationsDelegates: const [
-          ChartLocalization.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: const [Locale('en')],
-        theme: Theme.of(context),
-        home: Builder(
-          builder: (BuildContext context) => Scaffold(
-            backgroundColor: Colors.transparent,
-            body: ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
-              value: _drawingToolsRepo,
-              child: DrawingToolsDialog(
-                drawingTools: _drawingTools,
-              ),
-            ),
+      builder: (BuildContext context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero,
+        child: ChangeNotifierProvider<Repository<DrawingToolConfig>>.value(
+          value: _drawingToolsRepo,
+          child: DrawingToolsDialog(
+            drawingTools: _drawingTools,
           ),
         ),
       ),
