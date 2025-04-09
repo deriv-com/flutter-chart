@@ -155,12 +155,18 @@ class XAxisModel extends ChangeNotifier {
   double _msPerPx = 1000;
   double? _prevMsPerPx;
   late int _granularity;
+  late bool _isScrollBlocked = false;
   late int _nowEpoch;
   late int _rightBoundEpoch;
   double _panSpeed = 0;
 
   /// Difference in milliseconds between two consecutive candles/points.
   int get granularity => _granularity;
+
+  /// Whether horizontal scroll is blocked.
+  bool get isScrollBlocked => _isScrollBlocked;
+
+  set isScrollBlocked(bool value) => _isScrollBlocked = value;
 
   /// Epoch value of the leftmost chart's edge.
   int get leftBoundEpoch => _shiftEpoch(rightBoundEpoch, -width!);
@@ -453,12 +459,17 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called when user is panning the chart.
   void onPanUpdate(DragUpdateDetails details) {
-    scrollBy(-details.delta.dx);
+    // TODO(Jim): find simpler way to implement this
+    if (!_isScrollBlocked) {
+      scrollBy(-details.delta.dx);
+    }
   }
 
   /// Called at the end of scale and pan gestures.
   void onScaleAndPanEnd(ScaleEndDetails details) {
-    _triggerScrollMomentum(details.velocity);
+    if (!_isScrollBlocked) {
+      _triggerScrollMomentum(details.velocity);
+    }
   }
 
   /// Called to scale the chart

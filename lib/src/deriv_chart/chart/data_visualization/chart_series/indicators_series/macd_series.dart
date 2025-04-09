@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
@@ -147,13 +148,14 @@ class MACDSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
+    ChartScaleModel chartScaleModel,
   ) {
-    macdHistogramSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    macdSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-    signalMACDSeries.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+    macdHistogramSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartScaleModel);
+    macdSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartScaleModel);
+    signalMACDSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, theme, chartScaleModel);
   }
 
   @override
