@@ -10,6 +10,37 @@ import 'package:flutter/material.dart';
 /// Any app which wants to define the chart's theme should pass an
 /// implementation of this interface.
 abstract class ChartTheme {
+  Color get backgroundColor;
+
+  GridStyle get axisGridStyle;
+
+  LineStyle get areaLineStyle;
+
+  TextStyle get currentSpotLabelText;
+
+  Color get lineColor;
+
+  Color get textColor;
+
+  Color get subtitleColor;
+
+  Color get containerColor;
+
+  Color get gradientStart;
+
+  Color get gradientEnd;
+
+  Color get dotColor;
+
+  Color get effectColor;
+
+  Color get subtitle2Color;
+
+  Color get desktopColor;
+
+  /// The style of the current tick indicator.
+  HorizontalBarrierStyle get currentSpotStyle;
+
   String get fontFamily;
 
   Color get brandCoralColor;
@@ -75,9 +106,6 @@ abstract class ChartTheme {
   TextStyle get title;
 
   TextStyle get overLine;
-
-  /// The style of the current tick indicator.
-  HorizontalBarrierStyle get currentTickStyle;
 
   /// The painting styles of candlestick chart.
   CandleStyle get candleStyle;

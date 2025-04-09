@@ -16,6 +16,9 @@ abstract class ChartDefaultTheme implements ChartTheme {
       <TextStyle, Map<Color, TextStyle>>{};
 
   @override
+  TextStyle get currentSpotLabelText => TextStyles.currentSpotLabel;
+
+  @override
   double get margin04Chart => Dimens.margin04;
 
   @override
@@ -86,16 +89,12 @@ abstract class ChartDefaultTheme implements ChartTheme {
       );
 
   @override
-  HorizontalBarrierStyle get currentTickStyle => HorizontalBarrierStyle(
-        color: brandCoralColor,
-        textStyle: textStyle(textStyle: caption2, color: base01Color),
-      );
-
-  @override
   CandleStyle get candleStyle => CandleStyle(
-        positiveColor: accentGreenColor,
-        negativeColor: accentRedColor,
         neutralColor: base04Color,
+        candleBullishWickColor:
+            CandleBullishThemeColors.candleBullishWickDefault,
+        candleBearishWickColor:
+            CandleBearishThemeColors.candleBearishWickDefault,
       );
 
   @override

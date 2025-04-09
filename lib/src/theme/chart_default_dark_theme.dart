@@ -1,3 +1,6 @@
+import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +10,72 @@ import 'colors.dart';
 /// An implementation of [ChartDefaultTheme] which provides access to
 /// dark theme-related colors and styles for the chart package.
 class ChartDefaultDarkTheme extends ChartDefaultTheme {
+  @override
+  Color get lineColor => DefaultDarkThemeColors.line;
+
+  @override
+  Color get backgroundColor => DefaultDarkThemeColors.backgroundDynamicHighest;
+
+  @override
+  Color get textColor => DefaultDarkThemeColors.text;
+
+  @override
+  Color get subtitleColor => DefaultDarkThemeColors.subtitle;
+
+  @override
+  Color get containerColor => DefaultDarkThemeColors.container;
+
+  @override
+  Color get gradientStart => DefaultDarkThemeColors.gradientStart;
+
+  @override
+  Color get gradientEnd => DefaultDarkThemeColors.gradientEnd;
+
+  @override
+  Color get dotColor => DefaultDarkThemeColors.dot;
+
+  @override
+  Color get effectColor => DefaultDarkThemeColors.effect;
+
+  @override
+  Color get subtitle2Color => DefaultDarkThemeColors.subtitle2;
+
+  @override
+  Color get desktopColor => DefaultDarkThemeColors.desktop;
+
+  @override
+  LineStyle get areaLineStyle => const LineStyle(
+        color: DefaultDarkThemeColors.areaDefaultLine,
+        hasArea: true,
+        areaGradientColors: (
+          start: DefaultDarkThemeColors.areaDefaultGradientStart,
+          end: DefaultDarkThemeColors.areaDefaultGradientEnd,
+        ),
+      );
+
+  @override
+  GridStyle get axisGridStyle => GridStyle(
+        gridLineColor: DefaultDarkThemeColors.axisGridDefault,
+        xLabelStyle: textStyle(
+            textStyle: TextStyles.axisLabel,
+            color: DefaultDarkThemeColors.axisTextDefault),
+        yLabelStyle: textStyle(
+            textStyle: TextStyles.axisLabel,
+            color: DefaultDarkThemeColors.axisTextDefault),
+      );
+
+  @override
+  HorizontalBarrierStyle get currentSpotStyle => HorizontalBarrierStyle(
+      color: DefaultDarkThemeColors.currentSpotDefaultContainer,
+      textStyle: textStyle(
+          textStyle: currentSpotLabelText,
+          color: DefaultDarkThemeColors.currentSpotDefaultLabel),
+      isDashed: false);
+
+  @override
+  LineStyle get lineStyle =>
+      const LineStyle(color: DefaultDarkThemeColors.line);
+
   @override
   Color get accentRedColor => DarkThemeColors.accentRed;
 
