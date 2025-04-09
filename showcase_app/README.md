@@ -33,9 +33,13 @@ The app includes examples of:
 
 Each example screen demonstrates a specific feature of the Deriv Chart package with interactive controls to modify chart parameters and see the changes in real-time. The app includes:
 
-- **Interactive Controls**: Sliders, switches, color pickers, and buttons to modify chart parameters
-- **Real-time Updates**: See changes to the chart as you modify parameters
-- **Sample Data Generation**: Automatically generated sample data for demonstration purposes
+- **Interactive Controls**: A variety of controls including:
+  - **Sliders**: Adjust numerical parameters such as time intervals, indicator sensitivity, or opacity.
+  - **Switches**: Toggle features on and off, like technical indicators and theme modes.
+  - **Color Pickers**: Customize chart colors, markers, and background themes.
+  - **Buttons**: Apply changes, refresh the chart, or reset parameters to default settings.
+- **Real-time Updates**: See changes to the chart as you modify parameters, with immediate visual feedback
+- **Sample Data Generation**: Sample data is auto-generated using a simulated market algorithm that produces realistic price movements and patterns for demonstration purposes
 
 ## Testing
 
