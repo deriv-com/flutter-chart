@@ -123,8 +123,8 @@ class BollingerBandSeries extends Series {
     return ChannelFillPainter(
       upperSeries,
       lowerSeries,
-      firstUpperChannelFillColor: bbOptions.fillColor.withOpacity(0.2),
-      secondUpperChannelFillColor: bbOptions.fillColor.withOpacity(0.2),
+      firstUpperChannelFillColor: bbOptions.fillColor.withValues(alpha: 0.2),
+      secondUpperChannelFillColor: bbOptions.fillColor.withValues(alpha: 0.2),
     );
   }
 

@@ -355,7 +355,7 @@ class TrendDrawing extends Drawing {
             _mainRect,
             drawingData.shouldHighlight
                 ? paint.glowyLinePaintStyle(
-                    fillStyle.color.withOpacity(0.2), lineStyle.thickness)
+                    fillStyle.color.withValues(alpha: 0.2), lineStyle.thickness)
                 : paint.fillPaintStyle(fillStyle.color, lineStyle.thickness),
           )
           ..drawRect(
@@ -366,7 +366,7 @@ class TrendDrawing extends Drawing {
             _middleRect,
             drawingData.shouldHighlight
                 ? paint.glowyLinePaintStyle(
-                    fillStyle.color.withOpacity(0.2), lineStyle.thickness)
+                    fillStyle.color.withValues(alpha: 0.2), lineStyle.thickness)
                 : paint.fillPaintStyle(fillStyle.color, lineStyle.thickness),
           )
           ..drawRect(

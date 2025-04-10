@@ -5,7 +5,7 @@ homepage: https://github.com/deriv-com/flutter-chart
 repository: https://github.com/deriv-com/flutter-chart
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.6.0 <4.0.0"
   flutter: ">=3.10.1"
 
 dependencies:
@@ -30,6 +30,7 @@ dev_dependencies:
   build_runner: ^2.4.6
   intl_utils: ^2.8.2
   json_serializable: ^6.7.1
+  lints: ^5.1.1
 
 flutter:
   assets:

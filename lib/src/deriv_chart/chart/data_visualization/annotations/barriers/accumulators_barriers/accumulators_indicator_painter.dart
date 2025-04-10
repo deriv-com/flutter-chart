@@ -74,7 +74,7 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
     }
     _linePaint.color = color;
     _linePaintFill.color = color;
-    _rectPaint.color = color.withOpacity(0.08);
+    _rectPaint.color = color.withValues(alpha: 0.08);
 
     final AccumulatorIndicator indicator = series;
 
@@ -449,14 +449,14 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
             center.dy,
             size: arrowSize,
           ),
-          arrowPaint..color = _paint.color.withOpacity(0.64))
+          arrowPaint..color = _paint.color.withValues(alpha: 0.64))
       ..drawPath(
           getUpwardArrowPath(
             center.dx,
             center.dy - arrowSize + 1,
             size: arrowSize,
           ),
-          arrowPaint..color = _paint.color.withOpacity(0.32));
+          arrowPaint..color = _paint.color.withValues(alpha: 0.32));
   }
 
   void _paintDownwardArrows(
@@ -484,14 +484,14 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
             center.dy,
             size: arrowSize,
           ),
-          arrowPaint..color = _paint.color.withOpacity(0.64))
+          arrowPaint..color = _paint.color.withValues(alpha: 0.64))
       ..drawPath(
           getDownwardArrowPath(
             center.dx,
             center.dy + arrowSize - 1,
             size: arrowSize,
           ),
-          arrowPaint..color = _paint.color.withOpacity(0.32));
+          arrowPaint..color = _paint.color.withValues(alpha: 0.32));
   }
 
   void _paintLine(

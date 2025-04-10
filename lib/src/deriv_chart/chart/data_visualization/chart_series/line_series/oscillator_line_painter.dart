@@ -30,10 +30,10 @@ class OscillatorLinePainter extends LinePainter {
             const LineStyle(color: Colors.blueGrey),
         _bottomHorizontalLine = bottomHorizontalLine,
         _topZonesPaint = Paint()
-          ..color = topHorizontalLinesStyle.color.withOpacity(0.5)
+          ..color = topHorizontalLinesStyle.color.withValues(alpha: 0.5)
           ..style = PaintingStyle.fill,
         _bottomZonesPaint = Paint()
-          ..color = bottomHorizontalLinesStyle.color.withOpacity(0.5)
+          ..color = bottomHorizontalLinesStyle.color.withValues(alpha: 0.5)
           ..style = PaintingStyle.fill,
         super(series);
 
@@ -85,7 +85,7 @@ class OscillatorLinePainter extends LinePainter {
       if (kIsWeb) {
         final List<Tick> horizontalLineEntries = series.entries!
             .map((Tick entry) =>
-                Tick(epoch: entry.epoch, quote: _topHorizontalLine!))
+                Tick(epoch: entry.epoch, quote: _topHorizontalLine))
             .toList();
         topIntersections = combinePaths(
           series,
@@ -104,7 +104,7 @@ class OscillatorLinePainter extends LinePainter {
               linePath.startPosition.dx,
               0,
               linePath.endPosition.dx,
-              quoteToY(_topHorizontalLine!),
+              quoteToY(_topHorizontalLine),
             ),
           );
 
@@ -121,7 +121,7 @@ class OscillatorLinePainter extends LinePainter {
       if (kIsWeb) {
         final List<Tick> horizontalLineEntries = series.entries!
             .map((Tick entry) =>
-                Tick(epoch: entry.epoch, quote: _bottomHorizontalLine!))
+                Tick(epoch: entry.epoch, quote: _bottomHorizontalLine))
             .toList();
 
         bottomIntersection = combinePaths(
@@ -139,7 +139,7 @@ class OscillatorLinePainter extends LinePainter {
           ..addRect(
             Rect.fromLTRB(
               linePath.startPosition.dx,
-              quoteToY(_bottomHorizontalLine!),
+              quoteToY(_bottomHorizontalLine),
               linePath.endPosition.dx,
               size.height,
             ),
@@ -166,12 +166,12 @@ class OscillatorLinePainter extends LinePainter {
     if (_topHorizontalLine != null) {
       paint.color = topHorizontalLinesStyle.color;
       canvas.drawLine(
-          Offset(0, quoteToY(_topHorizontalLine!)),
+          Offset(0, quoteToY(_topHorizontalLine)),
           Offset(
               size.width -
-                  labelWidth(_topHorizontalLine!, textStyle.textStyle,
+                  labelWidth(_topHorizontalLine, textStyle.textStyle,
                       chartConfig.pipSize),
-              quoteToY(_topHorizontalLine!)),
+              quoteToY(_topHorizontalLine)),
           paint);
     }
 
@@ -181,12 +181,12 @@ class OscillatorLinePainter extends LinePainter {
         ..strokeWidth = bottomHorizontalLinesStyle.thickness;
 
       canvas.drawLine(
-          Offset(0, quoteToY(_bottomHorizontalLine!)),
+          Offset(0, quoteToY(_bottomHorizontalLine)),
           Offset(
               size.width -
                   labelWidth(_topHorizontalLine!, textStyle.textStyle,
                       chartConfig.pipSize),
-              quoteToY(_bottomHorizontalLine!)),
+              quoteToY(_bottomHorizontalLine)),
           paint);
     }
 
@@ -214,13 +214,13 @@ class OscillatorLinePainter extends LinePainter {
 
     if (_topHorizontalLine != null) {
       final TextPainter topValuePainter = makeTextPainter(
-        _topHorizontalLine!.toStringAsFixed(0),
+        _topHorizontalLine.toStringAsFixed(0),
         style.textStyle,
       );
       final Rect topLabelArea = Rect.fromCenter(
         center: Offset(
             size.width - rightMargin - padding - topValuePainter.width / 2,
-            quoteToY(_topHorizontalLine!)),
+            quoteToY(_topHorizontalLine)),
         width: topValuePainter.width + padding * 2,
         height: style.labelHeight,
       );
@@ -233,14 +233,14 @@ class OscillatorLinePainter extends LinePainter {
 
     if (_bottomHorizontalLine != null) {
       final TextPainter bottomValuePainter = makeTextPainter(
-        _bottomHorizontalLine!.toStringAsFixed(0),
+        _bottomHorizontalLine.toStringAsFixed(0),
         style.textStyle,
       );
 
       final Rect bottomLabelArea = Rect.fromCenter(
         center: Offset(
             size.width - rightMargin - padding - bottomValuePainter.width / 2,
-            quoteToY(_bottomHorizontalLine!)),
+            quoteToY(_bottomHorizontalLine)),
         width: bottomValuePainter.width + padding * 2,
         height: style.labelHeight,
       );

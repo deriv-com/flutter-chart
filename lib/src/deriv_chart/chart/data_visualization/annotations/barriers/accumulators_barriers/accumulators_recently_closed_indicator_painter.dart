@@ -59,7 +59,7 @@ class AccumulatorsRecentlyClosedIndicatorPainter
     }
     _linePaint.color = color;
     _linePaintFill.color = color;
-    _rectPaint.color = color.withOpacity(0.08);
+    _rectPaint.color = color.withValues(alpha: 0.08);
 
     final AccumulatorsRecentlyClosedIndicator indicator = series;
 
@@ -218,7 +218,7 @@ class AccumulatorsRecentlyClosedIndicatorPainter
       final RRect rRect =
           RRect.fromRectAndRadius(dialogRect, const Radius.circular(4));
 
-      _rectPaint.color = color.withOpacity(1);
+      _rectPaint.color = color.withValues(alpha: 1);
       canvas.drawRRect(rRect, _rectPaint);
 
       final Offset winLossPosition = Offset(

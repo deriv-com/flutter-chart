@@ -59,7 +59,7 @@ class AccumulatorsClosedIndicatorPainter
     }
     _linePaint.color = color;
     _linePaintFill.color = color;
-    _rectPaint.color = color.withOpacity(0.08);
+    _rectPaint.color = color.withValues(alpha: 0.08);
 
     final AccumulatorsClosedIndicator indicator = series;
 

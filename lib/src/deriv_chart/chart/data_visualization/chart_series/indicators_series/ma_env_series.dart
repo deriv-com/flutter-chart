@@ -121,8 +121,10 @@ class MAEnvSeries extends Series {
     return ChannelFillPainter(
       upperSeries,
       lowerSeries,
-      firstUpperChannelFillColor: maEnvOptions?.fillColor.withOpacity(0.2),
-      secondUpperChannelFillColor: maEnvOptions?.fillColor.withOpacity(0.2),
+      firstUpperChannelFillColor:
+          maEnvOptions?.fillColor.withValues(alpha: 0.2),
+      secondUpperChannelFillColor:
+          maEnvOptions?.fillColor.withValues(alpha: 0.2),
     );
   }
 

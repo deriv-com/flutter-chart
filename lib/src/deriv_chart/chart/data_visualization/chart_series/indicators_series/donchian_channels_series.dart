@@ -115,8 +115,8 @@ class DonchianChannelsSeries extends Series {
       return ChannelFillPainter(
         upperChannelSeries,
         lowerChannelSeries,
-        firstUpperChannelFillColor: config.fillColor.withOpacity(0.2),
-        secondUpperChannelFillColor: config.fillColor.withOpacity(0.2),
+        firstUpperChannelFillColor: config.fillColor.withValues(alpha: 0.2),
+        secondUpperChannelFillColor: config.fillColor.withValues(alpha: 0.2),
       );
     }
 

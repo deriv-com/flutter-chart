@@ -1,5 +1,4 @@
 /// Calculate time labels' from [gridTimestamps] without any overlaps.
-
 List<DateTime> calculateNoOverlapGridTimestamps(
   List<DateTime> gridTimestamps,
   double minDistanceBetweenTimeGridLines,

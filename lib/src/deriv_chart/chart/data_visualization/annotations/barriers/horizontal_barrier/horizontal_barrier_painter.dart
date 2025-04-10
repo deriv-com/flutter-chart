@@ -281,14 +281,14 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
             center.dy,
             size: arrowSize,
           ),
-          arrowPaint..color = _paint.color.withOpacity(0.64))
+          arrowPaint..color = _paint.color.withValues(alpha: 0.64))
       ..drawPath(
           getUpwardArrowPath(
             center.dx,
             center.dy - arrowSize + 1,
             size: arrowSize,
           ),
-          arrowPaint..color = _paint.color.withOpacity(0.32));
+          arrowPaint..color = _paint.color.withValues(alpha: 0.32));
   }
 
   void _paintDownwardArrows(
@@ -316,14 +316,14 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
             center.dy,
             size: arrowSize,
           ),
-          arrowPaint..color = _paint.color.withOpacity(0.64))
+          arrowPaint..color = _paint.color.withValues(alpha: 0.64))
       ..drawPath(
           getDownwardArrowPath(
             center.dx,
             center.dy + arrowSize - 1,
             size: arrowSize,
           ),
-          arrowPaint..color = _paint.color.withOpacity(0.32));
+          arrowPaint..color = _paint.color.withValues(alpha: 0.32));
   }
 }
 
@@ -369,7 +369,7 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
       ..drawCircle(
         _barrierPosition!,
         (iconSize / 2) - 2,
-        Paint()..color = Colors.black.withOpacity(0.32),
+        Paint()..color = Colors.black.withValues(alpha: 0.32),
       );
 
     TextPainter(textDirection: TextDirection.ltr)

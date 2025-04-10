@@ -142,9 +142,9 @@ class ADXSeries extends Series {
         positiveDISeries,
         negativeDISeries,
         firstUpperChannelFillColor:
-            config.positiveLineStyle.color.withOpacity(0.2),
+            config.positiveLineStyle.color.withValues(alpha: 0.2),
         secondUpperChannelFillColor:
-            config.negativeLineStyle.color.withOpacity(0.2),
+            config.negativeLineStyle.color.withValues(alpha: 0.2),
       );
     }
 
