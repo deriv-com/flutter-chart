@@ -205,25 +205,8 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
       }
     }
 
-    // Line.
-    if (arrowType == BarrierArrowType.none) {
-      final double lineStartX = tickPosition.dx;
-      final double lineEndX = labelArea.left;
-
-      // To erase the line behind profit.
-      if (animatedProfit != null && animatedProfit != 0) {
-        canvas.saveLayer(
-          Rect.fromLTRB(
-              lineStartX, tickPosition.dy - 1, lineEndX, tickPosition.dy + 1),
-          Paint(),
-        );
-      }
-      if (lineStartX < lineEndX && style.hasLine) {
-        _paintLine(canvas, lineStartX, lineEndX, tickPosition.dy, style);
-      }
-    }
-
-    // profit
+    // Calculate profit area if needed
+    Rect? profitArea;
     if (animatedProfit != null && animatedProfit != 0) {
       final TextPainter profitPainter = makeTextPainter(
         '${animatedProfit < 0 ? '' : '+'}${animatedProfit.toStringAsFixed(
@@ -256,18 +239,13 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
               padding,
           tickPosition.dy);
 
-      final Rect profitArea = Rect.fromCenter(
+      profitArea = Rect.fromCenter(
         center: Offset(textStartX + textWidth / 2, tickPosition.dy),
         width: textWidth + padding * 2,
         height: style.labelHeight,
       );
 
-      // Erase the line behind title.
-      if (arrowType == BarrierArrowType.none) {
-        canvas
-          ..drawRect(profitArea, Paint()..blendMode = BlendMode.clear)
-          ..restore();
-      }
+      // Draw profit text
       paintWithTextPainter(
         canvas,
         painter: profitPainter,
@@ -279,6 +257,33 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
         painter: currencyPainter,
         anchor: currencyPosition,
       );
+    }
+
+    // Draw line in segments, splitting around profit text area if present
+    // to avoid overlapping
+    if (arrowType == BarrierArrowType.none && style.hasLine) {
+      final double lineStartX = tickPosition.dx;
+      final double lineEndX = labelArea.left;
+
+      if (lineStartX < lineEndX) {
+        if (profitArea != null) {
+          // Draw line in two segments - before and after the profit text
+          // First segment: from lineStartX to left of profit area
+          if (lineStartX < profitArea.left) {
+            _paintLine(
+                canvas, lineStartX, profitArea.left, tickPosition.dy, style);
+          }
+
+          // Second segment: from right of profit area to lineEndX
+          if (profitArea.right < lineEndX) {
+            _paintLine(
+                canvas, lineEndX, profitArea.right, tickPosition.dy, style);
+          }
+        } else {
+          // Draw a continuous line
+          _paintLine(canvas, lineStartX, lineEndX, tickPosition.dy, style);
+        }
+      }
     }
 
     // Blinking dot.
