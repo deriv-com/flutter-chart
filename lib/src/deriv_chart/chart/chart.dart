@@ -305,7 +305,7 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
         Provider<ChartScaleModel>.value(value: _chartScaleModel),
       ],
       child: Ink(
-        color: _chartTheme.base08Color,
+        color: _chartTheme.backgroundColor,
         child: GestureManager(
           child: XAxisWrapper(
             maxEpoch: chartDataList.getMaxEpoch(),

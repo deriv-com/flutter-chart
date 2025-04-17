@@ -13,8 +13,8 @@ class CandleChartScreen extends BaseChartScreen {
 }
 
 class _CandleChartScreenState extends BaseChartScreenState<CandleChartScreen> {
-  Color _positiveColor = Colors.green;
-  Color _negativeColor = Colors.red;
+  Color _bullishColor = Colors.green;
+  Color _bearishColor = Colors.red;
 
   @override
   String getTitle() => 'Candle Chart';
@@ -33,8 +33,8 @@ class _CandleChartScreenState extends BaseChartScreenState<CandleChartScreen> {
       mainSeries: CandleSeries(
         candles,
         style: CandleStyle(
-          positiveColor: _positiveColor,
-          negativeColor: _negativeColor,
+          candleBullishBodyColor: _bullishColor,
+          candleBearishBodyColor: _bearishColor,
         ),
       ),
       controller: controller,
@@ -55,11 +55,11 @@ class _CandleChartScreenState extends BaseChartScreenState<CandleChartScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             DerivColorPicker(
-              label: 'Positive Color:',
-              selectedColor: _positiveColor,
+              label: 'Bullish Color:',
+              selectedColor: _bullishColor,
               onColorChanged: (color) {
                 setState(() {
-                  _positiveColor = color;
+                  _bullishColor = color;
                 });
               },
               presetColors: const [
@@ -73,11 +73,11 @@ class _CandleChartScreenState extends BaseChartScreenState<CandleChartScreen> {
             ),
             const SizedBox(height: 12),
             DerivColorPicker(
-              label: 'Negative Color:',
-              selectedColor: _negativeColor,
+              label: 'Bearish Color:',
+              selectedColor: _bearishColor,
               onColorChanged: (color) {
                 setState(() {
-                  _negativeColor = color;
+                  _bearishColor = color;
                 });
               },
               presetColors: const [

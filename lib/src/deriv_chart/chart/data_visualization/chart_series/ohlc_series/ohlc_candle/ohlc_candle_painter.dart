@@ -12,9 +12,11 @@ class OhlcCandlePainter extends OhlcPainter {
   /// Initializes
   OhlcCandlePainter(DataSeries<Candle> series) : super(series);
 
-  late Color _positiveColor;
-  late Color _negativeColor;
+  late Color _candleBullishBodyColor;
+  late Color _candleBearishBodyColor;
   late Color _neutralColor;
+  late Color _candleBullishWickColor;
+  late Color _candleBearishWickColor;
 
   @override
   void onPaintCandle(
@@ -24,17 +26,25 @@ class OhlcCandlePainter extends OhlcPainter {
   ) {
     final CandleStyle style = series.style as CandleStyle? ?? theme.candleStyle;
 
-    _positiveColor = style.positiveColor;
-    _negativeColor = style.negativeColor;
+    _candleBullishBodyColor = style.candleBullishBodyColor;
+    _candleBearishBodyColor = style.candleBearishBodyColor;
     _neutralColor = style.neutralColor;
+    _candleBullishWickColor = style.candleBullishWickColor;
+    _candleBearishWickColor = style.candleBearishWickColor;
 
     final Color _candleColor = currentPainting.yClose > prevPainting.yClose
-        ? _negativeColor
+        ? _candleBearishBodyColor
         : currentPainting.yClose < prevPainting.yClose
-            ? _positiveColor
+            ? _candleBullishBodyColor
             : _neutralColor;
 
-    _drawWick(canvas, _candleColor, currentPainting);
+    final Color candleWickColor = currentPainting.yClose > prevPainting.yClose
+        ? _candleBearishWickColor
+        : currentPainting.yClose < prevPainting.yClose
+            ? _candleBullishWickColor
+            : _neutralColor;
+
+    _drawWick(canvas, candleWickColor, currentPainting);
     _drawOpenCloseLines(canvas, _candleColor, currentPainting);
   }
 

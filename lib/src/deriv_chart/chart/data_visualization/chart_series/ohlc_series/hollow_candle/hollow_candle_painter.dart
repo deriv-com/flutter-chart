@@ -12,8 +12,8 @@ class HollowCandlePainter extends OhlcPainter {
   /// Initializes
   HollowCandlePainter(DataSeries<Candle> series) : super(series);
 
-  late Color _positiveColor;
-  late Color _negativeColor;
+  late Color _candleBullishBodyColor;
+  late Color _candleBearishBodyColor;
   late Color _neutralColor;
 
   @override
@@ -24,14 +24,14 @@ class HollowCandlePainter extends OhlcPainter {
   ) {
     final CandleStyle style = series.style as CandleStyle? ?? theme.candleStyle;
 
-    _positiveColor = style.positiveColor;
-    _negativeColor = style.negativeColor;
+    _candleBullishBodyColor = style.candleBullishBodyColor;
+    _candleBearishBodyColor = style.candleBearishBodyColor;
     _neutralColor = style.neutralColor;
 
     final Color _candleColor = currentPainting.yClose > prevPainting.yClose
-        ? _negativeColor
+        ? _candleBearishBodyColor
         : currentPainting.yClose < prevPainting.yClose
-            ? _positiveColor
+            ? _candleBullishBodyColor
             : _neutralColor;
 
     _drawWick(canvas, _candleColor, currentPainting);

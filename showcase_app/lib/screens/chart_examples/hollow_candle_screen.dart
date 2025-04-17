@@ -13,8 +13,8 @@ class HollowCandleScreen extends BaseChartScreen {
 
 class _HollowCandleScreenState
     extends BaseChartScreenState<HollowCandleScreen> {
-  Color _positiveColor = Colors.green;
-  Color _negativeColor = Colors.red;
+  Color _bullishColor = Colors.green;
+  Color _bearishColor = Colors.red;
 
   @override
   String getTitle() => 'Hollow Candle Chart';
@@ -26,8 +26,8 @@ class _HollowCandleScreenState
       mainSeries: HollowCandleSeries(
         candles,
         style: CandleStyle(
-          positiveColor: _positiveColor,
-          negativeColor: _negativeColor,
+          candleBullishBodyColor: _bullishColor,
+          candleBearishBodyColor: _bearishColor,
         ),
       ),
       controller: controller,
@@ -81,7 +81,7 @@ class _HollowCandleScreenState
   }
 
   Widget _buildColorButton(Color color, {required bool isPositive}) {
-    final currentColor = isPositive ? _positiveColor : _negativeColor;
+    final currentColor = isPositive ? _bullishColor : _bearishColor;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -89,9 +89,9 @@ class _HollowCandleScreenState
         onTap: () {
           setState(() {
             if (isPositive) {
-              _positiveColor = color;
+              _bullishColor = color;
             } else {
-              _negativeColor = color;
+              _bearishColor = color;
             }
           });
         },

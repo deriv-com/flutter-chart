@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:deriv_chart/src/deriv_chart/chart/mobile_chart_frame_dividers.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -187,29 +189,37 @@ class IndicatorLabelMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ChartTheme theme = context.read<ChartTheme>();
-    return Container(
-      padding: const EdgeInsets.all(Dimens.margin04),
-      decoration: BoxDecoration(
-        color: theme.hoverColor,
-        borderRadius: BorderRadius.circular(Dimens.margin04),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          // Different styling for mobile version.
-          BottomIndicatorTitle(
-            title,
-            theme.textStyle(
-              color: theme.base01Color,
-              textStyle: theme.textStyle(
-                textStyle: TextStyles.caption,
-                color: theme.base01Color,
-              ),
-            ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(Dimens.margin04),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+            sigmaX: Dimens.crosshairInformationBoxContainerGlassBackgroundBlur,
+            sigmaY: Dimens.crosshairInformationBoxContainerGlassBackgroundBlur),
+        child: Container(
+          padding: const EdgeInsets.all(Dimens.margin04),
+          decoration: BoxDecoration(
+            color: theme.crosshairInformationBoxContainerGlassColor,
+            borderRadius: BorderRadius.circular(Dimens.margin04),
           ),
-          const SizedBox(width: Dimens.margin08),
-          _buildIcons(context),
-        ],
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              // Different styling for mobile version.
+              BottomIndicatorTitle(
+                title,
+                theme.textStyle(
+                  color: theme.base01Color,
+                  textStyle: theme.textStyle(
+                    textStyle: TextStyles.caption,
+                    color: theme.base01Color,
+                  ),
+                ),
+              ),
+              const SizedBox(width: Dimens.margin08),
+              _buildIcons(context),
+            ],
+          ),
+        ),
       ),
     );
   }

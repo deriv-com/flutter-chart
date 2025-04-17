@@ -13,8 +13,8 @@ class CandlePainter extends OhlcPainter {
   CandlePainter(DataSeries<Candle> series) : super(series);
 
   late Paint _linePaint;
-  late Paint _positiveCandlePaint;
-  late Paint _negativeCandlePaint;
+  late Paint _candleBullishColorPaint;
+  late Paint _candleBearishColorPaint;
 
   @override
   void onPaintCandle(
@@ -24,12 +24,17 @@ class CandlePainter extends OhlcPainter {
   ) {
     final CandleStyle style = series.style as CandleStyle? ?? theme.candleStyle;
 
+    // Check if the current candle is bullish or bearish.
+    final bool isBullishCandle = currentPainting.yOpen > currentPainting.yClose;
+
     _linePaint = Paint()
-      ..color = style.neutralColor
+      ..color = isBullishCandle
+          ? style.candleBullishWickColor
+          : style.candleBearishWickColor
       ..strokeWidth = 1.2;
 
-    _positiveCandlePaint = Paint()..color = style.positiveColor;
-    _negativeCandlePaint = Paint()..color = style.negativeColor;
+    _candleBullishColorPaint = Paint()..color = style.candleBullishBodyColor;
+    _candleBearishColorPaint = Paint()..color = style.candleBearishBodyColor;
 
     canvas.drawLine(
       Offset(currentPainting.xCenter, currentPainting.yHigh),
@@ -45,7 +50,7 @@ class CandlePainter extends OhlcPainter {
             currentPainting.yOpen),
         _linePaint,
       );
-    } else if (currentPainting.yOpen > currentPainting.yClose) {
+    } else if (isBullishCandle) {
       canvas.drawRect(
         Rect.fromLTRB(
           currentPainting.xCenter - currentPainting.width / 2,
@@ -53,7 +58,7 @@ class CandlePainter extends OhlcPainter {
           currentPainting.xCenter + currentPainting.width / 2,
           currentPainting.yOpen,
         ),
-        _positiveCandlePaint,
+        _candleBullishColorPaint,
       );
     } else {
       canvas.drawRect(
@@ -63,7 +68,7 @@ class CandlePainter extends OhlcPainter {
           currentPainting.xCenter + currentPainting.width / 2,
           currentPainting.yClose,
         ),
-        _negativeCandlePaint,
+        _candleBearishColorPaint,
       );
     }
   }

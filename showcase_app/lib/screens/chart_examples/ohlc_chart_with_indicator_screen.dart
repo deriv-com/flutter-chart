@@ -14,8 +14,8 @@ class OHLCChartWithIndicatorScreen extends BaseChartScreen {
 
 class _OHLCChartWithIndicatorScreenState
     extends BaseChartScreenState<OHLCChartWithIndicatorScreen> {
-  Color _positiveColor = Colors.green;
-  Color _negativeColor = Colors.red;
+  Color _bullishColor = Colors.green;
+  Color _bearishColor = Colors.red;
   bool _showBollingerBands = true;
   int _bollingerPeriod = 20;
   double _bollingerDeviation = 2;
@@ -65,8 +65,8 @@ class _OHLCChartWithIndicatorScreenState
       mainSeries: OhlcCandleSeries(
         candles,
         style: CandleStyle(
-          positiveColor: _positiveColor,
-          negativeColor: _negativeColor,
+          candleBullishBodyColor: _bullishColor,
+          candleBearishBodyColor: _bearishColor,
         ),
       ),
       controller: controller,
@@ -199,7 +199,7 @@ class _OHLCChartWithIndicatorScreenState
   }
 
   Widget _buildColorButton(Color color, {required bool isPositive}) {
-    final currentColor = isPositive ? _positiveColor : _negativeColor;
+    final currentColor = isPositive ? _bullishColor : _bearishColor;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -207,9 +207,9 @@ class _OHLCChartWithIndicatorScreenState
         onTap: () {
           setState(() {
             if (isPositive) {
-              _positiveColor = color;
+              _bullishColor = color;
             } else {
-              _negativeColor = color;
+              _bearishColor = color;
             }
           });
         },

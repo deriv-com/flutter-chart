@@ -14,8 +14,8 @@ class CandleChartWithIndicatorScreen extends BaseChartScreen {
 
 class _CandleChartWithIndicatorScreenState
     extends BaseChartScreenState<CandleChartWithIndicatorScreen> {
-  Color _positiveColor = Colors.green;
-  Color _negativeColor = Colors.red;
+  Color _bullishColor = Colors.green;
+  Color _bearishColor = Colors.red;
   bool _showRSI = true;
   int _rsiPeriod = 14;
 
@@ -67,8 +67,8 @@ class _CandleChartWithIndicatorScreenState
       mainSeries: CandleSeries(
         candles,
         style: CandleStyle(
-          positiveColor: _positiveColor,
-          negativeColor: _negativeColor,
+          candleBullishBodyColor: _bullishColor,
+          candleBearishBodyColor: _bearishColor,
         ),
       ),
       controller: controller,
@@ -127,13 +127,13 @@ class _CandleChartWithIndicatorScreenState
           const SizedBox(height: 16),
           // Candle chart controls
           _buildColorRow(
-            label: 'Positive Color:',
+            label: 'Bullish Color:',
             colors: [Colors.green, Colors.blue, Colors.purple, Colors.teal],
             isPositive: true,
           ),
           const SizedBox(height: 12),
           _buildColorRow(
-            label: 'Negative Color:',
+            label: 'Bearish Color:',
             colors: [Colors.red, Colors.orange, Colors.pink, Colors.brown],
             isPositive: false,
           ),
@@ -161,7 +161,7 @@ class _CandleChartWithIndicatorScreenState
   }
 
   Widget _buildColorButton(Color color, {required bool isPositive}) {
-    final currentColor = isPositive ? _positiveColor : _negativeColor;
+    final currentColor = isPositive ? _bullishColor : _bearishColor;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -169,9 +169,9 @@ class _CandleChartWithIndicatorScreenState
         onTap: () {
           setState(() {
             if (isPositive) {
-              _positiveColor = color;
+              _bullishColor = color;
             } else {
-              _negativeColor = color;
+              _bearishColor = color;
             }
           });
         },

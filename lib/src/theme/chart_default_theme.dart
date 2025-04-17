@@ -16,6 +16,12 @@ abstract class ChartDefaultTheme implements ChartTheme {
       <TextStyle, Map<Color, TextStyle>>{};
 
   @override
+  TextStyle get currentSpotTextStyle => TextStyles.currentSpotTextStyle;
+
+  @override
+  TextStyle get gridTextStyle => TextStyles.gridTextStyle;
+
+  @override
   double get margin04Chart => Dimens.margin04;
 
   @override
@@ -73,29 +79,49 @@ abstract class ChartDefaultTheme implements ChartTheme {
   Color get brandOrangeColor => BrandColors.orange;
 
   @override
-  GridStyle get gridStyle => GridStyle(
-        gridLineColor: base07Color,
-        xLabelStyle: textStyle(
-          textStyle: caption2,
-          color: base03Color,
-        ),
-        yLabelStyle: textStyle(
-          textStyle: caption2,
-          color: base03Color,
-        ),
-      );
+  Color get candleBullishBodyDefault =>
+      CandleBullishThemeColors.candleBullishBodyDefault;
 
   @override
-  HorizontalBarrierStyle get currentTickStyle => HorizontalBarrierStyle(
-        color: brandCoralColor,
-        textStyle: textStyle(textStyle: caption2, color: base01Color),
-      );
+  Color get candleBullishBodyActive =>
+      CandleBullishThemeColors.candleBullishBodyActive;
+
+  @override
+  Color get candleBullishWickDefault =>
+      CandleBullishThemeColors.candleBullishWickDefault;
+
+  @override
+  Color get candleBullishWickActive =>
+      CandleBullishThemeColors.candleBullishWickActive;
+
+  @override
+  Color get candleBearishBodyDefault =>
+      CandleBearishThemeColors.candleBearishBodyDefault;
+
+  @override
+  Color get candleBearishBodyActive =>
+      CandleBearishThemeColors.candleBearishBodyActive;
+
+  @override
+  Color get candleBearishWickDefault =>
+      CandleBearishThemeColors.candleBearishWickDefault;
+
+  @override
+  Color get candleBearishWickActive =>
+      CandleBearishThemeColors.candleBearishWickActive;
+
+  @override
+  double get crosshairInformationBoxContainerGlassBackgroundBlur =>
+      Dimens.crosshairInformationBoxContainerGlassBackgroundBlur;
+
+  @override
+  double get areaLineThickness => Dimens.areaLineDefaultThickness;
 
   @override
   CandleStyle get candleStyle => CandleStyle(
-        positiveColor: accentGreenColor,
-        negativeColor: accentRedColor,
         neutralColor: base04Color,
+        candleBullishWickColor: candleBullishWickDefault,
+        candleBearishWickColor: candleBearishWickDefault,
       );
 
   @override

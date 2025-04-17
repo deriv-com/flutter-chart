@@ -10,6 +10,83 @@ import 'package:flutter/material.dart';
 /// Any app which wants to define the chart's theme should pass an
 /// implementation of this interface.
 abstract class ChartTheme {
+  Color get backgroundColor;
+
+  GridStyle get gridStyle;
+
+  LineStyle get areaStyle;
+
+  TextStyle get currentSpotTextStyle;
+
+  Color get gridLineColor;
+
+  Color get gridTextColor;
+
+  TextStyle get gridTextStyle;
+
+  Color get areaLineColor;
+
+  double get areaLineThickness;
+
+  Color get areaGradientStart;
+
+  Color get areaGradientEnd;
+
+  Color get candleBullishBodyDefault;
+
+  Color get candleBullishBodyActive;
+
+  Color get candleBullishWickDefault;
+
+  Color get candleBullishWickActive;
+
+  Color get candleBearishBodyDefault;
+
+  Color get candleBearishBodyActive;
+
+  Color get candleBearishWickDefault;
+
+  Color get candleBearishWickActive;
+
+  Color get currentSpotContainerColor;
+
+  Color get currentSpotDotColor;
+
+  Color get currentSpotDotEffect;
+
+  Color get currentSpotLineColor;
+
+  Color get currentSpotTextColor;
+
+  Color get crosshairLineDesktopColor;
+
+  Color get crosshairLineResponsiveUpperLineGradientStart;
+
+  Color get crosshairLineResponsiveUpperLineGradientEnd;
+
+  Color get crosshairLineResponsiveLowerLineGradientStart;
+
+  Color get crosshairLineResponsiveLowerLineGradientEnd;
+
+  Color get crosshairInformationBoxTextDefault;
+
+  Color get crosshairInformationBoxTextSubtle;
+
+  Color get crosshairInformationBoxTextStatic;
+
+  Color get crosshairInformationBoxTextProfit;
+
+  Color get crosshairInformationBoxTextLoss;
+
+  Color get crosshairInformationBoxContainerNormalColor;
+
+  Color get crosshairInformationBoxContainerGlassColor;
+
+  double get crosshairInformationBoxContainerGlassBackgroundBlur;
+
+  /// The style of the current tick indicator.
+  HorizontalBarrierStyle get currentSpotStyle;
+
   String get fontFamily;
 
   Color get brandCoralColor;
@@ -64,8 +141,6 @@ abstract class ChartTheme {
 
   TextStyle get caption2;
 
-  GridStyle get gridStyle;
-
   TextStyle get subheading;
 
   TextStyle get body2;
@@ -75,9 +150,6 @@ abstract class ChartTheme {
   TextStyle get title;
 
   TextStyle get overLine;
-
-  /// The style of the current tick indicator.
-  HorizontalBarrierStyle get currentTickStyle;
 
   /// The painting styles of candlestick chart.
   CandleStyle get candleStyle;
