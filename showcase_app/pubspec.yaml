@@ -1,0 +1,29 @@
+name: showcase_app
+description: A showcase app for the Deriv Chart package.
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.3 <4.0.0"
+  flutter: "3.24.1"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  deriv_chart:
+    path: ../
+  provider: ^6.0.5
+  flutter_localizations:
+    sdk: flutter
+
+dev_dependencies:
+  deriv_lint:
+    git:
+      url: https://github.com/deriv-com/flutter-deriv-packages.git
+      path: packages/deriv_lint
+      ref: dev
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

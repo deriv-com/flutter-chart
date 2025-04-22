@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,10 @@ abstract class SeriesPainter<S extends Series> {
   @protected
   late ChartTheme theme;
 
+  /// Chart's scale model.
+  @protected
+  late ChartScaleModel chartScaleModel;
+
   /// Sets some variables and paints this [SeriesPainter]'s data.
   void paint({
     required Canvas canvas,
@@ -31,9 +36,11 @@ abstract class SeriesPainter<S extends Series> {
     required AnimationInfo animationInfo,
     required ChartConfig chartConfig,
     required ChartTheme theme,
+    required ChartScaleModel chartScaleModel,
   }) {
     this.chartConfig = chartConfig;
     this.theme = theme;
+    this.chartScaleModel = chartScaleModel;
 
     onPaint(
       canvas: canvas,

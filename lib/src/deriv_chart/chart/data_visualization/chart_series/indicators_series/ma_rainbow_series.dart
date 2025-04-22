@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
@@ -172,6 +173,7 @@ class RainbowSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
+    ChartScaleModel chartScaleModel,
   ) {
     for (final SingleIndicatorSeries series in rainbowSeries) {
       series.paint(
@@ -182,6 +184,7 @@ class RainbowSeries extends Series {
         animationInfo,
         chartConfig,
         theme,
+        chartScaleModel,
       );
     }
   }

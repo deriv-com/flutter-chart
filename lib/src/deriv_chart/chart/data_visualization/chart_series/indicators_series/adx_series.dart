@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/line_series/oscillator_line_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/indicator.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
@@ -198,23 +199,24 @@ class ADXSeries extends Series {
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme theme,
+    ChartScaleModel chartScaleModel,
   ) {
     if (config.showSeries) {
-      positiveDISeries.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-      negativeDISeries.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
-      adxSeries.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+      positiveDISeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+          chartConfig, theme, chartScaleModel);
+      negativeDISeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+          chartConfig, theme, chartScaleModel);
+      adxSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+          chartConfig, theme, chartScaleModel);
     }
     if (config.showHistogram) {
-      adxHistogramSeries.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+      adxHistogramSeries.paint(canvas, size, epochToX, quoteToY, animationInfo,
+          chartConfig, theme, chartScaleModel);
     }
 
     if (config.showShading) {
-      super.paint(
-          canvas, size, epochToX, quoteToY, animationInfo, chartConfig, theme);
+      super.paint(canvas, size, epochToX, quoteToY, animationInfo, chartConfig,
+          theme, chartScaleModel);
     }
   }
 

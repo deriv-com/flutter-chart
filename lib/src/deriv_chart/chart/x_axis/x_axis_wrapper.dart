@@ -6,7 +6,19 @@ import 'package:flutter/material.dart';
 
 const Duration _defaultDuration = Duration(milliseconds: 300);
 
-/// X-axis wrapper widget.
+/// X-axis wrapper widget that provides viewport management for chart widgets.
+///
+/// This widget wraps Chart widgets (MainChart and bottom indicator charts) and provides
+/// the X-axis viewport information to its children. It manages two key variables:
+/// [rightBoundEpoch] and [leftBoundEpoch], which define the time range of the current
+/// viewport by pointing to the chart's right and left edges respectively.
+///
+/// Through [XAxisModel] (which extends ChangeNotifier), it provides functionality for its
+/// children to convert their time-based data points (epoch, value) to x-positions on the
+/// canvas. When there are changes in the viewport (right and left bound epochs), the
+/// XAxisModel notifies its children, allowing them to update their data and repaint
+/// accordingly. Each child widget manages its own Y-axis range and conversion from
+/// y-axis values to y-positions.
 ///
 /// Renders x-axis web widget or mobile widget based on the [kIsWeb] flag.
 class XAxisWrapper extends StatelessWidget {

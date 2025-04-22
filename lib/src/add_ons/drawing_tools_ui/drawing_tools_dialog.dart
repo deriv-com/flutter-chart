@@ -99,6 +99,7 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                     ? () {
                         widget.drawingTools
                             .onDrawingToolSelection(_selectedDrawingTool!);
+                        repo.update();
                         Navigator.of(context).pop();
                       }
                     : null,

@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/mobile_chart_frame_dividers.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/theme/dimens.dart';
@@ -263,6 +264,13 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
       granularity: widget.granularity,
       chartAxisConfig: widget.chartAxisConfig,
     );
+    // Calculate default msPerPx based on granularity and default interval width (which defaults to 20 pixels), msPerPx could be null in situations like when data fit mode is enabled.
+    final double defaultMsPerPx =
+        widget.granularity / widget.chartAxisConfig.defaultIntervalWidth;
+
+    final ChartScaleModel _chartScaleModel = ChartScaleModel(
+        granularity: widget.granularity,
+        msPerPx: widget.msPerPx ?? defaultMsPerPx);
 
     final List<Series>? overlaySeries =
         _getIndicatorSeries(widget.overlayConfigs);
@@ -294,6 +302,7 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
       providers: <SingleChildWidget>[
         Provider<ChartTheme>.value(value: _chartTheme),
         Provider<ChartConfig>.value(value: chartConfig),
+        Provider<ChartScaleModel>.value(value: _chartScaleModel),
       ],
       child: Ink(
         color: _chartTheme.base08Color,
