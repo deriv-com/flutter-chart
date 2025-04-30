@@ -8,21 +8,50 @@ The Deriv Chart library uses a coordinate system that maps:
 - Time (epochs) to X-coordinates on the screen
 - Price (quotes) to Y-coordinates on the screen
 
+```
+Y-axis (Price)
+    ^
+    |
+    |                   • (epoch2, quote2)
+    |
+    |       • (epoch1, quote1)
+    |
+    |
+    +---------------------------------> X-axis (Time)
+```
+
 This mapping is essential for:
 - Rendering data points at the correct positions
 - Handling user interactions (taps, drags)
 - Implementing scrolling and zooming
 - Supporting crosshair functionality
+- Enabling drawing tools and annotations
 
 ## X-Axis Coordinate System
 
-The X-axis represents time and is managed by the `XAxisWrapper` component.
+The X-axis represents time and is managed by the `XAxisWrapper` component, which serves as the foundation for horizontal positioning across the entire chart.
 
 ### Key Concepts
 
 1. **rightBoundEpoch**: The timestamp at the right edge of the chart
 2. **msPerPx**: Milliseconds per pixel (zoom level)
 3. **leftBoundEpoch**: The timestamp at the left edge of the chart
+4. **visibleTimeRange**: The time range currently visible on the chart
+
+```
+                leftBoundEpoch                      rightBoundEpoch
+                      |                                   |
+                      v                                   v
+    +------------------+-----------------------------------+
+    |                  |                                   |
+    |  Past (not       |        Visible Area              |  Future (not 
+    |  visible)        |                                  |  visible)
+    |                  |                                  |
+    +------------------+----------------------------------+
+                       |<------- screenWidth (px) ------->|
+                       |<------ visibleTimeRange -------->|
+                       |      (screenWidth * msPerPx)     |
+```
 
 ### Calculations
 
@@ -30,6 +59,7 @@ The relationship between these values is:
 
 ```
 leftBoundEpoch = rightBoundEpoch - screenWidth * msPerPx
+visibleTimeRange = screenWidth * msPerPx
 ```
 
 Where:
@@ -67,6 +97,12 @@ void scrollBy(double pixels) {
 }
 ```
 
+#### Edge Cases and Constraints
+
+- **Live Data**: When displaying live data, the `rightBoundEpoch` may be constrained to the current time or the latest data point
+- **Historical Limits**: The chart may impose limits on how far back in time users can scroll
+- **Smooth Scrolling**: The chart implements momentum-based scrolling for a natural feel
+
 ### Zooming
 
 Zooming is implemented by changing the `msPerPx`:
@@ -74,23 +110,35 @@ Zooming is implemented by changing the `msPerPx`:
 - Zooming out: Increase `msPerPx` (more milliseconds per pixel)
 
 ```dart
-void scale(double newMsPerPx) {
-  // Calculate the center point of the visible area
-  final centerEpoch = (rightBoundEpoch + leftBoundEpoch) ~/ 2;
+void scale(double newMsPerPx, {double? focalPointX}) {
+  // If no focal point is provided, use the center of the chart
+  final double focusX = focalPointX ?? width / 2;
+  
+  // Calculate the epoch at the focal point
+  final focalEpoch = epochFromX(focusX);
   
   // Update msPerPx
   msPerPx = newMsPerPx;
   
-  // Recalculate rightBoundEpoch to keep the center point fixed
-  rightBoundEpoch = centerEpoch + (width * msPerPx / 2).toInt();
+  // Recalculate rightBoundEpoch to keep the focal point at the same screen position
+  rightBoundEpoch = focalEpoch.millisecondsSinceEpoch + ((width - focusX) * msPerPx).toInt();
   
   notifyListeners();
 }
 ```
 
+#### Zoom Constraints
+
+The chart implements min and max zoom levels to ensure usability:
+
+```dart
+// Constrain msPerPx to reasonable limits
+msPerPx = math.max(minMsPerPx, math.min(maxMsPerPx, msPerPx));
+```
+
 ## Y-Axis Coordinate System
 
-The Y-axis represents price and is managed by each chart component (MainChart and BottomCharts) independently.
+The Y-axis represents price and is managed by each chart component (MainChart and BottomCharts) independently, allowing different scales for different types of data.
 
 ### Key Concepts
 
@@ -98,6 +146,26 @@ The Y-axis represents price and is managed by each chart component (MainChart an
 2. **bottomBoundQuote**: The minimum price in the visible area
 3. **topPadding** and **bottomPadding**: Padding to add above and below the data
 4. **quotePerPx**: Price units per pixel
+5. **visibleQuoteRange**: The price range currently visible on the chart
+
+```
+    ^
+    |  topPadding
+    +------------------+
+    |                  |
+    |  topBoundQuote   |
+    |                  |
+    |                  |
+    |  Visible         |
+    |  Quote Range     |
+    |                  |
+    |                  |
+    |  bottomBoundQuote|
+    |                  |
+    +------------------+
+    |  bottomPadding   |
+    v
+```
 
 ### Calculations
 
@@ -105,6 +173,7 @@ The relationship between these values is:
 
 ```
 quotePerPx = (topBoundQuote - bottomBoundQuote) / (height - topPadding - bottomPadding)
+visibleQuoteRange = topBoundQuote - bottomBoundQuote
 ```
 
 Where:
@@ -161,9 +230,30 @@ void updateYAxisBounds() {
 }
 ```
 
+#### Auto-Scaling and Fixed Scaling
+
+The chart supports both auto-scaling and fixed scaling modes:
+
+- **Auto-scaling**: The Y-axis automatically adjusts to fit the visible data
+- **Fixed scaling**: The Y-axis maintains a fixed range regardless of the visible data
+
+```dart
+void setFixedYAxisBounds(double min, double max) {
+  isFixedYAxis = true;
+  bottomBoundQuote = min;
+  topBoundQuote = max;
+  updateQuotePerPx();
+}
+
+void resetToAutoYAxisBounds() {
+  isFixedYAxis = false;
+  updateYAxisBounds();
+}
+```
+
 ## Grid System
 
-The grid system uses the coordinate system to place grid lines and labels at appropriate intervals.
+The grid system uses the coordinate system to place grid lines and labels at appropriate intervals, enhancing readability and providing visual reference points.
 
 ### X-Axis Grid
 
@@ -193,6 +283,26 @@ List<DateTime> gridTimestamps() {
 }
 ```
 
+#### Dynamic Time Intervals
+
+The chart dynamically selects appropriate time intervals based on the zoom level:
+
+```dart
+TimeInterval timeGridInterval() {
+  // Calculate the minimum distance between grid lines in pixels
+  const minDistanceBetweenLines = 60.0;
+  
+  // Calculate the time range that corresponds to the minimum distance
+  final minTimeRange = minDistanceBetweenLines * msPerPx;
+  
+  // Select the appropriate interval
+  if (minTimeRange < 60000) return TimeInterval.minute;
+  if (minTimeRange < 3600000) return TimeInterval.hour;
+  if (minTimeRange < 86400000) return TimeInterval.day;
+  return TimeInterval.month;
+}
+```
+
 ### Y-Axis Grid
 
 The Y-axis grid is determined by:
@@ -215,6 +325,73 @@ List<double> gridQuotes() {
   }
   
   return result;
+}
+```
+
+#### Dynamic Price Intervals
+
+The chart dynamically selects appropriate price intervals based on the visible range and chart height:
+
+```dart
+double quoteGridInterval() {
+  // Calculate the minimum distance between grid lines in pixels
+  const minDistanceBetweenLines = 40.0;
+  
+  // Calculate the quote range that corresponds to the minimum distance
+  final minQuoteRange = minDistanceBetweenLines * quotePerPx;
+  
+  // Select the appropriate interval from predefined options
+  final intervals = [0.00001, 0.0001, 0.001, 0.01, 0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 25, 50, 100, 200, 500, 1000];
+  
+  for (final interval in intervals) {
+    if (interval >= minQuoteRange) {
+      return interval;
+    }
+  }
+  
+  return intervals.last;
+}
+```
+
+## Performance Considerations
+
+### Clipping and Culling
+
+For optimal performance, the chart only renders data points that are within the visible area:
+
+```dart
+bool isVisible(DateTime epoch, double quote) {
+  final epochMs = epoch.millisecondsSinceEpoch;
+  return epochMs >= leftBoundEpoch &&
+         epochMs <= rightBoundEpoch &&
+         quote >= bottomBoundQuote &&
+         quote <= topBoundQuote;
+}
+```
+
+### Efficient Rendering
+
+The chart uses efficient rendering techniques to handle large datasets:
+
+1. **Data Decimation**: When zoomed out, the chart may reduce the number of points rendered
+2. **Incremental Rendering**: For very large datasets, the chart may render incrementally
+3. **Canvas Optimization**: The chart uses optimized Canvas drawing operations
+
+```dart
+void optimizedRenderDataPoints(List<DataPoint> points) {
+  // Skip points that are too close together on screen
+  double lastX = -double.infinity;
+  const minXDistance = 1.0; // Minimum distance in pixels
+  
+  for (final point in points) {
+    final x = xFromEpoch(point.epoch);
+    
+    if (x - lastX >= minXDistance) {
+      final y = yFromQuote(point.quote);
+      canvas.drawCircle(Offset(x, y), 2, paint);
+      lastX = x;
+    }
+  }
 }
 ```
 
@@ -305,9 +482,60 @@ void onTap(TapDownDetails details) {
 }
 ```
 
+### Drawing Tools and Annotations
+
+Drawing tools and annotations use the coordinate system to position themselves on the chart:
+
+```dart
+void drawHorizontalLine(Canvas canvas, double quote) {
+  final y = yFromQuote(quote);
+  
+  canvas.drawLine(
+    Offset(0, y),
+    Offset(width, y),
+    Paint()
+      ..color = Colors.red
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke,
+  );
+}
+
+void drawVerticalLine(Canvas canvas, DateTime epoch) {
+  final x = xFromEpoch(epoch);
+  
+  canvas.drawLine(
+    Offset(x, 0),
+    Offset(x, height),
+    Paint()
+      ..color = Colors.blue
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke,
+  );
+}
+```
+
 ## Shared X-Axis, Independent Y-Axes
 
 The Deriv Chart library uses a shared X-axis for all charts (MainChart and BottomCharts) but independent Y-axes:
+
+```
++------------------------------------------+
+|                                          |
+|  MainChart (Y-axis for price data)       |
+|                                          |
++------------------------------------------+
+|                                          |
+|  BottomChart 1 (Y-axis for RSI)          |
+|                                          |
++------------------------------------------+
+|                                          |
+|  BottomChart 2 (Y-axis for MACD)         |
+|                                          |
++------------------------------------------+
+                   ^
+                   |
+             Shared X-axis
+```
 
 1. The `XAxisWrapper` provides a single `XAxisModel` that is shared by all charts
 2. Each chart (MainChart and BottomCharts) has its own Y-axis calculations
@@ -315,6 +543,67 @@ The Deriv Chart library uses a shared X-axis for all charts (MainChart and Botto
 This allows:
 - Synchronized scrolling and zooming across all charts
 - Independent Y-axis scaling for each chart based on its data range
+- Consistent time alignment across all indicators
+
+### Implementation Details
+
+```dart
+class Chart extends StatelessWidget {
+  final XAxisModel xAxisModel;
+  final MainChart mainChart;
+  final List<BottomChart> bottomCharts;
+  
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Main chart with its own Y-axis
+        Expanded(
+          flex: 3,
+          child: mainChart.withXAxisModel(xAxisModel),
+        ),
+        
+        // Bottom charts, each with its own Y-axis
+        ...bottomCharts.map((chart) => 
+          Expanded(
+            flex: 1,
+            child: chart.withXAxisModel(xAxisModel),
+          ),
+        ),
+      ],
+    );
+  }
+}
+```
+
+## Real-World Applications
+
+### Time-Series Analysis
+
+The coordinate system enables sophisticated time-series analysis:
+
+- **Trend Lines**: Drawing lines connecting significant points to identify trends
+- **Support/Resistance Levels**: Horizontal lines at key price levels
+- **Moving Averages**: Smoothed lines showing average prices over time
+- **Fibonacci Retracements**: Horizontal lines at key Fibonacci levels
+
+### Interactive Features
+
+The coordinate system powers interactive features:
+
+- **Crosshair**: Shows precise price and time at the cursor position
+- **Tooltips**: Display data details at specific points
+- **Selection**: Allows users to select specific time ranges for analysis
+- **Zoom to Selection**: Enables users to zoom into a specific area of interest
+
+## Integration with Other Components
+
+The coordinate system integrates with other components of the Deriv Chart library:
+
+- **Interactive Layer**: Uses the coordinate system to position drawing tools
+- **Data Series**: Converts data points to screen coordinates for rendering
+- **Indicators**: Calculate values based on data and render using the coordinate system
+- **Annotations**: Position themselves on the chart using the coordinate system
 
 ## Next Steps
 
@@ -322,4 +611,5 @@ Now that you understand the coordinate system used in the Deriv Chart library, y
 
 - [Rendering Pipeline](rendering_pipeline.md) - Learn how data is rendered on the canvas
 - [Architecture](architecture.md) - Understand the overall architecture of the library
-- [API Reference](../api_reference/chart_widget.md) - Explore the complete API
+- [Data Models](data_models.md) - Explore the data models used in the library
+- [Interactive Layer](../features/drawing_tools/overview.md) - Learn about the interactive drawing tools

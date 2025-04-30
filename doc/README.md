@@ -1,6 +1,61 @@
 # Deriv Chart Documentation
 
+<div align="center">
+  <img src="images/deriv-chart.png" alt="Deriv Chart" width="400"/>
+  <p><em>A powerful, customizable Flutter charting library for financial applications</em></p>
+</div>
+
 Welcome to the Deriv Chart documentation! This comprehensive guide will help you understand and use the Deriv Chart library effectively, whether you're a user of the library or a contributor to its development.
+
+## Key Features
+
+- **Multiple Chart Types**: Line, Candlestick, OHLC, and Hollow Candlestick charts
+- **Technical Indicators**: Built-in support for popular indicators (Moving Averages, RSI, MACD, etc.)
+- **Interactive Drawing Tools**: Trend lines, Fibonacci tools, and more for technical analysis
+- **Real-time Updates**: Efficient handling of streaming data
+- **Customizable Themes**: Fully customizable appearance to match your app's design
+- **Responsive Design**: Works across different screen sizes and orientations
+- **High Performance**: Optimized rendering for smooth scrolling and zooming
+
+## Quick Start
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:deriv_chart/deriv_chart.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Deriv Chart Example')),
+        body: Center(
+          child: SizedBox(
+            height: 300,
+            child: Chart(
+              mainSeries: LineSeries([
+                Tick(epoch: DateTime.now().subtract(const Duration(minutes: 5)), quote: 100),
+                Tick(epoch: DateTime.now().subtract(const Duration(minutes: 4)), quote: 120),
+                Tick(epoch: DateTime.now().subtract(const Duration(minutes: 3)), quote: 110),
+                Tick(epoch: DateTime.now().subtract(const Duration(minutes: 2)), quote: 130),
+                Tick(epoch: DateTime.now().subtract(const Duration(minutes: 1)), quote: 125),
+                Tick(epoch: DateTime.now(), quote: 140),
+              ]),
+              pipSize: 2,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
 
 ## Table of Contents
 
@@ -9,7 +64,9 @@ Welcome to the Deriv Chart documentation! This comprehensive guide will help you
 - [Features](#features)
 - [Advanced Usage](#advanced-usage)
 - [API Reference](#api-reference)
+- [Examples](#examples)
 - [Contributing](#contributing)
+- [Support](#support)
 
 ## Getting Started
 
@@ -42,15 +99,15 @@ Explore the features available in the Deriv Chart library:
 ### Technical Analysis
 
 - [Indicators](features/indicators/overview.md) - Add technical indicators
-  - [Moving Averages](features/indicators/moving_averages.md)
-  - [Oscillators](features/indicators/oscillators.md)
-  - [Volatility Indicators](features/indicators/volatility.md)
-  - [Trend Indicators](features/indicators/trend_indicators.md)
+  - Moving Averages
+  - Oscillators
+  - Volatility Indicators
+  - Trend Indicators
 
 - [Drawing Tools](features/drawing_tools/overview.md) - Use interactive drawing tools
-  - [Lines and Channels](features/drawing_tools/lines_and_channels.md)
-  - [Fibonacci Tools](features/drawing_tools/fibonacci_tools.md)
-  - [Geometric Shapes](features/drawing_tools/geometric_shapes.md)
+  - Lines and Channels
+  - Fibonacci Tools
+  - Geometric Shapes
 
 ### Interactive Layer
 
@@ -76,6 +133,41 @@ Detailed API documentation for the Deriv Chart library:
 - [Drawing Tool Classes](api_reference/drawing_tool_classes.md) - Drawing tool classes
 - [Theme Classes](api_reference/theme_classes.md) - Theme customization classes
 
+## Examples
+
+The library includes several examples to help you get started:
+
+### Basic Examples
+
+- [Line Chart](../example/lib/examples/basic/line_chart_example.dart)
+- [Candlestick Chart](../example/lib/examples/basic/candle_chart_example.dart)
+- [OHLC Chart](../example/lib/examples/basic/ohlc_chart_example.dart)
+- [Hollow Candlestick Chart](../example/lib/examples/basic/hollow_candle_example.dart)
+
+### Feature Examples
+
+- [Chart with Indicators](../example/lib/examples/features/indicators_example.dart)
+- [Chart with Drawing Tools](../example/lib/examples/features/drawing_tools_example.dart)
+- [Chart with Annotations](../example/lib/examples/features/annotations_example.dart)
+- [Chart with Markers](../example/lib/examples/features/markers_example.dart)
+
+### Advanced Examples
+
+- [Real-time Chart](../example/lib/examples/advanced/real_time_chart_example.dart)
+- [Custom Theme](../example/lib/examples/advanced/custom_theme_example.dart)
+- [Custom Indicator](../example/lib/examples/advanced/custom_indicator_example.dart)
+- [Custom Drawing Tool](../example/lib/examples/advanced/custom_drawing_tool_example.dart)
+
+You can find these examples in the `example` directory of the repository.
+
+## Showcase App
+
+The `showcase_app` directory contains a complete Flutter application that demonstrates all the features of the Deriv Chart library. You can use this app as a reference for your own implementation.
+
+<div align="center">
+  <img src="images/intro.gif" alt="Showcase App" width="300"/>
+</div>
+
 ## Contributing
 
 Learn how to contribute to the Deriv Chart library:
@@ -85,44 +177,19 @@ Learn how to contribute to the Deriv Chart library:
 - [Code Style](code_style.md) - Follow the code style guidelines
 - [Testing](testing.md) - Write and run tests
 
-## Examples
+## Compatibility
 
-The library includes several examples to help you get started:
-
-### Basic Examples
-
-- Line Chart
-- Candlestick Chart
-- OHLC Chart
-- Hollow Candlestick Chart
-
-### Feature Examples
-
-- Chart with Indicators
-- Chart with Drawing Tools
-- Chart with Annotations
-- Chart with Markers
-
-### Advanced Examples
-
-- Real-time Chart
-- Custom Theme
-- Custom Indicator
-- Custom Drawing Tool
-
-You can find these examples in the `example` directory of the repository.
-
-## Showcase App
-
-The `showcase_app` directory contains a complete Flutter application that demonstrates all the features of the Deriv Chart library. You can use this app as a reference for your own implementation.
+- **Flutter**: 3.10.1 or higher
+- **Dart**: 3.0.0 or higher
+- **Platforms**: iOS, Android, Web, macOS, Windows, Linux
 
 ## Support
 
 If you need help with the Deriv Chart library, you can:
 
 - Check the [FAQ](faq.md) for common questions
-- Open an issue on GitHub
-- Contact the maintainers
+- Open an issue on [GitHub](https://github.com/your-organization/deriv-chart/issues)
+- Contact the maintainers at support@example.com
 
 ## License
 
