@@ -70,19 +70,10 @@ Where:
 
 The `XAxisModel` provides functions to convert between epochs and X-coordinates:
 
-```dart
-// Convert epoch to X-coordinate
-double xFromEpoch(DateTime epoch) {
-  return width - (rightBoundEpoch - epoch.millisecondsSinceEpoch) / msPerPx;
-}
+- **xFromEpoch**: Converts a timestamp (epoch) to an X-coordinate on the screen
+- **epochFromX**: Converts an X-coordinate on the screen to a timestamp (epoch)
 
-// Convert X-coordinate to epoch
-DateTime epochFromX(double x) {
-  return DateTime.fromMillisecondsSinceEpoch(
-    rightBoundEpoch - ((width - x) * msPerPx).toInt(),
-  );
-}
-```
+These conversion functions are essential for mapping data points to screen positions and interpreting user interactions.
 
 ### Scrolling
 
@@ -90,12 +81,7 @@ Scrolling is implemented by changing the `rightBoundEpoch`:
 - Scrolling right (into the past): Decrease `rightBoundEpoch`
 - Scrolling left (into the future): Increase `rightBoundEpoch`
 
-```dart
-void scrollBy(double pixels) {
-  rightBoundEpoch -= (pixels * msPerPx).toInt();
-  notifyListeners();
-}
-```
+The `scrollBy` method adjusts the `rightBoundEpoch` based on the number of pixels scrolled, converting pixels to milliseconds using the current `msPerPx` value.
 
 #### Edge Cases and Constraints
 
@@ -109,32 +95,11 @@ Zooming is implemented by changing the `msPerPx`:
 - Zooming in: Decrease `msPerPx` (fewer milliseconds per pixel)
 - Zooming out: Increase `msPerPx` (more milliseconds per pixel)
 
-```dart
-void scale(double newMsPerPx, {double? focalPointX}) {
-  // If no focal point is provided, use the center of the chart
-  final double focusX = focalPointX ?? width / 2;
-  
-  // Calculate the epoch at the focal point
-  final focalEpoch = epochFromX(focusX);
-  
-  // Update msPerPx
-  msPerPx = newMsPerPx;
-  
-  // Recalculate rightBoundEpoch to keep the focal point at the same screen position
-  rightBoundEpoch = focalEpoch.millisecondsSinceEpoch + ((width - focusX) * msPerPx).toInt();
-  
-  notifyListeners();
-}
-```
+The `scale` method updates the `msPerPx` value while maintaining the position of a focal point (typically the center of the chart or the point under the user's finger). This ensures that the chart zooms in or out around the expected point.
 
 #### Zoom Constraints
 
-The chart implements min and max zoom levels to ensure usability:
-
-```dart
-// Constrain msPerPx to reasonable limits
-msPerPx = math.max(minMsPerPx, math.min(maxMsPerPx, msPerPx));
-```
+The chart implements min and max zoom levels to ensure usability. The `msPerPx` value is constrained between minimum and maximum values to prevent users from zooming too far in or out.
 
 ## Y-Axis Coordinate System
 
@@ -184,17 +149,10 @@ Where:
 
 The `BasicChart` provides functions to convert between quotes and Y-coordinates:
 
-```dart
-// Convert quote to Y-coordinate
-double yFromQuote(double quote) {
-  return height - bottomPadding - (quote - bottomBoundQuote) / quotePerPx;
-}
+- **yFromQuote**: Converts a price value (quote) to a Y-coordinate on the screen
+- **quoteFromY**: Converts a Y-coordinate on the screen to a price value (quote)
 
-// Convert Y-coordinate to quote
-double quoteFromY(double y) {
-  return bottomBoundQuote + (height - bottomPadding - y) * quotePerPx;
-}
-```
+These conversion functions are essential for mapping data points to screen positions and interpreting user interactions.
 
 ### Y-Axis Scaling
 
@@ -203,155 +161,9 @@ The Y-axis scale is determined by:
 2. Adding padding to ensure data doesn't touch the edges
 3. Adjusting for a consistent scale when animating
 
-```dart
-void updateYAxisBounds() {
-  // Find min and max values in visible data
-  double minValue = double.infinity;
-  double maxValue = -double.infinity;
-  
-  for (final series in allSeries) {
-    if (!series.minValue.isNaN && series.minValue < minValue) {
-      minValue = series.minValue;
-    }
-    if (!series.maxValue.isNaN && series.maxValue > maxValue) {
-      maxValue = series.maxValue;
-    }
-  }
-  
-  // Add padding
-  final range = maxValue - minValue;
-  final paddingAmount = range * 0.1; // 10% padding
-  
-  topBoundQuote = maxValue + paddingAmount;
-  bottomBoundQuote = minValue - paddingAmount;
-  
-  // Update quotePerPx
-  quotePerPx = (topBoundQuote - bottomBoundQuote) / (height - topPadding - bottomPadding);
-}
-```
-
-#### Auto-Scaling and Fixed Scaling
-
-The chart supports both auto-scaling and fixed scaling modes:
-
-- **Auto-scaling**: The Y-axis automatically adjusts to fit the visible data
-- **Fixed scaling**: The Y-axis maintains a fixed range regardless of the visible data
-
-```dart
-void setFixedYAxisBounds(double min, double max) {
-  isFixedYAxis = true;
-  bottomBoundQuote = min;
-  topBoundQuote = max;
-  updateQuotePerPx();
-}
-
-void resetToAutoYAxisBounds() {
-  isFixedYAxis = false;
-  updateYAxisBounds();
-}
-```
-
 ## Grid System
 
 The grid system uses the coordinate system to place grid lines and labels at appropriate intervals, enhancing readability and providing visual reference points.
-
-### X-Axis Grid
-
-The X-axis grid is determined by:
-1. Calculating the appropriate time interval based on the zoom level
-2. Generating timestamps at regular intervals between `leftBoundEpoch` and `rightBoundEpoch`
-3. Converting these timestamps to X-coordinates
-
-```dart
-List<DateTime> gridTimestamps() {
-  final interval = timeGridInterval();
-  final result = <DateTime>[];
-  
-  // Start from the leftmost visible timestamp aligned to the interval
-  DateTime current = alignToInterval(
-    DateTime.fromMillisecondsSinceEpoch(leftBoundEpoch),
-    interval,
-  );
-  
-  // Generate timestamps until we reach the right edge
-  while (current.millisecondsSinceEpoch <= rightBoundEpoch) {
-    result.add(current);
-    current = addInterval(current, interval);
-  }
-  
-  return result;
-}
-```
-
-#### Dynamic Time Intervals
-
-The chart dynamically selects appropriate time intervals based on the zoom level:
-
-```dart
-TimeInterval timeGridInterval() {
-  // Calculate the minimum distance between grid lines in pixels
-  const minDistanceBetweenLines = 60.0;
-  
-  // Calculate the time range that corresponds to the minimum distance
-  final minTimeRange = minDistanceBetweenLines * msPerPx;
-  
-  // Select the appropriate interval
-  if (minTimeRange < 60000) return TimeInterval.minute;
-  if (minTimeRange < 3600000) return TimeInterval.hour;
-  if (minTimeRange < 86400000) return TimeInterval.day;
-  return TimeInterval.month;
-}
-```
-
-### Y-Axis Grid
-
-The Y-axis grid is determined by:
-1. Calculating the appropriate price interval based on the visible range
-2. Generating price values at regular intervals between `bottomBoundQuote` and `topBoundQuote`
-3. Converting these price values to Y-coordinates
-
-```dart
-List<double> gridQuotes() {
-  final interval = quoteGridInterval();
-  final result = <double>[];
-  
-  // Start from the bottom aligned to the interval
-  double current = (bottomBoundQuote / interval).floor() * interval;
-  
-  // Generate quotes until we reach the top
-  while (current <= topBoundQuote) {
-    result.add(current);
-    current += interval;
-  }
-  
-  return result;
-}
-```
-
-#### Dynamic Price Intervals
-
-The chart dynamically selects appropriate price intervals based on the visible range and chart height:
-
-```dart
-double quoteGridInterval() {
-  // Calculate the minimum distance between grid lines in pixels
-  const minDistanceBetweenLines = 40.0;
-  
-  // Calculate the quote range that corresponds to the minimum distance
-  final minQuoteRange = minDistanceBetweenLines * quotePerPx;
-  
-  // Select the appropriate interval from predefined options
-  final intervals = [0.00001, 0.0001, 0.001, 0.01, 0.1, 0.25, 0.5, 1, 2, 5, 10, 20, 25, 50, 100, 200, 500, 1000];
-  
-  for (final interval in intervals) {
-    if (interval >= minQuoteRange) {
-      return interval;
-    }
-  }
-  
-  return intervals.last;
-}
-```
 
 ## Performance Considerations
 
@@ -359,160 +171,22 @@ double quoteGridInterval() {
 
 For optimal performance, the chart only renders data points that are within the visible area:
 
-```dart
-bool isVisible(DateTime epoch, double quote) {
-  final epochMs = epoch.millisecondsSinceEpoch;
-  return epochMs >= leftBoundEpoch &&
-         epochMs <= rightBoundEpoch &&
-         quote >= bottomBoundQuote &&
-         quote <= topBoundQuote;
-}
-```
+The `isVisible` method checks if a data point is within the visible area of the chart. It compares the epoch and quote values against the current bounds to determine visibility.
 
-### Efficient Rendering
-
-The chart uses efficient rendering techniques to handle large datasets:
-
-1. **Data Decimation**: When zoomed out, the chart may reduce the number of points rendered
-2. **Incremental Rendering**: For very large datasets, the chart may render incrementally
-3. **Canvas Optimization**: The chart uses optimized Canvas drawing operations
-
-```dart
-void optimizedRenderDataPoints(List<DataPoint> points) {
-  // Skip points that are too close together on screen
-  double lastX = -double.infinity;
-  const minXDistance = 1.0; // Minimum distance in pixels
-  
-  for (final point in points) {
-    final x = xFromEpoch(point.epoch);
-    
-    if (x - lastX >= minXDistance) {
-      final y = yFromQuote(point.quote);
-      canvas.drawCircle(Offset(x, y), 2, paint);
-      lastX = x;
-    }
-  }
-}
-```
 
 ## Coordinate System in Action
-
-### Plotting Data Points
-
-To plot a data point (epoch, quote) on the canvas:
-
-```dart
-void plotPoint(Canvas canvas, DateTime epoch, double quote) {
-  final x = xFromEpoch(epoch);
-  final y = yFromQuote(quote);
-  
-  canvas.drawCircle(Offset(x, y), 3, Paint()..color = Colors.blue);
-}
-```
-
-### Drawing Lines
-
-To draw a line between two data points:
-
-```dart
-void drawLine(Canvas canvas, DateTime epoch1, double quote1, DateTime epoch2, double quote2) {
-  final x1 = xFromEpoch(epoch1);
-  final y1 = yFromQuote(quote1);
-  final x2 = xFromEpoch(epoch2);
-  final y2 = yFromQuote(quote2);
-  
-  canvas.drawLine(
-    Offset(x1, y1),
-    Offset(x2, y2),
-    Paint()
-      ..color = Colors.blue
-      ..strokeWidth = 2,
-  );
-}
-```
-
-### Drawing Candles
-
-To draw a candle:
-
-```dart
-void drawCandle(Canvas canvas, Candle candle) {
-  final x = xFromEpoch(candle.epoch);
-  final yOpen = yFromQuote(candle.open);
-  final yHigh = yFromQuote(candle.high);
-  final yLow = yFromQuote(candle.low);
-  final yClose = yFromQuote(candle.close);
-  
-  // Draw wick
-  canvas.drawLine(
-    Offset(x, yHigh),
-    Offset(x, yLow),
-    Paint()
-      ..color = Colors.black
-      ..strokeWidth = 1,
-  );
-  
-  // Draw body
-  final bodyPaint = Paint()
-    ..color = candle.isBullish ? Colors.green : Colors.red;
-  
-  canvas.drawRect(
-    Rect.fromPoints(
-      Offset(x - 4, yOpen),
-      Offset(x + 4, yClose),
-    ),
-    bodyPaint,
-  );
-}
-```
 
 ### Handling User Interactions
 
 To convert a user tap to a data point:
 
-```dart
-void onTap(TapDownDetails details) {
-  final x = details.localPosition.dx;
-  final y = details.localPosition.dy;
-  
-  final epoch = epochFromX(x);
-  final quote = quoteFromY(y);
-  
-  print('Tapped at epoch: $epoch, quote: $quote');
-}
-```
+The `onTap` method converts screen coordinates from a tap event to epoch and quote values using the coordinate conversion functions. This allows the chart to determine which data point the user tapped on.
 
 ### Drawing Tools and Annotations
 
 Drawing tools and annotations use the coordinate system to position themselves on the chart:
 
-```dart
-void drawHorizontalLine(Canvas canvas, double quote) {
-  final y = yFromQuote(quote);
-  
-  canvas.drawLine(
-    Offset(0, y),
-    Offset(width, y),
-    Paint()
-      ..color = Colors.red
-      ..strokeWidth = 1
-      ..style = PaintingStyle.stroke,
-  );
-}
-
-void drawVerticalLine(Canvas canvas, DateTime epoch) {
-  final x = xFromEpoch(epoch);
-  
-  canvas.drawLine(
-    Offset(x, 0),
-    Offset(x, height),
-    Paint()
-      ..color = Colors.blue
-      ..strokeWidth = 1
-      ..style = PaintingStyle.stroke,
-  );
-}
-```
+The `drawHorizontalLine` and `drawVerticalLine` methods demonstrate how to draw horizontal and vertical lines at specific price levels or timestamps. These are used for barriers, support/resistance levels, and other annotations.
 
 ## Shared X-Axis, Independent Y-Axes
 
@@ -547,34 +221,7 @@ This allows:
 
 ### Implementation Details
 
-```dart
-class Chart extends StatelessWidget {
-  final XAxisModel xAxisModel;
-  final MainChart mainChart;
-  final List<BottomChart> bottomCharts;
-  
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Main chart with its own Y-axis
-        Expanded(
-          flex: 3,
-          child: mainChart.withXAxisModel(xAxisModel),
-        ),
-        
-        // Bottom charts, each with its own Y-axis
-        ...bottomCharts.map((chart) => 
-          Expanded(
-            flex: 1,
-            child: chart.withXAxisModel(xAxisModel),
-          ),
-        ),
-      ],
-    );
-  }
-}
-```
+The `Chart` widget organizes the MainChart and BottomCharts in a vertical column. Each chart receives the same XAxisModel instance, ensuring that they share the same X-axis viewport. Each chart maintains its own Y-axis calculations based on its specific data.
 
 ## Real-World Applications
 
