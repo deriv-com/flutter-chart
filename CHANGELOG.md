@@ -1,3 +1,9 @@
+## [0.3.9]
+
+* feat: add rise and fall contract markers
+* feat: add chart showcase app
+* fix: adjust padding of indicator label
+
 ## [0.3.8]
 
 * Make XAxis smooth auto-scrolling customizable through ChartAxisConfig
