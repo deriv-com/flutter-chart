@@ -256,13 +256,15 @@ class IndicatorLabelMobile extends StatelessWidget {
           color: Colors.transparent,
           clipBehavior: Clip.antiAlias,
           child: IconButton(
+            style: IconButton.styleFrom(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap),
             icon: Icon(
               iconData,
               size: 16,
               color: context.read<ChartTheme>().base01Color,
             ),
             onPressed: onPressed,
-            padding: EdgeInsets.zero,
+            padding: const EdgeInsets.all(Dimens.margin04),
             constraints: const BoxConstraints(),
           ),
         ),
