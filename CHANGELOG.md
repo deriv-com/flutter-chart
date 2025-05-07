@@ -1,3 +1,7 @@
+## [0.4.0]
+
+* feat: improve package theme interface
+
 ## [0.3.9]
 
 * feat: add rise and fall contract markers
