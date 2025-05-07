@@ -1,5 +1,7 @@
 import 'dart:ui' as ui;
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/extensions/extensions.dart';
+import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
@@ -8,7 +10,7 @@ import '../../chart/data_visualization/chart_data.dart';
 import '../../chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import '../../chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import '../../chart/data_visualization/models/animation_info.dart';
-import '../interactable_drawing_custom_painter.dart';
+import '../enums/drawing_tool_state.dart';
 import 'interactable_drawing.dart';
 
 /// Interactable drawing for line drawing tool.
@@ -147,12 +149,11 @@ class LineInteractableDrawing
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
-    GetDrawingState getDrawingState,
+    Set<DrawingToolState> drawingState,
   ) {
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPaintStyle paintStyle = DrawingPaintStyle();
     // Check if this drawing is selected
-    final Set<DrawingToolState> state = getDrawingState(this);
 
     if (startPoint != null && endPoint != null) {
       final Offset startOffset =
@@ -161,8 +162,8 @@ class LineInteractableDrawing
           Offset(epochToX(endPoint!.epoch), quoteToY(endPoint!.quote));
 
       // Use glowy paint style if selected, otherwise use normal paint style
-      final Paint paint = state.contains(DrawingToolState.selected) ||
-              state.contains(DrawingToolState.dragging)
+      final Paint paint = drawingState.contains(DrawingToolState.selected) ||
+              drawingState.contains(DrawingToolState.dragging)
           ? paintStyle.linePaintStyle(
               lineStyle.color, 1 + 1 * animationInfo.stateChangePercent)
           : paintStyle.linePaintStyle(lineStyle.color, lineStyle.thickness);
@@ -170,8 +171,8 @@ class LineInteractableDrawing
       canvas.drawLine(startOffset, endOffset, paint);
 
       // Draw endpoints with glowy effect if selected
-      if (state.contains(DrawingToolState.selected) ||
-          state.contains(DrawingToolState.dragging)) {
+      if (drawingState.contains(DrawingToolState.selected) ||
+          drawingState.contains(DrawingToolState.dragging)) {
         _drawPointsFocusedCircle(
           paintStyle,
           lineStyle,
@@ -181,16 +182,16 @@ class LineInteractableDrawing
           3 * animationInfo.stateChangePercent,
           endOffset,
         );
-      } else if (state.contains(DrawingToolState.hovered)) {
+      } else if (drawingState.contains(DrawingToolState.hovered)) {
         _drawPointsFocusedCircle(
             paintStyle, lineStyle, canvas, startOffset, 10, 3, endOffset);
       }
 
       // Draw alignment guides when dragging
-      if (state.contains(DrawingToolState.dragging)) {
+      if (drawingState.contains(DrawingToolState.dragging)) {
         _drawAlignmentGuides(canvas, size, startOffset, endOffset, paintStyle);
       }
-    } else if (state.contains(DrawingToolState.adding)) {
+    } else if (drawingState.contains(DrawingToolState.adding)) {
       if (startPoint != null) {
         _drawPoint(
             startPoint!, epochToX, quoteToY, canvas, paintStyle, lineStyle);
@@ -454,6 +455,19 @@ class LineInteractableDrawing
         if (startPoint != null) startPoint!,
         if (endPoint != null) endPoint!
       ]);
+
+  @override
+  bool isInViewPort(EpochRange epochRange, QuoteRange quoteRange) =>
+      (startPoint?.isInEpochRange(
+            epochRange.leftEpoch,
+            epochRange.rightEpoch,
+          ) ??
+          true) ||
+      (endPoint?.isInEpochRange(
+            epochRange.leftEpoch,
+            epochRange.rightEpoch,
+          ) ??
+          true);
 }
 
 /// A circular array for dash patterns

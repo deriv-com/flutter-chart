@@ -1,6 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_states/interactive_normal_state.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_states/interactive_selected_tool_state.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_states/interactive_normal_state.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_states/interactive_selected_tool_state.dart';
 
 /// Enum to represent the direction of the [InteractiveLayer] state change
 /// animation.

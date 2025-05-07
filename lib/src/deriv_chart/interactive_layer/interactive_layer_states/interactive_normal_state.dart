@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
 import '../interactable_drawings/interactable_drawing.dart';
-import '../state_change_direction.dart';
+import '../enums/state_change_direction.dart';
 import 'interactive_hover_state.dart';
 import 'interactive_selected_tool_state.dart';
 import 'interactive_state.dart';

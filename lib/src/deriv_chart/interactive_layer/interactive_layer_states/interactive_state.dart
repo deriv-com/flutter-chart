@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:flutter/gestures.dart';
 
+import '../enums/drawing_tool_state.dart';
 import '../interactable_drawings/interactable_drawing.dart';
 import '../interactive_layer_base.dart';
 

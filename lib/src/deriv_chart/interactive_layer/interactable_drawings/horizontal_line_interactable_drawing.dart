@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/horizontal/horizontal_drawing_tool_config.dart';
+import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
@@ -8,7 +9,7 @@ import '../../chart/data_visualization/chart_data.dart';
 import '../../chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import '../../chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import '../../chart/data_visualization/models/animation_info.dart';
-import '../interactable_drawing_custom_painter.dart';
+import '../enums/drawing_tool_state.dart';
 import 'interactable_drawing.dart';
 
 /// Interactable drawing for horizontal line drawing tool.
@@ -80,7 +81,7 @@ class HorizontalLineInteractableDrawing
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
-    GetDrawingState getDrawingState,
+    Set<DrawingToolState> drawingState,
   ) {
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPaintStyle paintStyle = DrawingPaintStyle();
@@ -91,12 +92,9 @@ class HorizontalLineInteractableDrawing
       final Offset endOffset =
           Offset(size.width, quoteToY(startPoint!.quote)); // End at right edge
 
-      // Check if this drawing is selected
-      final Set<DrawingToolState> state = getDrawingState(this);
-
       // Use glowy paint style if selected, otherwise use normal paint style
-      final Paint paint = state.contains(DrawingToolState.selected) ||
-              state.contains(DrawingToolState.dragging)
+      final Paint paint = drawingState.contains(DrawingToolState.selected) ||
+              drawingState.contains(DrawingToolState.dragging)
           ? paintStyle.linePaintStyle(
               lineStyle.color, 1 + 1 * animationInfo.stateChangePercent)
           : paintStyle.linePaintStyle(lineStyle.color, lineStyle.thickness);
@@ -104,8 +102,8 @@ class HorizontalLineInteractableDrawing
       canvas.drawLine(startOffset, endOffset, paint);
 
       // Draw endpoints with glowy effect if selected
-      if (state.contains(DrawingToolState.selected) ||
-          state.contains(DrawingToolState.dragging)) {
+      if (drawingState.contains(DrawingToolState.selected) ||
+          drawingState.contains(DrawingToolState.dragging)) {
         _drawPointsFocusedCircle(
           paintStyle,
           lineStyle,
@@ -115,13 +113,13 @@ class HorizontalLineInteractableDrawing
           3 * animationInfo.stateChangePercent,
           endOffset,
         );
-      } else if (state.contains(DrawingToolState.hovered)) {
+      } else if (drawingState.contains(DrawingToolState.hovered)) {
         _drawPointsFocusedCircle(
             paintStyle, lineStyle, canvas, startOffset, 10, 3, endOffset);
       }
 
       // Draw alignment guides when dragging
-      if (state.contains(DrawingToolState.dragging)) {
+      if (drawingState.contains(DrawingToolState.dragging)) {
         _drawAlignmentGuides(canvas, size, startOffset);
       }
     } else {
@@ -306,6 +304,16 @@ class HorizontalLineInteractableDrawing
   @override
   HorizontalDrawingToolConfig getUpdatedConfig() => config
       .copyWith(edgePoints: <EdgePoint>[if (startPoint != null) startPoint!]);
+
+  @override
+  bool isInViewPort(EpochRange epochRange, QuoteRange quoteRange) =>
+      // On X-axis range horizontal line is always visible
+      // TODO(NA): consider Y-axis (quoteRange) checking when finding a solution
+      // to clear dismiss the existing drawing, if main series is changed and the
+      // tool is not supposed to be visible because it's outside of view-port.
+      // For now it won't impact that much in terms of performance, since the
+      // number tools we allow to add in total is limited to a few.
+      true;
 }
 
 /// A circular array for dash patterns

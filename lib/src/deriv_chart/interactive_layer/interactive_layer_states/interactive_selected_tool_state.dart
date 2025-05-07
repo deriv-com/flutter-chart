@@ -1,8 +1,9 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:flutter/widgets.dart';
 
+import '../enums/drawing_tool_state.dart';
 import '../interactable_drawings/interactable_drawing.dart';
-import '../state_change_direction.dart';
+import '../enums/state_change_direction.dart';
 import 'interactive_hover_state.dart';
 import 'interactive_normal_state.dart';
 import 'interactive_state.dart';
@@ -47,10 +48,15 @@ class InteractiveSelectedToolState extends InteractiveState
     if (drawing.config.configId == selected.config.configId) {
       // Return dragging state if we're currently dragging the tool
       if (_draggingStartedOnTool) {
-        return hoveredState..add(DrawingToolState.dragging);
+        hoveredState.add(DrawingToolState.dragging);
       }
-      // Otherwise return selected state
-      return hoveredState..add(DrawingToolState.selected);
+      // Otherwise add selected state
+      hoveredState.add(DrawingToolState.selected);
+    }
+
+    if (interactiveLayer.stateChangeAnimationController != null &&
+        interactiveLayer.stateChangeAnimationController!.isAnimating) {
+      hoveredState.add(DrawingToolState.animating);
     }
 
     // For all other drawings, return normal state

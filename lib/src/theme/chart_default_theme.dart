@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/entry_spot_style.dart';
 import 'package:flutter/material.dart';
 
-import 'colors.dart';
 import 'dimens.dart';
 import 'text_styles.dart';
 

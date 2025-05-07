@@ -1,4 +1,3 @@
-import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/widgets/bottom_indicator_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;

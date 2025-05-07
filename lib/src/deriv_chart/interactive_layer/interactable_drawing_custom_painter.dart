@@ -1,13 +1,16 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/interactable_drawing.dart';
+import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 
 import '../chart/data_visualization/chart_series/data_series.dart';
 import '../chart/data_visualization/drawing_tools/ray/ray_line_drawing.dart';
 import '../chart/data_visualization/models/animation_info.dart';
 import '../chart/y_axis/y_axis_config.dart';
+import 'enums/drawing_tool_state.dart';
 
 /// A callback which calling it should return if the [drawing] is selected.
 typedef GetDrawingState = Set<DrawingToolState> Function(
@@ -26,12 +29,17 @@ class InteractableDrawingCustomPainter extends CustomPainter {
     required this.epochToX,
     required this.quoteToY,
     required this.quoteFromY,
-    required this.getDrawingState,
+    required this.drawingState,
+    required this.epochRange,
+    required this.quoteRange,
     this.animationInfo = const AnimationInfo(),
   });
 
   /// Drawing to paint.
   final InteractableDrawing drawing;
+
+  /// [drawing]'s state.
+  final Set<DrawingToolState> drawingState;
 
   /// The main series of the chart.
   final DataSeries<Tick> series;
@@ -57,8 +65,11 @@ class InteractableDrawingCustomPainter extends CustomPainter {
   /// Showing animations progress.
   final AnimationInfo animationInfo;
 
-  /// Returns `true` if the drawing tool is selected.
-  final Set<DrawingToolState> Function(InteractableDrawing) getDrawingState;
+  /// Current epoch range (x-axis) of the chart;
+  final EpochRange epochRange;
+
+  /// Current quote range (y-axis) of the chart;
+  final QuoteRange quoteRange;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -69,15 +80,30 @@ class InteractableDrawingCustomPainter extends CustomPainter {
         epochToX,
         quoteToY,
         animationInfo,
-        getDrawingState,
+        drawingState,
       );
     });
   }
 
   @override
-  bool shouldRepaint(InteractableDrawingCustomPainter oldDelegate) =>
-      // TODO(NA): Return true/false based on the [drawing] state
-      true;
+  bool shouldRepaint(InteractableDrawingCustomPainter oldDelegate) {
+    final drawingIsInRange = drawing.isInViewPort(epochRange, quoteRange);
+
+    final bool isSeriesChanged = series.input.isEmpty ||
+        oldDelegate.series.input.isEmpty ||
+        series.input.first != oldDelegate.series.input.first;
+
+    return isSeriesChanged ||
+        (drawingIsInRange &&
+            // Drawing state is changed
+            (!setEquals(oldDelegate.drawingState, drawingState) ||
+                // Epoch range is changed
+                oldDelegate.epochRange != epochRange ||
+                // Quote range is changed
+                oldDelegate.quoteRange != quoteRange ||
+                // Drawing needs repaint
+                drawing.shouldRepaint(drawingState, oldDelegate.drawing)));
+  }
 
   @override
   bool shouldRebuildSemantics(InteractableDrawingCustomPainter oldDelegate) =>
