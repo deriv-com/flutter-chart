@@ -370,8 +370,6 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
               _buildAnnotations(),
               if (widget.markerSeries != null) _buildMarkerArea(),
               if (widget.drawingTools != null)
-                _buildDrawingToolChart(widget.drawingTools!),
-              if (widget.drawingTools != null)
                 InteractiveLayer(
                   drawingTools: widget.drawingTools!,
                   series: widget.mainSeries as DataSeries<Tick>,

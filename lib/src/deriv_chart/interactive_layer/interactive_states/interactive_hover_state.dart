@@ -20,13 +20,13 @@ mixin InteractiveHoverState on InteractiveState {
           : {DrawingToolState.normal};
 
   @override
-  void onHover(PointerHoverEvent event) {
+  bool onHover(PointerHoverEvent event) {
     super.onHover(event);
 
     final hoveredTool = anyDrawingHit(event.localPosition);
 
     if (hoveredTool == _hoveredTool) {
-      return;
+      return hoveredTool != null;
     }
 
     if (hoveredTool != _hoveredTool) {
@@ -34,5 +34,7 @@ mixin InteractiveHoverState on InteractiveState {
     } else {
       _hoveredTool = null;
     }
+    
+    return hoveredTool != null;
   }
 }
