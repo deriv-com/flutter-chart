@@ -84,6 +84,14 @@ abstract class ChartTheme {
 
   double get crosshairInformationBoxContainerGlassBackgroundBlur;
 
+  TextStyle get crosshairInformationBoxTitleStyle;
+
+  TextStyle get crosshairInformationBoxQuoteStyle;
+
+  TextStyle get crosshairInformationBoxTimeLabelStyle;
+
+  TextStyle get crosshairAxisLabelStyle;
+
   /// The style of the current tick indicator.
   HorizontalBarrierStyle get currentSpotStyle;
 
