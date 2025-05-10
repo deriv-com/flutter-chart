@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'base_chart_screen.dart';
@@ -85,6 +86,8 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
       pipSize: 2,
       granularity: 60000, // 1 minute
       activeSymbol: 'LINE_CHART',
+      crosshairVariant:
+          kIsWeb ? CrosshairVariant.largeScreen : CrosshairVariant.smallScreen,
     );
   }
 

@@ -12,6 +12,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_object.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_variant.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_axis_config.dart';
@@ -60,6 +61,7 @@ class DerivChart extends StatefulWidget {
     this.showDataFitButton,
     this.showScrollToLastTickButton,
     this.loadingAnimationColor,
+    this.crosshairVariant = CrosshairVariant.smallScreen,
     Key? key,
   }) : super(key: key);
 
@@ -174,6 +176,12 @@ class DerivChart extends StatefulWidget {
   /// Drawing tools
   final DrawingTools? drawingTools;
 
+  /// The variant of the crosshair to be used.
+  /// This is used to determine the type of crosshair to display.
+  /// The default is [CrosshairVariant.smallScreen].
+  /// [CrosshairVariant.largeScreen] is mostly for web.
+  final CrosshairVariant crosshairVariant;
+
   @override
   _DerivChartState createState() => _DerivChartState();
 }
@@ -261,10 +269,7 @@ class _DerivChartState extends State<DerivChart> {
 
   void showDrawingToolsDialog() {
     setState(() {
-      _drawingTools
-        ..init()
-        ..drawingToolsRepo = _drawingToolsRepo;
-      // _drawingTools.drawingToolsRepo = _drawingToolsRepo;
+      _drawingTools.drawingToolsRepo = _drawingToolsRepo;
     });
     showDialog<void>(
       context: context,
@@ -354,6 +359,7 @@ class _DerivChartState extends State<DerivChart> {
                 showScrollToLastTickButton: widget.showScrollToLastTickButton,
                 loadingAnimationColor: widget.loadingAnimationColor,
                 chartAxisConfig: widget.chartAxisConfig,
+                crosshairVariant: widget.crosshairVariant,
               ),
               if (widget.indicatorsRepo == null) _buildIndicatorsIcon(),
               if (widget.drawingToolsRepo == null) _buildDrawingToolsIcon(),
