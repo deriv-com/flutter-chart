@@ -14,8 +14,6 @@ abstract class ChartTheme {
 
   GridStyle get gridStyle;
 
-  LineStyle get areaStyle;
-
   TextStyle get currentSpotTextStyle;
 
   Color get gridLineColor;

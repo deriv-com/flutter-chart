@@ -100,7 +100,7 @@ class ChartDefaultLightTheme extends ChartDefaultTheme {
       );
 
   @override
-  LineStyle get areaStyle => LineStyle(
+  LineStyle get lineStyle => LineStyle(
         color: areaLineColor,
         hasArea: true,
         areaGradientColors: (
