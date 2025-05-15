@@ -1,5 +1,7 @@
 # Deriv Chart
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/deriv-com/flutter-chart)
+
 A financial charting library for Flutter applications, offering a comprehensive suite of features for technical analysis and trading visualization. It supports multiple chart types (candlestick, line, etc.), a wide range of technical indicators (RSI, MACD, Bollinger Bands, etc.), and interactive drawing tools. The library comes with customizable themes to match your application's visual style. Built specifically for financial applications, it includes essential features like price markers, barriers, and crosshairs, making it ideal for trading platforms, financial analysis tools, and market data visualization.
 
 
