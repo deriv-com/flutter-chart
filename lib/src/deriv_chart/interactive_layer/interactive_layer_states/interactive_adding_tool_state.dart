@@ -1,8 +1,9 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/drawing_adding_preview.dart';
 import 'package:flutter/gestures.dart';
 
 import '../enums/drawing_tool_state.dart';
-import '../interactable_drawings/interactable_drawing.dart';
+import '../interactable_drawings/drawing_v2.dart';
 import '../enums/state_change_direction.dart';
 import 'interactive_hover_state.dart';
 import 'interactive_normal_state.dart';
@@ -28,9 +29,10 @@ class InteractiveAddingToolState extends InteractiveState
   /// access to the layer's methods and properties.
   InteractiveAddingToolState(
     this.addingTool, {
-    required super.interactiveLayer,
+    required super.interactiveLayerBehaviour,
   }) {
-    _addingDrawing ??= addingTool.getInteractableDrawing();
+    _drawingPreview ??= interactiveLayerBehaviour
+        .getAddingDrawingPreview(addingTool.getInteractableDrawing());
   }
 
   /// The tool being added.
@@ -39,36 +41,87 @@ class InteractiveAddingToolState extends InteractiveState
   /// when the user taps on the chart.
   final DrawingToolConfig addingTool;
 
+  bool _isAddingToolBeingDragged = false;
+
   /// The drawing that is currently being created.
   ///
   /// This is initialized when the user first taps on the chart and is used
   /// to render a preview of the drawing being added.
-  InteractableDrawing<DrawingToolConfig>? _addingDrawing;
+  DrawingAddingPreview? _drawingPreview;
+
+  /// Getter to get the [_drawingPreview] instance.
+  DrawingAddingPreview? get addingDrawingPreview => _drawingPreview;
 
   @override
-  List<InteractableDrawing<DrawingToolConfig>> get previewDrawings =>
-      [if (_addingDrawing != null) _addingDrawing!];
+  List<DrawingV2> get previewDrawings =>
+      [if (_drawingPreview != null) _drawingPreview!];
 
   @override
-  Set<DrawingToolState> getToolState(
-    InteractableDrawing<DrawingToolConfig> drawing,
-  ) =>
-      drawing.config.configId == addingTool.configId
-          ? {DrawingToolState.adding}
-          : {DrawingToolState.idle};
+  Set<DrawingToolState> getToolState(DrawingV2 drawing) {
+    final String? addingDrawingId = _drawingPreview != null
+        ? interactiveLayerBehaviour
+            .getAddingDrawingPreview(_drawingPreview!.interactableDrawing)
+            .id
+        : null;
+
+    final Set<DrawingToolState> states = drawing.id == addingDrawingId
+        ? {
+            DrawingToolState.adding,
+            if (_isAddingToolBeingDragged) DrawingToolState.dragging
+          }
+        : {DrawingToolState.idle};
+
+    return states;
+  }
 
   @override
-  void onPanEnd(DragEndDetails details) {}
+  void onPanEnd(DragEndDetails details) {
+    if (_isAddingToolBeingDragged) {
+      _isAddingToolBeingDragged = false;
+    }
+
+    if (_drawingPreview?.hitTest(details.localPosition, epochToX, quoteToY) ??
+        false) {
+      _drawingPreview!
+          .onDragEnd(details, epochFromX, quoteFromY, epochToX, quoteToY);
+    }
+  }
 
   @override
-  void onPanStart(DragStartDetails details) {}
+  void onPanStart(DragStartDetails details) {
+    if (_drawingPreview?.hitTest(details.localPosition, epochToX, quoteToY) ??
+        false) {
+      _isAddingToolBeingDragged = true;
+      _drawingPreview!.onDragStart(
+        details,
+        epochFromX,
+        quoteFromY,
+        epochToX,
+        quoteToY,
+      );
+    } else {
+      _isAddingToolBeingDragged = false;
+    }
+  }
 
   @override
-  void onPanUpdate(DragUpdateDetails details) {}
+  void onPanUpdate(DragUpdateDetails details) {
+    if (_drawingPreview != null) {
+      if (_drawingPreview!.hitTest(details.localPosition, epochToX, quoteToY)) {
+        _drawingPreview!.onDragUpdate(
+          details,
+          epochFromX,
+          quoteFromY,
+          epochToX,
+          quoteToY,
+        );
+      }
+    }
+  }
 
   @override
   void onHover(PointerHoverEvent event) {
-    _addingDrawing?.onHover(
+    _drawingPreview?.onHover(
       event,
       epochFromX,
       quoteFromY,
@@ -79,19 +132,19 @@ class InteractiveAddingToolState extends InteractiveState
 
   @override
   void onTap(TapUpDetails details) {
-    _addingDrawing!
+    _drawingPreview!
         .onCreateTap(details, epochFromX, quoteFromY, epochToX, quoteToY, () {
       interactiveLayer.clearAddingDrawing();
 
       final DrawingToolConfig addedConfig =
-          interactiveLayer.onAddDrawing(_addingDrawing!);
+          interactiveLayer.onAddDrawing(_drawingPreview!.interactableDrawing);
 
       for (final drawing in interactiveLayer.drawings) {
         if (drawing.config.configId == addedConfig.configId) {
-          interactiveLayer.updateStateTo(
+          interactiveLayerBehaviour.updateStateTo(
             InteractiveSelectedToolState(
               selected: drawing,
-              interactiveLayer: interactiveLayer,
+              interactiveLayerBehaviour: interactiveLayerBehaviour,
             ),
             StateChangeAnimationDirection.forward,
           );

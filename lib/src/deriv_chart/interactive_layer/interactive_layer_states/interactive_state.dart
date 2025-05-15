@@ -3,8 +3,10 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:flutter/gestures.dart';
 
 import '../enums/drawing_tool_state.dart';
+import '../interactable_drawings/drawing_v2.dart';
 import '../interactable_drawings/interactable_drawing.dart';
 import '../interactive_layer_base.dart';
+import '../interactive_layer_behaviours/interactive_layer_behaviour.dart';
 
 /// The state of the interactive layer.
 ///
@@ -25,15 +27,13 @@ abstract class InteractiveState {
   /// The [interactiveLayer] parameter provides a reference to the layer that owns
   /// this state, allowing the state to call methods on the layer such as updating
   /// to a new state or adding/saving drawings.
-  InteractiveState({required this.interactiveLayer});
+  InteractiveState({required this.interactiveLayerBehaviour});
 
   /// Returns the state of the drawing tool.
   ///
   /// This method determines the visual and behavioral state of a specific drawing tool.
   /// Each concrete state implementation returns different [DrawingToolState] values:
-  Set<DrawingToolState> getToolState(
-    InteractableDrawing<DrawingToolConfig> drawing,
-  );
+  Set<DrawingToolState> getToolState(DrawingV2 drawing);
 
   /// Additional drawings of the state to be drawn on top of the main drawings.
   ///
@@ -44,13 +44,17 @@ abstract class InteractiveState {
   ///
   /// These are usually temporary/preview drawings that a state might want to
   /// render on top of the main drawings.
-  List<InteractableDrawing<DrawingToolConfig>> get previewDrawings => [];
+  List<DrawingV2> get previewDrawings => [];
 
   /// The interactive layer.
   ///
   /// A reference to the layer that owns this state, allowing the state to
   /// access layer properties and methods.
-  final InteractiveLayerBase interactiveLayer;
+  final InteractiveLayerBehaviour interactiveLayerBehaviour;
+
+  /// The interactive layer that owns this state.
+  InteractiveLayerBase get interactiveLayer =>
+      interactiveLayerBehaviour.interactiveLayer;
 
   /// Converts x coordinate (in pixels) to epoch timestamp.
   ///

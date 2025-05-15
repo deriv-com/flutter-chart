@@ -25,6 +25,17 @@ class EdgePoint with EquatableMixin {
   /// Quote.
   final double quote;
 
+  /// Returns a copy of this [EdgePoint] with the given values.
+  EdgePoint copyWith({
+    int? epoch,
+    double? quote,
+  }) {
+    return EdgePoint(
+      epoch: epoch ?? this.epoch,
+      quote: quote ?? this.quote,
+    );
+  }
+
   @override
   List<Object?> get props => <Object>[epoch, quote];
 }

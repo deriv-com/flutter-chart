@@ -141,6 +141,7 @@ class _ChartStateMobile extends _ChartState {
                   quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
                   showCurrentTickBlinkAnimation:
                       widget.showCurrentTickBlinkAnimation ?? true,
+                  interactiveLayerBehaviour: widget.interactiveLayerBehaviour,
                 ),
                 Align(
                   alignment: Alignment.topLeft,

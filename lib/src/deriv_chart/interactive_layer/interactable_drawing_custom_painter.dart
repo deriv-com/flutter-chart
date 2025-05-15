@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/interactable_drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/drawing_v2.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_states/interactive_state.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -14,7 +15,7 @@ import 'enums/drawing_tool_state.dart';
 
 /// A callback which calling it should return if the [drawing] is selected.
 typedef GetDrawingState = Set<DrawingToolState> Function(
-  InteractableDrawing drawing,
+  DrawingV2 drawing,
 );
 
 /// Interactable drawing custom painter.
@@ -30,16 +31,26 @@ class InteractableDrawingCustomPainter extends CustomPainter {
     required this.quoteToY,
     required this.quoteFromY,
     required this.drawingState,
+    required this.currentDrawingState,
     required this.epochRange,
     required this.quoteRange,
     this.animationInfo = const AnimationInfo(),
   });
 
   /// Drawing to paint.
-  final InteractableDrawing drawing;
+  final DrawingV2 drawing;
 
-  /// [drawing]'s state.
-  final Set<DrawingToolState> drawingState;
+  /// A callback to get the updated state of any drawing tool when calling it.
+  ///
+  /// To see where this callback is implemented check [InteractiveState]
+  /// classes.
+  final GetDrawingState drawingState;
+
+  /// The current state of drawing the [drawing] when we added its painter in
+  /// the widget tree, this is used to do the comparison between between old
+  /// state and new state of repainting logic of the
+  /// [InteractableDrawingCustomPainter].
+  final Set<DrawingToolState> currentDrawingState;
 
   /// The main series of the chart.
   final DataSeries<Tick> series;
@@ -96,13 +107,14 @@ class InteractableDrawingCustomPainter extends CustomPainter {
     return isSeriesChanged ||
         (drawingIsInRange &&
             // Drawing state is changed
-            (!setEquals(oldDelegate.drawingState, drawingState) ||
+            (!setEquals(oldDelegate.currentDrawingState, currentDrawingState) ||
                 // Epoch range is changed
                 oldDelegate.epochRange != epochRange ||
                 // Quote range is changed
                 oldDelegate.quoteRange != quoteRange ||
                 // Drawing needs repaint
-                drawing.shouldRepaint(drawingState, oldDelegate.drawing)));
+                drawing.shouldRepaint(
+                    currentDrawingState, oldDelegate.drawing)));
   }
 
   @override

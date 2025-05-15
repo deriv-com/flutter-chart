@@ -46,6 +46,7 @@ class _ChartStateWeb extends _ChartState {
             quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
             showCurrentTickBlinkAnimation:
                 widget.showCurrentTickBlinkAnimation ?? true,
+            interactiveLayerBehaviour: widget.interactiveLayerBehaviour,
           ),
         ),
         if (bottomSeries?.isNotEmpty ?? false)
