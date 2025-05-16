@@ -2,6 +2,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/functions/m
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_highlight_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_variant.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -337,5 +339,25 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   /// Each sub-class should implement and return appropriate cross-hair text
   /// based on its own requirements.
-  Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme);
+  Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme,
+      CrosshairVariant crosshairVariant);
+
+  /// Returns a CrosshairHighlightPainter for highlighting the element at the crosshair position.
+  /// Each series type should implement this to return the appropriate highlight painter.
+  ///
+  /// [crosshairTick] The tick to highlight.
+  /// [quoteToY] Function to convert quote to Y coordinate.
+  /// [xCenter] The X center position of the element.
+  /// [theme] The chart theme.
+  CrosshairHighlightPainter? getCrosshairHighlightPainter(
+    T crosshairTick,
+    double Function(double) quoteToY,
+    double xCenter,
+    double elementWidth,
+    ChartTheme theme,
+  ) {
+    // Default implementation returns null
+    // Subclasses should override this to provide appropriate highlight painters
+    return null;
+  }
 }

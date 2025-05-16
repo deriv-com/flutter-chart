@@ -14,8 +14,6 @@ abstract class ChartTheme {
 
   GridStyle get gridStyle;
 
-  LineStyle get areaStyle;
-
   TextStyle get currentSpotTextStyle;
 
   Color get gridLineColor;
@@ -83,6 +81,14 @@ abstract class ChartTheme {
   Color get crosshairInformationBoxContainerGlassColor;
 
   double get crosshairInformationBoxContainerGlassBackgroundBlur;
+
+  TextStyle get crosshairInformationBoxTitleStyle;
+
+  TextStyle get crosshairInformationBoxQuoteStyle;
+
+  TextStyle get crosshairInformationBoxTimeLabelStyle;
+
+  TextStyle get crosshairAxisLabelStyle;
 
   /// The style of the current tick indicator.
   HorizontalBarrierStyle get currentSpotStyle;

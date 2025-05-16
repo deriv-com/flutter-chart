@@ -354,10 +354,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
           return CandleSeries(ticks as List<Candle>);
       }
     }
-    return LineSeries(ticks,
-        style: const LineStyle(
-            hasArea: true,
-            color: DarkThemeColors.areaLineColor)) as DataSeries<Tick>;
+    return LineSeries(
+      ticks,
+    ) as DataSeries<Tick>;
   }
 
   @override

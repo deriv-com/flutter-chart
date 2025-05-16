@@ -1,6 +1,6 @@
 // ignore_for_file: use_setters_to_change_properties
 
-import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing_creator.dart';
