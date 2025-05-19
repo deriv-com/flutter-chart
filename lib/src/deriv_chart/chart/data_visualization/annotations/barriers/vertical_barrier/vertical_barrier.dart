@@ -50,6 +50,11 @@ class VerticalBarrier extends Barrier {
   BarrierObject createObject() => VerticalBarrierObject(epoch!, quote: quote);
 
   @override
+  bool shouldRepaint(covariant Barrier previous) {
+    return true;
+  }
+
+  @override
   List<double> recalculateMinMax() =>
       isOnRange ? super.recalculateMinMax() : <double>[double.nan, double.nan];
 }
