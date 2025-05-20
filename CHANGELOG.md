@@ -1,3 +1,11 @@
+## [0.4.1]
+
+* fix: Jim/fix example area line by @jim-deriv in https://github.com/deriv-com/flutter-chart/pull/381
+* refactor: remove saveLayer usage and draw lines in two segments instead by @behnam-deriv in https://github.com/deriv-com/flutter-chart/pull/372
+* refactor: Ramin/restructure drawing tools attempt control repainting by @ramin-deriv in https://github.com/deriv-com/flutter-chart/pull/373
+* chore: add deepwiki badge to readme by @behnam-deriv in https://github.com/deriv-com/flutter-chart/pull/383
+* fix: [GRWT-5941] Override shouldRepaint in vertical barrier by @behnam-deriv in https://github.com/deriv-com/flutter-chart/pull/384
+
 ## [0.4.0]
 
 * feat: improve package theme interface
