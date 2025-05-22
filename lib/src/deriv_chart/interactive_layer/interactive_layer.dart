@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/multiple_animated_builder.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_states/interactive_selected_tool_state.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -20,10 +21,8 @@ import 'interactable_drawings/interactable_drawing.dart';
 import 'interactable_drawing_custom_painter.dart';
 import 'interaction_notifier.dart';
 import 'interactive_layer_base.dart';
-import 'interactive_layer_states/interactive_adding_tool_state.dart';
-import 'interactive_layer_states/interactive_normal_state.dart';
-import 'interactive_layer_states/interactive_state.dart';
 import 'enums/state_change_direction.dart';
+import 'interactive_layer_behaviours/interactive_layer_behaviour.dart';
 
 /// Interactive layer of the chart package where elements can be drawn and can
 /// be interacted with.
@@ -39,8 +38,13 @@ class InteractiveLayer extends StatefulWidget {
     required this.epochFromCanvasX,
     required this.drawingToolsRepo,
     required this.quoteRange,
+    required this.interactiveLayerBehaviour,
     super.key,
   });
+
+  /// Interactive layer behaviour which defines how interactive layer should
+  /// behave in scenarios like adding/dragging, etc.
+  final InteractiveLayerBehaviour interactiveLayerBehaviour;
 
   /// Drawing tools.
   final DrawingTools drawingTools;
@@ -74,7 +78,8 @@ class InteractiveLayer extends StatefulWidget {
 }
 
 class _InteractiveLayerState extends State<InteractiveLayer> {
-  final List<InteractableDrawing> _interactableDrawings = [];
+  final Map<String, InteractableDrawing> _interactableDrawings =
+      <String, InteractableDrawing>{};
 
   /// Timers for debouncing repository updates
   ///
@@ -91,19 +96,30 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
   void initState() {
     super.initState();
 
-    widget.drawingToolsRepo.addListener(_setDrawingsFromConfigs);
+    widget.drawingToolsRepo.addListener(syncDrawingsWithConfigs);
   }
 
-  void _setDrawingsFromConfigs() {
-    if (widget.drawingToolsRepo.items.length == _interactableDrawings.length) {
-      return;
-    }
-
-    _interactableDrawings.clear();
+  void syncDrawingsWithConfigs() {
+    final configListIds =
+        widget.drawingToolsRepo.items.map((c) => c.configId).toSet();
 
     for (final config in widget.drawingToolsRepo.items) {
-      _interactableDrawings.add(config.getInteractableDrawing());
+      if (!_interactableDrawings.containsKey(config.configId)) {
+        // Add new drawing if it doesn't exist
+        final drawing = config.getInteractableDrawing();
+        _interactableDrawings[config.configId!] = drawing;
+        widget.interactiveLayerBehaviour.updateStateTo(
+          InteractiveSelectedToolState(
+            selected: drawing,
+            interactiveLayerBehaviour: widget.interactiveLayerBehaviour,
+          ),
+          StateChangeAnimationDirection.forward,
+        );
+      }
     }
+
+    // Remove drawings that are not in the config list
+    _interactableDrawings.removeWhere((id, _) => !configListIds.contains(id));
 
     setState(() {});
   }
@@ -163,14 +179,14 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
     }
     _debounceTimers.clear();
 
-    widget.drawingToolsRepo.removeListener(_setDrawingsFromConfigs);
+    widget.drawingToolsRepo.removeListener(syncDrawingsWithConfigs);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return _InteractiveLayerGestureHandler(
-      drawings: _interactableDrawings,
+      drawings: _interactableDrawings.values.toList(),
       epochFromX: widget.epochFromCanvasX,
       quoteFromY: widget.quoteFromCanvasY,
       epochToX: widget.epochToCanvasX,
@@ -179,6 +195,7 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
       chartConfig: widget.chartConfig,
       addingDrawingTool: widget.drawingTools.selectedDrawingTool,
       quoteRange: widget.quoteRange,
+      interactiveLayerBehaviour: widget.interactiveLayerBehaviour,
       onClearAddingDrawingTool: widget.drawingTools.clearDrawingToolSelection,
       onSaveDrawingChange: _updateConfigInRepository,
       onAddDrawing: _addDrawingToRepo,
@@ -198,11 +215,14 @@ class _InteractiveLayerGestureHandler extends StatefulWidget {
     required this.onClearAddingDrawingTool,
     required this.onAddDrawing,
     required this.quoteRange,
+    required this.interactiveLayerBehaviour,
     this.addingDrawingTool,
     this.onSaveDrawingChange,
   });
 
   final List<InteractableDrawing> drawings;
+
+  final InteractiveLayerBehaviour interactiveLayerBehaviour;
 
   final Function(InteractableDrawing<DrawingToolConfig>)? onSaveDrawingChange;
   final DrawingToolConfig Function(InteractableDrawing<DrawingToolConfig>)
@@ -234,26 +254,37 @@ class _InteractiveLayerGestureHandlerState
     extends State<_InteractiveLayerGestureHandler>
     with SingleTickerProviderStateMixin
     implements InteractiveLayerBase {
-  // InteractableDrawing? _selectedDrawing;
-
-  late InteractiveState _interactiveState;
   late AnimationController _stateChangeController;
-  static const Curve _stateChangeCurve = Curves.easeInOut;
+  static const Curve _stateChangeCurve = Curves.easeOut;
   final InteractionNotifier _interactionNotifier = InteractionNotifier();
 
   @override
   AnimationController? get stateChangeAnimationController =>
       _stateChangeController;
 
+  final GlobalKey _layerKey = GlobalKey();
+
+  Size? _size;
+
   @override
   void initState() {
     super.initState();
 
-    _interactiveState = InteractiveNormalState(interactiveLayer: this);
+    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
+      setState(() {
+        _size =
+            (_layerKey.currentContext?.findRenderObject() as RenderBox?)?.size;
+      });
+    });
+
+    widget.interactiveLayerBehaviour.init(
+      interactiveLayer: this,
+      onUpdate: () => setState(() {}),
+    );
 
     _stateChangeController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 240),
     );
 
     // register the callback
@@ -266,29 +297,15 @@ class _InteractiveLayerGestureHandlerState
 
     if (widget.addingDrawingTool != null &&
         widget.addingDrawingTool != oldWidget.addingDrawingTool) {
-      updateStateTo(
-        InteractiveAddingToolState(
-          widget.addingDrawingTool!,
-          interactiveLayer: this,
-        ),
-        StateChangeAnimationDirection.forward,
-      );
+      widget.interactiveLayerBehaviour
+          .onAddDrawingTool(widget.addingDrawingTool!);
     }
   }
 
   @override
-  Future<void> updateStateTo(
-    InteractiveState state,
-    StateChangeAnimationDirection direction, {
-    bool waitForAnimation = false,
-  }) async {
-    if (waitForAnimation) {
-      await _runAnimation(direction);
-      setState(() => _interactiveState = state);
-    } else {
-      unawaited(_runAnimation(direction));
-      setState(() => _interactiveState = state);
-    }
+  Future<void> animateStateChange(
+      StateChangeAnimationDirection direction) async {
+    await _runAnimation(direction);
   }
 
   Future<void> _runAnimation(StateChangeAnimationDirection direction) async {
@@ -305,29 +322,30 @@ class _InteractiveLayerGestureHandlerState
     final XAxisModel xAxis = context.watch<XAxisModel>();
     return MouseRegion(
       onHover: (event) {
-        _interactiveState.onHover(event);
+        widget.interactiveLayerBehaviour.onHover(event);
         _interactionNotifier.notify();
       },
       child: GestureDetector(
         onTapUp: (details) {
-          _interactiveState.onTap(details);
+          widget.interactiveLayerBehaviour.onTap(details);
           _interactionNotifier.notify();
         },
         onPanStart: (details) {
-          _interactiveState.onPanStart(details);
+          widget.interactiveLayerBehaviour.onPanStart(details);
           _interactionNotifier.notify();
         },
         onPanUpdate: (details) {
-          _interactiveState.onPanUpdate(details);
+          widget.interactiveLayerBehaviour.onPanUpdate(details);
           _interactionNotifier.notify();
         },
         onPanEnd: (details) {
-          _interactiveState.onPanEnd(details);
+          widget.interactiveLayerBehaviour.onPanEnd(details);
           _interactionNotifier.notify();
         },
         // TODO(NA): Move this part into separate widget. InteractiveLayer only cares about the interactions and selected tool movement
         // It can delegate it to an inner component as well. which we can have different interaction behaviours like per platform as well.
         child: RepaintBoundary(
+          key: _layerKey,
           child: MultipleAnimatedBuilder(
               animations: [_stateChangeController, _interactionNotifier],
               builder: (_, __) {
@@ -341,11 +359,16 @@ class _InteractiveLayerGestureHandlerState
                       : [
                           ...widget.drawings
                               .map((e) => CustomPaint(
+                                    key: ValueKey<String>(e.id),
                                     foregroundPainter:
                                         InteractableDrawingCustomPainter(
                                       drawing: e,
-                                      drawingState:
-                                          _interactiveState.getToolState(e),
+                                      currentDrawingState: widget
+                                          .interactiveLayerBehaviour
+                                          .getToolState(e),
+                                      drawingState: widget
+                                          .interactiveLayerBehaviour
+                                          .getToolState,
                                       series: widget.series,
                                       theme: context.watch<ChartTheme>(),
                                       chartConfig: widget.chartConfig,
@@ -364,14 +387,19 @@ class _InteractiveLayerGestureHandlerState
                                     ),
                                   ))
                               .toList(),
-                          ..._interactiveState.previewDrawings
+                          ...widget.interactiveLayerBehaviour.previewDrawings
                               .map((e) => CustomPaint(
+                                    key: ValueKey<String>(e.id),
                                     foregroundPainter:
                                         InteractableDrawingCustomPainter(
                                             drawing: e,
                                             series: widget.series,
-                                            drawingState: _interactiveState
+                                            currentDrawingState: widget
+                                                .interactiveLayerBehaviour
                                                 .getToolState(e),
+                                            drawingState: widget
+                                                .interactiveLayerBehaviour
+                                                .getToolState,
                                             theme: context.watch<ChartTheme>(),
                                             chartConfig: widget.chartConfig,
                                             epochFromX: xAxis.epochFromX,
@@ -399,7 +427,7 @@ class _InteractiveLayerGestureHandlerState
   }
 
   void onTap(TapUpDetails details) {
-    _interactiveState.onTap(details);
+    widget.interactiveLayerBehaviour.onTap(details);
     _interactionNotifier.notify();
   }
 
@@ -422,11 +450,14 @@ class _InteractiveLayerGestureHandlerState
   void clearAddingDrawing() => widget.onClearAddingDrawingTool.call();
 
   @override
-  DrawingToolConfig onAddDrawing(
+  DrawingToolConfig addDrawing(
           InteractableDrawing<DrawingToolConfig> drawing) =>
       widget.onAddDrawing.call(drawing);
 
   @override
-  void onSaveDrawing(InteractableDrawing<DrawingToolConfig> drawing) =>
+  void saveDrawing(InteractableDrawing<DrawingToolConfig> drawing) =>
       widget.onSaveDrawingChange?.call(drawing);
+
+  @override
+  Size? get layerSize => _size;
 }

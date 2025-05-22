@@ -1,0 +1,41 @@
+flowchart TD
+    UserInteractions["USER INTERACTIONS\n(Taps, Drags, Hovers, Gestures, etc.)"]
+    
+    subgraph InteractiveLayerBase["InteractiveLayerBase"]
+        subgraph Behaviour["InteractiveLayerBehaviour (Abstract)"]
+            BehaviourNote["Controls & customizes\nstate transitions"]
+            
+            subgraph States["InteractiveState"]
+                NormalState["Normal State\n• Default state\n• Select tools\n• Start adding tools"]
+                SelectedState["Selected State\n• Tool is selected\n• Show control points\n• Enable manipulation"]
+                AddingState["Adding State\n• Creating new tool\n• Capture coordinates\n• Show drawing preview"]
+                
+                NormalState <--> SelectedState
+                NormalState --> AddingState
+                AddingState --> SelectedState
+            end
+        end
+        
+        DesktopBehaviour["Desktop Behaviour\n• Mouse interactions\n• Hover support\n• Precise positioning"]
+        MobileBehaviour["Mobile Behaviour\n• Touch interactions\n• Gesture recognition\n• Larger touch targets"]
+        
+        DesktopBehaviour --> Behaviour
+        MobileBehaviour --> Behaviour
+        BehaviourNote --- States
+    end
+    
+    subgraph DrawingToolCreation["Drawing Tool Creation"]
+        subgraph Preview["DrawingAddingPreview"]
+            DesktopPreview["Desktop Preview\n• Mouse-based creation\n• Hover feedback\n• Precise positioning"]
+            MobilePreview["Mobile Preview\n• Touch-based creation\n• Tap sequence handling\n• Gesture recognition"]
+            
+            DesktopPreview <--> MobilePreview
+        end
+        
+        InteractableDrawing["InteractableDrawing"]
+    end
+    
+    
+    UserInteractions --> InteractiveLayerBase
+    AddingState --> DrawingToolCreation
+    Preview --> InteractableDrawing

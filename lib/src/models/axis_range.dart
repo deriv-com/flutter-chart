@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 /// Can use to represent the x-axis range on the chart.
 class EpochRange with EquatableMixin {
   /// Initializes.
-  EpochRange({required this.rightEpoch, required this.leftEpoch});
+  EpochRange({required this.leftEpoch, required this.rightEpoch});
 
   /// The left-most epoch.
   final int leftEpoch;

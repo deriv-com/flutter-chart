@@ -22,7 +22,7 @@ class InteractiveNormalState extends InteractiveState
   ///
   /// The [interactiveLayer] parameter is passed to the superclass and provides
   /// access to the layer's methods and properties.
-  InteractiveNormalState({required super.interactiveLayer});
+  InteractiveNormalState({required super.interactiveLayerBehaviour});
 
   @override
   void onPanEnd(DragEndDetails details) {}
@@ -38,11 +38,13 @@ class InteractiveNormalState extends InteractiveState
 
     final InteractiveState newState = InteractiveSelectedToolState(
       selected: hitDrawing,
-      interactiveLayer: interactiveLayer,
+      interactiveLayerBehaviour: interactiveLayerBehaviour,
     );
 
-    interactiveLayer.updateStateTo(
-        newState, StateChangeAnimationDirection.forward);
+    interactiveLayerBehaviour.updateStateTo(
+      newState,
+      StateChangeAnimationDirection.forward,
+    );
 
     newState.onPanStart(details);
   }
@@ -60,10 +62,10 @@ class InteractiveNormalState extends InteractiveState
       return;
     }
 
-    interactiveLayer.updateStateTo(
+    interactiveLayerBehaviour.updateStateTo(
       InteractiveSelectedToolState(
         selected: hitDrawing,
-        interactiveLayer: interactiveLayer,
+        interactiveLayerBehaviour: interactiveLayerBehaviour,
       ),
       StateChangeAnimationDirection.forward,
     );

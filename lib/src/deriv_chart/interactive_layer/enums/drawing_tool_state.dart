@@ -6,7 +6,7 @@
 enum DrawingToolState {
   /// Default state when the drawing tool is displayed on the chart
   /// but not being interacted with.
-  idle,
+  normal,
 
   /// The drawing tool is currently selected by the user. Selected tools
   /// typically show additional visual cues like handles or a glowy effect

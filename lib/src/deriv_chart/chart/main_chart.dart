@@ -18,6 +18,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../drawing_tool_chart/drawing_tool_chart.dart';
 import '../interactive_layer/interactive_layer.dart';
+import '../interactive_layer/interactive_layer_behaviours/interactive_layer_behaviour.dart';
+import '../interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import 'basic_chart.dart';
 import 'crosshair/crosshair_area.dart';
 import 'multiple_animated_builder.dart';
@@ -62,7 +64,9 @@ class MainChart extends BasicChart {
     double opacity = 1,
     ChartAxisConfig? chartAxisConfig,
     VisibleQuoteAreaChangedCallback? onQuoteAreaChanged,
+    this.interactiveLayerBehaviour,
     this.showCrosshair = false,
+    this.useDrawingToolsV2 = false,
   })  : _mainSeries = mainSeries,
         chartDataList = <ChartData>[
           mainSeries,
@@ -77,6 +81,9 @@ class MainChart extends BasicChart {
           chartAxisConfig: chartAxisConfig,
           onQuoteAreaChanged: onQuoteAreaChanged,
         );
+
+  /// Whether to use the new drawing tools v2 or not.
+  final bool useDrawingToolsV2;
 
   /// The indicator series that are displayed on the main chart.
   final List<Series>? overlaySeries;
@@ -132,6 +139,10 @@ class MainChart extends BasicChart {
   /// Whether to show current tick blink animation or not.
   final bool showCurrentTickBlinkAnimation;
 
+  /// Defines the interactive layer behaviour. like when adding a tools or
+  /// dragging/hovering.
+  final InteractiveLayerBehaviour? interactiveLayerBehaviour;
+
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
 }
@@ -159,6 +170,8 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
 
   final YAxisNotifier _yAxisNotifier = YAxisNotifier(YAxisModel.zero());
 
+  late final InteractiveLayerBehaviour _interactiveLayerBehaviour;
+
   @override
   double get verticalPadding {
     if (canvasSize == null) {
@@ -181,6 +194,10 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   @override
   void initState() {
     super.initState();
+
+    // TODO(Ramin): mention in the document to customize or go with default.
+    _interactiveLayerBehaviour =
+        widget.interactiveLayerBehaviour ?? InteractiveLayerDesktopBehaviour();
 
     if (widget.verticalPaddingFraction != null) {
       verticalPaddingFraction = widget.verticalPaddingFraction!;
@@ -368,11 +385,10 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                     _buildSeries(widget.overlaySeries!),
                   _buildAnnotations(),
                   if (widget.markerSeries != null) _buildMarkerArea(),
-                  if (widget.drawingTools != null)
+                  if (widget.drawingTools != null && widget.useDrawingToolsV2)
+                    _buildInteractiveLayer(context, xAxis)
+                  else if (widget.drawingTools != null)
                     _buildDrawingToolChart(widget.drawingTools!),
-                  // if (widget.drawingTools != null)
-                  //   _buildInteractiveLayer(context, xAxis),
-                  // TODO(Ramin): move and handle cross-hair inside the InteractiveLayer
                   if (kIsWeb) _buildCrosshairAreaWeb(),
                   if (!kIsWeb &&
                       !(widget.drawingTools?.isDrawingMoving ?? false))
@@ -421,10 +437,12 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
               bottomQuote:
                   chartQuoteFromCanvasY(_yAxisNotifier.value.canvasHeight),
             ),
+            interactiveLayerBehaviour: _interactiveLayerBehaviour,
           );
         },
       );
 
+  // ignore: unused_element
   Widget _buildDrawingToolChart(DrawingTools drawingTools) =>
       MultipleAnimatedBuilder(
         animations: <Listenable>[

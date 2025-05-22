@@ -1,28 +1,36 @@
-import 'dart:ui' as ui;
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/extensions/extensions.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/enums/drawing_tool_state.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../chart/data_visualization/chart_data.dart';
-import '../../chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
-import '../../chart/data_visualization/drawing_tools/data_model/edge_point.dart';
-import '../../chart/data_visualization/models/animation_info.dart';
-import '../enums/drawing_tool_state.dart';
-import 'interactable_drawing.dart';
+import '../../helpers/paint_helpers.dart';
+import '../../interactable_drawing_custom_painter.dart';
+import '../../interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
+import '../../interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
+import '../drawing_adding_preview.dart';
+import '../drawing_v2.dart';
+import '../interactable_drawing.dart';
+import 'trend_line_adding_preview_desktop.dart';
+import 'trend_line_adding_preview_mobile.dart';
 
-/// Interactable drawing for line drawing tool.
-class LineInteractableDrawing
+/// Interactable drawing for trend-line drawing tool.
+class TrendLineInteractableDrawing
     extends InteractableDrawing<LineDrawingToolConfig> {
-  /// Initializes [LineInteractableDrawing].
-  LineInteractableDrawing({
+  /// Initializes [TrendLineInteractableDrawing].
+  TrendLineInteractableDrawing({
     required LineDrawingToolConfig config,
     required this.startPoint,
     required this.endPoint,
   }) : super(config: config);
 
+  // TODO(Ramin): make it non-nullable.
   /// Start point of the line.
   EdgePoint? startPoint;
 
@@ -34,14 +42,6 @@ class LineInteractableDrawing
   // true: dragging the start point
   // false: dragging the end point
   bool? _isDraggingStartPoint;
-
-  Offset? _hoverPosition;
-
-  @override
-  void onHover(PointerHoverEvent event, EpochFromX epochFromX,
-      QuoteFromY quoteFromY, EpochToX epochToX, QuoteToY quoteToY) {
-    _hoverPosition = event.localPosition;
-  }
 
   @override
   void onDragStart(
@@ -55,14 +55,20 @@ class LineInteractableDrawing
       return;
     }
 
-    // Reset the dragging flag
-    _isDraggingStartPoint = null;
-
-    // Convert start and end points from epoch/quote to screen coordinates
     final Offset startOffset = Offset(
       epochToX(startPoint!.epoch),
       quoteToY(startPoint!.quote),
     );
+
+    // Check if the drag is starting on the start point
+    if ((details.localPosition - startOffset).distance <= hitTestMargin) {
+      _isDraggingStartPoint = true;
+      return;
+    }
+
+    // Reset the dragging flag
+    _isDraggingStartPoint = null;
+
     final Offset endOffset = Offset(
       epochToX(endPoint!.epoch),
       quoteToY(endPoint!.quote),
@@ -90,6 +96,16 @@ class LineInteractableDrawing
 
   @override
   bool hitTest(Offset offset, EpochToX epochToX, QuoteToY quoteToY) {
+    if (startPoint != null) {
+      final startOffset = Offset(
+        epochToX(startPoint!.epoch),
+        quoteToY(startPoint!.quote),
+      );
+
+      if ((offset - startOffset).distance <= hitTestMargin) {
+        return true;
+      }
+    }
     if (startPoint == null || endPoint == null) {
       return false;
     }
@@ -149,12 +165,13 @@ class LineInteractableDrawing
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
-    Set<DrawingToolState> drawingState,
+    GetDrawingState getDrawingState,
   ) {
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPaintStyle paintStyle = DrawingPaintStyle();
     // Check if this drawing is selected
 
+    final drawingState = getDrawingState(this);
     if (startPoint != null && endPoint != null) {
       final Offset startOffset =
           Offset(epochToX(startPoint!.epoch), quoteToY(startPoint!.quote));
@@ -171,9 +188,10 @@ class LineInteractableDrawing
       canvas.drawLine(startOffset, endOffset, paint);
 
       // Draw endpoints with glowy effect if selected
-      if (drawingState.contains(DrawingToolState.selected) ||
+      if ((drawingState.contains(DrawingToolState.selected) &&
+              !drawingState.contains(DrawingToolState.hovered)) ||
           drawingState.contains(DrawingToolState.dragging)) {
-        _drawPointsFocusedCircle(
+        drawPointsFocusedCircle(
           paintStyle,
           lineStyle,
           canvas,
@@ -183,7 +201,7 @@ class LineInteractableDrawing
           endOffset,
         );
       } else if (drawingState.contains(DrawingToolState.hovered)) {
-        _drawPointsFocusedCircle(
+        drawPointsFocusedCircle(
             paintStyle, lineStyle, canvas, startOffset, 10, 3, endOffset);
       }
 
@@ -191,170 +209,15 @@ class LineInteractableDrawing
       if (drawingState.contains(DrawingToolState.dragging)) {
         _drawAlignmentGuides(canvas, size, startOffset, endOffset, paintStyle);
       }
-    } else if (drawingState.contains(DrawingToolState.adding)) {
-      if (startPoint != null) {
-        _drawPoint(
-            startPoint!, epochToX, quoteToY, canvas, paintStyle, lineStyle);
-        _drawPointAlignmentGuides(canvas, size,
-            Offset(epochToX(startPoint!.epoch), quoteToY(startPoint!.quote)));
-
-        if (_hoverPosition != null) {
-          // endPoint doesn't exist yet and it means we're creating this line.
-          // Drawing preview line from startPoint to hoverPosition.
-          final Offset startPosition = Offset(
-            epochToX(startPoint!.epoch),
-            quoteToY(startPoint!.quote),
-          );
-          canvas.drawLine(startPosition, _hoverPosition!,
-              paintStyle.linePaintStyle(lineStyle.color, lineStyle.thickness));
-          _drawPointAlignmentGuides(canvas, size, _hoverPosition!);
-        }
-      }
-
-      if (endPoint != null) {
-        _drawPoint(
-            endPoint!, epochToX, quoteToY, canvas, paintStyle, lineStyle);
-      }
     }
-  }
-
-  void _drawPointsFocusedCircle(
-      DrawingPaintStyle paintStyle,
-      LineStyle lineStyle,
-      ui.Canvas canvas,
-      ui.Offset startOffset,
-      double outerCircleRadius,
-      double innerCircleRadius,
-      ui.Offset endOffset) {
-    final normalPaintStyle = paintStyle.glowyCirclePaintStyle(lineStyle.color);
-    final glowyPaintStyle =
-        paintStyle.glowyCirclePaintStyle(lineStyle.color.withOpacity(0.3));
-    canvas
-      ..drawCircle(
-        startOffset,
-        outerCircleRadius,
-        glowyPaintStyle,
-      )
-      ..drawCircle(
-        startOffset,
-        innerCircleRadius,
-        normalPaintStyle,
-      )
-      ..drawCircle(
-        endOffset,
-        outerCircleRadius,
-        glowyPaintStyle,
-      )
-      ..drawCircle(
-        endOffset,
-        innerCircleRadius,
-        normalPaintStyle,
-      );
   }
 
   /// Draws alignment guides (horizontal and vertical lines) from the points
   void _drawAlignmentGuides(Canvas canvas, Size size, Offset startOffset,
       Offset endOffset, DrawingPaintStyle paintStyle) {
     // Draw alignment guides for both start and end points
-    _drawPointAlignmentGuides(canvas, size, startOffset);
-    _drawPointAlignmentGuides(canvas, size, endOffset);
-  }
-
-  /// Draws alignment guides (horizontal and vertical lines) for a single point
-  void _drawPointAlignmentGuides(Canvas canvas, Size size, Offset pointOffset) {
-    // Create a dashed paint style for the alignment guides
-    final Paint guidesPaint = Paint()
-      ..color = const Color(0x80FFFFFF) // Semi-transparent white
-      ..strokeWidth = 1.0
-      ..style = PaintingStyle.stroke;
-
-    // Create paths for horizontal and vertical guides
-    final Path horizontalPath = Path();
-    final Path verticalPath = Path();
-
-    // Draw horizontal and vertical guides from the point
-    horizontalPath
-      ..moveTo(0, pointOffset.dy)
-      ..lineTo(size.width, pointOffset.dy);
-
-    verticalPath
-      ..moveTo(pointOffset.dx, 0)
-      ..lineTo(pointOffset.dx, size.height);
-
-    // Draw the dashed lines
-    canvas
-      ..drawPath(
-        _dashPath(horizontalPath,
-            dashArray: _CircularIntervalList<double>(<double>[5, 5])),
-        guidesPaint,
-      )
-      ..drawPath(
-        _dashPath(verticalPath,
-            dashArray: _CircularIntervalList<double>(<double>[5, 5])),
-        guidesPaint,
-      );
-  }
-
-  /// Creates a dashed path from a regular path
-  Path _dashPath(
-    Path source, {
-    required _CircularIntervalList<double> dashArray,
-  }) {
-    final Path dest = Path();
-    for (final ui.PathMetric metric in source.computeMetrics()) {
-      double distance = 0;
-      bool draw = true;
-      while (distance < metric.length) {
-        final double len = dashArray.next;
-        if (draw) {
-          dest.addPath(
-            metric.extractPath(distance, distance + len),
-            Offset.zero,
-          );
-        }
-        distance += len;
-        draw = !draw;
-      }
-    }
-    return dest;
-  }
-
-  void _drawPoint(
-    EdgePoint point,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    Canvas canvas,
-    DrawingPaintStyle paintStyle,
-    LineStyle lineStyle,
-  ) {
-    canvas.drawCircle(
-      Offset(epochToX(point.epoch), quoteToY(point.quote)),
-      5,
-      paintStyle.glowyCirclePaintStyle(lineStyle.color),
-    );
-  }
-
-  @override
-  void onCreateTap(
-    TapUpDetails details,
-    EpochFromX epochFromX,
-    QuoteFromY quoteFromY,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    VoidCallback onDone,
-  ) {
-    if (startPoint == null) {
-      startPoint = EdgePoint(
-        epoch: epochFromX(details.localPosition.dx),
-        quote: quoteFromY(details.localPosition.dy),
-      );
-    } else {
-      endPoint ??= EdgePoint(
-        epoch: epochFromX(details.localPosition.dx),
-        quote: quoteFromY(details.localPosition.dy),
-      );
-      onDone();
-    }
+    drawPointAlignmentGuides(canvas, size, startOffset);
+    drawPointAlignmentGuides(canvas, size, endOffset);
   }
 
   @override
@@ -468,19 +331,23 @@ class LineInteractableDrawing
             epochRange.rightEpoch,
           ) ??
           true);
-}
 
-/// A circular array for dash patterns
-class _CircularIntervalList<T> {
-  _CircularIntervalList(this._values);
+  @override
+  DrawingAddingPreview getAddingPreviewForMobileBehaviour(
+    InteractiveLayerMobileBehaviour layerBehaviour,
+  ) =>
+      TrendLineAddingPreviewMobile(
+        interactiveLayerBehaviour: layerBehaviour,
+        interactableDrawing: this,
+      );
 
-  final List<T> _values;
-  int _index = 0;
-
-  T get next {
-    if (_index >= _values.length) {
-      _index = 0;
-    }
-    return _values[_index++];
-  }
+  @override
+  DrawingAddingPreview<InteractableDrawing<DrawingToolConfig>>
+      getAddingPreviewForDesktopBehaviour(
+    InteractiveLayerDesktopBehaviour layerBehaviour,
+  ) =>
+          TrendLineAddingPreviewDesktop(
+            interactiveLayerBehaviour: layerBehaviour,
+            interactableDrawing: this,
+          );
 }
