@@ -1,3 +1,5 @@
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_highlight_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_variant.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -166,7 +168,8 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
   }
 
   @override
-  Widget getCrossHairInfo(Tick crossHairTick, int pipSize, ChartTheme theme) =>
+  Widget getCrossHairInfo(Tick crossHairTick, int pipSize, ChartTheme theme,
+          CrosshairVariant crosshairVariant) =>
       Text(
         '${crossHairTick.quote.toStringAsFixed(pipSize)}',
         style: const TextStyle(fontSize: 16),
@@ -177,4 +180,16 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
 
   @override
   double minValueOf(Tick t) => t.quote;
+
+  @override
+  CrosshairHighlightPainter getCrosshairHighlightPainter(
+      Tick crosshairTick,
+      double Function(double p1) quoteToY,
+      double xCenter,
+      int granularity,
+      double Function(int p1) xFromEpoch,
+      ChartTheme theme) {
+    // TODO(Jim): implement getCrosshairHighlightPainter when needed
+    throw UnimplementedError();
+  }
 }

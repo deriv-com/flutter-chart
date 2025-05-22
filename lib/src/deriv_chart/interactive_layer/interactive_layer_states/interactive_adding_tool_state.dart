@@ -58,16 +58,7 @@ class InteractiveAddingToolState extends InteractiveState
           : {DrawingToolState.idle};
 
   @override
-  void onPanEnd(DragEndDetails details) {}
-
-  @override
-  void onPanStart(DragStartDetails details) {}
-
-  @override
-  void onPanUpdate(DragUpdateDetails details) {}
-
-  @override
-  void onHover(PointerHoverEvent event) {
+  bool onHover(PointerHoverEvent event) {
     _addingDrawing?.onHover(
       event,
       epochFromX,
@@ -75,10 +66,12 @@ class InteractiveAddingToolState extends InteractiveState
       epochToX,
       quoteToY,
     );
+
+    return true; // Always return true as we're in adding mode
   }
 
   @override
-  void onTap(TapUpDetails details) {
+  bool onTap(TapUpDetails details) {
     _addingDrawing!
         .onCreateTap(details, epochFromX, quoteFromY, epochToX, quoteToY, () {
       interactiveLayer.clearAddingDrawing();
@@ -99,5 +92,7 @@ class InteractiveAddingToolState extends InteractiveState
         }
       }
     });
+
+    return true; // Always return true as we're in adding mode
   }
 }
