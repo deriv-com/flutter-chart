@@ -10,6 +10,7 @@ import 'package:example/settings_page.dart';
 import 'package:example/utils/endpoints_helper.dart';
 import 'package:example/widgets/connection_status_label.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_deriv_api/api/exceptions/exceptions.dart';
 import 'package:flutter_deriv_api/api/manually/ohlc_response_result.dart';
 import 'package:flutter_deriv_api/api/manually/tick.dart' as tick_api;
@@ -38,6 +39,8 @@ class MyHttpOverrides extends HttpOverrides {
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  SemanticsBinding.instance.ensureSemantics();
+
   HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }

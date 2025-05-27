@@ -59,4 +59,14 @@ abstract class SeriesPainter<S extends Series> {
     required QuoteToY quoteToY,
     required AnimationInfo animationInfo,
   });
+
+  /// Builds semantics for this [SeriesPainter]'s data.
+  ///
+  /// Override this method to provide custom semantics for a series.
+  /// By default, returns an empty list.
+  List<CustomPainterSemantics> buildSemantics({
+    required Size size,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+  });
 }
