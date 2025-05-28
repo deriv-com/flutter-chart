@@ -12,6 +12,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_object.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/behaviour/crosshair_behaviour.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/core/crosshair_variant.dart';
 import 'package:deriv_chart/src/misc/callbacks.dart';
 import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/chart_axis_config.dart';
@@ -60,6 +62,8 @@ class DerivChart extends StatefulWidget {
     this.showDataFitButton,
     this.showScrollToLastTickButton,
     this.loadingAnimationColor,
+    this.crosshairVariant = CrosshairVariant.smallScreen,
+    this.crosshairBehaviour,
     Key? key,
   }) : super(key: key);
 
@@ -174,6 +178,19 @@ class DerivChart extends StatefulWidget {
   /// Drawing tools
   final DrawingTools? drawingTools;
 
+  /// The variant of the crosshair to be used.
+  /// This is used to determine the type of crosshair to display.
+  /// The default is [CrosshairVariant.smallScreen].
+  /// [CrosshairVariant.largeScreen] is mostly for web.
+  final CrosshairVariant crosshairVariant;
+
+  /// The behaviour implementation that defines how the crosshair should be displayed.
+  ///
+  /// If provided, this behaviour will be used instead of the default behaviour created
+  /// based on the chart's main series and the specified crosshair variant. This allows
+  /// for customization of the crosshair appearance and behaviour.
+  final CrosshairBehaviour? crosshairBehaviour;
+
   @override
   _DerivChartState createState() => _DerivChartState();
 }
@@ -261,11 +278,7 @@ class _DerivChartState extends State<DerivChart> {
 
   void showDrawingToolsDialog() {
     setState(() {
-      _drawingTools
-        ..init()
-        ..drawingToolsRepo = _drawingToolsRepo;
-      // Comment above statement and uncomment below line, when using [InteractiveLayer]
-      // _drawingTools.drawingToolsRepo = _drawingToolsRepo;
+      _drawingTools.drawingToolsRepo = _drawingToolsRepo;
     });
     showDialog<void>(
       context: context,
@@ -355,6 +368,7 @@ class _DerivChartState extends State<DerivChart> {
                 showScrollToLastTickButton: widget.showScrollToLastTickButton,
                 loadingAnimationColor: widget.loadingAnimationColor,
                 chartAxisConfig: widget.chartAxisConfig,
+                crosshairVariant: widget.crosshairVariant,
               ),
               if (widget.indicatorsRepo == null) _buildIndicatorsIcon(),
               if (widget.drawingToolsRepo == null) _buildDrawingToolsIcon(),

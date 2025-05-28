@@ -2,12 +2,13 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/behaviour/crosshair_behaviour.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/core/crosshair_controller.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/core/crosshair_variant.dart';
 import 'package:deriv_chart/src/misc/chart_controller.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/models/chart_axis_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area_web.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_data_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/custom_painters/chart_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_area.dart';
@@ -16,10 +17,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../drawing_tool_chart/drawing_tool_chart.dart';
 import '../interactive_layer/interactive_layer.dart';
 import 'basic_chart.dart';
-import 'crosshair/crosshair_area.dart';
 import 'multiple_animated_builder.dart';
 import 'data_visualization/annotations/chart_annotation.dart';
 import 'data_visualization/chart_data.dart';
@@ -40,6 +39,8 @@ class MainChart extends BasicChart {
   /// Initializes the main chart to display in the chart widget.
   MainChart({
     required DataSeries<Tick> mainSeries,
+    required this.crosshairVariant,
+    required this.showCrosshair,
     this.drawingTools,
     this.isLive = false,
     int pipSize = 4,
@@ -62,7 +63,7 @@ class MainChart extends BasicChart {
     double opacity = 1,
     ChartAxisConfig? chartAxisConfig,
     VisibleQuoteAreaChangedCallback? onQuoteAreaChanged,
-    this.showCrosshair = false,
+    this.crosshairBehaviour,
   })  : _mainSeries = mainSeries,
         chartDataList = <ChartData>[
           mainSeries,
@@ -132,6 +133,19 @@ class MainChart extends BasicChart {
   /// Whether to show current tick blink animation or not.
   final bool showCurrentTickBlinkAnimation;
 
+  /// The variant of the crosshair to be used.
+  /// This is used to determine the type of crosshair to display.
+  /// The default is [CrosshairVariant.smallScreen].
+  /// [CrosshairVariant.largeScreen] is mostly for web.
+  final CrosshairVariant crosshairVariant;
+
+  /// The behavior implementation that defines how the crosshair should be displayed.
+  ///
+  /// If provided, this behavior will be used instead of the default behavior created
+  /// based on the chart's main series and the specified crosshair variant. This allows
+  /// for customization of the crosshair appearance and behavior.
+  final CrosshairBehaviour? crosshairBehaviour;
+
   @override
   _ChartImplementationState createState() => _ChartImplementationState();
 }
@@ -143,13 +157,13 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
 
   late Animation<double> _currentTickBlinkAnimation;
 
-  // TODO(Rustem): remove crosshair related state
-  bool _isCrosshairMode = false;
+  /// The crosshair controller.
+  late CrosshairController crosshairController;
 
   bool get _isScrollToLastTickAvailable =>
       (widget._mainSeries.entries?.isNotEmpty ?? false) &&
       xAxis.rightBoundEpoch < widget._mainSeries.entries!.last.epoch &&
-      !_isCrosshairMode;
+      !crosshairController.isCrosshairActive;
 
   /// Crosshair related state.
   late AnimationController crosshairZoomOutAnimationController;
@@ -185,8 +199,8 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     if (widget.verticalPaddingFraction != null) {
       verticalPaddingFraction = widget.verticalPaddingFraction!;
     }
-
     _setupController();
+    _setupCrosshairController();
   }
 
   @override
@@ -201,10 +215,17 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
       _updateBlinkingAnimationStatus();
     }
 
+    // Update the crosshair controller when showCrosshair changes
+    if (widget.showCrosshair != oldChart.showCrosshair) {
+      // Create a new controller with the updated showCrosshair value
+      _setupCrosshairController();
+    }
+
     xAxis.update(
       minEpoch: widget.chartDataList.getMinEpoch(),
       maxEpoch: widget.chartDataList.getMaxEpoch(),
     );
+    crosshairController.series = widget.mainSeries as DataSeries<Tick>;
   }
 
   void _updateBlinkingAnimationStatus() {
@@ -298,6 +319,26 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     );
   }
 
+  void _setupCrosshairController() {
+    crosshairController = CrosshairController(
+      xAxisModel: xAxis,
+      series: widget.mainSeries as DataSeries<Tick>,
+      onCrosshairAppeared: () {
+        if (widget.crosshairVariant == CrosshairVariant.smallScreen) {
+          crosshairZoomOutAnimationController.forward();
+        }
+        widget.onCrosshairAppeared?.call();
+      },
+      onCrosshairDisappeared: () {
+        if (widget.crosshairVariant == CrosshairVariant.smallScreen) {
+          crosshairZoomOutAnimationController.reverse();
+        }
+        widget.onCrosshairDisappeared?.call();
+      },
+      showCrosshair: widget.showCrosshair,
+    );
+  }
+
   @override
   List<Listenable> getQuoteGridAnimations() =>
       super.getQuoteGridAnimations()..add(crosshairZoomOutAnimation);
@@ -350,49 +391,42 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
           }
 
           updateVisibleData();
-          // TODO(mohammadamir-fs): Remove Extra ClipRect.
           return ListenableProvider<YAxisNotifier>.value(
             value: _yAxisNotifier,
-            child: ClipRect(
-              child: Stack(
-                fit: StackFit.expand,
-                children: <Widget>[
-                  // _buildQuoteGridLine(gridLineQuotes),
+            child: Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                // _buildQuoteGridLine(gridLineQuotes),
 
-                  if (widget.showLoadingAnimationForHistoricalData ||
-                      (widget._mainSeries.entries?.isEmpty ?? false))
-                    _buildLoadingAnimation(),
-                  // _buildQuoteGridLabel(gridLineQuotes),
-                  super.build(context),
-                  if (widget.overlaySeries != null)
-                    _buildSeries(widget.overlaySeries!),
-                  _buildAnnotations(),
-                  if (widget.markerSeries != null) _buildMarkerArea(),
-                  if (widget.drawingTools != null)
-                    _buildDrawingToolChart(widget.drawingTools!),
-                  // if (widget.drawingTools != null)
-                  //   _buildInteractiveLayer(context, xAxis),
-                  // TODO(Ramin): move and handle cross-hair inside the InteractiveLayer
-                  if (kIsWeb) _buildCrosshairAreaWeb(),
-                  if (!kIsWeb &&
-                      !(widget.drawingTools?.isDrawingMoving ?? false))
-                    _buildCrosshairArea(),
-                  if (widget.showScrollToLastTickButton &&
-                      _isScrollToLastTickAvailable)
-                    Positioned(
-                      bottom: 0,
-                      right: quoteLabelsTouchAreaWidth,
-                      child: _buildScrollToLastTickButton(),
-                    ),
-                  if (widget.showDataFitButton &&
-                      (widget._mainSeries.entries?.isNotEmpty ?? false))
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      child: _buildDataFitButton(),
-                    ),
-                ],
-              ),
+                if (widget.showLoadingAnimationForHistoricalData ||
+                    (widget._mainSeries.entries?.isEmpty ?? false))
+                  _buildLoadingAnimation(),
+                // _buildQuoteGridLabel(gridLineQuotes),
+                super.build(context),
+                if (widget.overlaySeries != null)
+                  _buildSeries(widget.overlaySeries!),
+                _buildAnnotations(),
+                if (widget.markerSeries != null) _buildMarkerArea(),
+                // TODO(Jim): Remove this when the drawing tools from the interactive layer are implemented
+                // if (widget.drawingTools != null)
+                //     _buildDrawingToolChart(widget.drawingTools!),
+                if (widget.drawingTools != null)
+                  _buildInteractiveLayer(context, xAxis),
+                if (widget.showScrollToLastTickButton &&
+                    _isScrollToLastTickAvailable)
+                  Positioned(
+                    bottom: 0,
+                    right: quoteLabelsTouchAreaWidth,
+                    child: _buildScrollToLastTickButton(),
+                  ),
+                if (widget.showDataFitButton &&
+                    (widget._mainSeries.entries?.isNotEmpty ?? false))
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    child: _buildDataFitButton(),
+                  ),
+              ],
             ),
           );
         },
@@ -421,23 +455,28 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
               bottomQuote:
                   chartQuoteFromCanvasY(_yAxisNotifier.value.canvasHeight),
             ),
+            crosshairController: crosshairController,
+            crosshairVariant: widget.crosshairVariant,
+            crosshairZoomOutAnimation: crosshairZoomOutAnimation,
+            pipSize: widget.pipSize,
           );
         },
       );
 
-  Widget _buildDrawingToolChart(DrawingTools drawingTools) =>
-      MultipleAnimatedBuilder(
-        animations: <Listenable>[
-          topBoundQuoteAnimationController,
-          bottomBoundQuoteAnimationController,
-        ],
-        builder: (_, Widget? child) => DrawingToolChart(
-          series: widget.mainSeries as DataSeries<Tick>,
-          chartQuoteToCanvasY: chartQuoteToCanvasY,
-          chartQuoteFromCanvasY: chartQuoteFromCanvasY,
-          drawingTools: drawingTools,
-        ),
-      );
+// TODO(Jim): Remove this when the drawing tools from the interactive layer are implemented
+  // Widget _buildDrawingToolChart(DrawingTools drawingTools) =>
+  //     MultipleAnimatedBuilder(
+  //       animations: <Listenable>[
+  //         topBoundQuoteAnimationController,
+  //         bottomBoundQuoteAnimationController,
+  //       ],
+  //       builder: (_, Widget? child) => DrawingToolChart(
+  //         series: widget.mainSeries as DataSeries<Tick>,
+  //         chartQuoteToCanvasY: chartQuoteToCanvasY,
+  //         chartQuoteFromCanvasY: chartQuoteFromCanvasY,
+  //         drawingTools: drawingTools,
+  //       ),
+  //     );
 
   Widget _buildLoadingAnimation() => LoadingAnimationArea(
         loadingRightBoundX: widget._mainSeries.input.isEmpty
@@ -478,36 +517,6 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                 )
                 .toList()
         ]),
-      );
-
-  Widget _buildCrosshairArea() => AnimatedBuilder(
-        animation: crosshairZoomOutAnimation,
-        builder: (BuildContext context, _) => CrosshairArea(
-          mainSeries: widget.mainSeries as DataSeries<Tick>,
-          pipSize: widget.pipSize,
-          quoteToCanvasY: chartQuoteToCanvasY,
-          onCrosshairAppeared: () {
-            _isCrosshairMode = true;
-            widget.onCrosshairAppeared?.call();
-            crosshairZoomOutAnimationController.forward();
-          },
-          onCrosshairDisappeared: () {
-            _isCrosshairMode = false;
-            crosshairZoomOutAnimationController.reverse();
-          },
-        ),
-      );
-
-  Widget _buildCrosshairAreaWeb() => CrosshairAreaWeb(
-        mainSeries: widget.mainSeries as DataSeries<Tick>,
-        epochFromCanvasX: xAxis.epochFromX,
-        quoteFromCanvasY: chartQuoteFromCanvasY,
-        epochToCanvasX: xAxis.xFromEpoch,
-        quoteToCanvasY: chartQuoteToCanvasY,
-        quoteLabelsTouchAreaWidth: quoteLabelsTouchAreaWidth,
-        showCrosshairCursor: widget.showCrosshair,
-        onCrosshairDisappeared: widget.onCrosshairDisappeared,
-        onCrosshairHover: widget.onCrosshairHover,
       );
 
   Widget _buildScrollToLastTickButton() => Material(

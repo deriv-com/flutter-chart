@@ -1,5 +1,45 @@
 import 'package:deriv_chart/src/models/tick.dart';
 
+/// Returns the closest previous tick to the [crosshairTick].
+///
+/// Returns `null` if list is empty or if there's no tick before the [crosshairTick].
+/// Expects a list of ticks to be sorted by epoch in ascending order.
+///
+/// This method uses binary search to efficiently find the closest previous tick,
+/// resulting in O(log n) time complexity, where n is the number of ticks in the list.
+/// This makes it suitable for use with large datasets.
+Tick? findClosestPreviousTick(Tick crosshairTick, List<Tick> ticks) {
+  if (ticks.isEmpty) {
+    return null;
+  }
+
+  // If crosshairTick is before the first tick, there's no previous tick
+  if (crosshairTick.epoch <= ticks.first.epoch) {
+    return null;
+  }
+
+  // Binary search to find the position where crosshairTick would be inserted
+  int left = 0;
+  int right = ticks.length - 1;
+
+  while (left <= right) {
+    final int mid = (left + right) ~/ 2;
+
+    if (ticks[mid].epoch < crosshairTick.epoch) {
+      left = mid + 1;
+    } else if (ticks[mid].epoch > crosshairTick.epoch) {
+      right = mid - 1;
+    } else {
+      // Exact match found, return the previous tick
+      return mid > 0 ? ticks[mid - 1] : null;
+    }
+  }
+
+  // At this point, 'right' points to the largest element smaller than crosshairTick.epoch
+  // and 'left' points to the smallest element greater than or equal to crosshairTick.epoch
+  return right >= 0 ? ticks[right] : null;
+}
+
 /// Returns a reference to candle with exact or closest epoch to [targetEpoch].
 ///
 /// Returns `null` if list is empty.

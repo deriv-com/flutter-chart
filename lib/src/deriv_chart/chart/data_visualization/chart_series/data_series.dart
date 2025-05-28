@@ -2,6 +2,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/functions/m
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/painters/highlight/crosshair_highlight_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/strategy/crosshair_strategy_context.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -335,7 +337,76 @@ abstract class DataSeries<T extends Tick> extends Series {
   /// [prevLastEntry] to `null`.
   void resetLastEntryAnimation() => prevLastEntry = null;
 
-  /// Each sub-class should implement and return appropriate cross-hair text
-  /// based on its own requirements.
+  /// Returns a widget displaying basic information for the crosshair tooltip.
+  ///
+  /// Each chart series type (line, candlestick, etc.) should implement this method
+  /// to return appropriate information based on its data structure. For example,
+  /// a line chart might show just the price, while a candlestick chart would show
+  /// open, high, low, and close values.
+  ///
+  /// Parameters:
+  /// - [crossHairTick]: The tick data at the crosshair position
+  /// - [pipSize]: Number of decimal places to display in price values
+  /// - [theme]: The chart theme containing styling information
+  ///
+  /// Returns a widget that displays the crosshair information.
   Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme);
+
+  /// Returns a widget displaying detailed information for the crosshair tooltip.
+  ///
+  /// This method provides more comprehensive information than getCrossHairInfo,
+  /// typically used for larger screen displays where more space is available.
+  /// The implementation should be tailored to the specific chart series type.
+  ///
+  /// Parameters:
+  /// - [crosshairTick]: The tick data at the crosshair position
+  /// - [pipSize]: Number of decimal places to display in price values
+  /// - [theme]: The chart theme containing styling information
+  ///
+  /// Returns a widget that displays detailed crosshair information.
+  Widget getDetailedCrossHairInfo({
+    required T crosshairTick,
+    required int pipSize,
+    required ChartTheme theme,
+  });
+
+  /// This method is responsible for creating a painter that will visually highlight
+  /// the data element (tick, candle, etc.) at the crosshair position. Different chart
+  /// types (line, candle, OHLC) will implement this differently to provide appropriate
+  /// visual feedback to the user about which data point they are examining.
+  ///
+  /// For candle-based charts, this typically involves drawing a highlighted version
+  /// of the candle with different colors or effects. For line charts, it might involve
+  /// drawing a dot or circle at the point.
+  ///
+  /// Parameters:
+  /// * [crosshairTick] - The tick data to highlight at the crosshair position.
+  /// * [quoteToY] - Function that converts a price quote to a Y-coordinate on the canvas.
+  /// * [xCenter] - The X-coordinate center position where the highlight should be drawn.
+  /// * [granularity] - The time granularity of the chart in seconds (e.g., 60 for 1-minute candles).
+  ///   This is used to calculate appropriate widths for elements like candles.
+  /// * [xFromEpoch] - Function that converts a timestamp (epoch) to an X-coordinate on the canvas.
+  ///   This is used in conjunction with granularity to determine element widths.
+  /// * [theme] - The chart theme containing colors and styles for the highlight.
+  ///
+  /// Returns:
+  /// A CrosshairHighlightPainter that will paint the highlighted element, or null if
+  /// no highlighting is needed for this series type.
+  CrosshairHighlightPainter getCrosshairHighlightPainter(
+    T crosshairTick,
+    double Function(double) quoteToY,
+    double xCenter,
+    int granularity,
+    ChartTheme theme,
+    double Function(int) xFromEpoch,
+  );
+
+  /// Returns a context for managing crosshair behaviors appropriate for this series type.
+  ///
+  /// This method should return a CrosshairStrategyContext that manages the
+  /// appropriate CrosshairBehaviour implementations for both small and large screens
+  /// based on the specific requirements of this chart series type.
+  ///
+  /// Returns a CrosshairStrategyContext instance.
+  CrosshairStrategyContext<T> getCrosshairStrategyContext();
 }

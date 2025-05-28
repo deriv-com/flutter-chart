@@ -105,6 +105,21 @@ abstract class ChartDefaultTheme implements ChartTheme {
       Dimens.crosshairInformationBoxContainerGlassBackgroundBlur;
 
   @override
+  TextStyle get crosshairInformationBoxTitleStyle =>
+      TextStyles.crosshairInformationBoxTitleStyle;
+
+  @override
+  TextStyle get crosshairInformationBoxQuoteStyle =>
+      TextStyles.crosshairInformationBoxQuoteStyle;
+
+  @override
+  TextStyle get crosshairInformationBoxTimeLabelStyle =>
+      TextStyles.crosshairInformationBoxTimeLabelStyle;
+
+  @override
+  TextStyle get crosshairAxisLabelStyle => TextStyles.crosshairAxisLabelStyle;
+
+  @override
   double get areaLineThickness => Dimens.areaLineDefaultThickness;
 
   @override

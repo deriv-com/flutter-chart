@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'base_chart_screen.dart';
@@ -17,6 +18,9 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
   Color _lineColor = Colors.blue;
   bool _showTickIndicator = true;
   TickIndicator? _tickIndicator;
+  bool _showCrosshair = true;
+  bool _useLargeScreenCrosshair = kIsWeb; // Default based on platform
+  bool _useDarkTheme = false;
 
   @override
   void initState() {
@@ -42,9 +46,8 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
 
     final lastTick = ticks.last;
 
-    final theme = Theme.of(context).brightness == Brightness.dark
-        ? ChartDefaultDarkTheme()
-        : ChartDefaultLightTheme();
+    final theme =
+        _useDarkTheme ? ChartDefaultDarkTheme() : ChartDefaultLightTheme();
 
     _tickIndicator = TickIndicator(
       lastTick,
@@ -66,6 +69,10 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
   Widget buildChart() {
     final List<ChartAnnotation<ChartObject>> annotations = [];
 
+    // Define theme for use in chart components
+    final theme =
+        _useDarkTheme ? ChartDefaultDarkTheme() : ChartDefaultLightTheme();
+
     if (_showTickIndicator && ticks.isNotEmpty && _tickIndicator != null) {
       annotations.add(_tickIndicator!);
     }
@@ -78,6 +85,10 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
           hasArea: _hasArea,
           thickness: _thickness,
           color: _lineColor,
+          areaGradientColors: (
+            start: theme.areaGradientStart,
+            end: theme.areaGradientEnd
+          ),
         ),
       ),
       annotations: annotations,
@@ -85,6 +96,11 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
       pipSize: 2,
       granularity: 60000, // 1 minute
       activeSymbol: 'LINE_CHART',
+      showCrosshair: _showCrosshair,
+      crosshairVariant: _useLargeScreenCrosshair
+          ? CrosshairVariant.largeScreen
+          : CrosshairVariant.smallScreen,
+      theme: _useDarkTheme ? ChartDefaultDarkTheme() : ChartDefaultLightTheme(),
     );
   }
 
@@ -95,6 +111,61 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // Theme toggle
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Theme:'),
+              const SizedBox(width: 8),
+              const Text('Light'),
+              Switch(
+                value: _useDarkTheme,
+                onChanged: (value) {
+                  setState(() {
+                    _useDarkTheme = value;
+                    _initializeTickIndicator();
+                  });
+                },
+              ),
+              const Text('Dark'),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Crosshair controls
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Show Crosshair:'),
+                  const SizedBox(width: 8),
+                  Switch(
+                    value: _showCrosshair,
+                    onChanged: (value) {
+                      setState(() {
+                        _showCrosshair = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _useLargeScreenCrosshair = !_useLargeScreenCrosshair;
+                  });
+                },
+                child: Text(
+                  'Crosshair: ${_useLargeScreenCrosshair ? 'Large' : 'Small'}',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
           // Tick indicator toggle
           Row(
             children: [

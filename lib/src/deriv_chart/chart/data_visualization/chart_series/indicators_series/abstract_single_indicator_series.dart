@@ -1,3 +1,6 @@
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/painters/highlight/crosshair_highlight_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/painters/highlight/crosshair_line_highlight_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/strategy/crosshair_strategy_context.dart';
 import 'package:deriv_chart/src/models/indicator_input.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -171,6 +174,39 @@ abstract class AbstractSingleIndicatorSeries extends DataSeries<Tick> {
         '${crossHairTick.quote.toStringAsFixed(pipSize)}',
         style: const TextStyle(fontSize: 16),
       );
+
+  @override
+  Widget getDetailedCrossHairInfo(
+      {required Tick crosshairTick,
+      required int pipSize,
+      required ChartTheme theme}) {
+    return getCrossHairInfo(crosshairTick, pipSize, theme);
+  }
+
+  @override
+  CrosshairStrategyContext<Tick> getCrosshairStrategyContext() {
+    // TODO(Jim): implement getCrosshairStrategyContext when needed
+    throw UnimplementedError();
+  }
+
+  @override
+  CrosshairHighlightPainter getCrosshairHighlightPainter(
+      Tick crosshairTick,
+      double Function(double p1) quoteToY,
+      double xCenter,
+      int granularity,
+      ChartTheme theme,
+      double Function(int) xFromEpoch) {
+    // Return a CrosshairLineHighlightPainter with transparent colors
+    // This effectively creates a "no-op" painter that doesn't paint anything visible
+    return CrosshairLineHighlightPainter(
+      tick: crosshairTick,
+      quoteToY: quoteToY,
+      xCenter: xCenter,
+      pointColor: Colors.transparent,
+      pointSize: 0,
+    );
+  }
 
   @override
   double maxValueOf(Tick t) => t.quote;
