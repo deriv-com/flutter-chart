@@ -11,7 +11,7 @@ class InteractiveAddingToolStateMobile extends InteractiveAddingToolState {
   });
 
   @override
-  void onTap(TapUpDetails details) {
+  bool onTap(TapUpDetails details) {
     if (!(addingDrawingPreview?.hitTest(
             details.localPosition, epochToX, quoteToY) ??
         true)) {
@@ -19,7 +19,8 @@ class InteractiveAddingToolStateMobile extends InteractiveAddingToolState {
       // to the way we want to have tool addition flow we should set current
       // point's position and go to the next step (next point or finish adding
       // the tool).
-      super.onTap(details);
+      return super.onTap(details);
     }
+    return false; // The tap was inside the adding drawing preview - Jim - Verify this
   }
 }

@@ -64,17 +64,22 @@ class InteractiveSelectedToolState extends InteractiveState
   }
 
   @override
-  void onPanEnd(DragEndDetails details) {
-    selected.onDragEnd(details, epochFromX, quoteFromY, epochToX, quoteToY);
-    _draggingStartedOnTool = false;
-    interactiveLayer.saveDrawing(selected);
+  bool onPanEnd(DragEndDetails details) {
+    if (_draggingStartedOnTool) {
+      selected.onDragEnd(details, epochFromX, quoteFromY, epochToX, quoteToY);
+      _draggingStartedOnTool = false;
+      interactiveLayer.saveDrawing(selected);
+      return true; // Ended dragging a tool
+    }
+    return false; // Not dragging a tool
   }
 
   @override
-  void onPanStart(DragStartDetails details) {
+  bool onPanStart(DragStartDetails details) {
     if (selected.hitTest(details.localPosition, epochToX, quoteToY)) {
       _draggingStartedOnTool = true;
       selected.onDragStart(details, epochFromX, quoteFromY, epochToX, quoteToY);
+      return true; // Started dragging on the selected tool
     } else {
       final InteractableDrawing<DrawingToolConfig>? hitDrawing =
           anyDrawingHit(details.localPosition);
@@ -89,12 +94,14 @@ class InteractiveSelectedToolState extends InteractiveState
           )..onPanStart(details),
           StateChangeAnimationDirection.forward,
         );
+        return true; // Started dragging on another tool
       }
+      return false; // No tool was hit
     }
   }
 
   @override
-  void onPanUpdate(DragUpdateDetails details) {
+  bool onPanUpdate(DragUpdateDetails details) {
     if (_draggingStartedOnTool) {
       selected.onDragUpdate(
         details,
@@ -103,11 +110,13 @@ class InteractiveSelectedToolState extends InteractiveState
         epochToX,
         quoteToY,
       );
+      return true; // Dragging a tool
     }
+    return false; // Not dragging a tool
   }
 
   @override
-  void onTap(TapUpDetails details) {
+  bool onTap(TapUpDetails details) {
     final InteractableDrawing<DrawingToolConfig>? hitDrawing =
         anyDrawingHit(details.localPosition);
 
@@ -121,6 +130,7 @@ class InteractiveSelectedToolState extends InteractiveState
         ),
         StateChangeAnimationDirection.forward,
       );
+      return true; // A drawing was hit
     } else {
       // If tap is on empty space, return to normal state.
       interactiveLayerBehaviour.updateStateTo(
@@ -129,6 +139,7 @@ class InteractiveSelectedToolState extends InteractiveState
         StateChangeAnimationDirection.backward,
         waitForAnimation: true,
       );
+      return false; // No drawing was hit
     }
   }
 }

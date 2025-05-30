@@ -36,9 +36,9 @@ class Dimens {
   /// Border radius x-large.
   static const double borderRadius24 = 24;
 
-  /// 5 rem (Value: 80)
+  /// 1.5 rem (Value: 24)
   static const double crosshairInformationBoxContainerGlassBackgroundBlur =
-      CoreDesignTokens.coreSize4000;
+      CoreDesignTokens.coreSize1200;
 
   /// Default area line thickness 1
   static const double areaLineDefaultThickness = 1;

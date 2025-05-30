@@ -25,15 +25,12 @@ class InteractiveNormalState extends InteractiveState
   InteractiveNormalState({required super.interactiveLayerBehaviour});
 
   @override
-  void onPanEnd(DragEndDetails details) {}
-
-  @override
-  void onPanStart(DragStartDetails details) {
+  bool onPanStart(DragStartDetails details) {
     final InteractableDrawing<DrawingToolConfig>? hitDrawing =
         anyDrawingHit(details.localPosition);
 
     if (hitDrawing == null) {
-      return;
+      return false; // No drawing was hit
     }
 
     final InteractiveState newState = InteractiveSelectedToolState(
@@ -47,19 +44,17 @@ class InteractiveNormalState extends InteractiveState
     );
 
     newState.onPanStart(details);
+    return true; // A drawing was hit
   }
 
   @override
-  void onPanUpdate(DragUpdateDetails details) {}
-
-  @override
-  void onTap(TapUpDetails details) {
+  bool onTap(TapUpDetails details) {
     final InteractableDrawing<DrawingToolConfig>? hitDrawing = anyDrawingHit(
       details.localPosition,
     );
 
     if (hitDrawing == null) {
-      return;
+      return false; // No drawing was hit
     }
 
     interactiveLayerBehaviour.updateStateTo(
@@ -69,5 +64,7 @@ class InteractiveNormalState extends InteractiveState
       ),
       StateChangeAnimationDirection.forward,
     );
+
+    return true; // A drawing was hit
   }
 }

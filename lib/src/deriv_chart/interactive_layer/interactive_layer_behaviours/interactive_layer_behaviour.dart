@@ -102,10 +102,10 @@ abstract class InteractiveLayerBehaviour {
   List<DrawingV2> get previewDrawings => _interactiveState.previewDrawings;
 
   /// Handles tap event.
-  void onTap(TapUpDetails details) => _interactiveState.onTap(details);
+  bool onTap(TapUpDetails details) => _interactiveState.onTap(details);
 
   /// Handles pan update event.
-  void onPanUpdate(DragUpdateDetails details) =>
+  bool onPanUpdate(DragUpdateDetails details) =>
       _interactiveState.onPanUpdate(details);
 
   /// Handles pan end event.
@@ -116,5 +116,5 @@ abstract class InteractiveLayerBehaviour {
       _interactiveState.onPanStart(details);
 
   /// Handles hover event.
-  void onHover(PointerHoverEvent event) => _interactiveState.onHover(event);
+  bool onHover(PointerHoverEvent event) => _interactiveState.onHover(event);
 }

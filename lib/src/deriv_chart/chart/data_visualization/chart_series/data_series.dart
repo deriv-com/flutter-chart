@@ -2,6 +2,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/functions/m
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_highlight_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_variant.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -337,5 +339,40 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   /// Each sub-class should implement and return appropriate cross-hair text
   /// based on its own requirements.
-  Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme);
+  Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme,
+      CrosshairVariant crosshairVariant);
+
+  /// Returns a CrosshairHighlightPainter for highlighting the element at the crosshair position.
+  /// Each series type should implement this to return the appropriate highlight painter.
+  ///
+  /// This method is responsible for creating a painter that will visually highlight
+  /// the data element (tick, candle, etc.) at the crosshair position. Different chart
+  /// types (line, candle, OHLC) will implement this differently to provide appropriate
+  /// visual feedback to the user about which data point they are examining.
+  ///
+  /// For candle-based charts, this typically involves drawing a highlighted version
+  /// of the candle with different colors or effects. For line charts, it might involve
+  /// drawing a dot or circle at the point.
+  ///
+  /// Parameters:
+  /// * [crosshairTick] - The tick data to highlight at the crosshair position.
+  /// * [quoteToY] - Function that converts a price quote to a Y-coordinate on the canvas.
+  /// * [xCenter] - The X-coordinate center position where the highlight should be drawn.
+  /// * [granularity] - The time granularity of the chart in seconds (e.g., 60 for 1-minute candles).
+  ///   This is used to calculate appropriate widths for elements like candles.
+  /// * [xFromEpoch] - Function that converts a timestamp (epoch) to an X-coordinate on the canvas.
+  ///   This is used in conjunction with granularity to determine element widths.
+  /// * [theme] - The chart theme containing colors and styles for the highlight.
+  ///
+  /// Returns:
+  /// A CrosshairHighlightPainter that will paint the highlighted element, or null if
+  /// no highlighting is needed for this series type.
+  CrosshairHighlightPainter getCrosshairHighlightPainter(
+    T crosshairTick,
+    double Function(double) quoteToY,
+    double xCenter,
+    int granularity,
+    double Function(int) xFromEpoch,
+    ChartTheme theme,
+  );
 }
