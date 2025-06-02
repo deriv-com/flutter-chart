@@ -1,13 +1,10 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/drawing_v2.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/interactable_drawing.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 
 import '../enums/drawing_tool_state.dart';
-import '../interactive_layer_behaviours/interactive_layer_behaviour.dart';
 
 /// A preview of a drawing that is being added to the [InteractiveLayer].
 ///
