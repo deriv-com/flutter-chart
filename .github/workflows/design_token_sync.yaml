@@ -237,7 +237,7 @@ jobs:
                   # Create a new PR with specified base branch, title, head branch, and description
                   if gh pr create \
                     --base "master" \
-                    --title "Design Token Update ($(date +%Y-%m-%d))" \
+                    --title "chore: Design Token Update ($(date +%Y-%m-%d))" \
                     --head "$SYNC_BRANCH_NAME" \
                     --body "This PR updates the design tokens from the quill-tokens repository. Automated PR created by the Design Token Sync workflow."; then
                     echo "PR created successfully"
