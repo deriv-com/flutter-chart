@@ -159,8 +159,14 @@ jobs:
                   chmod +x ./scripts/generate_and_check_token_files.sh
 
                   # Run the script that generates and validates token files
-                  # Note: Because the script uses 'set -e' so it will exit immediately on any error
-                  ./scripts/generate_and_check_token_files.sh
+                  if ./scripts/generate_and_check_token_files.sh; then
+                    echo "Token generation and validation completed successfully"
+                    echo "generation_success=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "Token generation and validation failed"
+                    echo "generation_success=false" >> $GITHUB_OUTPUT
+                    exit 1
+                  fi
 
                   # If we reach this point, the script completed successfully
                   echo "Token generation and validation completed successfully"
