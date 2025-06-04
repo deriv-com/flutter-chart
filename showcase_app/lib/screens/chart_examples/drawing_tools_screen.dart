@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,10 @@ class _DrawingToolsScreenState
   late final Repository<DrawingToolConfig> _drawingToolsRepo;
   DrawingToolConfig? _selectedDrawingTool;
   bool _isInitialized = false;
+  bool _showCrosshair = true;
+  bool _useLargeScreenCrosshair = kIsWeb; // Default based on platform
+  bool _useDarkTheme = false;
+  bool _useDrawingToolsV2 = true;
 
   @override
   void initState() {
@@ -65,7 +70,12 @@ class _DrawingToolsScreenState
       activeSymbol: 'DRAWING_TOOLS_CHART',
       drawingTools: _drawingTools,
       drawingToolsRepo: _drawingToolsRepo,
-      theme: ChartDefaultDarkTheme(),
+      theme: _useDarkTheme ? ChartDefaultDarkTheme() : ChartDefaultLightTheme(),
+      showCrosshair: _showCrosshair,
+      crosshairVariant: _useLargeScreenCrosshair
+          ? CrosshairVariant.largeScreen
+          : CrosshairVariant.smallScreen,
+      useDrawingToolsV2: _useDrawingToolsV2,
     );
   }
 
@@ -113,6 +123,78 @@ class _DrawingToolsScreenState
           const Text(
             'Drawing Tools',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          const SizedBox(height: 16),
+
+          // Theme toggle
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Theme:'),
+              const SizedBox(width: 8),
+              const Text('Light'),
+              Switch(
+                value: _useDarkTheme,
+                onChanged: (value) {
+                  setState(() {
+                    _useDarkTheme = value;
+                  });
+                },
+              ),
+              const Text('Dark'),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Crosshair controls
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Show Crosshair:'),
+                  const SizedBox(width: 8),
+                  Switch(
+                    value: _showCrosshair,
+                    onChanged: (value) {
+                      setState(() {
+                        _showCrosshair = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _useLargeScreenCrosshair = !_useLargeScreenCrosshair;
+                  });
+                },
+                child: Text(
+                  'Crosshair: ${_useLargeScreenCrosshair ? 'Large' : 'Small'}',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Drawing Tools V2 toggle
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Drawing Tools V2:'),
+              const SizedBox(width: 8),
+              Switch(
+                value: _useDrawingToolsV2,
+                onChanged: (value) {
+                  setState(() {
+                    _useDrawingToolsV2 = value;
+                  });
+                },
+              ),
+            ],
           ),
           const SizedBox(height: 16),
 
