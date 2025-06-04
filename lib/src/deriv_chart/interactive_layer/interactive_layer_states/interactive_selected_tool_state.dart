@@ -1,14 +1,8 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:flutter/widgets.dart';
 
 import '../enums/drawing_tool_state.dart';
-import '../interactable_drawings/drawing_v2.dart';
-import '../interactable_drawings/interactable_drawing.dart';
 import '../enums/state_change_direction.dart';
-import 'interactive_hover_state.dart';
-import 'interactive_normal_state.dart';
-import 'interactive_state.dart';
 
 /// The state of the interactive layer when a tool is selected.
 ///
