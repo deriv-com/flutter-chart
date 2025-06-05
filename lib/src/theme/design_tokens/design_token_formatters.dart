@@ -635,23 +635,32 @@ class MotionTokenFormatter implements DesignTokenValueFormatter {
       return cubicBezierFormatter.convertCubicBezierToDartObject(cleanedValue);
     }
 
-    // Handle standard CSS easing values
-    return _mapCssEasingToCurve(cleanedValue);
+    // Handle non-cubic-bezier motion values
+    return _handleNonBezierMotionValue(cleanedValue);
   }
 
-  /// Maps CSS easing values to Flutter Curve instances
+  /// Handles non-cubic-bezier motion values
   ///
-  /// This method handles standard CSS easing keywords and maps them to
-  /// appropriate Flutter Curves constants. For unrecognized values,
-  /// it defaults to Curves.linear to ensure valid Dart code generation.
+  /// This method processes motion values that are not cubic-bezier functions.
+  /// It first checks if the value is a token reference, and if not, handles
+  /// common CSS easing keywords. For truly unrecognized values, it throws
+  /// an error to prevent invalid Dart code generation.
   ///
   /// Parameters:
-  /// - easingValue: The CSS easing value (e.g., 'ease', 'ease-in', 'linear')
+  /// - value: The motion value to process
   ///
   /// Returns:
-  /// A string representation of a Flutter Curve constant
-  String _mapCssEasingToCurve(String easingValue) {
-    switch (easingValue.toLowerCase().trim()) {
+  /// A string representation of a Flutter Curve constant or token reference
+  String _handleNonBezierMotionValue(String value) {
+    // Check if it's a token reference first
+    if (value.startsWith('{') && value.endsWith('}')) {
+      // Extract the token reference (remove the curly braces)
+      final String tokenRef = value.substring(1, value.length - 1);
+      return DesignTokenUtils.convertToDartPropertyName(tokenRef, 'core');
+    }
+
+    // Handle common CSS easing keywords that might appear in design tokens
+    switch (value.toLowerCase().trim()) {
       case 'ease':
         return 'Curves.ease /* CSS ease curve */';
       case 'ease-in':
@@ -662,14 +671,11 @@ class MotionTokenFormatter implements DesignTokenValueFormatter {
         return 'Curves.easeInOut /* CSS ease-in-out curve */';
       case 'linear':
         return 'Curves.linear /* CSS linear curve */';
-      case 'step-start':
-        return 'Curves.linear /* step-start approximated as linear */';
-      case 'step-end':
-        return 'Curves.linear /* step-end approximated as linear */';
       default:
-        // For unrecognized values, default to linear to ensure valid Dart code
-        // This prevents invalid string literals from being generated
-        return 'Curves.linear /* fallback for unrecognized easing: $easingValue */';
+        // For unrecognized values, throw an error to prevent invalid code generation
+        // This is safer than silently converting to a potentially incorrect fallback
+        throw ArgumentError('Unrecognized motion easing value: "$value". '
+            'Expected cubic-bezier(...) function, token reference, or standard CSS easing keyword.');
     }
   }
 }

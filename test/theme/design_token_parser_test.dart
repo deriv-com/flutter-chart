@@ -239,45 +239,17 @@ void main() {
         expect(result, isNot(contains("'linear'")));
       });
 
-      /// Tests that unrecognized easing values fallback to valid Curve instances
+      /// Tests that unrecognized easing values throw an error
       ///
-      /// Verifies that unrecognized easing values are mapped to a valid Flutter
-      /// Curve (Curves.linear) instead of invalid string literals, preventing
+      /// Verifies that unrecognized easing values throw an ArgumentError
+      /// instead of producing invalid string literals, preventing
       /// the generation of invalid Dart code.
-      test('Motion Token - Unrecognized Fallback', () {
+      test('Motion Token - Unrecognized Error', () {
         String input = "unknown-easing";
-        String result = TokenFormatterFactory.getFormatter('motion')
-            .format(input, DesignTokenUtils.categoryCore);
-        expect(result, contains("Curves.linear"));
-        expect(result,
-            contains("fallback for unrecognized easing: unknown-easing"));
-        expect(result, isNot(contains("'unknown-easing'")));
-      });
-
-      /// Tests that step-start values are handled appropriately
-      ///
-      /// Verifies that CSS step-start values are approximated with a valid
-      /// Flutter Curve instead of being left as string literals.
-      test('Motion Token - Step Start', () {
-        String input = "step-start";
-        String result = TokenFormatterFactory.getFormatter('motion')
-            .format(input, DesignTokenUtils.categoryCore);
-        expect(result, contains("Curves.linear"));
-        expect(result, contains("step-start approximated as linear"));
-        expect(result, isNot(contains("'step-start'")));
-      });
-
-      /// Tests that step-end values are handled appropriately
-      ///
-      /// Verifies that CSS step-end values are approximated with a valid
-      /// Flutter Curve instead of being left as string literals.
-      test('Motion Token - Step End', () {
-        String input = "step-end";
-        String result = TokenFormatterFactory.getFormatter('motion')
-            .format(input, DesignTokenUtils.categoryCore);
-        expect(result, contains("Curves.linear"));
-        expect(result, contains("step-end approximated as linear"));
-        expect(result, isNot(contains("'step-end'")));
+        expect(() {
+          TokenFormatterFactory.getFormatter('motion')
+              .format(input, DesignTokenUtils.categoryCore);
+        }, throwsA(isA<ArgumentError>()));
       });
     });
 
