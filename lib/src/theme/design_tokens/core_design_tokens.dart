@@ -177,73 +177,73 @@ class CoreDesignTokens {
   static const coreBorderWidth300 = 8.0;
 
   /// coreColorSolidRed100 with value: #ffe6e6
-  static const coreColorSolidRed100 = Color(0xFFffe6e6);
+  static const coreColorSolidRed100 = Color(0xFFFFE6E6);
 
   /// coreColorSolidRed200 with value: #ffbfbf
-  static const coreColorSolidRed200 = Color(0xFFffbfbf);
+  static const coreColorSolidRed200 = Color(0xFFFFBFBF);
 
   /// coreColorSolidRed300 with value: #ff9999
-  static const coreColorSolidRed300 = Color(0xFFff9999);
+  static const coreColorSolidRed300 = Color(0xFFFF9999);
 
   /// coreColorSolidRed400 with value: #ff7373
-  static const coreColorSolidRed400 = Color(0xFFff7373);
+  static const coreColorSolidRed400 = Color(0xFFFF7373);
 
   /// coreColorSolidRed500 with value: #ff4d4d
-  static const coreColorSolidRed500 = Color(0xFFff4d4d);
+  static const coreColorSolidRed500 = Color(0xFFFF4D4D);
 
   /// coreColorSolidRed600 with value: #f92e26
-  static const coreColorSolidRed600 = Color(0xFFf92e26);
+  static const coreColorSolidRed600 = Color(0xFFF92E26);
 
   /// coreColorSolidRed700 with value: #e6190e
-  static const coreColorSolidRed700 = Color(0xFFe6190e);
+  static const coreColorSolidRed700 = Color(0xFFE6190E);
 
   /// coreColorSolidRed800 with value: #db0800
-  static const coreColorSolidRed800 = Color(0xFFdb0800);
+  static const coreColorSolidRed800 = Color(0xFFDB0800);
 
   /// coreColorSolidRed900 with value: #c40000
-  static const coreColorSolidRed900 = Color(0xFFc40000);
+  static const coreColorSolidRed900 = Color(0xFFC40000);
 
   /// coreColorSolidRed1000 with value: #a60000
-  static const coreColorSolidRed1000 = Color(0xFFa60000);
+  static const coreColorSolidRed1000 = Color(0xFFA60000);
 
   /// coreColorSolidRed1100 with value: #880000
   static const coreColorSolidRed1100 = Color(0xFF880000);
 
   /// coreColorSolidRed1200 with value: #6a0000
-  static const coreColorSolidRed1200 = Color(0xFF6a0000);
+  static const coreColorSolidRed1200 = Color(0xFF6A0000);
 
   /// coreColorSolidRed1300 with value: #4d0000
-  static const coreColorSolidRed1300 = Color(0xFF4d0000);
+  static const coreColorSolidRed1300 = Color(0xFF4D0000);
 
   /// coreColorSolidOrange100 with value: #feefe7
-  static const coreColorSolidOrange100 = Color(0xFFfeefe7);
+  static const coreColorSolidOrange100 = Color(0xFFFEEFE7);
 
   /// coreColorSolidOrange200 with value: #fdd7c2
-  static const coreColorSolidOrange200 = Color(0xFFfdd7c2);
+  static const coreColorSolidOrange200 = Color(0xFFFDD7C2);
 
   /// coreColorSolidOrange300 with value: #fbbf9d
-  static const coreColorSolidOrange300 = Color(0xFFfbbf9d);
+  static const coreColorSolidOrange300 = Color(0xFFFBBF9D);
 
   /// coreColorSolidOrange400 with value: #faa778
-  static const coreColorSolidOrange400 = Color(0xFFfaa778);
+  static const coreColorSolidOrange400 = Color(0xFFFAA778);
 
   /// coreColorSolidOrange500 with value: #f88f54
-  static const coreColorSolidOrange500 = Color(0xFFf88f54);
+  static const coreColorSolidOrange500 = Color(0xFFF88F54);
 
   /// coreColorSolidOrange600 with value: #f7772f
-  static const coreColorSolidOrange600 = Color(0xFFf7772f);
+  static const coreColorSolidOrange600 = Color(0xFFF7772F);
 
   /// coreColorSolidOrange700 with value: #f55f0a
-  static const coreColorSolidOrange700 = Color(0xFFf55f0a);
+  static const coreColorSolidOrange700 = Color(0xFFF55F0A);
 
   /// coreColorSolidOrange800 with value: #d85409
-  static const coreColorSolidOrange800 = Color(0xFFd85409);
+  static const coreColorSolidOrange800 = Color(0xFFD85409);
 
   /// coreColorSolidOrange900 with value: #bc4908
-  static const coreColorSolidOrange900 = Color(0xFFbc4908);
+  static const coreColorSolidOrange900 = Color(0xFFBC4908);
 
   /// coreColorSolidOrange1000 with value: #9f3e07
-  static const coreColorSolidOrange1000 = Color(0xFF9f3e07);
+  static const coreColorSolidOrange1000 = Color(0xFF9F3E07);
 
   /// coreColorSolidOrange1100 with value: #833305
   static const coreColorSolidOrange1100 = Color(0xFF833305);
@@ -252,313 +252,313 @@ class CoreDesignTokens {
   static const coreColorSolidOrange1200 = Color(0xFF662804);
 
   /// coreColorSolidOrange1300 with value: #4a1d03
-  static const coreColorSolidOrange1300 = Color(0xFF4a1d03);
+  static const coreColorSolidOrange1300 = Color(0xFF4A1D03);
 
   /// coreColorSolidYellow100 with value: #fff7e6
-  static const coreColorSolidYellow100 = Color(0xFFfff7e6);
+  static const coreColorSolidYellow100 = Color(0xFFFFF7E6);
 
   /// coreColorSolidYellow200 with value: #ffeabf
-  static const coreColorSolidYellow200 = Color(0xFFffeabf);
+  static const coreColorSolidYellow200 = Color(0xFFFFEABF);
 
   /// coreColorSolidYellow300 with value: #ffdd99
-  static const coreColorSolidYellow300 = Color(0xFFffdd99);
+  static const coreColorSolidYellow300 = Color(0xFFFFDD99);
 
   /// coreColorSolidYellow400 with value: #ffce73
-  static const coreColorSolidYellow400 = Color(0xFFffce73);
+  static const coreColorSolidYellow400 = Color(0xFFFFCE73);
 
   /// coreColorSolidYellow500 with value: #ffbe4d
-  static const coreColorSolidYellow500 = Color(0xFFffbe4d);
+  static const coreColorSolidYellow500 = Color(0xFFFFBE4D);
 
   /// coreColorSolidYellow600 with value: #ffae26
-  static const coreColorSolidYellow600 = Color(0xFFffae26);
+  static const coreColorSolidYellow600 = Color(0xFFFFAE26);
 
   /// coreColorSolidYellow700 with value: #ff9c13
-  static const coreColorSolidYellow700 = Color(0xFFff9c13);
+  static const coreColorSolidYellow700 = Color(0xFFFF9C13);
 
   /// coreColorSolidYellow800 with value: #e18d00
-  static const coreColorSolidYellow800 = Color(0xFFe18d00);
+  static const coreColorSolidYellow800 = Color(0xFFE18D00);
 
   /// coreColorSolidYellow900 with value: #c47d00
-  static const coreColorSolidYellow900 = Color(0xFFc47d00);
+  static const coreColorSolidYellow900 = Color(0xFFC47D00);
 
   /// coreColorSolidYellow1000 with value: #a66c00
-  static const coreColorSolidYellow1000 = Color(0xFFa66c00);
+  static const coreColorSolidYellow1000 = Color(0xFFA66C00);
 
   /// coreColorSolidYellow1100 with value: #885a00
-  static const coreColorSolidYellow1100 = Color(0xFF885a00);
+  static const coreColorSolidYellow1100 = Color(0xFF885A00);
 
   /// coreColorSolidYellow1200 with value: #6a4800
-  static const coreColorSolidYellow1200 = Color(0xFF6a4800);
+  static const coreColorSolidYellow1200 = Color(0xFF6A4800);
 
   /// coreColorSolidYellow1300 with value: #4d3500
-  static const coreColorSolidYellow1300 = Color(0xFF4d3500);
+  static const coreColorSolidYellow1300 = Color(0xFF4D3500);
 
   /// coreColorSolidMustard100 with value: #fef9e7
-  static const coreColorSolidMustard100 = Color(0xFFfef9e7);
+  static const coreColorSolidMustard100 = Color(0xFFFEF9E7);
 
   /// coreColorSolidMustard200 with value: #fdf1c2
-  static const coreColorSolidMustard200 = Color(0xFFfdf1c2);
+  static const coreColorSolidMustard200 = Color(0xFFFDF1C2);
 
   /// coreColorSolidMustard300 with value: #fce89d
-  static const coreColorSolidMustard300 = Color(0xFFfce89d);
+  static const coreColorSolidMustard300 = Color(0xFFFCE89D);
 
   /// coreColorSolidMustard400 with value: #fbe079
-  static const coreColorSolidMustard400 = Color(0xFFfbe079);
+  static const coreColorSolidMustard400 = Color(0xFFFBE079);
 
   /// coreColorSolidMustard500 with value: #f9d754
-  static const coreColorSolidMustard500 = Color(0xFFf9d754);
+  static const coreColorSolidMustard500 = Color(0xFFF9D754);
 
   /// coreColorSolidMustard600 with value: #f8cf30
-  static const coreColorSolidMustard600 = Color(0xFFf8cf30);
+  static const coreColorSolidMustard600 = Color(0xFFF8CF30);
 
   /// coreColorSolidMustard700 with value: #f7c60b
-  static const coreColorSolidMustard700 = Color(0xFFf7c60b);
+  static const coreColorSolidMustard700 = Color(0xFFF7C60B);
 
   /// coreColorSolidMustard800 with value: #daaf0a
-  static const coreColorSolidMustard800 = Color(0xFFdaaf0a);
+  static const coreColorSolidMustard800 = Color(0xFFDAAF0A);
 
   /// coreColorSolidMustard900 with value: #bd9808
-  static const coreColorSolidMustard900 = Color(0xFFbd9808);
+  static const coreColorSolidMustard900 = Color(0xFFBD9808);
 
   /// coreColorSolidMustard1000 with value: #a18107
-  static const coreColorSolidMustard1000 = Color(0xFFa18107);
+  static const coreColorSolidMustard1000 = Color(0xFFA18107);
 
   /// coreColorSolidMustard1100 with value: #846a06
-  static const coreColorSolidMustard1100 = Color(0xFF846a06);
+  static const coreColorSolidMustard1100 = Color(0xFF846A06);
 
   /// coreColorSolidMustard1200 with value: #675305
   static const coreColorSolidMustard1200 = Color(0xFF675305);
 
   /// coreColorSolidMustard1300 with value: #4a3b03
-  static const coreColorSolidMustard1300 = Color(0xFF4a3b03);
+  static const coreColorSolidMustard1300 = Color(0xFF4A3B03);
 
   /// coreColorSolidOlive100 with value: #fcfbe6
-  static const coreColorSolidOlive100 = Color(0xFFfcfbe6);
+  static const coreColorSolidOlive100 = Color(0xFFFCFBE6);
 
   /// coreColorSolidOlive200 with value: #f7f6c0
-  static const coreColorSolidOlive200 = Color(0xFFf7f6c0);
+  static const coreColorSolidOlive200 = Color(0xFFF7F6C0);
 
   /// coreColorSolidOlive300 with value: #f3f09a
-  static const coreColorSolidOlive300 = Color(0xFFf3f09a);
+  static const coreColorSolidOlive300 = Color(0xFFF3F09A);
 
   /// coreColorSolidOlive400 with value: #eeeb74
-  static const coreColorSolidOlive400 = Color(0xFFeeeb74);
+  static const coreColorSolidOlive400 = Color(0xFFEEEB74);
 
   /// coreColorSolidOlive500 with value: #e9e54e
-  static const coreColorSolidOlive500 = Color(0xFFe9e54e);
+  static const coreColorSolidOlive500 = Color(0xFFE9E54E);
 
   /// coreColorSolidOlive600 with value: #e5e028
-  static const coreColorSolidOlive600 = Color(0xFFe5e028);
+  static const coreColorSolidOlive600 = Color(0xFFE5E028);
 
   /// coreColorSolidOlive700 with value: #e0da02
-  static const coreColorSolidOlive700 = Color(0xFFe0da02);
+  static const coreColorSolidOlive700 = Color(0xFFE0DA02);
 
   /// coreColorSolidOlive800 with value: #c6c102
-  static const coreColorSolidOlive800 = Color(0xFFc6c102);
+  static const coreColorSolidOlive800 = Color(0xFFC6C102);
 
   /// coreColorSolidOlive900 with value: #aca702
-  static const coreColorSolidOlive900 = Color(0xFFaca702);
+  static const coreColorSolidOlive900 = Color(0xFFACA702);
 
   /// coreColorSolidOlive1000 with value: #928e01
-  static const coreColorSolidOlive1000 = Color(0xFF928e01);
+  static const coreColorSolidOlive1000 = Color(0xFF928E01);
 
   /// coreColorSolidOlive1100 with value: #787401
   static const coreColorSolidOlive1100 = Color(0xFF787401);
 
   /// coreColorSolidOlive1200 with value: #5d5b01
-  static const coreColorSolidOlive1200 = Color(0xFF5d5b01);
+  static const coreColorSolidOlive1200 = Color(0xFF5D5B01);
 
   /// coreColorSolidOlive1300 with value: #434101
   static const coreColorSolidOlive1300 = Color(0xFF434101);
 
   /// coreColorSolidGreen100 with value: #e6fae9
-  static const coreColorSolidGreen100 = Color(0xFFe6fae9);
+  static const coreColorSolidGreen100 = Color(0xFFE6FAE9);
 
   /// coreColorSolidGreen200 with value: #bfefc8
-  static const coreColorSolidGreen200 = Color(0xFFbfefc8);
+  static const coreColorSolidGreen200 = Color(0xFFBFEFC8);
 
   /// coreColorSolidGreen300 with value: #99e2a8
-  static const coreColorSolidGreen300 = Color(0xFF99e2a8);
+  static const coreColorSolidGreen300 = Color(0xFF99E2A8);
 
   /// coreColorSolidGreen400 with value: #73d089
-  static const coreColorSolidGreen400 = Color(0xFF73d089);
+  static const coreColorSolidGreen400 = Color(0xFF73D089);
 
   /// coreColorSolidGreen500 with value: #4dbc6b
-  static const coreColorSolidGreen500 = Color(0xFF4dbc6b);
+  static const coreColorSolidGreen500 = Color(0xFF4DBC6B);
 
   /// coreColorSolidGreen600 with value: #26a44e
-  static const coreColorSolidGreen600 = Color(0xFF26a44e);
+  static const coreColorSolidGreen600 = Color(0xFF26A44E);
 
   /// coreColorSolidGreen700 with value: #008832
   static const coreColorSolidGreen700 = Color(0xFF008832);
 
   /// coreColorSolidGreen800 with value: #00822a
-  static const coreColorSolidGreen800 = Color(0xFF00822a);
+  static const coreColorSolidGreen800 = Color(0xFF00822A);
 
   /// coreColorSolidGreen900 with value: #007a22
-  static const coreColorSolidGreen900 = Color(0xFF007a22);
+  static const coreColorSolidGreen900 = Color(0xFF007A22);
 
   /// coreColorSolidGreen1000 with value: #006f1b
-  static const coreColorSolidGreen1000 = Color(0xFF006f1b);
+  static const coreColorSolidGreen1000 = Color(0xFF006F1B);
 
   /// coreColorSolidGreen1100 with value: #006114
   static const coreColorSolidGreen1100 = Color(0xFF006114);
 
   /// coreColorSolidGreen1200 with value: #00500f
-  static const coreColorSolidGreen1200 = Color(0xFF00500f);
+  static const coreColorSolidGreen1200 = Color(0xFF00500F);
 
   /// coreColorSolidGreen1300 with value: #003d0a
-  static const coreColorSolidGreen1300 = Color(0xFF003d0a);
+  static const coreColorSolidGreen1300 = Color(0xFF003D0A);
 
   /// coreColorSolidEmerald100 with value: #e6fff9
-  static const coreColorSolidEmerald100 = Color(0xFFe6fff9);
+  static const coreColorSolidEmerald100 = Color(0xFFE6FFF9);
 
   /// coreColorSolidEmerald200 with value: #bfffed
-  static const coreColorSolidEmerald200 = Color(0xFFbfffed);
+  static const coreColorSolidEmerald200 = Color(0xFFBFFFED);
 
   /// coreColorSolidEmerald300 with value: #99ffdf
-  static const coreColorSolidEmerald300 = Color(0xFF99ffdf);
+  static const coreColorSolidEmerald300 = Color(0xFF99FFDF);
 
   /// coreColorSolidEmerald400 with value: #73f9cf
-  static const coreColorSolidEmerald400 = Color(0xFF73f9cf);
+  static const coreColorSolidEmerald400 = Color(0xFF73F9CF);
 
   /// coreColorSolidEmerald500 with value: #4decbc
-  static const coreColorSolidEmerald500 = Color(0xFF4decbc);
+  static const coreColorSolidEmerald500 = Color(0xFF4DECBC);
 
   /// coreColorSolidEmerald600 with value: #26daa7
-  static const coreColorSolidEmerald600 = Color(0xFF26daa7);
+  static const coreColorSolidEmerald600 = Color(0xFF26DAA7);
 
   /// coreColorSolidEmerald700 with value: #00c390
-  static const coreColorSolidEmerald700 = Color(0xFF00c390);
+  static const coreColorSolidEmerald700 = Color(0xFF00C390);
 
   /// coreColorSolidEmerald800 with value: #00bb86
-  static const coreColorSolidEmerald800 = Color(0xFF00bb86);
+  static const coreColorSolidEmerald800 = Color(0xFF00BB86);
 
   /// coreColorSolidEmerald900 with value: #00ae7a
-  static const coreColorSolidEmerald900 = Color(0xFF00ae7a);
+  static const coreColorSolidEmerald900 = Color(0xFF00AE7A);
 
   /// coreColorSolidEmerald1000 with value: #009e6d
-  static const coreColorSolidEmerald1000 = Color(0xFF009e6d);
+  static const coreColorSolidEmerald1000 = Color(0xFF009E6D);
 
   /// coreColorSolidEmerald1100 with value: #00885d
-  static const coreColorSolidEmerald1100 = Color(0xFF00885d);
+  static const coreColorSolidEmerald1100 = Color(0xFF00885D);
 
   /// coreColorSolidEmerald1200 with value: #006a4c
-  static const coreColorSolidEmerald1200 = Color(0xFF006a4c);
+  static const coreColorSolidEmerald1200 = Color(0xFF006A4C);
 
   /// coreColorSolidEmerald1300 with value: #004d39
-  static const coreColorSolidEmerald1300 = Color(0xFF004d39);
+  static const coreColorSolidEmerald1300 = Color(0xFF004D39);
 
   /// coreColorSolidTiffany100 with value: #e8fdf8
-  static const coreColorSolidTiffany100 = Color(0xFFe8fdf8);
+  static const coreColorSolidTiffany100 = Color(0xFFE8FDF8);
 
   /// coreColorSolidTiffany200 with value: #c5faef
-  static const coreColorSolidTiffany200 = Color(0xFFc5faef);
+  static const coreColorSolidTiffany200 = Color(0xFFC5FAEF);
 
   /// coreColorSolidTiffany300 with value: #a2f7e5
-  static const coreColorSolidTiffany300 = Color(0xFFa2f7e5);
+  static const coreColorSolidTiffany300 = Color(0xFFA2F7E5);
 
   /// coreColorSolidTiffany400 with value: #7ff3db
-  static const coreColorSolidTiffany400 = Color(0xFF7ff3db);
+  static const coreColorSolidTiffany400 = Color(0xFF7FF3DB);
 
   /// coreColorSolidTiffany500 with value: #5df0d1
-  static const coreColorSolidTiffany500 = Color(0xFF5df0d1);
+  static const coreColorSolidTiffany500 = Color(0xFF5DF0D1);
 
   /// coreColorSolidTiffany600 with value: #3aedc7
-  static const coreColorSolidTiffany600 = Color(0xFF3aedc7);
+  static const coreColorSolidTiffany600 = Color(0xFF3AEDC7);
 
   /// coreColorSolidTiffany700 with value: #17eabd
-  static const coreColorSolidTiffany700 = Color(0xFF17eabd);
+  static const coreColorSolidTiffany700 = Color(0xFF17EABD);
 
   /// coreColorSolidTiffany800 with value: #14cfa7
-  static const coreColorSolidTiffany800 = Color(0xFF14cfa7);
+  static const coreColorSolidTiffany800 = Color(0xFF14CFA7);
 
   /// coreColorSolidTiffany900 with value: #12b391
-  static const coreColorSolidTiffany900 = Color(0xFF12b391);
+  static const coreColorSolidTiffany900 = Color(0xFF12B391);
 
   /// coreColorSolidTiffany1000 with value: #0f987b
-  static const coreColorSolidTiffany1000 = Color(0xFF0f987b);
+  static const coreColorSolidTiffany1000 = Color(0xFF0F987B);
 
   /// coreColorSolidTiffany1100 with value: #0c7d65
-  static const coreColorSolidTiffany1100 = Color(0xFF0c7d65);
+  static const coreColorSolidTiffany1100 = Color(0xFF0C7D65);
 
   /// coreColorSolidTiffany1200 with value: #0a624f
-  static const coreColorSolidTiffany1200 = Color(0xFF0a624f);
+  static const coreColorSolidTiffany1200 = Color(0xFF0A624F);
 
   /// coreColorSolidTiffany1300 with value: #074639
   static const coreColorSolidTiffany1300 = Color(0xFF074639);
 
   /// coreColorSolidTeal100 with value: #e6fafa
-  static const coreColorSolidTeal100 = Color(0xFFe6fafa);
+  static const coreColorSolidTeal100 = Color(0xFFE6FAFA);
 
   /// coreColorSolidTeal200 with value: #bff2f2
-  static const coreColorSolidTeal200 = Color(0xFFbff2f2);
+  static const coreColorSolidTeal200 = Color(0xFFBFF2F2);
 
   /// coreColorSolidTeal300 with value: #99ebeb
-  static const coreColorSolidTeal300 = Color(0xFF99ebeb);
+  static const coreColorSolidTeal300 = Color(0xFF99EBEB);
 
   /// coreColorSolidTeal400 with value: #73e3e3
-  static const coreColorSolidTeal400 = Color(0xFF73e3e3);
+  static const coreColorSolidTeal400 = Color(0xFF73E3E3);
 
   /// coreColorSolidTeal500 with value: #4ddbdb
-  static const coreColorSolidTeal500 = Color(0xFF4ddbdb);
+  static const coreColorSolidTeal500 = Color(0xFF4DDBDB);
 
   /// coreColorSolidTeal600 with value: #26d4d4
-  static const coreColorSolidTeal600 = Color(0xFF26d4d4);
+  static const coreColorSolidTeal600 = Color(0xFF26D4D4);
 
   /// coreColorSolidTeal700 with value: #00cccc
-  static const coreColorSolidTeal700 = Color(0xFF00cccc);
+  static const coreColorSolidTeal700 = Color(0xFF00CCCC);
 
   /// coreColorSolidTeal800 with value: #00b4b4
-  static const coreColorSolidTeal800 = Color(0xFF00b4b4);
+  static const coreColorSolidTeal800 = Color(0xFF00B4B4);
 
   /// coreColorSolidTeal900 with value: #009c9c
-  static const coreColorSolidTeal900 = Color(0xFF009c9c);
+  static const coreColorSolidTeal900 = Color(0xFF009C9C);
 
   /// coreColorSolidTeal1000 with value: #008585
   static const coreColorSolidTeal1000 = Color(0xFF008585);
 
   /// coreColorSolidTeal1100 with value: #006d6d
-  static const coreColorSolidTeal1100 = Color(0xFF006d6d);
+  static const coreColorSolidTeal1100 = Color(0xFF006D6D);
 
   /// coreColorSolidTeal1200 with value: #005555
   static const coreColorSolidTeal1200 = Color(0xFF005555);
 
   /// coreColorSolidTeal1300 with value: #003d3d
-  static const coreColorSolidTeal1300 = Color(0xFF003d3d);
+  static const coreColorSolidTeal1300 = Color(0xFF003D3D);
 
   /// coreColorSolidSeawater100 with value: #e7f6f7
-  static const coreColorSolidSeawater100 = Color(0xFFe7f6f7);
+  static const coreColorSolidSeawater100 = Color(0xFFE7F6F7);
 
   /// coreColorSolidSeawater200 with value: #c2e7eb
-  static const coreColorSolidSeawater200 = Color(0xFFc2e7eb);
+  static const coreColorSolidSeawater200 = Color(0xFFC2E7EB);
 
   /// coreColorSolidSeawater300 with value: #9dd9df
-  static const coreColorSolidSeawater300 = Color(0xFF9dd9df);
+  static const coreColorSolidSeawater300 = Color(0xFF9DD9DF);
 
   /// coreColorSolidSeawater400 with value: #78cbd4
-  static const coreColorSolidSeawater400 = Color(0xFF78cbd4);
+  static const coreColorSolidSeawater400 = Color(0xFF78CBD4);
 
   /// coreColorSolidSeawater500 with value: #54bdc8
-  static const coreColorSolidSeawater500 = Color(0xFF54bdc8);
+  static const coreColorSolidSeawater500 = Color(0xFF54BDC8);
 
   /// coreColorSolidSeawater600 with value: #2faebc
-  static const coreColorSolidSeawater600 = Color(0xFF2faebc);
+  static const coreColorSolidSeawater600 = Color(0xFF2FAEBC);
 
   /// coreColorSolidSeawater700 with value: #0aa0b0
-  static const coreColorSolidSeawater700 = Color(0xFF0aa0b0);
+  static const coreColorSolidSeawater700 = Color(0xFF0AA0B0);
 
   /// coreColorSolidSeawater800 with value: #098d9c
-  static const coreColorSolidSeawater800 = Color(0xFF098d9c);
+  static const coreColorSolidSeawater800 = Color(0xFF098D9C);
 
   /// coreColorSolidSeawater900 with value: #087b87
-  static const coreColorSolidSeawater900 = Color(0xFF087b87);
+  static const coreColorSolidSeawater900 = Color(0xFF087B87);
 
   /// coreColorSolidSeawater1000 with value: #076872
   static const coreColorSolidSeawater1000 = Color(0xFF076872);
 
   /// coreColorSolidSeawater1100 with value: #05555e
-  static const coreColorSolidSeawater1100 = Color(0xFF05555e);
+  static const coreColorSolidSeawater1100 = Color(0xFF05555E);
 
   /// coreColorSolidSeawater1200 with value: #044349
   static const coreColorSolidSeawater1200 = Color(0xFF044349);
@@ -567,94 +567,94 @@ class CoreDesignTokens {
   static const coreColorSolidSeawater1300 = Color(0xFF033035);
 
   /// coreColorSolidGlacier100 with value: #f5fdff
-  static const coreColorSolidGlacier100 = Color(0xFFf5fdff);
+  static const coreColorSolidGlacier100 = Color(0xFFF5FDFF);
 
   /// coreColorSolidGlacier200 with value: #ccf6ff
-  static const coreColorSolidGlacier200 = Color(0xFFccf6ff);
+  static const coreColorSolidGlacier200 = Color(0xFFCCF6FF);
 
   /// coreColorSolidGlacier300 with value: #a3eeff
-  static const coreColorSolidGlacier300 = Color(0xFFa3eeff);
+  static const coreColorSolidGlacier300 = Color(0xFFA3EEFF);
 
   /// coreColorSolidGlacier400 with value: #7ae7ff
-  static const coreColorSolidGlacier400 = Color(0xFF7ae7ff);
+  static const coreColorSolidGlacier400 = Color(0xFF7AE7FF);
 
   /// coreColorSolidGlacier500 with value: #52dfff
-  static const coreColorSolidGlacier500 = Color(0xFF52dfff);
+  static const coreColorSolidGlacier500 = Color(0xFF52DFFF);
 
   /// coreColorSolidGlacier600 with value: #29d8ff
-  static const coreColorSolidGlacier600 = Color(0xFF29d8ff);
+  static const coreColorSolidGlacier600 = Color(0xFF29D8FF);
 
   /// coreColorSolidGlacier700 with value: #00d0ff
-  static const coreColorSolidGlacier700 = Color(0xFF00d0ff);
+  static const coreColorSolidGlacier700 = Color(0xFF00D0FF);
 
   /// coreColorSolidGlacier800 with value: #00afd6
-  static const coreColorSolidGlacier800 = Color(0xFF00afd6);
+  static const coreColorSolidGlacier800 = Color(0xFF00AFD6);
 
   /// coreColorSolidGlacier900 with value: #008dad
-  static const coreColorSolidGlacier900 = Color(0xFF008dad);
+  static const coreColorSolidGlacier900 = Color(0xFF008DAD);
 
   /// coreColorSolidGlacier1000 with value: #006c85
-  static const coreColorSolidGlacier1000 = Color(0xFF006c85);
+  static const coreColorSolidGlacier1000 = Color(0xFF006C85);
 
   /// coreColorSolidGlacier1100 with value: #004b5c
-  static const coreColorSolidGlacier1100 = Color(0xFF004b5c);
+  static const coreColorSolidGlacier1100 = Color(0xFF004B5C);
 
   /// coreColorSolidGlacier1200 with value: #002a33
-  static const coreColorSolidGlacier1200 = Color(0xFF002a33);
+  static const coreColorSolidGlacier1200 = Color(0xFF002A33);
 
   /// coreColorSolidGlacier1300 with value: #00080a
-  static const coreColorSolidGlacier1300 = Color(0xFF00080a);
+  static const coreColorSolidGlacier1300 = Color(0xFF00080A);
 
   /// coreColorSolidBlue100 with value: #e6f5ff
-  static const coreColorSolidBlue100 = Color(0xFFe6f5ff);
+  static const coreColorSolidBlue100 = Color(0xFFE6F5FF);
 
   /// coreColorSolidBlue200 with value: #bfe7ff
-  static const coreColorSolidBlue200 = Color(0xFFbfe7ff);
+  static const coreColorSolidBlue200 = Color(0xFFBFE7FF);
 
   /// coreColorSolidBlue300 with value: #99d8ff
-  static const coreColorSolidBlue300 = Color(0xFF99d8ff);
+  static const coreColorSolidBlue300 = Color(0xFF99D8FF);
 
   /// coreColorSolidBlue400 with value: #73c9ff
-  static const coreColorSolidBlue400 = Color(0xFF73c9ff);
+  static const coreColorSolidBlue400 = Color(0xFF73C9FF);
 
   /// coreColorSolidBlue500 with value: #53b9ff
-  static const coreColorSolidBlue500 = Color(0xFF53b9ff);
+  static const coreColorSolidBlue500 = Color(0xFF53B9FF);
 
   /// coreColorSolidBlue600 with value: #3daaff
-  static const coreColorSolidBlue600 = Color(0xFF3daaff);
+  static const coreColorSolidBlue600 = Color(0xFF3DAAFF);
 
   /// coreColorSolidBlue700 with value: #2c9aff
-  static const coreColorSolidBlue700 = Color(0xFF2c9aff);
+  static const coreColorSolidBlue700 = Color(0xFF2C9AFF);
 
   /// coreColorSolidBlue800 with value: #1789e1
-  static const coreColorSolidBlue800 = Color(0xFF1789e1);
+  static const coreColorSolidBlue800 = Color(0xFF1789E1);
 
   /// coreColorSolidBlue900 with value: #0777c4
-  static const coreColorSolidBlue900 = Color(0xFF0777c4);
+  static const coreColorSolidBlue900 = Color(0xFF0777C4);
 
   /// coreColorSolidBlue1000 with value: #0066a6
-  static const coreColorSolidBlue1000 = Color(0xFF0066a6);
+  static const coreColorSolidBlue1000 = Color(0xFF0066A6);
 
   /// coreColorSolidBlue1100 with value: #005488
   static const coreColorSolidBlue1100 = Color(0xFF005488);
 
   /// coreColorSolidBlue1200 with value: #00426a
-  static const coreColorSolidBlue1200 = Color(0xFF00426a);
+  static const coreColorSolidBlue1200 = Color(0xFF00426A);
 
   /// coreColorSolidBlue1300 with value: #00304d
-  static const coreColorSolidBlue1300 = Color(0xFF00304d);
+  static const coreColorSolidBlue1300 = Color(0xFF00304D);
 
   /// coreColorSolidMidnight100 with value: #f5f7f9
-  static const coreColorSolidMidnight100 = Color(0xFFf5f7f9);
+  static const coreColorSolidMidnight100 = Color(0xFFF5F7F9);
 
   /// coreColorSolidMidnight200 with value: #ccd7de
-  static const coreColorSolidMidnight200 = Color(0xFFccd7de);
+  static const coreColorSolidMidnight200 = Color(0xFFCCD7DE);
 
   /// coreColorSolidMidnight300 with value: #a3b7c4
-  static const coreColorSolidMidnight300 = Color(0xFFa3b7c4);
+  static const coreColorSolidMidnight300 = Color(0xFFA3B7C4);
 
   /// coreColorSolidMidnight400 with value: #7a97aa
-  static const coreColorSolidMidnight400 = Color(0xFF7a97aa);
+  static const coreColorSolidMidnight400 = Color(0xFF7A97AA);
 
   /// coreColorSolidMidnight500 with value: #527790
   static const coreColorSolidMidnight500 = Color(0xFF527790);
@@ -663,55 +663,55 @@ class CoreDesignTokens {
   static const coreColorSolidMidnight600 = Color(0xFF295776);
 
   /// coreColorSolidMidnight700 with value: #00375c
-  static const coreColorSolidMidnight700 = Color(0xFF00375c);
+  static const coreColorSolidMidnight700 = Color(0xFF00375C);
 
   /// coreColorSolidMidnight800 with value: #002e4d
-  static const coreColorSolidMidnight800 = Color(0xFF002e4d);
+  static const coreColorSolidMidnight800 = Color(0xFF002E4D);
 
   /// coreColorSolidMidnight900 with value: #00253f
-  static const coreColorSolidMidnight900 = Color(0xFF00253f);
+  static const coreColorSolidMidnight900 = Color(0xFF00253F);
 
   /// coreColorSolidMidnight1000 with value: #001d30
-  static const coreColorSolidMidnight1000 = Color(0xFF001d30);
+  static const coreColorSolidMidnight1000 = Color(0xFF001D30);
 
   /// coreColorSolidMidnight1100 with value: #001421
   static const coreColorSolidMidnight1100 = Color(0xFF001421);
 
   /// coreColorSolidMidnight1200 with value: #000b12
-  static const coreColorSolidMidnight1200 = Color(0xFF000b12);
+  static const coreColorSolidMidnight1200 = Color(0xFF000B12);
 
   /// coreColorSolidMidnight1300 with value: #000204
   static const coreColorSolidMidnight1300 = Color(0xFF000204);
 
   /// coreColorSolidSapphire100 with value: #e7eafe
-  static const coreColorSolidSapphire100 = Color(0xFFe7eafe);
+  static const coreColorSolidSapphire100 = Color(0xFFE7EAFE);
 
   /// coreColorSolidSapphire200 with value: #c2c9fd
-  static const coreColorSolidSapphire200 = Color(0xFFc2c9fd);
+  static const coreColorSolidSapphire200 = Color(0xFFC2C9FD);
 
   /// coreColorSolidSapphire300 with value: #9ea9fc
-  static const coreColorSolidSapphire300 = Color(0xFF9ea9fc);
+  static const coreColorSolidSapphire300 = Color(0xFF9EA9FC);
 
   /// coreColorSolidSapphire400 with value: #7989fb
-  static const coreColorSolidSapphire400 = Color(0xFF7989fb);
+  static const coreColorSolidSapphire400 = Color(0xFF7989FB);
 
   /// coreColorSolidSapphire500 with value: #5569f9
-  static const coreColorSolidSapphire500 = Color(0xFF5569f9);
+  static const coreColorSolidSapphire500 = Color(0xFF5569F9);
 
   /// coreColorSolidSapphire600 with value: #3148f8
-  static const coreColorSolidSapphire600 = Color(0xFF3148f8);
+  static const coreColorSolidSapphire600 = Color(0xFF3148F8);
 
   /// coreColorSolidSapphire700 with value: #0c28f7
-  static const coreColorSolidSapphire700 = Color(0xFF0c28f7);
+  static const coreColorSolidSapphire700 = Color(0xFF0C28F7);
 
   /// coreColorSolidSapphire800 with value: #0b23da
-  static const coreColorSolidSapphire800 = Color(0xFF0b23da);
+  static const coreColorSolidSapphire800 = Color(0xFF0B23DA);
 
   /// coreColorSolidSapphire900 with value: #091fbd
-  static const coreColorSolidSapphire900 = Color(0xFF091fbd);
+  static const coreColorSolidSapphire900 = Color(0xFF091FBD);
 
   /// coreColorSolidSapphire1000 with value: #081aa1
-  static const coreColorSolidSapphire1000 = Color(0xFF081aa1);
+  static const coreColorSolidSapphire1000 = Color(0xFF081AA1);
 
   /// coreColorSolidSapphire1100 with value: #061584
   static const coreColorSolidSapphire1100 = Color(0xFF061584);
@@ -720,247 +720,247 @@ class CoreDesignTokens {
   static const coreColorSolidSapphire1200 = Color(0xFF051167);
 
   /// coreColorSolidSapphire1300 with value: #040c4a
-  static const coreColorSolidSapphire1300 = Color(0xFF040c4a);
+  static const coreColorSolidSapphire1300 = Color(0xFF040C4A);
 
   /// coreColorSolidBlueberry100 with value: #ede6fc
-  static const coreColorSolidBlueberry100 = Color(0xFFede6fc);
+  static const coreColorSolidBlueberry100 = Color(0xFFEDE6FC);
 
   /// coreColorSolidBlueberry200 with value: #d2c0f7
-  static const coreColorSolidBlueberry200 = Color(0xFFd2c0f7);
+  static const coreColorSolidBlueberry200 = Color(0xFFD2C0F7);
 
   /// coreColorSolidBlueberry300 with value: #b69af3
-  static const coreColorSolidBlueberry300 = Color(0xFFb69af3);
+  static const coreColorSolidBlueberry300 = Color(0xFFB69AF3);
 
   /// coreColorSolidBlueberry400 with value: #9b74ee
-  static const coreColorSolidBlueberry400 = Color(0xFF9b74ee);
+  static const coreColorSolidBlueberry400 = Color(0xFF9B74EE);
 
   /// coreColorSolidBlueberry500 with value: #804ee9
-  static const coreColorSolidBlueberry500 = Color(0xFF804ee9);
+  static const coreColorSolidBlueberry500 = Color(0xFF804EE9);
 
   /// coreColorSolidBlueberry600 with value: #6428e5
-  static const coreColorSolidBlueberry600 = Color(0xFF6428e5);
+  static const coreColorSolidBlueberry600 = Color(0xFF6428E5);
 
   /// coreColorSolidBlueberry700 with value: #4902e0
-  static const coreColorSolidBlueberry700 = Color(0xFF4902e0);
+  static const coreColorSolidBlueberry700 = Color(0xFF4902E0);
 
   /// coreColorSolidBlueberry800 with value: #4102c6
-  static const coreColorSolidBlueberry800 = Color(0xFF4102c6);
+  static const coreColorSolidBlueberry800 = Color(0xFF4102C6);
 
   /// coreColorSolidBlueberry900 with value: #3802ac
-  static const coreColorSolidBlueberry900 = Color(0xFF3802ac);
+  static const coreColorSolidBlueberry900 = Color(0xFF3802AC);
 
   /// coreColorSolidBlueberry1000 with value: #2f0192
-  static const coreColorSolidBlueberry1000 = Color(0xFF2f0192);
+  static const coreColorSolidBlueberry1000 = Color(0xFF2F0192);
 
   /// coreColorSolidBlueberry1100 with value: #270178
   static const coreColorSolidBlueberry1100 = Color(0xFF270178);
 
   /// coreColorSolidBlueberry1200 with value: #1e015d
-  static const coreColorSolidBlueberry1200 = Color(0xFF1e015d);
+  static const coreColorSolidBlueberry1200 = Color(0xFF1E015D);
 
   /// coreColorSolidBlueberry1300 with value: #160143
   static const coreColorSolidBlueberry1300 = Color(0xFF160143);
 
   /// coreColorSolidGrape100 with value: #f2e7fa
-  static const coreColorSolidGrape100 = Color(0xFFf2e7fa);
+  static const coreColorSolidGrape100 = Color(0xFFF2E7FA);
 
   /// coreColorSolidGrape200 with value: #dfc3f3
-  static const coreColorSolidGrape200 = Color(0xFFdfc3f3);
+  static const coreColorSolidGrape200 = Color(0xFFDFC3F3);
 
   /// coreColorSolidGrape300 with value: #cc9eec
-  static const coreColorSolidGrape300 = Color(0xFFcc9eec);
+  static const coreColorSolidGrape300 = Color(0xFFCC9EEC);
 
   /// coreColorSolidGrape400 with value: #b97ae5
-  static const coreColorSolidGrape400 = Color(0xFFb97ae5);
+  static const coreColorSolidGrape400 = Color(0xFFB97AE5);
 
   /// coreColorSolidGrape500 with value: #a556dd
-  static const coreColorSolidGrape500 = Color(0xFFa556dd);
+  static const coreColorSolidGrape500 = Color(0xFFA556DD);
 
   /// coreColorSolidGrape600 with value: #9231d6
-  static const coreColorSolidGrape600 = Color(0xFF9231d6);
+  static const coreColorSolidGrape600 = Color(0xFF9231D6);
 
   /// coreColorSolidGrape700 with value: #7f0dcf
-  static const coreColorSolidGrape700 = Color(0xFF7f0dcf);
+  static const coreColorSolidGrape700 = Color(0xFF7F0DCF);
 
   /// coreColorSolidGrape800 with value: #700cb7
-  static const coreColorSolidGrape800 = Color(0xFF700cb7);
+  static const coreColorSolidGrape800 = Color(0xFF700CB7);
 
   /// coreColorSolidGrape900 with value: #610a9f
-  static const coreColorSolidGrape900 = Color(0xFF610a9f);
+  static const coreColorSolidGrape900 = Color(0xFF610A9F);
 
   /// coreColorSolidGrape1000 with value: #530987
   static const coreColorSolidGrape1000 = Color(0xFF530987);
 
   /// coreColorSolidGrape1100 with value: #44076e
-  static const coreColorSolidGrape1100 = Color(0xFF44076e);
+  static const coreColorSolidGrape1100 = Color(0xFF44076E);
 
   /// coreColorSolidGrape1200 with value: #350556
   static const coreColorSolidGrape1200 = Color(0xFF350556);
 
   /// coreColorSolidGrape1300 with value: #26043e
-  static const coreColorSolidGrape1300 = Color(0xFF26043e);
+  static const coreColorSolidGrape1300 = Color(0xFF26043E);
 
   /// coreColorSolidMagenta100 with value: #fae7fe
-  static const coreColorSolidMagenta100 = Color(0xFFfae7fe);
+  static const coreColorSolidMagenta100 = Color(0xFFFAE7FE);
 
   /// coreColorSolidMagenta200 with value: #f2c3fd
-  static const coreColorSolidMagenta200 = Color(0xFFf2c3fd);
+  static const coreColorSolidMagenta200 = Color(0xFFF2C3FD);
 
   /// coreColorSolidMagenta300 with value: #ea9efc
-  static const coreColorSolidMagenta300 = Color(0xFFea9efc);
+  static const coreColorSolidMagenta300 = Color(0xFFEA9EFC);
 
   /// coreColorSolidMagenta400 with value: #e27afb
-  static const coreColorSolidMagenta400 = Color(0xFFe27afb);
+  static const coreColorSolidMagenta400 = Color(0xFFE27AFB);
 
   /// coreColorSolidMagenta500 with value: #db56f9
-  static const coreColorSolidMagenta500 = Color(0xFFdb56f9);
+  static const coreColorSolidMagenta500 = Color(0xFFDB56F9);
 
   /// coreColorSolidMagenta600 with value: #d331f8
-  static const coreColorSolidMagenta600 = Color(0xFFd331f8);
+  static const coreColorSolidMagenta600 = Color(0xFFD331F8);
 
   /// coreColorSolidMagenta700 with value: #cb0df7
-  static const coreColorSolidMagenta700 = Color(0xFFcb0df7);
+  static const coreColorSolidMagenta700 = Color(0xFFCB0DF7);
 
   /// coreColorSolidMagenta800 with value: #b30cda
-  static const coreColorSolidMagenta800 = Color(0xFFb30cda);
+  static const coreColorSolidMagenta800 = Color(0xFFB30CDA);
 
   /// coreColorSolidMagenta900 with value: #9c0abd
-  static const coreColorSolidMagenta900 = Color(0xFF9c0abd);
+  static const coreColorSolidMagenta900 = Color(0xFF9C0ABD);
 
   /// coreColorSolidMagenta1000 with value: #8409a1
-  static const coreColorSolidMagenta1000 = Color(0xFF8409a1);
+  static const coreColorSolidMagenta1000 = Color(0xFF8409A1);
 
   /// coreColorSolidMagenta1100 with value: #6c0784
-  static const coreColorSolidMagenta1100 = Color(0xFF6c0784);
+  static const coreColorSolidMagenta1100 = Color(0xFF6C0784);
 
   /// coreColorSolidMagenta1200 with value: #550567
   static const coreColorSolidMagenta1200 = Color(0xFF550567);
 
   /// coreColorSolidMagenta1300 with value: #3d044a
-  static const coreColorSolidMagenta1300 = Color(0xFF3d044a);
+  static const coreColorSolidMagenta1300 = Color(0xFF3D044A);
 
   /// coreColorSolidCherry100 with value: #ffe6e7
-  static const coreColorSolidCherry100 = Color(0xFFffe6e7);
+  static const coreColorSolidCherry100 = Color(0xFFFFE6E7);
 
   /// coreColorSolidCherry200 with value: #ffbfc6
-  static const coreColorSolidCherry200 = Color(0xFFffbfc6);
+  static const coreColorSolidCherry200 = Color(0xFFFFBFC6);
 
   /// coreColorSolidCherry300 with value: #ff99a6
-  static const coreColorSolidCherry300 = Color(0xFFff99a6);
+  static const coreColorSolidCherry300 = Color(0xFFFF99A6);
 
   /// coreColorSolidCherry400 with value: #ff7389
-  static const coreColorSolidCherry400 = Color(0xFFff7389);
+  static const coreColorSolidCherry400 = Color(0xFFFF7389);
 
   /// coreColorSolidCherry500 with value: #ff4d6e
-  static const coreColorSolidCherry500 = Color(0xFFff4d6e);
+  static const coreColorSolidCherry500 = Color(0xFFFF4D6E);
 
   /// coreColorSolidCherry600 with value: #f32656
-  static const coreColorSolidCherry600 = Color(0xFFf32656);
+  static const coreColorSolidCherry600 = Color(0xFFF32656);
 
   /// coreColorSolidCherry700 with value: #de0040
-  static const coreColorSolidCherry700 = Color(0xFFde0040);
+  static const coreColorSolidCherry700 = Color(0xFFDE0040);
 
   /// coreColorSolidCherry800 with value: #d40032
-  static const coreColorSolidCherry800 = Color(0xFFd40032);
+  static const coreColorSolidCherry800 = Color(0xFFD40032);
 
   /// coreColorSolidCherry900 with value: #c40025
-  static const coreColorSolidCherry900 = Color(0xFFc40025);
+  static const coreColorSolidCherry900 = Color(0xFFC40025);
 
   /// coreColorSolidCherry1000 with value: #a6001a
-  static const coreColorSolidCherry1000 = Color(0xFFa6001a);
+  static const coreColorSolidCherry1000 = Color(0xFFA6001A);
 
   /// coreColorSolidCherry1100 with value: #880011
   static const coreColorSolidCherry1100 = Color(0xFF880011);
 
   /// coreColorSolidCherry1200 with value: #6a000a
-  static const coreColorSolidCherry1200 = Color(0xFF6a000a);
+  static const coreColorSolidCherry1200 = Color(0xFF6A000A);
 
   /// coreColorSolidCherry1300 with value: #4d0005
-  static const coreColorSolidCherry1300 = Color(0xFF4d0005);
+  static const coreColorSolidCherry1300 = Color(0xFF4D0005);
 
   /// coreColorSolidCoral100 with value: #ffe6e6
-  static const coreColorSolidCoral100 = Color(0xFFffe6e6);
+  static const coreColorSolidCoral100 = Color(0xFFFFE6E6);
 
   /// coreColorSolidCoral200 with value: #ffbfc2
-  static const coreColorSolidCoral200 = Color(0xFFffbfc2);
+  static const coreColorSolidCoral200 = Color(0xFFFFBFC2);
 
   /// coreColorSolidCoral300 with value: #ff9ba3
-  static const coreColorSolidCoral300 = Color(0xFFff9ba3);
+  static const coreColorSolidCoral300 = Color(0xFFFF9BA3);
 
   /// coreColorSolidCoral400 with value: #ff7e88
-  static const coreColorSolidCoral400 = Color(0xFFff7e88);
+  static const coreColorSolidCoral400 = Color(0xFFFF7E88);
 
   /// coreColorSolidCoral500 with value: #ff6671
-  static const coreColorSolidCoral500 = Color(0xFFff6671);
+  static const coreColorSolidCoral500 = Color(0xFFFF6671);
 
   /// coreColorSolidCoral600 with value: #ff535e
-  static const coreColorSolidCoral600 = Color(0xFFff535e);
+  static const coreColorSolidCoral600 = Color(0xFFFF535E);
 
   /// coreColorSolidCoral700 with value: #ff444f
-  static const coreColorSolidCoral700 = Color(0xFFff444f);
+  static const coreColorSolidCoral700 = Color(0xFFFF444F);
 
   /// coreColorSolidCoral800 with value: #e12e3a
-  static const coreColorSolidCoral800 = Color(0xFFe12e3a);
+  static const coreColorSolidCoral800 = Color(0xFFE12E3A);
 
   /// coreColorSolidCoral900 with value: #c41c28
-  static const coreColorSolidCoral900 = Color(0xFFc41c28);
+  static const coreColorSolidCoral900 = Color(0xFFC41C28);
 
   /// coreColorSolidCoral1000 with value: #a60e19
-  static const coreColorSolidCoral1000 = Color(0xFFa60e19);
+  static const coreColorSolidCoral1000 = Color(0xFFA60E19);
 
   /// coreColorSolidCoral1100 with value: #88030d
-  static const coreColorSolidCoral1100 = Color(0xFF88030d);
+  static const coreColorSolidCoral1100 = Color(0xFF88030D);
 
   /// coreColorSolidCoral1200 with value: #6a0004
-  static const coreColorSolidCoral1200 = Color(0xFF6a0004);
+  static const coreColorSolidCoral1200 = Color(0xFF6A0004);
 
   /// coreColorSolidCoral1300 with value: #4d0000
-  static const coreColorSolidCoral1300 = Color(0xFF4d0000);
+  static const coreColorSolidCoral1300 = Color(0xFF4D0000);
 
   /// coreColorSolidSlate50 with value: #ffffff
-  static const coreColorSolidSlate50 = Color(0xFFffffff);
+  static const coreColorSolidSlate50 = Color(0xFFFFFFFF);
 
   /// coreColorSolidSlate75 with value: #f6f7f8
-  static const coreColorSolidSlate75 = Color(0xFFf6f7f8);
+  static const coreColorSolidSlate75 = Color(0xFFF6F7F8);
 
   /// coreColorSolidSlate100 with value: #ebecef
-  static const coreColorSolidSlate100 = Color(0xFFebecef);
+  static const coreColorSolidSlate100 = Color(0xFFEBECEF);
 
   /// coreColorSolidSlate200 with value: #ced0d6
-  static const coreColorSolidSlate200 = Color(0xFFced0d6);
+  static const coreColorSolidSlate200 = Color(0xFFCED0D6);
 
   /// coreColorSolidSlate300 with value: #b1b4bc
-  static const coreColorSolidSlate300 = Color(0xFFb1b4bc);
+  static const coreColorSolidSlate300 = Color(0xFFB1B4BC);
 
   /// coreColorSolidSlate400 with value: #9498a2
-  static const coreColorSolidSlate400 = Color(0xFF9498a2);
+  static const coreColorSolidSlate400 = Color(0xFF9498A2);
 
   /// coreColorSolidSlate500 with value: #787d88
-  static const coreColorSolidSlate500 = Color(0xFF787d88);
+  static const coreColorSolidSlate500 = Color(0xFF787D88);
 
   /// coreColorSolidSlate600 with value: #5c616d
-  static const coreColorSolidSlate600 = Color(0xFF5c616d);
+  static const coreColorSolidSlate600 = Color(0xFF5C616D);
 
   /// coreColorSolidSlate700 with value: #414652
   static const coreColorSolidSlate700 = Color(0xFF414652);
 
   /// coreColorSolidSlate800 with value: #383d4a
-  static const coreColorSolidSlate800 = Color(0xFF383d4a);
+  static const coreColorSolidSlate800 = Color(0xFF383D4A);
 
   /// coreColorSolidSlate900 with value: #303541
   static const coreColorSolidSlate900 = Color(0xFF303541);
 
   /// coreColorSolidSlate1000 with value: #282c38
-  static const coreColorSolidSlate1000 = Color(0xFF282c38);
+  static const coreColorSolidSlate1000 = Color(0xFF282C38);
 
   /// coreColorSolidSlate1100 with value: #20242f
-  static const coreColorSolidSlate1100 = Color(0xFF20242f);
+  static const coreColorSolidSlate1100 = Color(0xFF20242F);
 
   /// coreColorSolidSlate1200 with value: #181c25
-  static const coreColorSolidSlate1200 = Color(0xFF181c25);
+  static const coreColorSolidSlate1200 = Color(0xFF181C25);
 
   /// coreColorSolidSlate1300 with value: #11141b
-  static const coreColorSolidSlate1300 = Color(0xFF11141b);
+  static const coreColorSolidSlate1300 = Color(0xFF11141B);
 
   /// coreColorSolidSlate1400 with value: #000000
   static const coreColorSolidSlate1400 = Color(0xFF000000);
@@ -3117,25 +3117,25 @@ class CoreDesignTokens {
   static const coreFontFamilyFontAwesomeCustom = 'Font Awesome Kit a9f9eb613f';
 
   /// coreFontWeightLight with value: 300
-  static const coreFontWeightLight = '300';
+  static const coreFontWeightLight = FontWeight.w300;
 
   /// coreFontWeightRegular with value: 400
-  static const coreFontWeightRegular = '400';
+  static const coreFontWeightRegular = FontWeight.w400;
 
   /// coreFontWeightSemiBold with value: 600
-  static const coreFontWeightSemiBold = '600';
+  static const coreFontWeightSemiBold = FontWeight.w600;
 
   /// coreFontWeightBold with value: 700
-  static const coreFontWeightBold = '700';
+  static const coreFontWeightBold = FontWeight.w700;
 
   /// coreFontWeightExtraBold with value: 800
-  static const coreFontWeightExtraBold = '800';
+  static const coreFontWeightExtraBold = FontWeight.w800;
 
   /// coreFontWeightBlack with value: 900
-  static const coreFontWeightBlack = '900';
+  static const coreFontWeightBlack = FontWeight.w900;
 
   /// coreFontWeightItalic with value: Italic
-  static const coreFontWeightItalic = 'Italic';
+  static const coreFontWeightItalic = FontStyle.italic;
 
   /// coreFontWeightBoldItalic with value: Bold Italic
   static const coreFontWeightBoldItalic = 'Bold Italic';
@@ -3201,13 +3201,13 @@ class CoreDesignTokens {
   static const coreLineHeight1800 = 204.0;
 
   /// coreLineHeightAuto with value: auto
-  static const coreLineHeightAuto = 'auto';
+  static const coreLineHeightAuto = 1.0;
 
   /// coreFontDecorationNone with value: none
-  static const coreFontDecorationNone = 'none';
+  static const coreFontDecorationNone = TextDecoration.none;
 
   /// coreFontDecorationUnderline with value: underline
-  static const coreFontDecorationUnderline = 'underline';
+  static const coreFontDecorationUnderline = TextDecoration.underline;
 
   /// 0.75 rem (Value: 12)
   static const coreParagraphSpacing50 = 12.0;
@@ -3264,16 +3264,18 @@ class CoreDesignTokens {
   static const coreParagraphSpacing1600 = 196.0;
 
   /// coreMotionEase100 with value: cubic-bezier(0, 0, 1, 1)
-  static const coreMotionEase100 = 'cubic-bezier(0, 0, 1, 1)';
+  static const coreMotionEase100 = Curves
+      .linear /* cubic-bezier(0.0, 0.0, 1.0, 1.0) - A linear animation curve */;
 
   /// coreMotionEase200 with value: cubic-bezier(1, 0, 1, 1)
-  static const coreMotionEase200 = 'cubic-bezier(1, 0, 1, 1)';
+  static const coreMotionEase200 = Cubic(1, 0, 1, 1);
 
   /// coreMotionEase300 with value: cubic-bezier(0, 0, 0, 1)
-  static const coreMotionEase300 = 'cubic-bezier(0, 0, 0, 1)';
+  static const coreMotionEase300 = Curves
+      .decelerate /* cubic-bezier(0.0, 0.0, 0.0, 1.0) - Animation curve that starts quickly and decelerates */;
 
   /// coreMotionEase400 with value: cubic-bezier(0.72, 0, 0.24, 1)
-  static const coreMotionEase400 = 'cubic-bezier(0.72, 0, 0.24, 1)';
+  static const coreMotionEase400 = Cubic(0.72, 0, 0.24, 1);
 
   /// coreMotionDuration50 with value: 0ms
   static const coreMotionDuration50 = Duration();
