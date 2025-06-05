@@ -635,8 +635,42 @@ class MotionTokenFormatter implements DesignTokenValueFormatter {
       return cubicBezierFormatter.convertCubicBezierToDartObject(cleanedValue);
     }
 
-    // If we couldn't parse it, return the original string
-    return "'$cleanedValue'";
+    // Handle standard CSS easing values
+    return _mapCssEasingToCurve(cleanedValue);
+  }
+
+  /// Maps CSS easing values to Flutter Curve instances
+  ///
+  /// This method handles standard CSS easing keywords and maps them to
+  /// appropriate Flutter Curves constants. For unrecognized values,
+  /// it defaults to Curves.linear to ensure valid Dart code generation.
+  ///
+  /// Parameters:
+  /// - easingValue: The CSS easing value (e.g., 'ease', 'ease-in', 'linear')
+  ///
+  /// Returns:
+  /// A string representation of a Flutter Curve constant
+  String _mapCssEasingToCurve(String easingValue) {
+    switch (easingValue.toLowerCase().trim()) {
+      case 'ease':
+        return 'Curves.ease /* CSS ease curve */';
+      case 'ease-in':
+        return 'Curves.easeIn /* CSS ease-in curve */';
+      case 'ease-out':
+        return 'Curves.easeOut /* CSS ease-out curve */';
+      case 'ease-in-out':
+        return 'Curves.easeInOut /* CSS ease-in-out curve */';
+      case 'linear':
+        return 'Curves.linear /* CSS linear curve */';
+      case 'step-start':
+        return 'Curves.linear /* step-start approximated as linear */';
+      case 'step-end':
+        return 'Curves.linear /* step-end approximated as linear */';
+      default:
+        // For unrecognized values, default to linear to ensure valid Dart code
+        // This prevents invalid string literals from being generated
+        return 'Curves.linear /* fallback for unrecognized easing: $easingValue */';
+    }
   }
 }
 

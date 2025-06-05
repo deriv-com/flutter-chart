@@ -162,6 +162,125 @@ void main() {
       });
     });
 
+    /// Tests for motion token formatting
+    ///
+    /// These tests verify that motion tokens (both cubic-bezier and CSS easing values)
+    /// are correctly formatted to valid Flutter Curve instances, addressing the bug
+    /// where non-bezier values were incorrectly formatted as string literals.
+    group('Motion Token Tests', () {
+      /// Tests that cubic-bezier values are handled correctly by MotionTokenFormatter
+      ///
+      /// Verifies that the MotionTokenFormatter correctly delegates cubic-bezier
+      /// values to the CubicBezierTokenFormatter.
+      test('Motion Token - Cubic Bezier', () {
+        String input = "cubic-bezier(0.42, 0, 1, 1)";
+        String result = TokenFormatterFactory.getFormatter('motion')
+            .format(input, DesignTokenUtils.categoryCore);
+        expect(result, contains("Curves.ease"));
+      });
+
+      /// Tests that CSS 'ease' values are mapped to Flutter Curves
+      ///
+      /// Verifies that the CSS 'ease' keyword is correctly mapped to
+      /// Flutter's Curves.ease constant instead of a string literal.
+      test('Motion Token - CSS Ease', () {
+        String input = "ease";
+        String result = TokenFormatterFactory.getFormatter('motion')
+            .format(input, DesignTokenUtils.categoryCore);
+        expect(result, contains("Curves.ease"));
+        expect(result, isNot(contains("'ease'")));
+      });
+
+      /// Tests that CSS 'ease-in' values are mapped to Flutter Curves
+      ///
+      /// Verifies that the CSS 'ease-in' keyword is correctly mapped to
+      /// Flutter's Curves.easeIn constant instead of a string literal.
+      test('Motion Token - CSS Ease In', () {
+        String input = "ease-in";
+        String result = TokenFormatterFactory.getFormatter('motion')
+            .format(input, DesignTokenUtils.categoryCore);
+        expect(result, contains("Curves.easeIn"));
+        expect(result, isNot(contains("'ease-in'")));
+      });
+
+      /// Tests that CSS 'ease-out' values are mapped to Flutter Curves
+      ///
+      /// Verifies that the CSS 'ease-out' keyword is correctly mapped to
+      /// Flutter's Curves.easeOut constant instead of a string literal.
+      test('Motion Token - CSS Ease Out', () {
+        String input = "ease-out";
+        String result = TokenFormatterFactory.getFormatter('motion')
+            .format(input, DesignTokenUtils.categoryCore);
+        expect(result, contains("Curves.easeOut"));
+        expect(result, isNot(contains("'ease-out'")));
+      });
+
+      /// Tests that CSS 'ease-in-out' values are mapped to Flutter Curves
+      ///
+      /// Verifies that the CSS 'ease-in-out' keyword is correctly mapped to
+      /// Flutter's Curves.easeInOut constant instead of a string literal.
+      test('Motion Token - CSS Ease In Out', () {
+        String input = "ease-in-out";
+        String result = TokenFormatterFactory.getFormatter('motion')
+            .format(input, DesignTokenUtils.categoryCore);
+        expect(result, contains("Curves.easeInOut"));
+        expect(result, isNot(contains("'ease-in-out'")));
+      });
+
+      /// Tests that CSS 'linear' values are mapped to Flutter Curves
+      ///
+      /// Verifies that the CSS 'linear' keyword is correctly mapped to
+      /// Flutter's Curves.linear constant instead of a string literal.
+      test('Motion Token - CSS Linear', () {
+        String input = "linear";
+        String result = TokenFormatterFactory.getFormatter('motion')
+            .format(input, DesignTokenUtils.categoryCore);
+        expect(result, contains("Curves.linear"));
+        expect(result, isNot(contains("'linear'")));
+      });
+
+      /// Tests that unrecognized easing values fallback to valid Curve instances
+      ///
+      /// Verifies that unrecognized easing values are mapped to a valid Flutter
+      /// Curve (Curves.linear) instead of invalid string literals, preventing
+      /// the generation of invalid Dart code.
+      test('Motion Token - Unrecognized Fallback', () {
+        String input = "unknown-easing";
+        String result = TokenFormatterFactory.getFormatter('motion')
+            .format(input, DesignTokenUtils.categoryCore);
+        expect(result, contains("Curves.linear"));
+        expect(result,
+            contains("fallback for unrecognized easing: unknown-easing"));
+        expect(result, isNot(contains("'unknown-easing'")));
+      });
+
+      /// Tests that step-start values are handled appropriately
+      ///
+      /// Verifies that CSS step-start values are approximated with a valid
+      /// Flutter Curve instead of being left as string literals.
+      test('Motion Token - Step Start', () {
+        String input = "step-start";
+        String result = TokenFormatterFactory.getFormatter('motion')
+            .format(input, DesignTokenUtils.categoryCore);
+        expect(result, contains("Curves.linear"));
+        expect(result, contains("step-start approximated as linear"));
+        expect(result, isNot(contains("'step-start'")));
+      });
+
+      /// Tests that step-end values are handled appropriately
+      ///
+      /// Verifies that CSS step-end values are approximated with a valid
+      /// Flutter Curve instead of being left as string literals.
+      test('Motion Token - Step End', () {
+        String input = "step-end";
+        String result = TokenFormatterFactory.getFormatter('motion')
+            .format(input, DesignTokenUtils.categoryCore);
+        expect(result, contains("Curves.linear"));
+        expect(result, contains("step-end approximated as linear"));
+        expect(result, isNot(contains("'step-end'")));
+      });
+    });
+
     /// Tests for token name conversion
     ///
     /// These tests verify that dot-notation token references are correctly converted
