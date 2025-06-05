@@ -19,7 +19,7 @@ echo "Fixing component_design_tokens.dart..."
 dart fix --apply lib/src/theme/design_tokens/component_design_tokens.dart
 
 echo "Step 3: Formatting generated files..."
-dart format --set-exit-if-changed .
+dart format .
 
 echo "Step 4: Analyzing generated files for remaining issues..."
 ANALYZE_OUTPUT=$(dart analyze lib/src/theme/design_tokens/core_design_tokens.dart lib/src/theme/design_tokens/light_theme_design_tokens.dart lib/src/theme/design_tokens/dark_theme_design_tokens.dart lib/src/theme/design_tokens/component_design_tokens.dart)
