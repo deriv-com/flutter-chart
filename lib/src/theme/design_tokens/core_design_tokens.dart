@@ -2465,8 +2465,7 @@ class CoreDesignTokens {
   );
 
   /// coreElevationShadow50 with value: {x: 0, y: 0, blur: 0, spread: 0, color: , type: dropShadow}
-  static const coreElevationShadow50 = BoxShadow(
-      color: Colors.transparent);
+  static const coreElevationShadow50 = BoxShadow(color: Colors.transparent);
 
   /// coreElevationShadow110 with value: [{x: 0, y: -1, blur: 2, spread: 0, color: rgba(0, 0, 0, 6%), type: dropShadow}, {x: 0, y: -1, blur: 2, spread: 0, color: rgba(0, 0, 0, 3%), type: dropShadow}]
   static final coreElevationShadow110 = [

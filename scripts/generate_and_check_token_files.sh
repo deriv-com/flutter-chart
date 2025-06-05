@@ -8,10 +8,7 @@ echo "=== Starting token generation and validation process ==="
 echo "Step 1: Generating token files..."
 dart lib/src/theme/design_tokens/design_token_parser.dart
 
-echo "Step 2: Formatting generated files..."
-dart format lib/src/theme/design_tokens/core_design_tokens.dart lib/src/theme/design_tokens/light_theme_design_tokens.dart lib/src/theme/design_tokens/dark_theme_design_tokens.dart lib/src/theme/design_tokens/component_design_tokens.dart
-
-echo "Step 3: Auto-fixing common issues..."
+echo "Step 2: Auto-fixing common issues..."
 echo "Fixing core_design_tokens.dart..."
 dart fix --apply lib/src/theme/design_tokens/core_design_tokens.dart
 echo "Fixing light_theme_design_tokens.dart..."
@@ -20,6 +17,9 @@ echo "Fixing dark_theme_design_tokens.dart..."
 dart fix --apply lib/src/theme/design_tokens/dark_theme_design_tokens.dart
 echo "Fixing component_design_tokens.dart..."
 dart fix --apply lib/src/theme/design_tokens/component_design_tokens.dart
+
+echo "Step 3: Formatting generated files..."
+dart format --set-exit-if-changed .
 
 echo "Step 4: Analyzing generated files for remaining issues..."
 ANALYZE_OUTPUT=$(dart analyze lib/src/theme/design_tokens/core_design_tokens.dart lib/src/theme/design_tokens/light_theme_design_tokens.dart lib/src/theme/design_tokens/dark_theme_design_tokens.dart lib/src/theme/design_tokens/component_design_tokens.dart)
