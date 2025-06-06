@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 abstract class DrawingToolConfig extends AddOnConfig {
   /// Initializes
   const DrawingToolConfig({
-    required this.configId,
+    required super.configId,
     required this.drawingData,
     // TODO(Bahar-Deriv): Move edgePoints to drawingData.
     required this.edgePoints,
@@ -60,9 +60,6 @@ abstract class DrawingToolConfig extends AddOnConfig {
 
   /// Drawing tool edge points.
   final List<EdgePoint> edgePoints;
-
-  /// Drawing tool config id.
-  final String? configId;
 
   /// Key of drawing tool name property in JSON.
   static const String nameKey = 'name';

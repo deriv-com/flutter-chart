@@ -1,8 +1,16 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../interactable_drawings/drawing_v2.dart';
+import '../interactable_drawings/interactable_drawing.dart';
+import '../interactive_layer_states/interactive_state.dart';
 import '../enums/drawing_tool_state.dart';
 import '../enums/state_change_direction.dart';
+import '../widgets/selected_drawing_floating_menu.dart';
+import 'interactive_hover_state.dart';
+import 'interactive_normal_state.dart';
 
 /// The state of the interactive layer when a tool is selected.
 ///
@@ -24,7 +32,9 @@ class InteractiveSelectedToolState extends InteractiveState
   InteractiveSelectedToolState({
     required this.selected,
     required super.interactiveLayerBehaviour,
-  });
+  }) {
+    interactiveLayerBehaviour.controller.selectedDrawing = selected;
+  }
 
   /// The selected tool.
   ///
@@ -61,7 +71,7 @@ class InteractiveSelectedToolState extends InteractiveState
   void onPanEnd(DragEndDetails details) {
     selected.onDragEnd(details, epochFromX, quoteFromY, epochToX, quoteToY);
     _draggingStartedOnTool = false;
-    interactiveLayer.saveDrawing(selected);
+    interactiveLayer.saveDrawing(selected.getUpdatedConfig());
   }
 
   @override
@@ -121,8 +131,34 @@ class InteractiveSelectedToolState extends InteractiveState
         InteractiveNormalState(
             interactiveLayerBehaviour: interactiveLayerBehaviour),
         StateChangeAnimationDirection.backward,
-        waitForAnimation: true,
       );
     }
   }
+
+  @override
+  List<Widget> get previewWidgets => [_buildSelectedDrawingFloatingMenu()];
+
+  Widget _buildSelectedDrawingFloatingMenu() => SelectedDrawingFloatingMenu(
+        drawing: selected,
+        interactiveLayerBehaviour: interactiveLayerBehaviour,
+        onUpdateDrawing: (config) {
+          interactiveLayer.saveDrawing(config);
+          interactiveLayerBehaviour.updateStateTo(
+            this,
+            StateChangeAnimationDirection.forward,
+            animate: false,
+          );
+        },
+        onRemoveDrawing: (config) {
+          interactiveLayer.removeDrawing(config);
+
+          interactiveLayerBehaviour.updateStateTo(
+            InteractiveNormalState(
+              interactiveLayerBehaviour: interactiveLayerBehaviour,
+            ),
+            StateChangeAnimationDirection.backward,
+            waitForAnimation: false,
+          );
+        },
+      );
 }

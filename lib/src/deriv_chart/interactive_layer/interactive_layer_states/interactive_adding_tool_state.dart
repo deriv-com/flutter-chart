@@ -142,16 +142,18 @@ class InteractiveAddingToolState extends InteractiveState
   void onTap(TapUpDetails details) {
     _drawingPreview!
         .onCreateTap(details, epochFromX, quoteFromY, epochToX, quoteToY, () {
+      interactiveLayer
+        ..clearAddingDrawing()
+        ..addDrawing(_drawingPreview!.interactableDrawing.getUpdatedConfig());
+
+      _drawingPreview = null;
+
       interactiveLayerBehaviour.updateStateTo(
         InteractiveNormalState(
           interactiveLayerBehaviour: interactiveLayerBehaviour,
         ),
         StateChangeAnimationDirection.forward,
       );
-
-      interactiveLayer
-        ..clearAddingDrawing()
-        ..addDrawing(_drawingPreview!.interactableDrawing);
     });
   }
 }

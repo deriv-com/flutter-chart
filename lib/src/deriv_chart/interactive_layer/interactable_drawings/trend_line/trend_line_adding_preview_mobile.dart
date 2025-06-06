@@ -5,6 +5,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/anim
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/enums/drawing_tool_state.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/enums/state_change_direction.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -54,6 +56,8 @@ class TrendLineAddingPreviewMobile
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
     GetDrawingState getDrawingState,
   ) {
     final LineStyle lineStyle = interactableDrawing.config.lineStyle;
@@ -164,7 +168,6 @@ class TrendLineAddingPreviewMobile
     interactiveLayerBehaviour.updateStateTo(
       interactiveLayerBehaviour.currentState,
       StateChangeAnimationDirection.forward,
-      waitForAnimation: true,
     );
 
     interactableDrawing.onDragStart(
@@ -177,7 +180,6 @@ class TrendLineAddingPreviewMobile
     interactiveLayerBehaviour.updateStateTo(
       interactiveLayerBehaviour.currentState,
       StateChangeAnimationDirection.backward,
-      waitForAnimation: true,
     );
 
     interactableDrawing.onDragEnd(

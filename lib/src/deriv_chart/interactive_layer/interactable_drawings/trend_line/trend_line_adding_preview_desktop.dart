@@ -7,6 +7,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/anim
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/paint_helpers.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawing_custom_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/gestures.dart';
 
@@ -46,6 +48,8 @@ class TrendLineAddingPreviewDesktop
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
     GetDrawingState getDrawingState,
   ) {
     final LineStyle lineStyle = interactableDrawing.config.lineStyle;
@@ -72,8 +76,8 @@ class TrendLineAddingPreviewDesktop
           paintStyle, lineStyle);
     }
 
-    _crossHair.paint(
-        canvas, size, epochToX, quoteToY, animationInfo, getDrawingState);
+    _crossHair.paint(canvas, size, epochToX, quoteToY, animationInfo,
+        chartConfig, chartTheme, getDrawingState);
   }
 
   @override

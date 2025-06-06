@@ -1,5 +1,7 @@
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
@@ -74,12 +76,32 @@ abstract class DrawingV2 {
   );
 
   /// Paints the drawing tool on the chart.
+  ///
+  /// Whatever that is painted here it will be in the chart's excluding Y-axis
+  /// area.
   void paint(
     Canvas canvas,
     Size size,
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
+    GetDrawingState getDrawingState,
+  );
+
+  /// Paints the drawing tool chart but over the Y-axis.
+  ///
+  /// This is useful for the drawing wants to paint something that should be
+  /// visible over the Y-axis, like a horizontal line or a label.
+  void paintOverYAxis(
+    Canvas canvas,
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
     GetDrawingState getDrawingState,
   );
 

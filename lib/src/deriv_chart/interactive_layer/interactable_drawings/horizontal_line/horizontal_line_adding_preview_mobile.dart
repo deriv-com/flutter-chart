@@ -5,8 +5,9 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/paint_helpers.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
-
 import '../../interactable_drawing_custom_painter.dart';
 import '../drawing_adding_preview.dart';
 import 'horizontal_line_interactable_drawing.dart';
@@ -69,6 +70,8 @@ class HorizontalLineAddingPreviewMobile
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
     GetDrawingState drawingState,
   ) {
     if (interactableDrawing.startPoint != null) {
@@ -80,12 +83,35 @@ class HorizontalLineAddingPreviewMobile
 
       canvas.drawPath(
         dashPath(horizontalPath,
-            dashArray: CircularIntervalList<double>(<double>[5, 5])),
+            dashArray: CircularIntervalList<double>(<double>[2, 2])),
         Paint()
           ..color = interactableDrawing.config.lineStyle.color
           ..style = PaintingStyle.stroke,
       );
     }
+  }
+
+  @override
+  void paintOverYAxis(
+    Canvas canvas,
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
+    GetDrawingState getDrawingState,
+  ) {
+    drawValueLabel(
+      canvas: canvas,
+      quoteToY: quoteToY,
+      value: interactableDrawing.startPoint!.quote,
+      pipSize: chartConfig.pipSize,
+      size: size,
+      textStyle: interactableDrawing.config.labelStyle,
+      color: interactableDrawing.config.lineStyle.color,
+      backgroundColor: chartTheme.backgroundColor,
+    );
   }
 
   @override

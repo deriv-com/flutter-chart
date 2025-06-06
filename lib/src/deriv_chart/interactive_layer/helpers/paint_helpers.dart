@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:flutter/material.dart';
 
 /// Draws alignment guides (horizontal and vertical lines) for a single point
 void drawPointAlignmentGuides(Canvas canvas, Size size, Offset pointOffset) {
@@ -154,4 +155,93 @@ class CircularIntervalList<T> {
     }
     return _values[_index++];
   }
+}
+
+/// Draws a value rectangle with formatted price based on pip size
+///
+/// This draws a rounded rectangle with the formatted value inside it.
+/// The value is formatted according to the provided pip size.
+void drawValueLabel({
+  required Canvas canvas,
+  required QuoteToY quoteToY,
+  required double value,
+  required int pipSize,
+  required Size size,
+  required TextStyle textStyle,
+  Color color = Colors.white,
+  Color backgroundColor = Colors.transparent,
+}) {
+  // Calculate Y position based on the value
+  final double yPosition = quoteToY(value);
+
+  // Format the value according to pip size with proper decimal places
+  final String formattedValue = value.toStringAsFixed(pipSize);
+
+  // Create text painter to measure text dimensions
+  final TextPainter textPainter =
+      _getTextPainter(formattedValue, color, textStyle: textStyle)..layout();
+
+  // Create rectangle with padding around the text
+  final double rectWidth = textPainter.width + 24;
+  const double rectHeight = 30; // Fixed height to match the image
+
+  final double rectRight = size.width;
+  final double rectLeft = rectRight - rectWidth;
+
+  final Rect rect = Rect.fromLTRB(
+    rectLeft,
+    yPosition - rectHeight / 2,
+    rectRight,
+    yPosition + rectHeight / 2,
+  );
+
+  // Draw rounded rectangle
+  final Paint rectPaint = Paint()
+    ..color = backgroundColor
+    ..style = PaintingStyle.fill;
+
+  final Paint borderPaint = Paint()
+    ..color = color
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1.0;
+
+  // Draw the background and border
+  final RRect roundedRect =
+      RRect.fromRectAndRadius(rect, const Radius.circular(4));
+  canvas
+    ..drawRRect(roundedRect, rectPaint)
+    ..drawRRect(roundedRect, borderPaint);
+
+  // Draw the text centered in the rectangle
+  textPainter.paint(
+    canvas,
+    Offset(
+      rect.left + (rectWidth - textPainter.width) / 2,
+      rect.top + (rectHeight - textPainter.height) / 2,
+    ),
+  );
+
+  // hover for buttons
+  // change cursor stle when hover over grab
+}
+
+/// Returns a [TextPainter] for the given formatted value and color.
+TextPainter _getTextPainter(
+  String formattedValue,
+  Color color, {
+  TextStyle textStyle = const TextStyle(
+    color: Colors.white38,
+    fontSize: 14,
+    fontWeight: FontWeight.normal,
+  ),
+}) {
+  final TextPainter textPainter = TextPainter(
+    text: TextSpan(
+      text: formattedValue,
+      style: textStyle,
+    ),
+    textDirection: TextDirection.ltr,
+    textAlign: TextAlign.center,
+  );
+  return textPainter;
 }

@@ -1,5 +1,8 @@
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
@@ -23,16 +26,45 @@ import 'drawing_v2.dart';
 abstract class InteractableDrawing<T extends DrawingToolConfig>
     implements DrawingV2 {
   /// Initializes [InteractableDrawing].
-  InteractableDrawing({required this.config});
+  InteractableDrawing({required T drawingConfig}) {
+    config = drawingConfig.copyWith() as T;
+    _prevConfig = config.copyWith() as T;
+  }
 
   @override
   String get id => config.configId ?? '';
 
   /// The drawing tool config.
-  final T config;
+  late T config;
+
+  /// The previous drawing tool config.
+  ///
+  /// Whenever there is a change in the internal [config] this will be hold the
+  /// previous state of the config before change. so it can be used in the
+  /// config comparisons.
+  late T _prevConfig;
 
   /// Returns the updated config.
   T getUpdatedConfig();
+
+  /// Returns the widget for the toolbar menu of the drawing tool.
+  /// [config] is the current configuration of the drawing tool.
+  Widget getToolBarMenu({
+    required UpdateDrawingTool onUpdate,
+  }) {
+    final toolBar = buildDrawingToolBarMenu((config) {
+      _prevConfig = this.config;
+      this.config = config as T;
+
+      onUpdate(config);
+    });
+
+    return toolBar;
+  }
+
+  /// Builds the toolbar menu for the drawing tool.
+  @protected
+  Widget buildDrawingToolBarMenu(UpdateDrawingTool onUpdate);
 
   /// Returns `true` if the drawing tool is hit by the given offset.
   @override
@@ -94,6 +126,8 @@ abstract class InteractableDrawing<T extends DrawingToolConfig>
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
     GetDrawingState getDrawingState,
   );
 
@@ -102,11 +136,26 @@ abstract class InteractableDrawing<T extends DrawingToolConfig>
     Set<DrawingToolState> drawingState,
     covariant InteractableDrawing<T> oldDrawing,
   ) {
-    return config != oldDrawing.config ||
+    final configChanged = config != _prevConfig;
+    _prevConfig = config;
+
+    return configChanged ||
         drawingState.contains(DrawingToolState.dragging) ||
         drawingState.contains(DrawingToolState.adding) ||
         drawingState.contains(DrawingToolState.animating);
   }
+
+  @override
+  void paintOverYAxis(
+    Canvas canvas,
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
+    GetDrawingState getDrawingState,
+  ) {}
 
   @override
   bool isInViewPort(EpochRange epochRange, QuoteRange quoteRange);

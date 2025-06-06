@@ -68,6 +68,7 @@ class InteractiveNormalState extends InteractiveState
         interactiveLayerBehaviour: interactiveLayerBehaviour,
       ),
       StateChangeAnimationDirection.forward,
+      waitForAnimation: false,
     );
   }
 }
