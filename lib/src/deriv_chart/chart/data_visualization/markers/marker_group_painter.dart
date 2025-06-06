@@ -86,4 +86,12 @@ class MarkerGroupPainter extends SeriesPainter<MarkerGroupSeries> {
       );
     }
   }
+
+  @override
+  List<CustomPainterSemantics> buildSemantics(
+      {required Size size,
+      required EpochToX epochToX,
+      required QuoteToY quoteToY}) {
+    return <CustomPainterSemantics>[];
+  }
 }
