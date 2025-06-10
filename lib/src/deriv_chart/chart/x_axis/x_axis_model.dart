@@ -12,6 +12,7 @@ import 'functions/calc_no_overlay_time_gaps.dart';
 import 'gaps/gap_manager.dart';
 import 'gaps/helpers.dart';
 import 'grid/calc_time_grid.dart';
+import '../auto_interval/zoom_level_observer.dart';
 
 /// Will stop auto-panning when the last tick has reached to this offset from
 /// the [XAxisModel.leftBoundEpoch].
@@ -329,8 +330,8 @@ class XAxisModel extends ChangeNotifier {
       return;
     }
     _granularity = newGranularity;
-    _msPerPx = _defaultMsPerPx;
-    _scrollTo(_maxRightBoundEpoch);
+    // _msPerPx = _defaultMsPerPx;
+    // _scrollTo(_maxRightBoundEpoch);
   }
 
   /// Updates chart's isLive property.
@@ -470,12 +471,26 @@ class XAxisModel extends ChangeNotifier {
     if (!_isScrollBlocked) {
       _triggerScrollMomentum(details.velocity);
     }
+
+    _zoomLevelObserver?.onZoomLevelChanged(_msPerPx, _granularity);
   }
 
-  /// Called to scale the chart
+  /// Optional zoom level observer for auto-interval feature
+  ZoomLevelObserver? _zoomLevelObserver;
+
+  /// Sets the zoom level observer (for auto-interval feature)
+  void setZoomLevelObserver(ZoomLevelObserver? observer) {
+    _zoomLevelObserver = observer;
+  }
+
+  /// Enhanced scale method
   void scale(double scale) {
     _msPerPx = (_prevMsPerPx! / scale).clamp(_minMsPerPx, _maxMsPerPx);
+    print('_msPerPx: $_msPerPx');
     onScale?.call();
+    if (kIsWeb) {
+      _zoomLevelObserver?.onZoomLevelChanged(_msPerPx, _granularity);
+    }
     notifyListeners();
   }
 

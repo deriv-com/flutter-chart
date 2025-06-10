@@ -451,21 +451,31 @@ class BasicChartState<T extends BasicChart> extends State<T>
         builder: (BuildContext context, _) => RepaintBoundary(
           child: Opacity(
             opacity: widget.opacity,
-            child: CustomPaint(
-              painter: ChartDataPainter(
-                animationInfo: AnimationInfo(
-                  currentTickPercent: currentTickAnimation.value,
+            child: AnimatedSwitcher(
+              duration: context
+                  .watch<ChartConfig>()
+                  .chartAxisConfig
+                  .autoIntervalTransitionDuration,
+              switchInCurve: const Cubic(0.72, 0, 0.24, 1),
+              switchOutCurve: const Cubic(0.72, 0, 0.24, 1),
+              child: CustomPaint(
+                key: ValueKey(context.watch<ChartConfig>().granularity),
+                size: canvasSize!,
+                painter: ChartDataPainter(
+                  animationInfo: AnimationInfo(
+                    currentTickPercent: currentTickAnimation.value,
+                  ),
+                  mainSeries: widget.mainSeries,
+                  chartConfig: context.watch<ChartConfig>(),
+                  theme: context.watch<ChartTheme>(),
+                  epochToCanvasX: xAxis.xFromEpoch,
+                  quoteToCanvasY: chartQuoteToCanvasY,
+                  rightBoundEpoch: xAxis.rightBoundEpoch,
+                  leftBoundEpoch: xAxis.leftBoundEpoch,
+                  topY: chartQuoteToCanvasY(widget.mainSeries.maxValue),
+                  bottomY: chartQuoteToCanvasY(widget.mainSeries.minValue),
+                  chartScaleModel: context.watch<ChartScaleModel>(),
                 ),
-                mainSeries: widget.mainSeries,
-                chartConfig: context.watch<ChartConfig>(),
-                theme: context.watch<ChartTheme>(),
-                epochToCanvasX: xAxis.xFromEpoch,
-                quoteToCanvasY: chartQuoteToCanvasY,
-                rightBoundEpoch: xAxis.rightBoundEpoch,
-                leftBoundEpoch: xAxis.leftBoundEpoch,
-                topY: chartQuoteToCanvasY(widget.mainSeries.maxValue),
-                bottomY: chartQuoteToCanvasY(widget.mainSeries.minValue),
-                chartScaleModel: context.watch<ChartScaleModel>(),
               ),
             ),
           ),

@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 import '../grid/x_grid_painter.dart';
 import '../x_axis_model.dart';
+import '../../auto_interval/zoom_level_observer.dart';
 
 /// X-axis base widget.
 ///
@@ -114,6 +115,11 @@ class XAxisState extends State<XAxisBase> with TickerProviderStateMixin {
       maxIntervalWidth: widget.maxIntervalWidth,
       dataFitPadding: widget.dataFitPadding,
     );
+
+    // Inject auto-interval coordinator if available
+    final ZoomLevelObserver? zoomLevelObserver =
+        context.read<ZoomLevelObserver?>();
+    _model.setZoomLevelObserver(zoomLevelObserver);
 
     gestureManager = context.read<GestureManagerState>()
       ..registerCallback(_model.onScaleAndPanStart)

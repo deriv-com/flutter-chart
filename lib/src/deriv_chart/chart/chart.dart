@@ -31,12 +31,17 @@ import 'data_visualization/chart_series/series.dart';
 import 'data_visualization/markers/marker_series.dart';
 import 'data_visualization/models/chart_object.dart';
 import 'main_chart.dart';
+import 'auto_interval/auto_interval_wrapper.dart';
 
 part 'chart_state_web.dart';
 
 part 'chart_state_mobile.dart';
 
 const Duration _defaultDuration = Duration(milliseconds: 300);
+
+// Add callback type
+typedef OnGranularityChangeRequestedCallback = void Function(
+    int suggestedGranularity);
 
 /// Interactive chart widget.
 class Chart extends StatefulWidget {
@@ -77,6 +82,7 @@ class Chart extends StatefulWidget {
     this.showScrollToLastTickButton,
     this.loadingAnimationColor,
     this.useDrawingToolsV2 = false,
+    this.onGranularityChangeRequested,
     Key? key,
   }) : super(key: key);
 
@@ -194,6 +200,9 @@ class Chart extends StatefulWidget {
   /// The interactive layer behaviour.
   final InteractiveLayerBehaviour? interactiveLayerBehaviour;
 
+  /// Called when the chart suggests a granularity change due to zoom level.
+  final OnGranularityChangeRequestedCallback? onGranularityChangeRequested;
+
   @override
   State<StatefulWidget> createState() =>
       // TODO(Ramin): Make this customizable from outside.
@@ -281,6 +290,8 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
         granularity: widget.granularity,
         msPerPx: widget.msPerPx ?? defaultMsPerPx);
 
+    // print(_chartScaleModel.toString());
+
     final List<Series>? overlaySeries =
         _getIndicatorSeries(widget.overlayConfigs);
 
@@ -307,7 +318,7 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
     final Duration currentTickAnimationDuration =
         widget.currentTickAnimationDuration ?? _defaultDuration;
 
-    return MultiProvider(
+    Widget chartContent = MultiProvider(
       providers: <SingleChildWidget>[
         Provider<ChartTheme>.value(value: _chartTheme),
         Provider<ChartConfig>.value(value: chartConfig),
@@ -335,6 +346,19 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
         ),
       ),
     );
+
+    // Wrap with AutoIntervalWrapper if enabled
+    if (widget.chartAxisConfig.autoIntervalEnabled) {
+      chartContent = AutoIntervalWrapper(
+        enabled: true,
+        granularity: widget.granularity,
+        zoomRanges: widget.chartAxisConfig.autoIntervalZoomRanges,
+        onGranularityChangeRequested: widget.onGranularityChangeRequested,
+        child: chartContent,
+      );
+    }
+
+    return chartContent;
   }
 
   Widget buildChartsLayout(
