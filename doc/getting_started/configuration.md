@@ -12,7 +12,7 @@ The `Chart` widget accepts various parameters to customize its behavior and appe
 Chart(
   mainSeries: LineSeries(ticks),
   pipSize: 2,
-  granularity: 60,
+  granularity: 60000, // 60000 milliseconds (1 minute)
   theme: ChartDefaultDarkTheme(),
   controller: ChartController(),
 )
@@ -24,7 +24,7 @@ Chart(
 |-----------|------|-------------|
 | `mainSeries` | `Series` | The primary data series to display (required) |
 | `pipSize` | `int` | Number of decimal places for price values (default: 2) |
-| `granularity` | `int` | Time interval in seconds for candles (default: 60) |
+| `granularity` | `int` | Time interval in milliseconds for candles or average ms difference between consecutive ticks (default: 60000) |
 | `theme` | `ChartTheme` | Theme for the chart (default: based on app theme) |
 | `controller` | `ChartController` | Controller for programmatic chart manipulation |
 
@@ -43,13 +43,11 @@ Chart(
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `annotations` | `List<ChartAnnotation>` | Annotations to display on the chart (barriers, etc.) |
-| `showGrid` | `bool` | Whether to display grid lines (default: true) |
-| `showLabels` | `bool` | Whether to display axis labels (default: true) |
-| `showScrollButtons` | `bool` | Whether to display scroll buttons (default: false) |
 | `showCrosshair` | `bool` | Whether to display crosshair on long press (default: true) |
-| `showIndicatorNames` | `bool` | Whether to display indicator names (default: true) |
-| `showWatermark` | `bool` | Whether to display watermark (default: false) |
-| `watermarkConfig` | `WatermarkConfig` | Configuration for the watermark |
+| `showDataFitButton` | `bool` | Whether to display the data fit button (default: true) |
+| `showScrollToLastTickButton` | `bool` | Whether to display scroll to last tick button (default: true) |
+| `loadingAnimationColor` | `Color` | The color of the loading animation |
+| `chartAxisConfig` | `ChartAxisConfig` | Configuration for chart axes including grid and labels |
 
 ### Callback Parameters
 
@@ -80,17 +78,17 @@ Chart(
 
 ## Granularity
 
-The `granularity` parameter specifies the time interval in seconds for candle charts. It affects how candles are grouped and displayed:
+The `granularity` parameter specifies the time interval in milliseconds for candle charts. It affects how candles are grouped and displayed:
 
-- `granularity: 60` represents 1-minute candles
-- `granularity: 300` represents 5-minute candles
-- `granularity: 3600` represents 1-hour candles
+- `granularity: 60000` represents 1-minute candles
+- `granularity: 300000` represents 5-minute candles
+- `granularity: 3600000` represents 1-hour candles
 
 ```dart
 Chart(
   mainSeries: CandleSeries(candles),
   pipSize: 2,
-  granularity: 300, // 5-minute candles
+  granularity: 300000, // 5-minute candles (300000 milliseconds)
 )
 ```
 
