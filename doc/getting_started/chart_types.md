@@ -21,6 +21,7 @@ Line charts connect data points with straight lines, showing the price movement 
 Chart(
   mainSeries: LineSeries(ticks),
   pipSize: 2,
+  granularity: 60000, // 60000 milliseconds (1 minute) interval
 )
 ```
 
@@ -68,7 +69,7 @@ Candlestick charts display price movements using "candles" that show the open, h
 Chart(
   mainSeries: CandleSeries(candles),
   pipSize: 2,
-  granularity: 60, // 60 seconds per candle
+  granularity: 60000, // 60000 milliseconds (1 minute) interval per candle
 )
 ```
 
@@ -105,7 +106,7 @@ Chart(
     ),
   ),
   pipSize: 2,
-  granularity: 60,
+  granularity: 60000, // 60000 milliseconds (1 minute) interval
 )
 ```
 
@@ -123,7 +124,7 @@ OHLC (Open-High-Low-Close) charts display price movements using horizontal lines
 Chart(
   mainSeries: OHLCSeries(candles),
   pipSize: 2,
-  granularity: 60, // 60 seconds per candle
+  granularity: 60000, // 60000 milliseconds (1 minute) interval per candle
 )
 ```
 
@@ -147,7 +148,7 @@ Chart(
     ),
   ),
   pipSize: 2,
-  granularity: 60,
+  granularity: 60000, // 60000 milliseconds (1 minute) interval
 )
 ```
 
@@ -161,7 +162,7 @@ Hollow candlestick charts are a variation of standard candlestick charts where b
 Chart(
   mainSeries: HollowCandleSeries(candles),
   pipSize: 2,
-  granularity: 60, // 60 seconds per candle
+  granularity: 60000, // 60000 milliseconds (1 minute) interval per candle
 )
 ```
 
@@ -186,7 +187,7 @@ Chart(
     ),
   ),
   pipSize: 2,
-  granularity: 60,
+  granularity: 60000, // 60000 milliseconds (1 minute) interval
 )
 ```
 
@@ -244,7 +245,7 @@ class _ChartTypeSwitcherExampleState extends State<ChartTypeSwitcherExample> {
           child: Chart(
             mainSeries: _getMainSeries(),
             pipSize: 2,
-            granularity: 60,
+            granularity: 60000, // 60000 milliseconds (1 minute) interval
           ),
         ),
       ],

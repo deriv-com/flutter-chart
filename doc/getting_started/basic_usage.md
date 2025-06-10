@@ -92,6 +92,7 @@ The Deriv Chart library supports several chart types:
 Chart(
   mainSeries: LineSeries(ticks),
   pipSize: 2,
+  granularity: 60000, // 60000 milliseconds (1 minute) interval
 )
 ```
 
@@ -101,7 +102,7 @@ Chart(
 Chart(
   mainSeries: CandleSeries(candles),
   pipSize: 2,
-  granularity: 60, // 60 seconds per candle
+  granularity: 60000, // 60000 milliseconds (1 minute) interval per candle
 )
 ```
 
@@ -111,7 +112,7 @@ Chart(
 Chart(
   mainSeries: OHLCSeries(candles),
   pipSize: 2,
-  granularity: 60, // 60 seconds per candle
+  granularity: 60000, // 60000 milliseconds (1 minute) interval per candle
 )
 ```
 
@@ -121,7 +122,7 @@ Chart(
 Chart(
   mainSeries: HollowCandleSeries(candles),
   pipSize: 2,
-  granularity: 60, // 60 seconds per candle
+  granularity: 60000, // 60000 milliseconds (1 minute) interval per candle
 )
 ```
 
