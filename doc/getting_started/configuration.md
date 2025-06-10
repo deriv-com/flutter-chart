@@ -53,13 +53,11 @@ Chart(
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `onVisibleAreaChanged` | `Function(int leftEpoch, int rightEpoch)` | Called when the visible area changes |
-| `onCrosshairAppeared` | `Function()` | Called when the crosshair appears |
-| `onCrosshairDisappeared` | `Function()` | Called when the crosshair disappears |
-| `onTap` | `Function(TapDownDetails)` | Called when the chart is tapped |
-| `onLongPressStart` | `Function(LongPressStartDetails)` | Called when a long press starts |
-| `onLongPressMoveUpdate` | `Function(LongPressMoveUpdateDetails)` | Called when a long press moves |
-| `onLongPressEnd` | `Function(LongPressEndDetails)` | Called when a long press ends |
+| `onVisibleAreaChanged` | `Function(int leftEpoch, int rightEpoch)` | Called when the visible area changes due to scrolling or zooming |
+| `onQuoteAreaChanged` | `Function(double minQuote, double maxQuote)` | Called when the visible quote area changes |
+| `onCrosshairAppeared` | `VoidCallback` | Called when the crosshair appears |
+| `onCrosshairDisappeared` | `VoidCallback` | Called when the crosshair disappears |
+| `onCrosshairHover` | `OnCrosshairHoverCallback` | Called when the crosshair cursor is hovered/moved |
 
 ## PipSize
 
