@@ -168,9 +168,11 @@ Chart(
       style: HorizontalBarrierStyle(
         color: Colors.red,
         isDashed: true,
-        lineThickness: 1,
-        labelBackgroundColor: Colors.red.withOpacity(0.8),
-        labelTextStyle: TextStyle(color: Colors.white),
+        titleBackgroundColor: Colors.red.withOpacity(0.8),
+        textStyle: TextStyle(color: Colors.white),
+        labelShape: LabelShape.rectangle,
+        labelHeight: 24,
+        labelPadding: 4,
       ),
       visibility: HorizontalBarrierVisibility.forceToStayOnRange,
     ),
@@ -180,12 +182,18 @@ Chart(
       style: VerticalBarrierStyle(
         color: Colors.blue,
         isDashed: false,
-        lineThickness: 1,
-        labelBackgroundColor: Colors.blue.withOpacity(0.8),
-        labelTextStyle: TextStyle(color: Colors.white),
+        titleBackgroundColor: Colors.blue.withOpacity(0.8),
+        textStyle: TextStyle(color: Colors.white),
+        labelPosition: VerticalBarrierLabelPosition.auto,
       ),
     ),
-    TickIndicator(ticks.last),
+    TickIndicator(
+      ticks.last,
+      style: HorizontalBarrierStyle(
+        labelShape: LabelShape.pentagon,
+      ),
+      visibility: HorizontalBarrierVisibility.normal,
+    ),
   ],
 )
 ```
@@ -253,32 +261,6 @@ Chart(
 )
 ```
 
-## Localization
-
-To use chart localization, add the `ChartLocalization.delegate` to your `localizationsDelegates` inside the `MaterialApp`:
-
-```dart
-MaterialApp(
-  localizationsDelegates: [
-    ChartLocalization.delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ],
-  supportedLocales: [
-    const Locale('en', ''),
-    const Locale('es', ''),
-    // Add other supported locales
-  ],
-  // ...
-)
-```
-
-To change the locale of the chart:
-
-```dart
-ChartLocalization.load(Locale('es'));
-```
-
 ## DerivChart Configuration
 
 The `DerivChart` widget is a wrapper around the `Chart` widget that provides additional functionality for managing indicators and drawing tools:
@@ -286,7 +268,7 @@ The `DerivChart` widget is a wrapper around the `Chart` widget that provides add
 ```dart
 DerivChart(
   mainSeries: CandleSeries(candles),
-  granularity: 60,
+  granularity: 60000, // 60000 milliseconds (1 minute)
   activeSymbol: 'R_100',
   pipSize: 4,
   // All Chart parameters are also available here
