@@ -223,26 +223,6 @@ This allows:
 
 The `Chart` widget organizes the MainChart and BottomCharts in a vertical column. Each chart receives the same XAxisModel instance, ensuring that they share the same X-axis viewport. Each chart maintains its own Y-axis calculations based on its specific data.
 
-## Real-World Applications
-
-### Time-Series Analysis
-
-The coordinate system enables sophisticated time-series analysis:
-
-- **Trend Lines**: Drawing lines connecting significant points to identify trends
-- **Support/Resistance Levels**: Horizontal lines at key price levels
-- **Moving Averages**: Smoothed lines showing average prices over time
-- **Fibonacci Retracements**: Horizontal lines at key Fibonacci levels
-
-### Interactive Features
-
-The coordinate system powers interactive features:
-
-- **Crosshair**: Shows precise price and time at the cursor position
-- **Tooltips**: Display data details at specific points
-- **Selection**: Allows users to select specific time ranges for analysis
-- **Zoom to Selection**: Enables users to zoom into a specific area of interest
-
 ## Integration with Other Components
 
 The coordinate system integrates with other components of the Deriv Chart library:
