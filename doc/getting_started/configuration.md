@@ -142,18 +142,16 @@ Chart(
 // Programmatically control the chart
 controller.scrollToLastTick(); // Scroll to the most recent data
 controller.scale(100); // Zoom the chart
-controller.scrollTo(DateTime.now().subtract(const Duration(days: 1))); // Scroll to a specific time
+controller.scroll(100); // Scroll by 100 pixels
 ```
 
 ### Available Controller Methods
 
 | Method | Description |
 |--------|-------------|
-| `scrollToLastTick()` | Scroll to the most recent data |
-| `scale(double msPerPx)` | Set the zoom level |
-| `scrollTo(DateTime time)` | Scroll to a specific time |
-| `scrollBy(double pixels)` | Scroll by a specific number of pixels |
-| `resetView()` | Reset the view to the default state |
+| `scrollToLastTick({bool animate = false})` | Scroll to the most recent data with optional animation |
+| `scale(double scale)` | Set the zoom level |
+| `scroll(double pxShift)` | Scroll by a specific number of pixels |
 
 ## Annotations
 
