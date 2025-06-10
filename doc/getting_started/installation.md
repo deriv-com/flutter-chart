@@ -85,24 +85,6 @@ The Deriv Chart library depends on the following packages:
 
 These dependencies are automatically installed when you add the Deriv Chart library to your project.
 
-## Platform-Specific Setup
-
-### Android
-
-No additional setup is required for Android.
-
-### iOS
-
-No additional setup is required for iOS.
-
-### Web
-
-For web applications, ensure that your `web/index.html` file includes the necessary viewport meta tag for proper rendering:
-
-```html
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-```
-
 ## Next Steps
 
 Now that you have installed the Deriv Chart library, you can proceed to:
