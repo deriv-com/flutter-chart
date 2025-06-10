@@ -139,8 +139,7 @@ Chart(
     style: CandleStyle(
       positiveColor: Colors.green,
       negativeColor: Colors.red,
-      wickWidth: 1,
-      bodyWidth: 8,
+      neutralColor: Colors.grey,
     ),
   ),
   pipSize: 2,

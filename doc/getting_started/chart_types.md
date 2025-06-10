@@ -101,8 +101,7 @@ Chart(
     style: CandleStyle(
       positiveColor: Colors.green,
       negativeColor: Colors.red,
-      wickWidth: 1,
-      bodyWidth: 8,
+      neutralColor: Colors.grey,
     ),
   ),
   pipSize: 2,
@@ -140,11 +139,10 @@ You can customize the appearance of the OHLC chart using the `OHLCStyle` class:
 Chart(
   mainSeries: OHLCSeries(
     candles,
-    style: OHLCStyle(
+    style: CandleStyle(
       positiveColor: Colors.green,
       negativeColor: Colors.red,
-      thickness: 1,
-      width: 8,
+      neutralColor: Colors.grey,
     ),
   ),
   pipSize: 2,
@@ -178,12 +176,10 @@ You can customize the appearance of the hollow candlestick chart using the `Holl
 Chart(
   mainSeries: HollowCandleSeries(
     candles,
-    style: HollowCandleStyle(
+    style: CandleStyle(
       positiveColor: Colors.green,
       negativeColor: Colors.red,
-      wickWidth: 1,
-      bodyWidth: 8,
-      hollowPositiveColor: Colors.white,
+      neutralColor: Colors.grey,
     ),
   ),
   pipSize: 2,
