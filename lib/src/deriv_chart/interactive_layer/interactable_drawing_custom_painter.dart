@@ -125,6 +125,8 @@ class InteractableDrawingCustomPainter extends CustomPainter {
                 oldDelegate.epochRange != epochRange ||
                 // Quote range is changed
                 oldDelegate.quoteRange != quoteRange ||
+                // Theme is changed
+                oldDelegate.theme != theme ||
                 // Drawing needs repaint
                 drawing.shouldRepaint(
                     currentDrawingState, oldDelegate.drawing)));
