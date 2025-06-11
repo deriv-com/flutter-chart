@@ -95,6 +95,7 @@ class _CandleChartWithIndicatorScreenState
       granularity: 3600000, // 1 hour
       activeSymbol: 'CANDLE_CHART_WITH_INDICATOR',
       indicatorsRepo: _indicatorsRepo, // Pass the indicators repository
+      useDrawingToolsV2: true,
     );
   }
 

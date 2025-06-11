@@ -52,6 +52,7 @@ class _OHLCChartScreenState extends BaseChartScreenState<OHLCChartScreen> {
       pipSize: 2,
       granularity: 3600000, // 1 hour
       activeSymbol: 'OHLC_CHART',
+      useDrawingToolsV2: true,
     );
   }
 

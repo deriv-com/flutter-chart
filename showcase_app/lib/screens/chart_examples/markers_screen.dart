@@ -101,6 +101,7 @@ class _MarkersScreenState extends BaseChartScreenState<MarkersScreen> {
       pipSize: 2,
       granularity: 60000, // 1 minute
       activeSymbol: 'MARKERS_CHART',
+      useDrawingToolsV2: true,
     );
   }
 

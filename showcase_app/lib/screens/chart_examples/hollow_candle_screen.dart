@@ -53,6 +53,7 @@ class _HollowCandleScreenState
       pipSize: 2,
       granularity: 3600000, // 1 hour
       activeSymbol: 'HOLLOW_CANDLE_CHART',
+      useDrawingToolsV2: true,
     );
   }
 

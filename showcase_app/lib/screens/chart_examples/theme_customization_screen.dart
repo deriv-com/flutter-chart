@@ -185,6 +185,7 @@ class _ThemeCustomizationScreenState
       granularity: 3600000, // 1 hour
       theme: theme,
       activeSymbol: 'THEME_CUSTOMIZATION_CHART',
+      useDrawingToolsV2: true,
     );
   }
 

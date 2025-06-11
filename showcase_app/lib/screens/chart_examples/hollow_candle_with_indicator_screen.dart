@@ -86,6 +86,7 @@ class _HollowCandleWithIndicatorScreenState
       granularity: 3600000, // 1 hour
       activeSymbol: 'HOLLOW_CANDLE_WITH_INDICATOR',
       indicatorsRepo: _indicatorsRepo, // Pass the indicators repository
+      useDrawingToolsV2: true,
     );
   }
 

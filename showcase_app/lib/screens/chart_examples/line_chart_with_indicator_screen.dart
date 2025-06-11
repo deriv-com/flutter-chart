@@ -122,6 +122,7 @@ class _LineChartWithIndicatorScreenState
       granularity: 60000, // 1 minute
       activeSymbol: 'LINE_CHART_WITH_INDICATOR',
       indicatorsRepo: _indicatorsRepo, // Pass the indicators repository
+      useDrawingToolsV2: true,
     );
   }
 

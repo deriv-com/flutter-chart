@@ -85,6 +85,7 @@ class _LineChartScreenState extends BaseChartScreenState<LineChartScreen> {
       pipSize: 2,
       granularity: 60000, // 1 minute
       activeSymbol: 'LINE_CHART',
+      useDrawingToolsV2: true,
     );
   }
 

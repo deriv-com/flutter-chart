@@ -93,6 +93,7 @@ class _OHLCChartWithIndicatorScreenState
       granularity: 3600000, // 1 hour
       activeSymbol: 'OHLC_CHART_WITH_INDICATOR',
       indicatorsRepo: _indicatorsRepo, // Pass the indicators repository
+      useDrawingToolsV2: true,
     );
   }
 
