@@ -136,6 +136,7 @@ jobs:
                   echo "::endgroup::"
 
             - name: 🐦 Setup Flutter
+              if: steps.check-tokens.outputs.needs_sync == 'true'
               uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
               with:
                   flutter-version: "3.24.1"
@@ -167,10 +168,6 @@ jobs:
                     echo "generation_success=false" >> $GITHUB_OUTPUT
                     exit 1
                   fi
-
-                  # If we reach this point, the script completed successfully
-                  echo "Token generation and validation completed successfully"
-                  echo "generation_success=true" >> $GITHUB_OUTPUT
 
                   # End the collapsible group in the GitHub Actions log
                   echo "::endgroup::"

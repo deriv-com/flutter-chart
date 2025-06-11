@@ -352,13 +352,7 @@ class BoxShadowTokenFormatter implements DesignTokenValueFormatter {
 class FontFamilyTokenFormatter implements DesignTokenValueFormatter {
   @override
   String format(dynamic value, String category) {
-    if (value is String && value.startsWith('{') && value.endsWith('}')) {
-      // Extract the token reference (remove the curly braces)
-      final String tokenRef = value.substring(1, value.length - 1);
-
-      return DesignTokenUtils.convertToDartPropertyName(tokenRef, category);
-    }
-    return "'$value'";
+    return DesignTokenUtils.formatTokenReference(value, category);
   }
 }
 
@@ -366,11 +360,9 @@ class FontFamilyTokenFormatter implements DesignTokenValueFormatter {
 class TextDecorationTokenFormatter implements DesignTokenValueFormatter {
   @override
   String format(dynamic value, String category) {
+    // First check if it's a token reference
     if (value is String && value.startsWith('{') && value.endsWith('}')) {
-      // Extract the token reference (remove the curly braces)
-      final String tokenRef = value.substring(1, value.length - 1);
-
-      return DesignTokenUtils.convertToDartPropertyName(tokenRef, category);
+      return DesignTokenUtils.formatTokenReference(value, category);
     }
 
     // Handle text decoration values
@@ -378,7 +370,7 @@ class TextDecorationTokenFormatter implements DesignTokenValueFormatter {
       return _mapToTextDecoration(value);
     }
 
-    return "'$value'";
+    return DesignTokenUtils.formatTokenReference(value, category);
   }
 
   /// Maps text decoration strings to Flutter TextDecoration constants
@@ -403,11 +395,9 @@ class TextDecorationTokenFormatter implements DesignTokenValueFormatter {
 class FontStyleTokenFormatter implements DesignTokenValueFormatter {
   @override
   String format(dynamic value, String category) {
+    // First check if it's a token reference
     if (value is String && value.startsWith('{') && value.endsWith('}')) {
-      // Extract the token reference (remove the curly braces)
-      final String tokenRef = value.substring(1, value.length - 1);
-
-      return DesignTokenUtils.convertToDartPropertyName(tokenRef, category);
+      return DesignTokenUtils.formatTokenReference(value, category);
     }
 
     // Handle font style values
@@ -415,7 +405,7 @@ class FontStyleTokenFormatter implements DesignTokenValueFormatter {
       return _mapToFontStyle(value);
     }
 
-    return "'$value'";
+    return DesignTokenUtils.formatTokenReference(value, category);
   }
 
   /// Maps font style strings to Flutter FontStyle constants
@@ -435,11 +425,9 @@ class FontStyleTokenFormatter implements DesignTokenValueFormatter {
 class LineHeightTokenFormatter implements DesignTokenValueFormatter {
   @override
   String format(dynamic value, String category) {
+    // First check if it's a token reference
     if (value is String && value.startsWith('{') && value.endsWith('}')) {
-      // Extract the token reference (remove the curly braces)
-      final String tokenRef = value.substring(1, value.length - 1);
-
-      return DesignTokenUtils.convertToDartPropertyName(tokenRef, category);
+      return DesignTokenUtils.formatTokenReference(value, category);
     }
 
     // Handle line height values
@@ -447,7 +435,7 @@ class LineHeightTokenFormatter implements DesignTokenValueFormatter {
       return _mapToLineHeight(value);
     }
 
-    return "'$value'";
+    return DesignTokenUtils.formatTokenReference(value, category);
   }
 
   /// Maps line height strings to appropriate Flutter values
@@ -481,11 +469,9 @@ class LineHeightTokenFormatter implements DesignTokenValueFormatter {
 class FontWeightTokenFormatter implements DesignTokenValueFormatter {
   @override
   String format(dynamic value, String category) {
+    // First check if it's a token reference
     if (value is String && value.startsWith('{') && value.endsWith('}')) {
-      // Extract the token reference (remove the curly braces)
-      final String tokenRef = value.substring(1, value.length - 1);
-
-      return DesignTokenUtils.convertToDartPropertyName(tokenRef, category);
+      return DesignTokenUtils.formatTokenReference(value, category);
     }
 
     // Handle string values that might be font styles incorrectly categorized as font weights
@@ -507,7 +493,7 @@ class FontWeightTokenFormatter implements DesignTokenValueFormatter {
       }
     }
 
-    return "'$value'";
+    return DesignTokenUtils.formatTokenReference(value, category);
   }
 
   /// Checks if a value is actually a font style (incorrectly categorized as font weight)

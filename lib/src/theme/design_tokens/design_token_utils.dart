@@ -334,6 +334,27 @@ class DesignTokenUtils {
     return structuralTokenTypes.contains(tokenType);
   }
 
+  /// Shared utility for formatting token references
+  ///
+  /// This method handles the common pattern of token references that are
+  /// wrapped in curly braces (e.g., "{core.color.solid.red.500}").
+  /// It extracts the token reference and converts it to a Dart property name.
+  ///
+  /// Parameters:
+  /// - value: The value to check and potentially format as a token reference
+  /// - category: The token category (core, light, dark) to determine context
+  ///
+  /// Returns:
+  /// The formatted token reference if the value is a token reference,
+  /// otherwise returns the original value as a string literal
+  static String formatTokenReference(dynamic value, String category) {
+    if (value is String && value.startsWith('{') && value.endsWith('}')) {
+      final String tokenRef = value.substring(1, value.length - 1);
+      return convertToDartPropertyName(tokenRef, category);
+    }
+    return "'$value'";
+  }
+
   /// The standard header comment for design token class files.
   ///
   /// This header comment includes information about the file being generated automatically
