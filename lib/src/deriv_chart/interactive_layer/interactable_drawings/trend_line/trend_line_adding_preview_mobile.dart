@@ -9,7 +9,6 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import '../../helpers/paint_helpers.dart';
 import '../../interactable_drawing_custom_painter.dart';
@@ -213,5 +212,5 @@ class TrendLineAddingPreviewMobile
   }
 
   @override
-  String get id => 'line-adding-preview-mobile';
+  String get id => 'trend-line-adding-preview-mobile';
 }

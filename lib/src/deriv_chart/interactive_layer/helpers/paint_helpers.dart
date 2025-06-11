@@ -5,12 +5,14 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
 
 /// Draws alignment guides (horizontal and vertical lines) for a single point
-void drawPointAlignmentGuides(Canvas canvas, Size size, Offset pointOffset) {
+void drawPointAlignmentGuides(Canvas canvas, Size size, Offset pointOffset,
+    {Color lineColor = const Color(0x80FFFFFF)}) {
   // Create a dashed paint style for the alignment guides
   final Paint guidesPaint = Paint()
-    ..color = const Color(0x80FFFFFF) // Semi-transparent white
+    ..color = lineColor
     ..strokeWidth = 1.0
     ..style = PaintingStyle.stroke;
 
@@ -262,4 +264,73 @@ TextPainter _getTextPainter(
     textAlign: TextAlign.center,
   );
   return textPainter;
+}
+
+/// Draws an epoch label rectangle on the x-axis with formatted time
+///
+/// This draws a rounded rectangle with the formatted epoch time inside it.
+/// The epoch is formatted as a readable time string.
+void drawEpochLabel({
+  required Canvas canvas,
+  required EpochToX epochToX,
+  required int epoch,
+  required Size size,
+  required TextStyle textStyle,
+  double animationProgress = 1,
+  Color color = Colors.white,
+  Color backgroundColor = Colors.transparent,
+}) {
+  // Calculate X position based on the epoch
+  final double xPosition = epochToX(epoch);
+
+  final DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(epoch);
+  final intl.DateFormat formatter = intl.DateFormat('MM/dd/yy HH:mm:ss');
+  final String formattedTime = formatter.format(dateTime);
+
+  // Create text painter to measure text dimensions
+  final TextPainter textPainter = _getTextPainter(
+    formattedTime,
+    textStyle: textStyle.copyWith(
+      color: textStyle.color?.withOpacity(animationProgress),
+    ),
+  )..layout();
+
+  // Create rectangle with padding around the text
+  final double rectWidth = textPainter.width + 16;
+  const double rectHeight = 24;
+  final double rectBottom = size.height + rectHeight;
+  final double rectTop = rectBottom - rectHeight;
+
+  final Rect rect = Rect.fromLTRB(
+    xPosition - rectWidth / 2,
+    rectTop,
+    xPosition + rectWidth / 2,
+    rectBottom,
+  );
+
+  // Draw rounded rectangle
+  final Paint rectPaint = Paint()
+    ..color = backgroundColor.withOpacity(animationProgress)
+    ..style = PaintingStyle.fill;
+
+  final Paint borderPaint = Paint()
+    ..color = color.withOpacity(animationProgress)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1.0;
+
+  // Draw the background and border
+  final RRect roundedRect =
+      RRect.fromRectAndRadius(rect, const Radius.circular(4));
+  canvas
+    ..drawRRect(roundedRect, rectPaint)
+    ..drawRRect(roundedRect, borderPaint);
+
+  // Draw the text centered in the rectangle
+  textPainter.paint(
+    canvas,
+    Offset(
+      rect.left + (rectWidth - textPainter.width) / 2,
+      rect.top + (rectHeight - textPainter.height) / 2,
+    ),
+  );
 }

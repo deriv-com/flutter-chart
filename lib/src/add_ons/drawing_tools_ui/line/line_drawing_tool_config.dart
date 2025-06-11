@@ -6,6 +6,8 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/text_style_json_converter.dart';
+import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -20,7 +22,12 @@ class LineDrawingToolConfig extends DrawingToolConfig {
     String? configId,
     DrawingData? drawingData,
     List<EdgePoint> edgePoints = const <EdgePoint>[],
-    this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.white),
+    this.lineStyle =
+        const LineStyle(color: CoreDesignTokens.coreColorSolidBlue700),
+    this.labelStyle = const TextStyle(
+      color: CoreDesignTokens.coreColorSolidBlue700,
+      fontSize: 12,
+    ),
     this.overlayStyle,
     this.pattern = DrawingPatterns.solid,
     super.number,
@@ -43,6 +50,10 @@ class LineDrawingToolConfig extends DrawingToolConfig {
 
   /// Drawing tool line style
   final LineStyle lineStyle;
+
+  /// The style of the label showing on y-axis.
+  @TextStyleJsonConverter()
+  final TextStyle labelStyle;
 
   /// Drawing tool overlay style
   final OverlayStyle? overlayStyle;
@@ -68,6 +79,7 @@ class LineDrawingToolConfig extends DrawingToolConfig {
     DrawingData? drawingData,
     LineStyle? lineStyle,
     LineStyle? fillStyle,
+    TextStyle? labelStyle,
     OverlayStyle? overlayStyle,
     DrawingPatterns? pattern,
     List<EdgePoint>? edgePoints,
@@ -78,6 +90,7 @@ class LineDrawingToolConfig extends DrawingToolConfig {
         configId: configId ?? this.configId,
         drawingData: drawingData ?? this.drawingData,
         lineStyle: lineStyle ?? this.lineStyle,
+        labelStyle: labelStyle ?? this.labelStyle,
         overlayStyle: overlayStyle ?? this.overlayStyle,
         pattern: pattern ?? this.pattern,
         edgePoints: edgePoints ?? this.edgePoints,
