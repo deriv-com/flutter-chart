@@ -21,6 +21,8 @@ class InteractiveLayerMobileBehaviour extends InteractiveLayerBehaviour {
     updateStateTo(
       newState,
       StateChangeAnimationDirection.backward,
+      waitForAnimation: false,
+      animate: false,
     );
   }
 

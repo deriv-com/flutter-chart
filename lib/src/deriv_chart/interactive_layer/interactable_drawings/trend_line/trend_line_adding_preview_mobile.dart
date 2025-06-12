@@ -11,7 +11,7 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 import '../../helpers/paint_helpers.dart';
-import '../../interactable_drawing_custom_painter.dart';
+import '../../helpers/types.dart';
 import '../drawing_adding_preview.dart';
 import '../drawing_v2.dart';
 import 'trend_line_interactable_drawing.dart';
@@ -27,7 +27,7 @@ class TrendLineAddingPreviewMobile
   }) {
     if (interactableDrawing.startPoint == null) {
       final interactiveLayer = interactiveLayerBehaviour.interactiveLayer;
-      final Size size = interactiveLayer.layerSize!;
+      final Size size = interactiveLayer.drawingContext.fullSize;
 
       final bottomLeftCenter = Offset(size.width / 4, size.height * 3 / 4);
       final topRightCenter = Offset(size.width * 3 / 4, size.height / 4);

@@ -126,7 +126,7 @@ class _SelectedDrawingFloatingMenuState
               color: CoreDesignTokens.coreColorSolidSlate1100,
               borderRadius: BorderRadius.circular(8),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: const EdgeInsets.only(right: 8, top: 4, bottom: 4),
             child: Row(
               children: <Widget>[
                 _buildDragIcon(),

@@ -11,7 +11,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 
 import '../enums/drawing_tool_state.dart';
-import '../interactable_drawing_custom_painter.dart';
+import '../helpers/types.dart';
 import '../interactive_layer_behaviours/interactive_layer_behaviour.dart';
 
 /// A preview of a drawing that is being added to the [InteractiveLayer].

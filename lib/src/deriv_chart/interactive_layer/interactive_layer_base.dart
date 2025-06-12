@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/drawing_context.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_states/interactive_selected_tool_state.dart';
 import 'package:flutter/animation.dart';
 
@@ -44,7 +45,7 @@ abstract class InteractiveLayerBase {
   QuoteToY get quoteToY;
 
   /// The size of the interactive layer.
-  Size? get layerSize;
+  DrawingContext get drawingContext;
 
   /// Clears the adding drawing.
   void clearAddingDrawing();

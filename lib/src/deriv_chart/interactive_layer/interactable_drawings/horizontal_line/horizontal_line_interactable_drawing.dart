@@ -6,7 +6,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawing_custom_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/drawing_adding_preview.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/horizontal_line/horizontal_line_adding_preview_desktop.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/widgets/color_picker.dart';
@@ -20,6 +19,7 @@ import 'package:flutter/material.dart';
 
 import '../../enums/drawing_tool_state.dart';
 import '../../helpers/paint_helpers.dart';
+import '../../helpers/types.dart';
 import '../../interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import '../../interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
 import '../drawing_v2.dart';
@@ -33,6 +33,8 @@ class HorizontalLineInteractableDrawing
   HorizontalLineInteractableDrawing({
     required HorizontalDrawingToolConfig config,
     required this.startPoint,
+    required super.drawingContext,
+    required super.getDrawingState,
   }) : super(drawingConfig: config);
 
   /// Start point of the line.
@@ -74,6 +76,13 @@ class HorizontalLineInteractableDrawing
   @override
   bool hitTest(Offset offset, EpochToX epochToX, QuoteToY quoteToY) {
     if (startPoint == null) {
+      return false;
+    }
+
+    final isNotSelected = !state.contains(DrawingToolState.selected);
+    final isOutsideContent = offset.dx > drawingContext.contentSize.width;
+
+    if (isNotSelected && isOutsideContent) {
       return false;
     }
 

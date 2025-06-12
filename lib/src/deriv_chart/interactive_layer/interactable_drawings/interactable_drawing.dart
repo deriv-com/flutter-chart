@@ -8,8 +8,9 @@ import 'package:flutter/widgets.dart';
 
 import '../../chart/data_visualization/chart_data.dart';
 import '../../chart/data_visualization/models/animation_info.dart';
+import '../drawing_context.dart';
 import '../enums/drawing_tool_state.dart';
-import '../interactable_drawing_custom_painter.dart';
+import '../helpers/types.dart';
 import '../interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import '../interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
 import 'drawing_adding_preview.dart';
@@ -26,7 +27,11 @@ import 'drawing_v2.dart';
 abstract class InteractableDrawing<T extends DrawingToolConfig>
     implements DrawingV2 {
   /// Initializes [InteractableDrawing].
-  InteractableDrawing({required T drawingConfig}) {
+  InteractableDrawing({
+    required T drawingConfig,
+    required this.drawingContext,
+    required this.getDrawingState,
+  }) {
     config = drawingConfig.copyWith() as T;
     _prevConfig = config.copyWith() as T;
   }
@@ -43,6 +48,15 @@ abstract class InteractableDrawing<T extends DrawingToolConfig>
   /// previous state of the config before change. so it can be used in the
   /// config comparisons.
   late T _prevConfig;
+
+  /// A callback to get the updated state of any drawing tool when calling it.
+  final DrawingContext drawingContext;
+
+  /// A callback to get the current state of a drawing.
+  final GetDrawingState getDrawingState;
+
+  /// Returns the current state of this drawing tool.
+  Set<DrawingToolState> get state => getDrawingState(this);
 
   /// Returns the updated config.
   T getUpdatedConfig();
@@ -129,6 +143,7 @@ abstract class InteractableDrawing<T extends DrawingToolConfig>
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme chartTheme,
+    // TODO(NA): remove this and use instance state getter directly.
     GetDrawingState getDrawingState,
   );
 

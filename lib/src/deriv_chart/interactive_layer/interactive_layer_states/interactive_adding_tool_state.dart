@@ -31,8 +31,12 @@ class InteractiveAddingToolState extends InteractiveState
     this.addingTool, {
     required super.interactiveLayerBehaviour,
   }) {
-    _drawingPreview ??= interactiveLayerBehaviour
-        .getAddingDrawingPreview(addingTool.getInteractableDrawing());
+    _drawingPreview ??= interactiveLayerBehaviour.getAddingDrawingPreview(
+      addingTool.getInteractableDrawing(
+        interactiveLayerBehaviour.interactiveLayer.drawingContext,
+        interactiveLayerBehaviour.getToolState,
+      ),
+    );
   }
 
   /// The tool being added.

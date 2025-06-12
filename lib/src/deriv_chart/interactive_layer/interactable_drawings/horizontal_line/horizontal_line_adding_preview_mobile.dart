@@ -8,7 +8,7 @@ import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
-import '../../interactable_drawing_custom_painter.dart';
+import '../../helpers/types.dart';
 import '../drawing_adding_preview.dart';
 import 'horizontal_line_interactable_drawing.dart';
 
@@ -24,7 +24,7 @@ class HorizontalLineAddingPreviewMobile
   }) {
     if (interactableDrawing.startPoint == null) {
       final interactiveLayer = interactiveLayerBehaviour.interactiveLayer;
-      final Size? layerSize = interactiveLayer.layerSize;
+      final Size? layerSize = interactiveLayer.drawingContext.fullSize;
 
       final double centerX = layerSize != null ? layerSize.width / 2 : 0;
       final double centerY = layerSize != null ? layerSize.height / 2 : 0;

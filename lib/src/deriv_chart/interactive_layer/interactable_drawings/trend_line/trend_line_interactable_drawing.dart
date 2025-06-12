@@ -19,7 +19,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../helpers/paint_helpers.dart';
-import '../../interactable_drawing_custom_painter.dart';
+import '../../helpers/types.dart';
 import '../../interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import '../../interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
 import '../drawing_adding_preview.dart';
@@ -36,6 +36,8 @@ class TrendLineInteractableDrawing
     required LineDrawingToolConfig config,
     required this.startPoint,
     required this.endPoint,
+    required super.drawingContext,
+    required super.getDrawingState,
   }) : super(drawingConfig: config);
 
   // TODO(Ramin): make it non-nullable.

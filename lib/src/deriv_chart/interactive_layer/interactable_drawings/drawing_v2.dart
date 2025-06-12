@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 import '../../chart/data_visualization/chart_data.dart';
 import '../../chart/data_visualization/models/animation_info.dart';
 import '../enums/drawing_tool_state.dart';
-import '../interactable_drawing_custom_painter.dart';
+import '../helpers/types.dart';
 
 /// The margin for hit testing.
 const double hitTestMargin = 32;

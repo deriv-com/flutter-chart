@@ -5,6 +5,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/drawing_context.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/types.dart';
 import 'package:flutter/material.dart';
 
 /// Drawing tools config
@@ -68,7 +70,13 @@ abstract class DrawingToolConfig extends AddOnConfig {
   static String configIdKey = 'configId';
 
   /// Returns back the [InteractableDrawing] instance of this drawing tool.
-  InteractableDrawing getInteractableDrawing() {
+  ///
+  /// [getDrawingState] is a callback that returns the current state of a
+  /// [InteractableDrawing].
+  InteractableDrawing getInteractableDrawing(
+    DrawingContext drawingContext,
+    GetDrawingState getDrawingState,
+  ) {
     throw UnimplementedError('getInteractableDrawing() is not implemented.');
   }
 

@@ -12,11 +12,7 @@ import '../chart/data_visualization/drawing_tools/ray/ray_line_drawing.dart';
 import '../chart/data_visualization/models/animation_info.dart';
 import '../chart/y_axis/y_axis_config.dart';
 import 'enums/drawing_tool_state.dart';
-
-/// A callback which calling it should return if the [drawing] is selected.
-typedef GetDrawingState = Set<DrawingToolState> Function(
-  DrawingV2 drawing,
-);
+import 'helpers/types.dart';
 
 /// Interactable drawing custom painter.
 class InteractableDrawingCustomPainter extends CustomPainter {

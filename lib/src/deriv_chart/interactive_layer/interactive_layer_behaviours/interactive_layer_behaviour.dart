@@ -108,6 +108,8 @@ abstract class InteractiveLayerBehaviour {
     updateStateTo(
       InteractiveAddingToolState(drawingTool, interactiveLayerBehaviour: this),
       StateChangeAnimationDirection.forward,
+      animate: false,
+      waitForAnimation: false,
     );
   }
 

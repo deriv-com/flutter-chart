@@ -5,6 +5,8 @@ import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/multiple_animated_builder.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/drawing_context.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_states/interactive_selected_tool_state.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
@@ -83,17 +85,6 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
   final Map<String, InteractableDrawing> _interactableDrawings =
       <String, InteractableDrawing>{};
 
-  /// Timers for debouncing repository updates
-  ///
-  /// We use a map to have one timer per each drawing tool config. This is
-  /// because the request to update the config of different tools can come at
-  /// the same time. If we use only one timer a new request from a different
-  /// tool will cancel the previous one.
-  final Map<String, Timer> _debounceTimers = <String, Timer>{};
-
-  /// Duration for debouncing repository updates (1-sec is a good balance)
-  static const Duration _debounceDuration = Duration(milliseconds: 300);
-
   @override
   void initState() {
     super.initState();
@@ -108,7 +99,10 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
     for (final config in widget.drawingToolsRepo.items) {
       if (!_interactableDrawings.containsKey(config.configId)) {
         // Add new drawing if it doesn't exist
-        final drawing = config.getInteractableDrawing();
+        final drawing = config.getInteractableDrawing(
+          widget.interactiveLayerBehaviour.interactiveLayer.drawingContext,
+          widget.interactiveLayerBehaviour.getToolState,
+        );
         _interactableDrawings[config.configId!] = drawing;
       }
     }
@@ -144,30 +138,23 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
       return;
     }
 
-    // Cancel any existing timer
-    _debounceTimers[configId]?.cancel();
+    if (!mounted) {
+      return;
+    }
 
-    // Create a new timer
-    _debounceTimers[configId] = Timer(_debounceDuration, () {
-      // Only proceed if the widget is still mounted
-      if (!mounted) {
-        return;
-      }
+    final Repository<DrawingToolConfig> repo =
+        context.read<Repository<DrawingToolConfig>>();
 
-      final Repository<DrawingToolConfig> repo =
-          context.read<Repository<DrawingToolConfig>>();
+    // Find the index of the config in the repository
+    final int index =
+        repo.items.indexWhere((config) => config.configId == drawing.configId);
 
-      // Find the index of the config in the repository
-      final int index = repo.items
-          .indexWhere((config) => config.configId == drawing.configId);
+    if (index == -1) {
+      return; // Config not found
+    }
 
-      if (index == -1) {
-        return; // Config not found
-      }
-
-      // Update the config in the repository
-      repo.updateAt(index, drawing);
-    });
+    // Update the config in the repository
+    repo.updateAt(index, drawing);
   }
 
   DrawingToolConfig _addDrawingToRepo(DrawingToolConfig drawing) {
@@ -182,12 +169,6 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
 
   @override
   void dispose() {
-    // Cancel the debounce timers when the widget is disposed
-    for (final Timer timer in _debounceTimers.values) {
-      timer.cancel();
-    }
-    _debounceTimers.clear();
-
     widget.drawingToolsRepo.removeListener(syncDrawingsWithConfigs);
     super.dispose();
   }
@@ -276,7 +257,10 @@ class _InteractiveLayerGestureHandlerState
   AnimationController? get stateChangeAnimationController =>
       _stateChangeController;
 
-  Size? _size;
+  DrawingContext _drawingContext = DrawingContext(
+    fullSize: Size.zero,
+    contentSize: Size.zero,
+  );
 
   @override
   void initState() {
@@ -362,7 +346,15 @@ class _InteractiveLayerGestureHandlerState
   Widget build(BuildContext context) {
     final XAxisModel xAxis = context.watch<XAxisModel>();
     return LayoutBuilder(builder: (_, BoxConstraints constraints) {
-      _size = Size(constraints.maxWidth, constraints.maxHeight);
+      final YAxisConfig yAxisConfig = YAxisConfig.instance;
+
+      _drawingContext = DrawingContext(
+        fullSize: Size(constraints.maxWidth, constraints.maxHeight),
+        contentSize: Size(
+          constraints.maxWidth - yAxisConfig.cachedLabelWidth!,
+          constraints.maxHeight,
+        ),
+      );
 
       return MouseRegion(
         onHover: (event) {
@@ -504,12 +496,12 @@ class _InteractiveLayerGestureHandlerState
       widget.onRemoveDrawing?.call(drawing);
 
   @override
-  Size? get layerSize => _size;
-
-  @override
   void dispose() {
     _interactionNotifier.dispose();
     _stateChangeController.dispose();
     super.dispose();
   }
+
+  @override
+  DrawingContext get drawingContext => _drawingContext;
 }
