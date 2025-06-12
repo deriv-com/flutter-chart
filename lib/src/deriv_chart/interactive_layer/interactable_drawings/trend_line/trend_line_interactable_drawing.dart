@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
@@ -7,11 +8,13 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/extensions/
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/enums/drawing_tool_state.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../helpers/paint_helpers.dart';
-import '../../interactable_drawing_custom_painter.dart';
+import '../../helpers/types.dart';
 import '../../interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import '../../interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
 import '../drawing_adding_preview.dart';
@@ -28,7 +31,9 @@ class TrendLineInteractableDrawing
     required LineDrawingToolConfig config,
     required this.startPoint,
     required this.endPoint,
-  }) : super(config: config);
+    required super.drawingContext,
+    required super.getDrawingState,
+  }) : super(drawingConfig: config);
 
   // TODO(Ramin): make it non-nullable.
   /// Start point of the line.
@@ -168,6 +173,8 @@ class TrendLineInteractableDrawing
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
     GetDrawingState getDrawingState,
   ) {
     final LineStyle lineStyle = config.lineStyle;
@@ -350,4 +357,8 @@ class TrendLineInteractableDrawing
             interactiveLayerBehaviour: layerBehaviour,
             interactableDrawing: this,
           );
+
+  @override
+  Widget buildDrawingToolBarMenu(UpdateDrawingTool onUpdate) =>
+      const Text('[Trend Line Options]');
 }

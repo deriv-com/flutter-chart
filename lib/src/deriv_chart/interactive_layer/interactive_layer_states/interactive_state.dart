@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/widgets.dart';
 
 import '../enums/drawing_tool_state.dart';
 import '../interactable_drawings/drawing_v2.dart';
@@ -27,7 +28,9 @@ abstract class InteractiveState {
   /// The [interactiveLayer] parameter provides a reference to the layer that owns
   /// this state, allowing the state to call methods on the layer such as updating
   /// to a new state or adding/saving drawings.
-  InteractiveState({required this.interactiveLayerBehaviour});
+  InteractiveState({required this.interactiveLayerBehaviour}) {
+    interactiveLayerBehaviour.controller.selectedDrawing = null;
+  }
 
   /// Returns the state of the drawing tool.
   ///
@@ -45,6 +48,9 @@ abstract class InteractiveState {
   /// These are usually temporary/preview drawings that a state might want to
   /// render on top of the main drawings.
   List<DrawingV2> get previewDrawings => [];
+
+  /// Additional widgets to be rendered on top of the interactive layer.
+  List<Widget> get previewWidgets => [];
 
   /// The interactive layer.
   ///

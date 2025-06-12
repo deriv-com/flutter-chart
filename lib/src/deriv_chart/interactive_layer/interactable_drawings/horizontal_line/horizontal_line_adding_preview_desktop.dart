@@ -4,9 +4,12 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
 
-import '../../interactable_drawing_custom_painter.dart';
+import '../../helpers/paint_helpers.dart';
+import '../../helpers/types.dart';
 import '../drawing_adding_preview.dart';
 import 'horizontal_line_interactable_drawing.dart';
 
@@ -42,15 +45,49 @@ class HorizontalLineAddingPreviewDesktop
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
     GetDrawingState drawingState,
   ) {
     if (_hoverPosition != null) {
-      canvas.drawLine(
-        Offset(0, _hoverPosition!.dy),
-        Offset(size.width, _hoverPosition!.dy),
+      final double lineY = _hoverPosition!.dy;
+
+      final Path horizontalPath = Path()
+        ..moveTo(0, lineY)
+        ..lineTo(size.width, lineY);
+
+      canvas.drawPath(
+        dashPath(horizontalPath,
+            dashArray: CircularIntervalList<double>(<double>[2, 2])),
         Paint()
           ..color = interactableDrawing.config.lineStyle.color
           ..style = PaintingStyle.stroke,
+      );
+    }
+  }
+
+  @override
+  void paintOverYAxis(
+    Canvas canvas,
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
+    GetDrawingState getDrawingState,
+  ) {
+    if (_hoverPosition != null) {
+      drawValueLabel(
+        canvas: canvas,
+        quoteToY: quoteToY,
+        value: interactiveLayerBehaviour.interactiveLayer
+            .quoteFromY(_hoverPosition!.dy),
+        pipSize: chartConfig.pipSize,
+        size: size,
+        color: interactableDrawing.config.lineStyle.color,
+        backgroundColor: chartTheme.backgroundColor,
+        textStyle: interactableDrawing.config.labelStyle,
       );
     }
   }

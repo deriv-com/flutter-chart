@@ -44,6 +44,7 @@ class InteractiveNormalState extends InteractiveState
     interactiveLayerBehaviour.updateStateTo(
       newState,
       StateChangeAnimationDirection.forward,
+      waitForAnimation: false,
     );
 
     newState.onPanStart(details);
@@ -68,6 +69,7 @@ class InteractiveNormalState extends InteractiveState
         interactiveLayerBehaviour: interactiveLayerBehaviour,
       ),
       StateChangeAnimationDirection.forward,
+      waitForAnimation: false,
     );
   }
 }
