@@ -66,6 +66,7 @@ class _DrawingToolsScreenState
       drawingTools: _drawingTools,
       drawingToolsRepo: _drawingToolsRepo,
       theme: ChartDefaultDarkTheme(),
+      useDrawingToolsV2: true,
     );
   }
 

@@ -1,20 +1,25 @@
 import 'dart:ui' as ui;
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/horizontal/horizontal_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawing_custom_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/drawing_adding_preview.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/horizontal_line/horizontal_line_adding_preview_desktop.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/widgets/color_picker.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import '../../enums/drawing_tool_state.dart';
 import '../../helpers/paint_helpers.dart';
+import '../../helpers/types.dart';
 import '../../interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import '../../interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
 import '../drawing_v2.dart';
@@ -28,7 +33,9 @@ class HorizontalLineInteractableDrawing
   HorizontalLineInteractableDrawing({
     required HorizontalDrawingToolConfig config,
     required this.startPoint,
-  }) : super(config: config);
+    required super.drawingContext,
+    required super.getDrawingState,
+  }) : super(drawingConfig: config);
 
   /// Start point of the line.
   EdgePoint? startPoint;
@@ -72,6 +79,13 @@ class HorizontalLineInteractableDrawing
       return false;
     }
 
+    final isNotSelected = !state.contains(DrawingToolState.selected);
+    final isOutsideContent = offset.dx > drawingContext.contentSize.width;
+
+    if (isNotSelected && isOutsideContent) {
+      return false;
+    }
+
     // Convert start and end points from epoch/quote to screen coordinates
     final Offset startOffset = Offset(
       epochToX(startPoint!.epoch),
@@ -90,6 +104,8 @@ class HorizontalLineInteractableDrawing
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
     GetDrawingState getDrawingState,
   ) {
     final LineStyle lineStyle = config.lineStyle;
@@ -103,34 +119,19 @@ class HorizontalLineInteractableDrawing
           Offset(size.width, quoteToY(startPoint!.quote)); // End at right edge
 
       // Use glowy paint style if selected, otherwise use normal paint style
-      final Paint paint = drawingState.contains(DrawingToolState.selected) ||
-              drawingState.contains(DrawingToolState.dragging)
-          ? paintStyle.linePaintStyle(
-              lineStyle.color, 1 + 1 * animationInfo.stateChangePercent)
-          : paintStyle.linePaintStyle(lineStyle.color, lineStyle.thickness);
+      final Paint paint =
+          paintStyle.linePaintStyle(lineStyle.color, lineStyle.thickness);
 
       canvas.drawLine(startOffset, endOffset, paint);
 
-      // Draw endpoints with glowy effect if selected
-      if (drawingState.contains(DrawingToolState.selected) ||
-          drawingState.contains(DrawingToolState.dragging)) {
-        _drawPointsFocusedCircle(
-          paintStyle,
-          lineStyle,
-          canvas,
-          startOffset,
-          10 * animationInfo.stateChangePercent,
-          3 * animationInfo.stateChangePercent,
-          endOffset,
-        );
-      } else if (drawingState.contains(DrawingToolState.hovered)) {
-        _drawPointsFocusedCircle(
-            paintStyle, lineStyle, canvas, startOffset, 10, 3, endOffset);
-      }
-
-      // Draw alignment guides when dragging
-      if (drawingState.contains(DrawingToolState.dragging)) {
-        drawPointAlignmentGuides(canvas, size, startOffset);
+      if (drawingState.contains(DrawingToolState.selected)) {
+        final neonPain = Paint()
+          ..color = config.lineStyle.color.withOpacity(0.4)
+          ..strokeWidth = 8 * animationInfo.stateChangePercent
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+        canvas.drawLine(startOffset, endOffset, neonPain);
       }
     } else {
       if (startPoint == null && _hoverPosition != null) {
@@ -151,38 +152,31 @@ class HorizontalLineInteractableDrawing
     }
   }
 
-  void _drawPointsFocusedCircle(
-      DrawingPaintStyle paintStyle,
-      LineStyle lineStyle,
-      ui.Canvas canvas,
-      ui.Offset startOffset,
-      double outerCircleRadius,
-      double innerCircleRadius,
-      ui.Offset endOffset) {
-    final normalPaintStyle = paintStyle.glowyCirclePaintStyle(lineStyle.color);
-    final glowyPaintStyle =
-        paintStyle.glowyCirclePaintStyle(lineStyle.color.withOpacity(0.3));
-    canvas
-      ..drawCircle(
-        startOffset,
-        outerCircleRadius,
-        glowyPaintStyle,
-      )
-      ..drawCircle(
-        startOffset,
-        innerCircleRadius,
-        normalPaintStyle,
-      )
-      ..drawCircle(
-        endOffset,
-        outerCircleRadius,
-        glowyPaintStyle,
-      )
-      ..drawCircle(
-        endOffset,
-        innerCircleRadius,
-        normalPaintStyle,
+  @override
+  void paintOverYAxis(
+    ui.Canvas canvas,
+    ui.Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
+    GetDrawingState getDrawingState,
+  ) {
+    if (getDrawingState(this).contains(DrawingToolState.selected)) {
+      drawValueLabel(
+        canvas: canvas,
+        quoteToY: quoteToY,
+        value: startPoint!.quote,
+        pipSize: chartConfig.pipSize,
+        animationProgress: animationInfo.stateChangePercent,
+        size: size,
+        textStyle: config.labelStyle,
+        color: config.lineStyle.color,
+        backgroundColor: chartTheme.backgroundColor,
+        addNeonEffect: true,
       );
+    }
   }
 
   @override
@@ -260,4 +254,53 @@ class HorizontalLineInteractableDrawing
             interactiveLayerBehaviour: layerBehaviour,
             interactableDrawing: this,
           );
+
+  @override
+  Widget buildDrawingToolBarMenu(UpdateDrawingTool onUpdate) => Row(
+        children: <Widget>[
+          _buildLineThicknessIcon(),
+          const SizedBox(width: 4),
+          _buildColorPickerIcon(onUpdate)
+        ],
+      );
+
+  Widget _buildColorPickerIcon(UpdateDrawingTool onUpdate) => SizedBox(
+        width: 32,
+        height: 32,
+        child: ColorPicker(
+          currentColor: config.lineStyle.color,
+          onColorChanged: (newColor) => onUpdate(config.copyWith(
+            lineStyle: config.lineStyle.copyWith(color: newColor),
+            labelStyle: config.labelStyle.copyWith(color: newColor),
+          )),
+        ),
+      );
+
+  Widget _buildLineThicknessIcon() => SizedBox(
+        width: 32,
+        height: 32,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white38,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          onPressed: () {
+            // update line thickness
+          },
+          child: Text(
+            '${config.lineStyle.thickness.toInt()}px',
+            style: const TextStyle(
+              fontSize: 14,
+              color: CoreDesignTokens.coreColorSolidSlate50,
+              fontWeight: FontWeight.normal,
+              height: 2,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
 }

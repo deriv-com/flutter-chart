@@ -6,7 +6,11 @@ abstract class AddOnConfig with EquatableMixin {
   const AddOnConfig({
     this.isOverlay = true,
     this.number = 0,
+    this.configId,
   });
+
+  /// Drawing tool config id.
+  final String? configId;
 
   /// Whether the add-on is an overlay on the main chart or displays on a
   /// separate chart. Default is set to `true`.

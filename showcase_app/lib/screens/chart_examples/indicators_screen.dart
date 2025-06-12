@@ -97,6 +97,7 @@ class _IndicatorsScreenState extends BaseChartScreenState<IndicatorsScreen> {
       granularity: 3600000, // 1 hour
       indicatorsRepo: _indicatorsRepo, // Pass the indicators repository
       activeSymbol: 'INDICATORS_CHART',
+      useDrawingToolsV2: true,
     );
   }
 

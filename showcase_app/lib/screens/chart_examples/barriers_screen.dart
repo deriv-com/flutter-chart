@@ -151,6 +151,7 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
       pipSize: 2,
       granularity: 60000, // 1 minute
       activeSymbol: 'BARRIERS_CHART',
+      useDrawingToolsV2: true,
     );
   }
 

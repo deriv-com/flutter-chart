@@ -367,48 +367,44 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
           }
 
           updateVisibleData();
-          // TODO(mohammadamir-fs): Remove Extra ClipRect.
           return ListenableProvider<YAxisNotifier>.value(
             value: _yAxisNotifier,
-            child: ClipRect(
-              child: Stack(
-                fit: StackFit.expand,
-                children: <Widget>[
-                  // _buildQuoteGridLine(gridLineQuotes),
+            child: Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                // _buildQuoteGridLine(gridLineQuotes),
 
-                  if (widget.showLoadingAnimationForHistoricalData ||
-                      (widget._mainSeries.entries?.isEmpty ?? false))
-                    _buildLoadingAnimation(),
-                  // _buildQuoteGridLabel(gridLineQuotes),
-                  super.build(context),
-                  if (widget.overlaySeries != null)
-                    _buildSeries(widget.overlaySeries!),
-                  _buildAnnotations(),
-                  if (widget.markerSeries != null) _buildMarkerArea(),
-                  if (widget.drawingTools != null && widget.useDrawingToolsV2)
-                    _buildInteractiveLayer(context, xAxis)
-                  else if (widget.drawingTools != null)
-                    _buildDrawingToolChart(widget.drawingTools!),
-                  if (kIsWeb) _buildCrosshairAreaWeb(),
-                  if (!kIsWeb &&
-                      !(widget.drawingTools?.isDrawingMoving ?? false))
-                    _buildCrosshairArea(),
-                  if (widget.showScrollToLastTickButton &&
-                      _isScrollToLastTickAvailable)
-                    Positioned(
-                      bottom: 0,
-                      right: quoteLabelsTouchAreaWidth,
-                      child: _buildScrollToLastTickButton(),
-                    ),
-                  if (widget.showDataFitButton &&
-                      (widget._mainSeries.entries?.isNotEmpty ?? false))
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      child: _buildDataFitButton(),
-                    ),
-                ],
-              ),
+                if (widget.showLoadingAnimationForHistoricalData ||
+                    (widget._mainSeries.entries?.isEmpty ?? false))
+                  _buildLoadingAnimation(),
+                // _buildQuoteGridLabel(gridLineQuotes),
+                super.build(context),
+                if (widget.overlaySeries != null)
+                  _buildSeries(widget.overlaySeries!),
+                _buildAnnotations(),
+                if (widget.markerSeries != null) _buildMarkerArea(),
+                if (widget.drawingTools != null && widget.useDrawingToolsV2)
+                  _buildInteractiveLayer(context, xAxis)
+                else if (widget.drawingTools != null)
+                  _buildDrawingToolChart(widget.drawingTools!),
+                if (kIsWeb) _buildCrosshairAreaWeb(),
+                if (!kIsWeb && !(widget.drawingTools?.isDrawingMoving ?? false))
+                  _buildCrosshairArea(),
+                if (widget.showScrollToLastTickButton &&
+                    _isScrollToLastTickAvailable)
+                  Positioned(
+                    bottom: 0,
+                    right: quoteLabelsTouchAreaWidth,
+                    child: _buildScrollToLastTickButton(),
+                  ),
+                if (widget.showDataFitButton &&
+                    (widget._mainSeries.entries?.isNotEmpty ?? false))
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    child: _buildDataFitButton(),
+                  ),
+              ],
             ),
           );
         },
