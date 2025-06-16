@@ -32,7 +32,7 @@ class InteractiveLayerController extends ChangeNotifier {
   /// The current position of the floating menu.
   Offset floatingMenuPosition;
 
-  /// The current state of the interactive layer.
+  /// Sets the current state of the interactive layer and notifies listeners.
   set currentState(InteractiveState state) {
     _currentState = state;
     notifyListeners();

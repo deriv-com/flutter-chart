@@ -13,6 +13,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../helpers/paint_helpers.dart';
 import '../../helpers/types.dart';
+import '../../interactive_layer_states/interactive_adding_tool_state.dart';
 import '../drawing_adding_preview.dart';
 import '../drawing_v2.dart';
 import 'trend_line_interactable_drawing.dart';
@@ -25,7 +26,12 @@ class TrendLineAddingPreviewMobile
   TrendLineAddingPreviewMobile({
     required super.interactiveLayerBehaviour,
     required super.interactableDrawing,
-  }) {
+  }) : super(
+          initialAddingStateInfo: AddingStateInfo(
+            addingTool: interactableDrawing,
+            step: AddingToolStep.awaitingFinishAdding,
+          ),
+        ) {
     if (interactableDrawing.startPoint == null) {
       final interactiveLayer = interactiveLayerBehaviour.interactiveLayer;
       final Size size = interactiveLayer.drawingContext.fullSize;
@@ -149,9 +155,10 @@ class TrendLineAddingPreviewMobile
     EpochFromX epochFromX,
     QuoteFromY quoteFromY,
     EpochToX epochToX,
-    QuoteToY quoteToY,
-    VoidCallback onDone,
-  ) {
+    QuoteToY quoteToY, {
+    required VoidCallback onDone,
+    required Function(AddingStateInfo) onAddingStateChange,
+  }) {
     if (!interactableDrawing.hitTest(
       details.localPosition,
       epochToX,
@@ -159,6 +166,11 @@ class TrendLineAddingPreviewMobile
     )) {
       // Tap is outside the drawing preview. means adding is confirmed.
       onDone();
+      onAddingStateChange(
+        addingStateInfo.copyWith(
+          step: AddingToolStep.awaitingFinishAdding,
+        ),
+      );
     }
   }
 

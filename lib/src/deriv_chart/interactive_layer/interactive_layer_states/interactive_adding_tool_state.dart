@@ -16,10 +16,9 @@ import 'interactive_state.dart';
 class AddingStateInfo {
   /// Creates an instance of [AddingStateInfo].
   AddingStateInfo({
-    required this.addingToolType,
     required this.addingTool,
     required this.step,
-  });
+  }) : addingToolType = addingTool.runtimeType;
 
   /// The type of the tool being added.
   final Type addingToolType;
@@ -29,6 +28,17 @@ class AddingStateInfo {
 
   /// Indicates the current step in the process of adding a tool.
   final AddingToolStep step;
+
+  /// Creates a copy of this [AddingStateInfo] with the specified
+  /// [addingTool] and [step].
+  AddingStateInfo copyWith({
+    InteractableDrawing<DrawingToolConfig>? addingTool,
+    AddingToolStep? step,
+  }) =>
+      AddingStateInfo(
+        addingTool: addingTool ?? this.addingTool,
+        step: step ?? this.step,
+      );
 }
 
 /// Represents a step in the process of adding a tool to the interactive layer,
@@ -57,6 +67,13 @@ class AddingToolStep {
   /// Some tools, such as [HorizontalLineInteractableDrawing], require only one
   /// point only.
   static const awaitingTheOnlyPoint = AddingToolStep._(0);
+
+  /// Indicates that the tool addition process is awaiting the user to confirm
+  /// the addition of the tool.
+  static const awaitingFinishAdding = AddingToolStep._(-1);
+
+  /// The users has finished adding the tool.
+  static const addingFinished = AddingToolStep._(-2);
 
   @override
   String toString() => 'AddingToolStep(step: $step)';
@@ -89,7 +106,12 @@ class InteractiveAddingToolState extends InteractiveState
         interactiveLayerBehaviour.getToolState,
       ),
     );
+
+    addingStateInfo = _drawingPreview!.addingStateInfo;
   }
+
+  /// The initial state information for adding a tool.
+  late final AddingStateInfo addingStateInfo;
 
   /// The tool being added.
   ///
@@ -197,26 +219,40 @@ class InteractiveAddingToolState extends InteractiveState
 
   @override
   void onTap(TapUpDetails details) {
-    _drawingPreview!
-        .onCreateTap(details, epochFromX, quoteFromY, epochToX, quoteToY, () {
-      interactiveLayer
-        ..clearAddingDrawing()
-        ..addDrawing(_drawingPreview!.interactableDrawing.getUpdatedConfig());
+    _drawingPreview!.onCreateTap(
+      details,
+      epochFromX,
+      quoteFromY,
+      epochToX,
+      quoteToY,
+      onAddingStateChange: (addingStateInfo) {
+        interactiveLayerBehaviour.controller.currentState = this.copyWith(
+          addingTool: _drawingPreview!.interactableDrawing,
+          step: addingStateInfo.step,
+        );
 
-      // Update the state to selected tool state with the newly added drawing.
-      //
-      // Once we have saved the drawing config in [AddOnsRepository] we should
-      // update to selected state with the interactable drawing that comes from
-      // that configs and not the preview one.
-      interactiveLayerBehaviour.updateStateTo(
-        InteractiveSelectedToolState(
-          selected: _drawingPreview!.interactableDrawing,
-          interactiveLayerBehaviour: interactiveLayerBehaviour,
-        ),
-        StateChangeAnimationDirection.forward,
-      );
+        if (addingStateInfo.step == AddingToolStep.addingFinished) {
+          interactiveLayer
+            ..clearAddingDrawing()
+            ..addDrawing(
+                _drawingPreview!.interactableDrawing.getUpdatedConfig());
 
-      _drawingPreview = null;
-    });
+          // Update the state to selected tool state with the newly added drawing.
+          //
+          // Once we have saved the drawing config in [AddOnsRepository] we should
+          // update to selected state with the interactable drawing that comes from
+          // that configs and not the preview one.
+          interactiveLayerBehaviour.updateStateTo(
+            InteractiveSelectedToolState(
+              selected: _drawingPreview!.interactableDrawing,
+              interactiveLayerBehaviour: interactiveLayerBehaviour,
+            ),
+            StateChangeAnimationDirection.forward,
+          );
+
+          _drawingPreview = null;
+        }
+      },
+    );
   }
 }
