@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer.
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../helpers/types.dart';
 import '../interactable_drawings/drawing_v2.dart';
 import '../interactable_drawings/interactable_drawing.dart';
 import '../interactive_layer_states/interactive_state.dart';
@@ -65,6 +66,15 @@ class InteractiveSelectedToolState extends InteractiveState
 
     // For all other drawings, return normal state
     return hoveredState;
+  }
+
+  @override
+  DrawingZOrder getToolZOrder(DrawingV2 drawing) {
+    if (drawing.id == selected.config.configId) {
+      return DrawingZOrder.top;
+    }
+
+    return super.getToolZOrder(drawing);
   }
 
   @override
