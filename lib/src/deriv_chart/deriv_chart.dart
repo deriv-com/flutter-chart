@@ -28,7 +28,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'interactive_layer/interactive_layer_behaviours/interactive_layer_behaviour.dart';
 import 'interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import 'interactive_layer/interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
-import 'interactive_layer/interactive_layer_states/interactive_adding_tool_state.dart';
 
 /// A wrapper around the [Chart] which handles adding indicators to the chart.
 class DerivChart extends StatefulWidget {
@@ -209,16 +208,16 @@ class _DerivChartState extends State<DerivChart> {
 
   late final InteractiveLayerBehaviour _interactiveLayerBehaviour;
 
-  final InteractiveLayerController _controller = InteractiveLayerController();
-
   @override
   void initState() {
     super.initState();
 
     _interactiveLayerBehaviour = widget.interactiveLayerBehaviour ??
         (kIsWeb
-            ? InteractiveLayerDesktopBehaviour(controller: _controller)
-            : InteractiveLayerMobileBehaviour(controller: _controller));
+            ? InteractiveLayerDesktopBehaviour(
+                controller: InteractiveLayerController())
+            : InteractiveLayerMobileBehaviour(
+                controller: InteractiveLayerController()));
 
     _initRepos();
   }
@@ -309,7 +308,7 @@ class _DerivChartState extends State<DerivChart> {
         value: _drawingToolsRepo,
         child: DrawingToolsDialog(
           drawingTools: _drawingTools,
-          interactiveLayerController: _controller,
+          interactiveLayerController: _interactiveLayerBehaviour.controller,
         ),
       ),
     );
@@ -394,27 +393,6 @@ class _DerivChartState extends State<DerivChart> {
               ),
               if (widget.indicatorsRepo == null) _buildIndicatorsIcon(),
               if (widget.drawingToolsRepo == null) _buildDrawingToolsIcon(),
-              Align(
-                alignment: Alignment.topRight,
-                child: ListenableBuilder(
-                  listenable: _controller,
-                  builder: (_, __) {
-                    if (_controller.currentState
-                        is InteractiveAddingToolState) {
-                      return Row(
-                        children: [
-                          const Text('Cancel adding!'),
-                          IconButton(
-                            onPressed: _controller.cancelAdding,
-                            icon: const Icon(Icons.cancel),
-                          ),
-                        ],
-                      );
-                    }
-                    return const SizedBox();
-                  },
-                ),
-              ),
             ],
           ),
         ),

@@ -9,6 +9,7 @@ import 'package:example/generated/l10n.dart';
 import 'package:example/settings_page.dart';
 import 'package:example/utils/endpoints_helper.dart';
 import 'package:example/widgets/connection_status_label.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_deriv_api/api/exceptions/exceptions.dart';
 import 'package:flutter_deriv_api/api/manually/ohlc_response_result.dart';
@@ -112,6 +113,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
   final ChartController _controller = ChartController();
   PersistentBottomSheetController? _bottomSheetController;
 
+  late final InteractiveLayerBehaviour _interactiveLayerBehaviour;
+
+  final InteractiveLayerController _interactiveLayerController =
+      InteractiveLayerController();
+
   late PrefServiceCache _prefService;
 
   @override
@@ -120,6 +126,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _requestCompleter = Completer<dynamic>();
     _connectToAPI();
     _initPrefs();
+
+    _interactiveLayerBehaviour = kIsWeb
+        ? InteractiveLayerDesktopBehaviour(
+            controller: _interactiveLayerController)
+        : InteractiveLayerMobileBehaviour(
+            controller: _interactiveLayerController);
   }
 
   Future<void> _initPrefs() async {
@@ -379,6 +391,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 children: <Widget>[
                   ClipRect(
                     child: DerivChart(
+                      useDrawingToolsV2: true,
+                      interactiveLayerBehaviour: _interactiveLayerBehaviour,
                       mainSeries: _getDataSeries(style),
                       markerSeries: MarkerSeries(
                         _markers,
@@ -442,6 +456,28 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     Align(
                       child: _buildConnectionStatus(),
                     ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: ListenableBuilder(
+                      listenable: _interactiveLayerController,
+                      builder: (_, __) {
+                        if (_interactiveLayerController.currentState
+                            is InteractiveAddingToolState) {
+                          return Row(
+                            children: [
+                              const Text('Cancel adding!'),
+                              IconButton(
+                                onPressed:
+                                    _interactiveLayerController.cancelAdding,
+                                icon: const Icon(Icons.cancel),
+                              ),
+                            ],
+                          );
+                        }
+                        return const SizedBox();
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
