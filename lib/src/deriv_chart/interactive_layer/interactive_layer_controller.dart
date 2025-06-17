@@ -1,7 +1,10 @@
 import 'dart:ui';
 
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer.dart';
 import 'package:flutter/foundation.dart';
 
+import 'interactive_layer_states/interactive_adding_tool_state.dart';
 import 'interactive_layer_states/interactive_state.dart';
 
 /// A controller similar to [ListView.scrollController] to control interactive
@@ -30,9 +33,34 @@ class InteractiveLayerController extends ChangeNotifier {
   /// The current position of the floating menu.
   Offset floatingMenuPosition;
 
+  /// The callback to be called when the user cancels adding a drawing tool.
+  VoidCallback? onCancelAdding;
+
+  /// The callback to be called when a new drawing tool going to be added.
+  Function(DrawingToolConfig)? onAddNewTool;
+
   /// Sets the current state of the interactive layer and notifies listeners.
   set currentState(InteractiveState state) {
     _currentState = state;
     notifyListeners();
   }
+
+  /// Cancels the adding of a drawing tool if we're in
+  /// [InteractiveAddingToolState].
+  ///
+  /// Otherwise will throw ...
+  void cancelAdding() {
+    if (_currentState is InteractiveAddingToolState) {
+      onCancelAdding?.call();
+    } else {
+      throw StateError(
+        'Cannot cancel adding tool when not in InteractiveAddingToolState',
+      );
+    }
+  }
+
+  /// Updates the [InteractiveLayer]'s internal state to start adding the
+  /// [config] to the chart.
+  void startAddingNewTool(DrawingToolConfig config) =>
+      onAddNewTool?.call(config);
 }

@@ -19,6 +19,9 @@ class _DrawingToolsScreenState
   DrawingToolConfig? _selectedDrawingTool;
   bool _isInitialized = false;
 
+  final InteractiveLayerController interactiveLayerController =
+      InteractiveLayerController();
+
   @override
   void initState() {
     super.initState();
@@ -61,7 +64,8 @@ class _DrawingToolsScreenState
       mainSeries: LineSeries(ticks, style: const LineStyle(hasArea: true)),
       controller: controller,
       pipSize: 2,
-      granularity: 60000, // 1 minute
+      granularity: 60000,
+      // 1 minute
       activeSymbol: 'DRAWING_TOOLS_CHART',
       drawingTools: _drawingTools,
       drawingToolsRepo: _drawingToolsRepo,
@@ -85,6 +89,7 @@ class _DrawingToolsScreenState
           value: _drawingToolsRepo,
           child: DrawingToolsDialog(
             drawingTools: _drawingTools,
+            interactiveLayerController: interactiveLayerController,
           ),
         ),
       ),
@@ -92,15 +97,14 @@ class _DrawingToolsScreenState
   }
 
   void _addDrawingTool() {
-    if (!_isInitialized || _selectedDrawingTool == null) {
+    if (_selectedDrawingTool == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a drawing tool')),
+      );
       return;
     }
 
-    _drawingTools.onDrawingToolSelection(_selectedDrawingTool!);
-    _drawingToolsRepo.update();
-    setState(() {
-      _selectedDrawingTool = null;
-    });
+    interactiveLayerController.startAddingNewTool(_selectedDrawingTool!);
   }
 
   @override

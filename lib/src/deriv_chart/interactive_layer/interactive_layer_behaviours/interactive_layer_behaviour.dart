@@ -33,8 +33,18 @@ abstract class InteractiveLayerBehaviour {
   InteractiveLayerBehaviour({
     InteractiveLayerController? controller,
   }) : _controller = controller ?? InteractiveLayerController() {
-    _controller.currentState =
-        InteractiveNormalState(interactiveLayerBehaviour: this);
+    _controller
+      ..currentState = InteractiveNormalState(interactiveLayerBehaviour: this)
+      ..onCancelAdding = () {
+        updateStateTo(
+          InteractiveNormalState(interactiveLayerBehaviour: this),
+          StateChangeAnimationDirection.backward,
+          animate: false,
+        );
+      }
+      ..onAddNewTool = (DrawingToolConfig drawingTool) {
+        startAddingTool(drawingTool);
+      };
   }
 
   late final InteractiveLayerController _controller;
