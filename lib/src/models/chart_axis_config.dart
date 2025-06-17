@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
 import 'package:flutter/foundation.dart';
 
 /// Default top bound quote.
@@ -10,15 +11,18 @@ const double defaultBottomBoundQuote = 30;
 /// Limits panning to the right.
 const double defaultMaxCurrentTickOffset = 150;
 
+/// {@template auto_interval_zoom_range}
 /// Configuration for auto-interval zoom ranges.
 /// Maps granularity (in milliseconds) to the optimal pixel range for that interval.
+/// {@endtemplate}
 @immutable
 class AutoIntervalZoomRange {
+  /// {@macro auto_interval_zoom_range}
   const AutoIntervalZoomRange({
     required this.granularity,
     required this.minPixelsPerInterval,
     required this.maxPixelsPerInterval,
-    this.optimalPixelsPerInterval = 40.0,
+    this.optimalPixelsPerInterval = 18.0,
   });
 
   /// The granularity in milliseconds (e.g., 60000 for 1-minute candles)
@@ -38,64 +42,64 @@ class AutoIntervalZoomRange {
 const List<AutoIntervalZoomRange> defaultAutoIntervalRanges = [
   AutoIntervalZoomRange(
     granularity: 60000,
-    minPixelsPerInterval: 10,
-    maxPixelsPerInterval: 1000,
-  ), // 1 minute - _msPerPx range: ( - 6000)
+    minPixelsPerInterval: 12,
+    maxPixelsPerInterval: 24,
+  ), // 1 minute
   AutoIntervalZoomRange(
     granularity: 120000,
-    minPixelsPerInterval: 10,
-    maxPixelsPerInterval: 40,
-  ), // 2 minutes - _msPerPx range: (3000 - 12000)
+    minPixelsPerInterval: 12,
+    maxPixelsPerInterval: 24,
+  ), // 2 minutes
   AutoIntervalZoomRange(
     granularity: 180000,
-    minPixelsPerInterval: 10,
-    maxPixelsPerInterval: 30,
-  ), // 3 minutes - _msPerPx range: (6000 - 18000)
+    minPixelsPerInterval: 12,
+    maxPixelsPerInterval: 24,
+  ), // 3 minutes
   AutoIntervalZoomRange(
     granularity: 300000,
-    minPixelsPerInterval: 10,
-    maxPixelsPerInterval: 25,
-  ), // 5 minutes - _msPerPx range: (12000 - 30000)
+    minPixelsPerInterval: 12,
+    maxPixelsPerInterval: 24,
+  ), // 5 minutes
   AutoIntervalZoomRange(
     granularity: 600000,
-    minPixelsPerInterval: 10,
-    maxPixelsPerInterval: 33,
-  ), // 10 minutes - _msPerPx range: (18000 - 60000)
+    minPixelsPerInterval: 12,
+    maxPixelsPerInterval: 24,
+  ), // 10 minutes
   AutoIntervalZoomRange(
     granularity: 900000,
-    minPixelsPerInterval: 10,
-    maxPixelsPerInterval: 30,
-  ), // 15 minutes - _msPerPx range: (30000 - 90000)
+    minPixelsPerInterval: 12,
+    maxPixelsPerInterval: 24,
+  ), // 15 minutes
   AutoIntervalZoomRange(
     granularity: 1800000,
-    minPixelsPerInterval: 10,
-    maxPixelsPerInterval: 30,
-  ), // 30 minutes - _msPerPx range: (60000 - 180000)
+    minPixelsPerInterval: 12,
+    maxPixelsPerInterval: 24,
+  ), // 30 minutes
   AutoIntervalZoomRange(
     granularity: 3600000,
-    minPixelsPerInterval: 10,
-    maxPixelsPerInterval: 40,
-  ), // 1 hour - _msPerPx range: (90000 - 360000)
+    minPixelsPerInterval: 12,
+    maxPixelsPerInterval: 24,
+  ), // 1 hour
   AutoIntervalZoomRange(
     granularity: 7200000,
-    minPixelsPerInterval: 10,
-    maxPixelsPerInterval: 40,
-  ), // 2 hours - _msPerPx range: (180000 - 720000)
+    minPixelsPerInterval: 12,
+    maxPixelsPerInterval: 24,
+  ), // 2 hours
   AutoIntervalZoomRange(
     granularity: 14400000,
-    minPixelsPerInterval: 10,
-    maxPixelsPerInterval: 40,
-  ), // 4 hours - _msPerPx range: (360000 - 1440000)
+    minPixelsPerInterval: 12,
+    maxPixelsPerInterval: 24,
+  ), // 4 hours
   AutoIntervalZoomRange(
     granularity: 28800000,
-    minPixelsPerInterval: 10,
-    maxPixelsPerInterval: 40,
-  ), // 8 hours - _msPerPx range: (720000 - 2880000)
+    minPixelsPerInterval: 12,
+    maxPixelsPerInterval: 24,
+  ), // 8 hours
   AutoIntervalZoomRange(
     granularity: 86400000,
-    minPixelsPerInterval: 1,
-    maxPixelsPerInterval: 30,
-  ), // 1 day - _msPerPx range: (2880000 - )
+    minPixelsPerInterval: 12,
+    maxPixelsPerInterval: 24,
+  ), // 1 day
 ];
 
 /// Configuration for the chart axis.
@@ -113,7 +117,7 @@ class ChartAxisConfig {
     this.smoothScrolling = true,
     this.autoIntervalEnabled = false,
     this.autoIntervalZoomRanges = defaultAutoIntervalRanges,
-    this.autoIntervalTransitionDuration = const Duration(milliseconds: 480),
+    this.autoIntervalTransitionDuration = CoreDesignTokens.motionDurationSnappy,
   });
 
   /// Top quote bound target for animated transition.
