@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
 import 'package:flutter/material.dart';
 
 /// Grid of color options for dropdown color picker.
@@ -28,7 +29,10 @@ class DropdownColorGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -36,14 +40,16 @@ class DropdownColorGrid extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  for (final Color color in row)
+                  for (int i = 0; i < row.length; i++) ...[
                     _ColorOptionButton(
-                      color: color,
-                      selected: color.value == selectedColor.value,
-                      onTap: () => onChanged(color),
+                      color: row[i],
+                      selected: row[i].value == selectedColor.value,
+                      onTap: () => onChanged(row[i]),
                     ),
+                    if (i < row.length - 1) const SizedBox(width: 4)
+                  ],
                 ],
               ),
             ),
@@ -71,30 +77,29 @@ class _ColorOptionButton extends StatelessWidget {
       width: 16,
       height: 16,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(2),
+        border: Border.all(
+          // TODO(NA): use color from core design tokens when the token is there.
+          color: const Color(0x29000000),
+        ),
         color: color,
       ),
     );
 
     return GestureDetector(
       onTap: onTap,
-      child: selected ? _wrapWithBorder(colorArea) : colorArea,
+      child: Stack(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              border: selected ? Border.all(color: Colors.white) : null,
+            ),
+            child: colorArea,
+          )
+        ],
+      ),
     );
   }
-
-  Widget _wrapWithBorder(Widget child) => Container(
-        padding: const EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6),
-          border: Border.all(width: 2, color: Colors.white),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.white.withOpacity(0.3),
-              blurRadius: 4,
-              spreadRadius: 1,
-            ),
-          ],
-        ),
-        child: child,
-      );
 }
