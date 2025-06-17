@@ -1,5 +1,5 @@
 import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
-import 'package:deriv_chart/src/widgets/color_picker/material_color_grid.dart';
+import 'package:deriv_chart/src/widgets/color_picker/dropdown_color_grid.dart';
 import 'package:flutter/material.dart';
 
 /// Shows a color picker dropdown at the specified position.
@@ -11,7 +11,7 @@ void showColorPickerDropdown({
   required Offset position,
   required Color initialColor,
   required ValueChanged<Color> onColorSelected,
-  BoxConstraints constraints = const BoxConstraints(maxWidth: 200, maxHeight: 250),
+  BoxConstraints constraints = const BoxConstraints(maxWidth: 140, maxHeight: 320),
 }) {
   // Get screen size to determine dropdown direction
   final screenSize = MediaQuery.of(context).size;
@@ -43,14 +43,14 @@ void showColorPickerDropdown({
                 : position.dy + 40,
             child: Material(
               elevation: 8,
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(6),
               color: CoreDesignTokens.coreColorSolidSlate1100,
               child: Container(
                 constraints: constraints,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: MaterialColorGrid(
+                child: DropdownColorGrid(
                   selectedColor: initialColor,
                   onChanged: (Color selectedColor) {
                     onColorSelected(selectedColor);
