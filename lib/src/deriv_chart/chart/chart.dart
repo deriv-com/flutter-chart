@@ -290,8 +290,6 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
         granularity: widget.granularity,
         msPerPx: widget.msPerPx ?? defaultMsPerPx);
 
-    // print(_chartScaleModel.toString());
-
     final List<Series>? overlaySeries =
         _getIndicatorSeries(widget.overlayConfigs);
 
@@ -318,47 +316,40 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
     final Duration currentTickAnimationDuration =
         widget.currentTickAnimationDuration ?? _defaultDuration;
 
-    Widget chartContent = MultiProvider(
-      providers: <SingleChildWidget>[
-        Provider<ChartTheme>.value(value: _chartTheme),
-        Provider<ChartConfig>.value(value: chartConfig),
-        Provider<ChartScaleModel>.value(value: _chartScaleModel),
-      ],
-      child: Ink(
-        color: _chartTheme.backgroundColor,
-        child: GestureManager(
-          child: XAxisWrapper(
-            maxEpoch: chartDataList.getMaxEpoch(),
-            minEpoch: chartDataList.getMinEpoch(),
-            chartAxisConfig: widget.chartAxisConfig,
-            entries: widget.mainSeries.input,
-            pipSize: widget.pipSize,
-            onVisibleAreaChanged: _onVisibleAreaChanged,
-            isLive: widget.isLive,
-            startWithDataFitMode: widget.dataFitEnabled,
-            msPerPx: widget.msPerPx,
-            minIntervalWidth: widget.minIntervalWidth,
-            maxIntervalWidth: widget.maxIntervalWidth,
-            dataFitPadding: widget.dataFitPadding,
-            scrollAnimationDuration: currentTickAnimationDuration,
-            child: buildChartsLayout(context, overlaySeries, bottomSeries),
+    return AutoIntervalWrapper(
+      enabled: widget.chartAxisConfig.autoIntervalEnabled,
+      granularity: widget.granularity,
+      zoomRanges: widget.chartAxisConfig.autoIntervalZoomRanges,
+      onGranularityChangeRequested: widget.onGranularityChangeRequested,
+      child: MultiProvider(
+        providers: <SingleChildWidget>[
+          Provider<ChartTheme>.value(value: _chartTheme),
+          Provider<ChartConfig>.value(value: chartConfig),
+          Provider<ChartScaleModel>.value(value: _chartScaleModel),
+        ],
+        child: Ink(
+          color: _chartTheme.backgroundColor,
+          child: GestureManager(
+            child: XAxisWrapper(
+              maxEpoch: chartDataList.getMaxEpoch(),
+              minEpoch: chartDataList.getMinEpoch(),
+              chartAxisConfig: widget.chartAxisConfig,
+              entries: widget.mainSeries.input,
+              pipSize: widget.pipSize,
+              onVisibleAreaChanged: _onVisibleAreaChanged,
+              isLive: widget.isLive,
+              startWithDataFitMode: widget.dataFitEnabled,
+              msPerPx: widget.msPerPx,
+              minIntervalWidth: widget.minIntervalWidth,
+              maxIntervalWidth: widget.maxIntervalWidth,
+              dataFitPadding: widget.dataFitPadding,
+              scrollAnimationDuration: currentTickAnimationDuration,
+              child: buildChartsLayout(context, overlaySeries, bottomSeries),
+            ),
           ),
         ),
       ),
     );
-
-    // Wrap with AutoIntervalWrapper if enabled
-    if (widget.chartAxisConfig.autoIntervalEnabled) {
-      chartContent = AutoIntervalWrapper(
-        enabled: true,
-        granularity: widget.granularity,
-        zoomRanges: widget.chartAxisConfig.autoIntervalZoomRanges,
-        onGranularityChangeRequested: widget.onGranularityChangeRequested,
-        child: chartContent,
-      );
-    }
-
-    return chartContent;
   }
 
   Widget buildChartsLayout(

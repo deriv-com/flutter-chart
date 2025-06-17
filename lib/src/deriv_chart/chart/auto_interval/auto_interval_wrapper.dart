@@ -55,7 +55,8 @@ class AutoIntervalWrapper extends StatefulWidget {
 /// State for AutoIntervalWrapper that implements ZoomLevelObserver.
 class AutoIntervalWrapperState extends State<AutoIntervalWrapper>
     implements ZoomLevelObserver {
-  int _currentGranularity = 0;
+  late int _currentGranularity;
+  double? _currentMsPerPx;
   int? _lastSuggestedGranularity;
 
   @override
@@ -73,26 +74,23 @@ class AutoIntervalWrapperState extends State<AutoIntervalWrapper>
       _currentGranularity = widget.granularity;
       _lastSuggestedGranularity = null; // Reset suggestion tracking
     }
+
+    // Suggest granularity change if auto-interval is re-enabled.
+    if (!oldWidget.enabled && widget.enabled) {
+      _requestGranularityChangeIfNeeded();
+    }
   }
 
   @override
   void onZoomLevelChanged(double msPerPx, int currentGranularity) {
-    if (!widget.enabled) {
-      return;
-    }
-
-    // Update current granularity
+    // Update current granularity and msPerPx
     _currentGranularity = currentGranularity;
+    _currentMsPerPx = msPerPx;
 
-    // Calculate optimal granularity for current zoom level
-    final int? optimalGranularity = _calculateOptimalGranularity(msPerPx);
-
-    // Suggest change if different from current and not already suggested
-    if (optimalGranularity != null &&
-        optimalGranularity != _currentGranularity &&
-        optimalGranularity != _lastSuggestedGranularity) {
-      _lastSuggestedGranularity = optimalGranularity;
-      widget.onGranularityChangeRequested?.call(optimalGranularity);
+    // Calculate optimal granularity for current zoom level if auto-interval
+    // is enabled.
+    if (widget.enabled) {
+      _requestGranularityChangeIfNeeded();
     }
   }
 
@@ -102,6 +100,9 @@ class AutoIntervalWrapperState extends State<AutoIntervalWrapper>
     double bestScore = double.infinity;
 
     for (final AutoIntervalZoomRange range in widget.zoomRanges) {
+
+      // The number of pixels that one interval (candle) will occupy on the
+      // chart at current zoom level.
       final double pixelsPerInterval = range.granularity / msPerPx;
 
       // Check if current zoom level fits within this range's bounds
@@ -119,6 +120,27 @@ class AutoIntervalWrapperState extends State<AutoIntervalWrapper>
     }
 
     return bestRange?.granularity;
+  }
+
+  /// Requests a granularity change if the optimal granularity is different
+  /// from the current and not already requested.
+  void _requestGranularityChangeIfNeeded() {
+    if (_currentMsPerPx == null) {
+      return;
+    }
+
+    final int? optimalGranularity =
+        _calculateOptimalGranularity(_currentMsPerPx!);
+
+    if (optimalGranularity != null &&
+        optimalGranularity != _currentGranularity &&
+        optimalGranularity != _lastSuggestedGranularity) {
+      _lastSuggestedGranularity = optimalGranularity;
+      // Defer the callback to the next frame
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.onGranularityChangeRequested?.call(optimalGranularity);
+      });
+    }
   }
 
   @override
