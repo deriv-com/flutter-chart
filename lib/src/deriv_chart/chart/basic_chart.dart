@@ -20,6 +20,7 @@ import 'helpers/functions/conversion.dart';
 import 'helpers/functions/helper_functions.dart';
 import 'multiple_animated_builder.dart';
 import 'y_axis/quote_grid.dart';
+import 'package:deriv_chart/src/widgets/maybe_animated_switcher.dart';
 
 const Duration _defaultDuration = Duration(milliseconds: 300);
 
@@ -451,13 +452,15 @@ class BasicChartState<T extends BasicChart> extends State<T>
         builder: (BuildContext context, _) => RepaintBoundary(
           child: Opacity(
             opacity: widget.opacity,
-            child: AnimatedSwitcher(
+            child: MaybeAnimatedSwitcher(
+              enabled: context
+                  .watch<ChartConfig>()
+                  .chartAxisConfig
+                  .autoIntervalEnabled,
               duration: context
                   .watch<ChartConfig>()
                   .chartAxisConfig
                   .autoIntervalTransitionDuration,
-              switchInCurve: const Cubic(0.72, 0, 0.24, 1),
-              switchOutCurve: const Cubic(0.72, 0, 0.24, 1),
               child: CustomPaint(
                 key: ValueKey(context.watch<ChartConfig>().granularity),
                 size: canvasSize!,
