@@ -8,7 +8,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/drawing_adding_preview.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/horizontal_line/horizontal_line_adding_preview_desktop.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/widgets/color_picker.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/widgets/color_picker_dropdown_button.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -272,7 +272,7 @@ class HorizontalLineInteractableDrawing
   Widget _buildColorPickerIcon(UpdateDrawingTool onUpdate) => SizedBox(
         width: 32,
         height: 32,
-        child: ColorPicker(
+        child: ColorPickerDropdownButton(
           currentColor: config.lineStyle.color,
           onColorChanged: (newColor) => onUpdate(config.copyWith(
             lineStyle: config.lineStyle.copyWith(color: newColor),
