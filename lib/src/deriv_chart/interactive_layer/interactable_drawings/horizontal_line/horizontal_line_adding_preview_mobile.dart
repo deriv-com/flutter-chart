@@ -22,12 +22,8 @@ class HorizontalLineAddingPreviewMobile
   HorizontalLineAddingPreviewMobile({
     required super.interactiveLayerBehaviour,
     required super.interactableDrawing,
-  }) : super(
-          initialAddingStateInfo: AddingStateInfo(
-            addingTool: interactableDrawing,
-            step: AddingToolStep.awaitingFinishAdding,
-          ),
-        ) {
+    required super.onAddingStateChange,
+  }) {
     if (interactableDrawing.startPoint == null) {
       final interactiveLayer = interactiveLayerBehaviour.interactiveLayer;
       final Size? layerSize = interactiveLayer.drawingContext.fullSize;
@@ -39,6 +35,8 @@ class HorizontalLineAddingPreviewMobile
         epoch: interactiveLayer.epochFromX(centerX),
         quote: interactiveLayer.quoteFromY(centerY),
       );
+
+      onAddingStateChange(AddingStateInfo(0, 1));
     }
   }
 
@@ -126,15 +124,13 @@ class HorizontalLineAddingPreviewMobile
     EpochFromX epochFromX,
     QuoteFromY quoteFromY,
     EpochToX epochToX,
-    QuoteToY quoteToY, {
-    required VoidCallback onDone,
-    required Function(AddingStateInfo) onAddingStateChange,
-  }) {
+    QuoteToY quoteToY,
+  ) {
     interactableDrawing.startPoint ??= EdgePoint(
       epoch: epochFromX(details.localPosition.dx),
       quote: quoteFromY(details.localPosition.dy),
     );
 
-    onDone();
+    onAddingStateChange(AddingStateInfo(1, 1));
   }
 }

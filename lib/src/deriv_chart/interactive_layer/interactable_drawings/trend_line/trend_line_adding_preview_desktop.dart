@@ -26,12 +26,10 @@ class TrendLineAddingPreviewDesktop
   TrendLineAddingPreviewDesktop({
     required super.interactiveLayerBehaviour,
     required super.interactableDrawing,
-  }) : super(
-          initialAddingStateInfo: AddingStateInfo(
-            addingTool: interactableDrawing,
-            step: AddingToolStep.awaitingFirstPoint,
-          ),
-        );
+    required super.onAddingStateChange,
+  }) {
+    onAddingStateChange(AddingStateInfo(0, 2));
+  }
 
   Offset? _hoverPosition;
 
@@ -92,21 +90,20 @@ class TrendLineAddingPreviewDesktop
     EpochFromX epochFromX,
     QuoteFromY quoteFromY,
     EpochToX epochToX,
-    QuoteToY quoteToY, {
-    required VoidCallback onDone,
-    required Function(AddingStateInfo) onAddingStateChange,
-  }) {
+    QuoteToY quoteToY,
+  ) {
     if (interactableDrawing.startPoint == null) {
       interactableDrawing.startPoint = EdgePoint(
         epoch: epochFromX(details.localPosition.dx),
         quote: quoteFromY(details.localPosition.dy),
       );
+      onAddingStateChange(AddingStateInfo(1, 2));
     } else {
       interactableDrawing.endPoint ??= EdgePoint(
         epoch: epochFromX(details.localPosition.dx),
         quote: quoteFromY(details.localPosition.dy),
       );
-      onDone();
+      onAddingStateChange(AddingStateInfo(2, 2));
     }
   }
 

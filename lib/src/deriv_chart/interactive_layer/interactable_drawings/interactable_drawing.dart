@@ -13,6 +13,7 @@ import '../enums/drawing_tool_state.dart';
 import '../helpers/types.dart';
 import '../interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import '../interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
+import '../interactive_layer_states/interactive_adding_tool_state.dart';
 import 'drawing_adding_preview.dart';
 import 'drawing_v2.dart';
 
@@ -183,6 +184,7 @@ abstract class InteractableDrawing<T extends DrawingToolConfig>
   /// other than the default one.
   DrawingAddingPreview getAddingPreviewForMobileBehaviour(
     InteractiveLayerMobileBehaviour layerBehaviour,
+    Function(AddingStateInfo) onAddingStateChange,
   );
 
   /// Returns back the [InteractableDrawing] which is used for showing the
@@ -192,5 +194,6 @@ abstract class InteractableDrawing<T extends DrawingToolConfig>
   /// other than the default one.
   DrawingAddingPreview getAddingPreviewForDesktopBehaviour(
     InteractiveLayerDesktopBehaviour layerBehaviour,
+    Function(AddingStateInfo) onAddingStateChange,
   );
 }

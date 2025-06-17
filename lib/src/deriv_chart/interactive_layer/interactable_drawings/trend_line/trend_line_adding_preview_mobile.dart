@@ -26,12 +26,8 @@ class TrendLineAddingPreviewMobile
   TrendLineAddingPreviewMobile({
     required super.interactiveLayerBehaviour,
     required super.interactableDrawing,
-  }) : super(
-          initialAddingStateInfo: AddingStateInfo(
-            addingTool: interactableDrawing,
-            step: AddingToolStep.awaitingFinishAdding,
-          ),
-        ) {
+    required super.onAddingStateChange,
+  }) {
     if (interactableDrawing.startPoint == null) {
       final interactiveLayer = interactiveLayerBehaviour.interactiveLayer;
       final Size size = interactiveLayer.drawingContext.fullSize;
@@ -48,6 +44,8 @@ class TrendLineAddingPreviewMobile
           epoch: interactiveLayer.epochFromX(topRightCenter.dx),
           quote: interactiveLayer.quoteFromY(topRightCenter.dy),
         );
+
+      onAddingStateChange(AddingStateInfo(0, 1));
     }
   }
 
@@ -155,22 +153,15 @@ class TrendLineAddingPreviewMobile
     EpochFromX epochFromX,
     QuoteFromY quoteFromY,
     EpochToX epochToX,
-    QuoteToY quoteToY, {
-    required VoidCallback onDone,
-    required Function(AddingStateInfo) onAddingStateChange,
-  }) {
+    QuoteToY quoteToY,
+  ) {
     if (!interactableDrawing.hitTest(
       details.localPosition,
       epochToX,
       quoteToY,
     )) {
       // Tap is outside the drawing preview. means adding is confirmed.
-      onDone();
-      onAddingStateChange(
-        addingStateInfo.copyWith(
-          step: AddingToolStep.awaitingFinishAdding,
-        ),
-      );
+      onAddingStateChange(AddingStateInfo(1, 1));
     }
   }
 

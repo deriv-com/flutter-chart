@@ -7,7 +7,6 @@ import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer.
 import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 
@@ -44,12 +43,11 @@ abstract class DrawingAddingPreview<
   DrawingAddingPreview({
     required this.interactiveLayerBehaviour,
     required this.interactableDrawing,
-    required AddingStateInfo initialAddingStateInfo,
-  }) : addingStateInfo = initialAddingStateInfo;
+    required this.onAddingStateChange,
+  });
 
-  /// drawing tool addition information about steps and other adding related
-  /// information.
-  AddingStateInfo addingStateInfo;
+  /// A callback to the current step of the tool adding process.
+  final Function(AddingStateInfo) onAddingStateChange;
 
   /// The current interactive layer behaviour which is active and defines how
   /// this preview should behave.
@@ -104,10 +102,8 @@ abstract class DrawingAddingPreview<
     EpochFromX epochFromX,
     QuoteFromY quoteFromY,
     EpochToX epochToX,
-    QuoteToY quoteToY, {
-    required VoidCallback onDone,
-    required Function(AddingStateInfo) onAddingStateChange,
-  });
+    QuoteToY quoteToY,
+  );
 
   /// Handles the start of a drag gesture during drawing creation.
   @override

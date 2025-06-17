@@ -22,6 +22,7 @@ import '../../helpers/paint_helpers.dart';
 import '../../helpers/types.dart';
 import '../../interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import '../../interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
+import '../../interactive_layer_states/interactive_adding_tool_state.dart';
 import '../drawing_v2.dart';
 import '../interactable_drawing.dart';
 import 'horizontal_line_adding_preview_mobile.dart';
@@ -239,20 +240,24 @@ class HorizontalLineInteractableDrawing
   DrawingAddingPreview<InteractableDrawing<DrawingToolConfig>>
       getAddingPreviewForDesktopBehaviour(
     InteractiveLayerDesktopBehaviour layerBehaviour,
+    Function(AddingStateInfo) onAddingStateChange,
   ) =>
           HorizontalLineAddingPreviewDesktop(
             interactiveLayerBehaviour: layerBehaviour,
             interactableDrawing: this,
+            onAddingStateChange: onAddingStateChange,
           );
 
   @override
   DrawingAddingPreview<InteractableDrawing<DrawingToolConfig>>
       getAddingPreviewForMobileBehaviour(
     InteractiveLayerMobileBehaviour layerBehaviour,
+    Function(AddingStateInfo) onAddingStateChange,
   ) =>
           HorizontalLineAddingPreviewMobile(
             interactiveLayerBehaviour: layerBehaviour,
             interactableDrawing: this,
+            onAddingStateChange: onAddingStateChange,
           );
 
   @override

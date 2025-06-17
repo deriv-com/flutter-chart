@@ -32,7 +32,10 @@ abstract class InteractiveLayerBehaviour {
   /// Creates an instance of [InteractiveLayerBehaviour].
   InteractiveLayerBehaviour({
     InteractiveLayerController? controller,
-  }) : _controller = controller ?? InteractiveLayerController();
+  }) : _controller = controller ?? InteractiveLayerController() {
+    _controller.currentState =
+        InteractiveNormalState(interactiveLayerBehaviour: this);
+  }
 
   late final InteractiveLayerController _controller;
 
@@ -68,13 +71,14 @@ abstract class InteractiveLayerBehaviour {
     _initialized = true;
     this.interactiveLayer = interactiveLayer;
     this.onUpdate = onUpdate;
-    _controller.currentState =
-        InteractiveNormalState(interactiveLayerBehaviour: this);
   }
 
   /// Return the adding preview of the [drawing] we're currently adding for this
   /// Behaviour.
-  DrawingAddingPreview getAddingDrawingPreview(InteractableDrawing drawing);
+  DrawingAddingPreview getAddingDrawingPreview(
+    InteractableDrawing drawing,
+    Function(AddingStateInfo) onAddingStateChange,
+  );
 
   /// Updates the interactive layer state to the new state.
   ///

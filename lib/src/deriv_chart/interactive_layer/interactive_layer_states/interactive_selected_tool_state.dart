@@ -32,9 +32,7 @@ class InteractiveSelectedToolState extends InteractiveState
   InteractiveSelectedToolState({
     required this.selected,
     required super.interactiveLayerBehaviour,
-  }) {
-    interactiveLayerBehaviour.controller.selectedDrawing = selected;
-  }
+  });
 
   /// The selected tool.
   ///

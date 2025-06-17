@@ -1,9 +1,7 @@
 import 'dart:ui';
 
-import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:flutter/foundation.dart';
 
-import 'interactable_drawings/interactable_drawing.dart';
 import 'interactive_layer_states/interactive_state.dart';
 
 /// A controller similar to [ListView.scrollController] to control interactive
@@ -35,20 +33,6 @@ class InteractiveLayerController extends ChangeNotifier {
   /// Sets the current state of the interactive layer and notifies listeners.
   set currentState(InteractiveState state) {
     _currentState = state;
-    notifyListeners();
-  }
-
-  InteractableDrawing<DrawingToolConfig>? _selectedDrawing;
-
-  /// The current selected drawing of the [InteractiveLayer].
-  InteractableDrawing<DrawingToolConfig>? get selectedDrawing =>
-      _selectedDrawing;
-
-  /// Sets the selected drawing of the [InteractiveLayer].
-  set selectedDrawing(
-    InteractableDrawing<DrawingToolConfig>? drawing,
-  ) {
-    _selectedDrawing = drawing;
     notifyListeners();
   }
 }
