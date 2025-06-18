@@ -7,8 +7,7 @@ import '../../../models/chart_axis_config.dart';
 ///
 /// This widget wraps chart components and automatically manages granularity
 /// changes based on zoom levels. It provides a clean interface similar to
-/// GestureManager and XAxisWrapper, eliminating the need for manual coordinator
-/// setup and observer pattern implementation.
+/// GestureManager and XAxisWrapper.
 ///
 /// Usage:
 /// ```dart
@@ -19,7 +18,7 @@ import '../../../models/chart_axis_config.dart';
 ///   onGranularityChangeRequested: (newGranularity) {
 ///     // Handle granularity change request
 ///   },
-///   child: Chart(...),
+///   child: ...
 /// )
 /// ```
 class AutoIntervalWrapper extends StatefulWidget {
