@@ -94,12 +94,12 @@ void showColorPickerDropdown({
                 left: leftPosition,
                 top: topPosition,
                 child: AnimatedOpacity(
-                  opacity: hasMeasuredSize ? 1.0 : 0.0,
-                  duration: const Duration(milliseconds: 150),
+                  opacity: hasMeasuredSize ? 1 : 0,
+                  duration: const Duration(milliseconds: 240),
                   child: Material(
                     key: dropdownKey,
                     elevation: 8,
-                    borderRadius: BorderRadius.circular(6),
+                    borderRadius: BorderRadius.circular(8),
                     color: CoreDesignTokens.coreColorSolidSlate1100,
                     child: Container(
                       decoration: BoxDecoration(

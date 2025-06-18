@@ -81,6 +81,7 @@ class _ColorOptionButton extends StatelessWidget {
         border: Border.all(
           // TODO(NA): use color from core design tokens when the token is there.
           color: const Color(0x29000000),
+          width: 2,
         ),
         color: color,
       ),
@@ -88,22 +89,38 @@ class _ColorOptionButton extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: SizedBox(
+      child: selected
+          ? Stack(
+              children: <Widget>[
+                _buildColorOption(colorArea),
+                Container(
+                  width: 32,
+                  height: 32,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: Colors.white, width: 2),
+                  ),
+                ),
+              ],
+            )
+          : _buildColorOption(colorArea),
+    );
+  }
+
+  Widget _buildColorOption(Widget colorArea) => SizedBox(
         height: 32, // Fixed height for color option
         width: 32, // Fixed width for color option
         child: Stack(
-          children: [
+          children: <Widget>[
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
-                border: selected ? Border.all(color: Colors.white) : null,
+                // border: selected ? Border.all(color: Colors.white, width: 2) : null,
               ),
               child: colorArea,
             )
           ],
         ),
-      ),
-    );
-  }
+      );
 }
