@@ -99,7 +99,6 @@ class AutoIntervalWrapperState extends State<AutoIntervalWrapper>
     double bestScore = double.infinity;
 
     for (final AutoIntervalZoomRange range in widget.zoomRanges) {
-
       // The number of pixels that one interval (candle) will occupy on the
       // chart at current zoom level.
       final double pixelsPerInterval = range.granularity / msPerPx;
