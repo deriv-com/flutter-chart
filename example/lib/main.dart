@@ -287,9 +287,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _updateSampleSLAndTP();
 
-      // WidgetsBinding.instance.addPostFrameCallback(
-      //   (Duration timeStamp) => _controller.scrollToLastTick(),
-      // );
+      if (!_adaptiveInterval) {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (Duration timeStamp) => _controller.scrollToLastTick(),
+        );
+      }
     } on BaseAPIException catch (e) {
       dev.log(e.message!, error: e);
     } finally {
@@ -374,17 +376,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   Expanded(child: _buildMarketSelectorButton()),
                   _buildChartTypeButton(),
                   _buildIntervalSelector(),
-                  // Add zoom buttons
-                  IconButton(
-                    icon: const Icon(Icons.zoom_in, color: Colors.white),
-                    onPressed: _zoomIn,
-                    tooltip: 'Zoom In',
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.zoom_out, color: Colors.white),
-                    onPressed: _zoomOut,
-                    tooltip: 'Zoom Out',
-                  ),
                 ],
               ),
             ),
@@ -496,6 +487,20 @@ class _FullscreenChartState extends State<FullscreenChart> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.zoom_out),
+                        onPressed: _zoomOut,
+                        tooltip: 'Zoom Out',
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.zoom_in),
+                        onPressed: _zoomIn,
+                        tooltip: 'Zoom In',
+                      ),
+                    ],
+                  ),
                   IconButton(
                       icon: const Icon(Icons.settings),
                       onPressed: () async {
@@ -664,7 +669,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _sampleBarriers.clear();
     _sl = false;
     _tp = false;
-    _adaptiveInterval = true;
   }
 
   Widget _buildConnectionStatus() => ConnectionStatusLabel(
@@ -796,7 +800,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _requestCompleter = Completer<dynamic>();
 
     setState(() {
-      // ticks.clear();
+      if (!_adaptiveInterval) {
+        ticks.clear();
+      }
       _clearMarkers();
       _clearBarriers();
     });
@@ -888,28 +894,16 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Widget _buildToggle(String label, bool value, VoidCallback onToggle) {
     return Expanded(
-      child: InkWell(
-        onTap: onToggle,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Checkbox(
-              value: value,
-              onChanged: (_) => onToggle(),
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            Expanded(
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  label,
-                  style: const TextStyle(fontSize: 12),
-                ),
-              ),
-            ),
-          ],
+      child: CheckboxListTile(
+        title: Text(
+          label,
+          style: const TextStyle(fontSize: 14),
         ),
+        value: value,
+        onChanged: (_) => onToggle(),
+        controlAffinity: ListTileControlAffinity.leading,
+        contentPadding: EdgeInsets.zero,
+        dense: true,
       ),
     );
   }
