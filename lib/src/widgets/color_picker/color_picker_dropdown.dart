@@ -78,42 +78,19 @@ void showColorPickerDropdown({
 
           return Stack(
             children: [
-              // Invisible full-screen touch handler to close dropdown when tapping outside
-              Positioned.fill(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () => overlayEntry.remove(),
-                  child: Container(
-                    color: Colors.transparent,
-                  ),
-                ),
-              ),
+              // Invisible full-screen touch handler to close dropdown when
+              // tapping outside
+              _buildOutsideArea(overlayEntry),
 
-              // The dropdown with opacity controlled by hasMeasuredSize
               Positioned(
                 left: leftPosition,
                 top: topPosition,
-                child: AnimatedOpacity(
-                  opacity: hasMeasuredSize ? 1 : 0,
-                  duration: const Duration(milliseconds: 240),
-                  child: Material(
-                    key: dropdownKey,
-                    elevation: 8,
-                    borderRadius: BorderRadius.circular(8),
-                    color: CoreDesignTokens.coreColorSolidSlate1100,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: DropdownColorGrid(
-                        selectedColor: initialColor,
-                        onChanged: (Color selectedColor) {
-                          onColorSelected(selectedColor);
-                          overlayEntry.remove();
-                        },
-                      ),
-                    ),
-                  ),
+                child: _buildDropdownContent(
+                  hasMeasuredSize,
+                  dropdownKey,
+                  initialColor,
+                  onColorSelected,
+                  overlayEntry,
                 ),
               ),
             ],
@@ -126,3 +103,43 @@ void showColorPickerDropdown({
   // Insert the overlay
   Overlay.of(context).insert(overlayEntry);
 }
+
+Widget _buildDropdownContent(
+  bool hasMeasuredSize,
+  GlobalKey<State<StatefulWidget>> dropdownKey,
+  Color initialColor,
+  ValueChanged<Color> onColorSelected,
+  OverlayEntry overlayEntry,
+) =>
+    AnimatedOpacity(
+      opacity: hasMeasuredSize ? 1 : 0,
+      duration: const Duration(milliseconds: 240),
+      child: Material(
+        key: dropdownKey,
+        elevation: 8,
+        borderRadius: BorderRadius.circular(8),
+        color: CoreDesignTokens.coreColorSolidSlate1100,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: DropdownColorGrid(
+            selectedColor: initialColor,
+            onChanged: (Color selectedColor) {
+              onColorSelected(selectedColor);
+              overlayEntry.remove();
+            },
+          ),
+        ),
+      ),
+    );
+
+Widget _buildOutsideArea(OverlayEntry overlayEntry) => Positioned.fill(
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => overlayEntry.remove(),
+        child: Container(
+          color: Colors.transparent,
+        ),
+      ),
+    );
