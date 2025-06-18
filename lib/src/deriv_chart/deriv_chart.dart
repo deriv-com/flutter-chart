@@ -42,6 +42,7 @@ class DerivChart extends StatefulWidget {
     this.onCrosshairHover,
     this.onVisibleAreaChanged,
     this.onQuoteAreaChanged,
+    this.onGranularityChangeRequested,
     this.theme,
     this.isLive = false,
     this.dataFitEnabled = false,
@@ -106,6 +107,11 @@ class DerivChart extends StatefulWidget {
 
   /// Callback provided by library user.
   final VisibleQuoteAreaChangedCallback? onQuoteAreaChanged;
+
+  /// Called when the chart suggests a granularity change due to zoom level.
+  /// This is used by the auto-interval feature to notify consumers
+  /// that they should request new data with a different granularity.
+  final void Function(int suggestedGranularity)? onGranularityChangeRequested;
 
   /// Chart's theme.
   final ChartTheme? theme;
@@ -362,6 +368,8 @@ class _DerivChartState extends State<DerivChart> {
                 onCrosshairHover: widget.onCrosshairHover,
                 onVisibleAreaChanged: widget.onVisibleAreaChanged,
                 onQuoteAreaChanged: widget.onQuoteAreaChanged,
+                onGranularityChangeRequested:
+                    widget.onGranularityChangeRequested,
                 isLive: widget.isLive,
                 dataFitEnabled: widget.dataFitEnabled,
                 opacity: widget.opacity,
