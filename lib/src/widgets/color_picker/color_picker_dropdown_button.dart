@@ -22,12 +22,17 @@ class ColorPickerDropdownButton extends StatelessWidget {
       onPressed: () {
         // Get the button's position in the overlay
         final RenderBox renderBox = context.findRenderObject() as RenderBox;
-        final position = renderBox.localToGlobal(Offset.zero);
-        
+        final buttonSize = renderBox.size;
+
+        // Calculate position at the center of the button
+        final position = renderBox
+            .localToGlobal(Offset(buttonSize.width / 2, buttonSize.height / 2));
+
         // Show the dropdown at this position
         showColorPickerDropdown(
           context: context,
-          position: position,
+          originWidgetPosition: position,
+          originWidgetSize: buttonSize,
           initialColor: currentColor,
           onColorSelected: onColorChanged,
         );
@@ -40,22 +45,35 @@ class ColorPickerDropdownButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
         ),
       ),
-      child: SizedBox(
+      child: ColorPickerIcon(color: currentColor),
+    );
+  }
+}
+
+/// A color picker icon widget.
+class ColorPickerIcon extends StatelessWidget {
+  /// Creates a color picker icon.
+  const ColorPickerIcon({
+    required this.color,
+    Key? key,
+  }) : super(key: key);
+
+  /// The color to display.
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) => SizedBox(
         width: 32,
         height: 32,
         child: Center(
-          child: _buildColorBox(),
-        ),
-      ),
-    );
-  }
-
-  Container _buildColorBox() => Container(
-        width: 14,
-        height: 14,
-        decoration: BoxDecoration(
-          color: currentColor,
-          borderRadius: BorderRadius.circular(4),
+          child: Container(
+            width: 14,
+            height: 14,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
         ),
       );
 }

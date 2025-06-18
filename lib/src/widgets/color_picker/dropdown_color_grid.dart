@@ -1,4 +1,3 @@
-import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
 import 'package:flutter/material.dart';
 
 /// Grid of color options for dropdown color picker.
@@ -29,7 +28,7 @@ class DropdownColorGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8), // 8px padding
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
       ),
@@ -39,6 +38,7 @@ class DropdownColorGrid extends StatelessWidget {
           for (final List<Color> row in _colorGrid)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
+              // 6px vertical padding
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -88,17 +88,21 @@ class _ColorOptionButton extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: Stack(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              border: selected ? Border.all(color: Colors.white) : null,
-            ),
-            child: colorArea,
-          )
-        ],
+      child: SizedBox(
+        height: 32, // Fixed height for color option
+        width: 32, // Fixed width for color option
+        child: Stack(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                border: selected ? Border.all(color: Colors.white) : null,
+              ),
+              child: colorArea,
+            )
+          ],
+        ),
       ),
     );
   }
