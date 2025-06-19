@@ -227,5 +227,4 @@ Now that you understand the basics of using the Deriv Chart library, you can exp
 
 - [Chart Types](chart_types.md) - Learn more about different chart types
 - [Configuration](configuration.md) - Discover more configuration options
-- [Indicators](../features/indicators/overview.md) - Add technical indicators to your charts
-- [Drawing Tools](../features/drawing_tools/overview.md) - Enable interactive drawing tools
+- [Advanced Features](advanced_features.md) - Learn about technical indicators, annotations, markers, and drawing tools

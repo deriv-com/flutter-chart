@@ -76,6 +76,7 @@ If you're new to the Deriv Chart library, start here to learn the basics:
 - [Basic Usage](getting_started/basic_usage.md) - Create your first chart
 - [Chart Types](getting_started/chart_types.md) - Learn about different chart types
 - [Configuration](getting_started/configuration.md) - Understand configuration options
+- [Advanced Features](getting_started/advanced_features.md) - Learn about indicators, annotations, markers, and drawing tools
 
 ## Core Concepts
 
