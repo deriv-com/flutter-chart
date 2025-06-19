@@ -26,37 +26,35 @@ class ColorGridDropdown extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8), // 8px padding
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final List<Color> row in _colorGrid)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              // 6px vertical padding
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  for (int i = 0; i < row.length; i++) ...[
-                    _ColorOptionButton(
-                      color: row[i],
-                      selected: row[i].value == selectedColor.value,
-                      onTap: () => onChanged(row[i]),
-                    ),
-                    if (i < row.length - 1) const SizedBox(width: 4)
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(8), // 8px padding
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final List<Color> row in _colorGrid)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                // 6px vertical padding
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (int i = 0; i < row.length; i++) ...[
+                      _ColorOptionButton(
+                        color: row[i],
+                        selected: row[i].value == selectedColor.value,
+                        onTap: () => onChanged(row[i]),
+                      ),
+                      if (i < row.length - 1) const SizedBox(width: 4)
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 }
 
 class _ColorOptionButton extends StatelessWidget {

@@ -21,28 +21,26 @@ class LineThicknessDropdown extends StatelessWidget {
   static const List<double> _thicknessOptions = [1, 2, 3, 4, 5];
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (final thickness in _thicknessOptions)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: _ThicknessOptionButton(
-                thickness: thickness,
-                selected: thickness == selectedThickness,
-                onTap: () => onChanged(thickness),
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final thickness in _thicknessOptions)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: _ThicknessOptionButton(
+                  thickness: thickness,
+                  selected: thickness == selectedThickness,
+                  onTap: () => onChanged(thickness),
+                ),
               ),
-            ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 }
 
 class _ThicknessOptionButton extends StatelessWidget {

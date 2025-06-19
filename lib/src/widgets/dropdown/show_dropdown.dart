@@ -1,5 +1,9 @@
+import 'dart:ui';
+
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// A builder function type for creating a drop-down picker widget to get the
 /// value for type [T].
@@ -45,8 +49,9 @@ void showDropdown<T>({
 
   // Define the overlay content
   overlayEntry = OverlayEntry(
-    builder: (context) {
-      return StatefulBuilder(
+    builder: (_) => Provider.value(
+      value: context.watch<ChartTheme>(),
+      child: StatefulBuilder(
         builder: (context, setState) {
           // After the first build, measure the size of the dropdown
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -93,6 +98,7 @@ void showDropdown<T>({
                 left: leftPosition,
                 top: topPosition,
                 child: _buildDropdownContent<T>(
+                  context,
                   hasMeasuredSize,
                   dropdownKey,
                   initialColor,
@@ -104,8 +110,8 @@ void showDropdown<T>({
             ],
           );
         },
-      );
-    },
+      ),
+    ),
   );
 
   // Insert the overlay
@@ -113,39 +119,43 @@ void showDropdown<T>({
 }
 
 Widget _buildDropdownContent<T>(
+  BuildContext context,
   bool hasMeasuredSize,
   GlobalKey<State<StatefulWidget>> dropdownKey,
   T initialColor,
   ValueChanged<T> onColorSelected,
   DropdownBuilder<T> builder,
   OverlayEntry overlayEntry,
-) =>
-    AnimatedOpacity(
-      opacity: hasMeasuredSize ? 1 : 0,
-      duration: const Duration(milliseconds: 240),
+) {
+  final ChartTheme theme = context.read<ChartTheme>();
+  return AnimatedOpacity(
+    opacity: hasMeasuredSize ? 1 : 0,
+    duration: const Duration(milliseconds: 240),
+    child: ClipRRect(
       child: Material(
         key: dropdownKey,
-        elevation: 8,
         borderRadius: BorderRadius.circular(8),
+        // TODO(NA): use color from theme variables when it's added there.
         color: CoreDesignTokens.coreColorSolidSlate1100,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: theme.crosshairInformationBoxContainerGlassBackgroundBlur,
+            sigmaY: theme.crosshairInformationBoxContainerGlassBackgroundBlur,
           ),
-          child: builder(initialColor, (T selectedColor) {
-            onColorSelected(selectedColor);
-            overlayEntry.remove();
-          }),
-          // child: DropdownColorGrid(
-          //   selectedColor: initialColor,
-          //   onChanged: (Color selectedColor) {
-          //     onColorSelected(selectedColor);
-          //     overlayEntry.remove();
-          //   },
-          // ),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: builder(initialColor, (T selectedColor) {
+              onColorSelected(selectedColor);
+              overlayEntry.remove();
+            }),
+          ),
         ),
       ),
-    );
+    ),
+  );
+}
 
 Widget _buildOutsideArea(OverlayEntry overlayEntry) => Positioned.fill(
       child: GestureDetector(
