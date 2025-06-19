@@ -1,6 +1,12 @@
 import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
-import 'package:deriv_chart/src/widgets/color_picker/dropdown_color_grid.dart';
 import 'package:flutter/material.dart';
+
+/// A builder function type for creating a drop-down picker widget to get the
+/// value for type [T].
+typedef DropdownBuilder<T> = Widget Function(
+  T selectedColor,
+  ValueChanged<T> onColorSelected,
+);
 
 /// Shows a color picker dropdown at the specified position.
 ///
@@ -11,12 +17,13 @@ import 'package:flutter/material.dart';
 /// the dropdown. Provide the top-left corner of the widget.
 ///
 /// [originWidgetSize] is the size of the button that triggered the dropdown.
-void showColorPickerDropdown({
+void showColorPickerDropdown<T>({
   required BuildContext context,
   required Offset originWidgetPosition,
   required Size originWidgetSize,
-  required Color initialColor,
-  required ValueChanged<Color> onColorSelected,
+  required T initialColor,
+  required ValueChanged<T> onValueSelected,
+  required DropdownBuilder<T> dropdownBuilder,
   double gapWithOriginWidget = 8,
 }) {
   // Get screen size to determine dropdown direction
@@ -85,11 +92,12 @@ void showColorPickerDropdown({
               Positioned(
                 left: leftPosition,
                 top: topPosition,
-                child: _buildDropdownContent(
+                child: _buildDropdownContent<T>(
                   hasMeasuredSize,
                   dropdownKey,
                   initialColor,
-                  onColorSelected,
+                  onValueSelected,
+                  dropdownBuilder,
                   overlayEntry,
                 ),
               ),
@@ -104,11 +112,12 @@ void showColorPickerDropdown({
   Overlay.of(context).insert(overlayEntry);
 }
 
-Widget _buildDropdownContent(
+Widget _buildDropdownContent<T>(
   bool hasMeasuredSize,
   GlobalKey<State<StatefulWidget>> dropdownKey,
-  Color initialColor,
-  ValueChanged<Color> onColorSelected,
+  T initialColor,
+  ValueChanged<T> onColorSelected,
+  DropdownBuilder<T> builder,
   OverlayEntry overlayEntry,
 ) =>
     AnimatedOpacity(
@@ -123,13 +132,17 @@ Widget _buildDropdownContent(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
           ),
-          child: DropdownColorGrid(
-            selectedColor: initialColor,
-            onChanged: (Color selectedColor) {
-              onColorSelected(selectedColor);
-              overlayEntry.remove();
-            },
-          ),
+          child: builder(initialColor, (T selectedColor) {
+            onColorSelected(selectedColor);
+            overlayEntry.remove();
+          }),
+          // child: DropdownColorGrid(
+          //   selectedColor: initialColor,
+          //   onChanged: (Color selectedColor) {
+          //     onColorSelected(selectedColor);
+          //     overlayEntry.remove();
+          //   },
+          // ),
         ),
       ),
     );

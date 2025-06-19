@@ -14,6 +14,7 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_chart/src/widgets/line_thickness/line_thickness_dropdown_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -263,7 +264,7 @@ class HorizontalLineInteractableDrawing
   @override
   Widget buildDrawingToolBarMenu(UpdateDrawingTool onUpdate) => Row(
         children: <Widget>[
-          _buildLineThicknessIcon(),
+          _buildLineThicknessIcon(onUpdate),
           const SizedBox(width: 4),
           _buildColorPickerIcon(onUpdate)
         ],
@@ -281,31 +282,41 @@ class HorizontalLineInteractableDrawing
         ),
       );
 
-  Widget _buildLineThicknessIcon() => SizedBox(
-        width: 32,
-        height: 32,
-        child: TextButton(
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.white38,
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-          onPressed: () {
-            // update line thickness
-          },
-          child: Text(
-            '${config.lineStyle.thickness.toInt()}px',
-            style: const TextStyle(
-              fontSize: 14,
-              color: CoreDesignTokens.coreColorSolidSlate50,
-              fontWeight: FontWeight.normal,
-              height: 2,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
+  Widget _buildLineThicknessIcon(UpdateDrawingTool onUpdate) =>
+      LineThicknessDropdownButton(
+        thickness: config.lineStyle.thickness,
+        onValueChanged: (double newValue) {
+          onUpdate(config.copyWith(
+            lineStyle: config.lineStyle.copyWith(thickness: newValue),
+          ));
+        },
       );
+
+// Widget _buildLineThicknessIcon() => SizedBox(
+//       width: 32,
+//       height: 32,
+//       child: TextButton(
+//         style: TextButton.styleFrom(
+//           foregroundColor: Colors.white38,
+//           alignment: Alignment.center,
+//           padding: const EdgeInsets.symmetric(),
+//           shape: RoundedRectangleBorder(
+//             borderRadius: BorderRadius.circular(4),
+//           ),
+//         ),
+//         onPressed: () {
+//           // update line thickness
+//         },
+//         child: Text(
+//           '${config.lineStyle.thickness.toInt()}px',
+//           style: const TextStyle(
+//             fontSize: 14,
+//             color: CoreDesignTokens.coreColorSolidSlate50,
+//             fontWeight: FontWeight.normal,
+//             height: 2,
+//           ),
+//           textAlign: TextAlign.center,
+//         ),
+//       ),
+//     );
 }
