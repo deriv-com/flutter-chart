@@ -11,6 +11,7 @@ HorizontalBarrierStyle? getLastIndicatorStyle(
   if (showLastIndicator) {
     return HorizontalBarrierStyle(
       color: color,
+      labelShapeBackgroundColor: color,
       hasLine: false,
       textStyle: TextStyle(
         fontSize: 10,
