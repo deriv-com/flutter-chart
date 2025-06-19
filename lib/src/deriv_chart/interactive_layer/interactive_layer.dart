@@ -7,6 +7,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/multiple_animated_builder.dart
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/drawing_context.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/types.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_states/interactive_selected_tool_state.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
@@ -406,6 +407,26 @@ class _InteractiveLayerGestureHandlerState
                     ? []
                     : [
                         ...widget.drawings
+                            .where(
+                              (e) =>
+                                  widget.interactiveLayerBehaviour
+                                      .getToolZOrder(e) ==
+                                  DrawingZOrder.bottom,
+                            )
+                            .map((DrawingV2 drawing) => _buildDrawing(
+                                  drawing,
+                                  context,
+                                  xAxis,
+                                  animationValue,
+                                ))
+                            .toList(),
+                        ...widget.drawings
+                            .where(
+                              (e) =>
+                                  widget.interactiveLayerBehaviour
+                                      .getToolZOrder(e) ==
+                                  DrawingZOrder.top,
+                            )
                             .map((DrawingV2 drawing) => _buildDrawing(
                                   drawing,
                                   context,

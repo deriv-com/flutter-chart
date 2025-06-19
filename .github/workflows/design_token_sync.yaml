@@ -84,6 +84,10 @@ jobs:
                   # Start a collapsible group in the GitHub Actions log for better readability
                   echo "::group::Setting up branch for token updates"
 
+                  # Configure Git identity for any git operations
+                  git config user.name "GitHub Actions Bot"
+                  git config user.email "actions@github.com"
+
                   git checkout master
 
                   echo "Pulling latest changes from master branch in case new commits have been pushed"
@@ -102,12 +106,13 @@ jobs:
                     echo "Branch does not exist - creating new branch from updated master"
                     git checkout -b $SYNC_BRANCH_NAME
                   fi
-                  
+
                   # End the collapsible group in the GitHub Actions log
                   echo "::endgroup::"
 
             - name: 📝 Update tokens file
               if: steps.check-tokens.outputs.needs_sync == 'true'
+              id: update-tokens
               run: |
                   # Start a collapsible group in the GitHub Actions log for better readability
                   echo "::group::Updating tokens file"
@@ -119,7 +124,14 @@ jobs:
 
                   git add lib/src/theme/design_tokens/tokens.json
 
-                  git commit -m "chore: sync design tokens from quill-tokens repository"
+                  # Check if there are any changes to commit
+                  if git diff --staged --quiet; then
+                    echo "No changes to commit after copying tokens file"
+                    echo "tokens_updated=false" >> $GITHUB_OUTPUT
+                  else
+                    git commit -m "chore: sync design tokens from quill-tokens repository"
+                    echo "tokens_updated=true" >> $GITHUB_OUTPUT
+                  fi
                   # End the collapsible group in the GitHub Actions log
                   echo "::endgroup::"
 
@@ -127,9 +139,16 @@ jobs:
               if: steps.check-tokens.outputs.needs_sync == 'true'
               uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
               with:
-                  flutter-version: "3.x"
-                  channel: "stable"
+                  flutter-version: "3.24.1"
+                  channel: stable
                   cache: true
+
+            - name: 📦 Install dependencies
+              if: steps.check-tokens.outputs.needs_sync == 'true'
+              run: |
+                  echo "::group::Installing Flutter dependencies"
+                  flutter pub get
+                  echo "::endgroup::"
 
             - name: ⚙️ Run generate and check token files script
               if: steps.check-tokens.outputs.needs_sync == 'true'
@@ -141,20 +160,15 @@ jobs:
                   chmod +x ./scripts/generate_and_check_token_files.sh
 
                   # Run the script that generates and validates token files
-                  ./scripts/generate_and_check_token_files.sh
-
-                  # Check if the script ran successfully (exit code 0 means success)
-                  if [ $? -eq 0 ]; then
+                  if ./scripts/generate_and_check_token_files.sh; then
                     echo "Token generation and validation completed successfully"
-                    # Set the output variable 'generation_success' to true for use in conditional steps
                     echo "generation_success=true" >> $GITHUB_OUTPUT
                   else
-                    echo "Token generation or validation failed"
-                    # Set the output variable 'generation_success' to false for use in conditional steps
+                    echo "Token generation and validation failed"
                     echo "generation_success=false" >> $GITHUB_OUTPUT
-                    # Exit with error code 1 to indicate failure of this step
                     exit 1
                   fi
+
                   # End the collapsible group in the GitHub Actions log
                   echo "::endgroup::"
 
@@ -184,8 +198,30 @@ jobs:
                   # End the collapsible group in the GitHub Actions log
                   echo "::endgroup::"
 
+            - name: 🔍 Check if branch is ahead of master
+              if: steps.check-tokens.outputs.needs_sync == 'true'
+              id: check-ahead
+              run: |
+                  # Start a collapsible group in the GitHub Actions log for better readability
+                  echo "::group::Checking if branch is ahead of master"
+
+                  # Check if the current branch has commits ahead of master
+                  AHEAD_COUNT=$(git rev-list --count master..$SYNC_BRANCH_NAME)
+                  echo "Branch $SYNC_BRANCH_NAME is $AHEAD_COUNT commits ahead of master"
+
+                  if [ "$AHEAD_COUNT" -gt 0 ]; then
+                    echo "Branch has commits ahead of master, should create PR"
+                    echo "branch_ahead=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "Branch is not ahead of master"
+                    echo "branch_ahead=false" >> $GITHUB_OUTPUT
+                  fi
+
+                  # End the collapsible group in the GitHub Actions log
+                  echo "::endgroup::"
+
             - name: 🔀 Create Pull Request
-              if: steps.check-tokens.outputs.needs_sync == 'true' && steps.commit-files.outputs.changes_committed == 'true'
+              if: steps.check-tokens.outputs.needs_sync == 'true' && (steps.commit-files.outputs.changes_committed == 'true' || steps.check-ahead.outputs.branch_ahead == 'true')
               id: create-pr
               continue-on-error: true # Don't fail the workflow if PR creation fails
               run: |
@@ -194,7 +230,7 @@ jobs:
                   # Install GitHub CLI (gh) for creating pull requests
                   sudo apt-get update
                   sudo apt-get install -y gh
-                  
+
                   # Authenticate with GitHub CLI using the workflow's GITHUB_TOKEN
                   gh auth login --with-token <<< ${{ github.token }}
 
@@ -204,7 +240,7 @@ jobs:
                   # Create a new PR with specified base branch, title, head branch, and description
                   if gh pr create \
                     --base "master" \
-                    --title "Design Token Update ($(date +%Y-%m-%d))" \
+                    --title "chore: Design Token Update ($(date +%Y-%m-%d))" \
                     --head "$SYNC_BRANCH_NAME" \
                     --body "This PR updates the design tokens from the quill-tokens repository. Automated PR created by the Design Token Sync workflow."; then
                     echo "PR created successfully"
@@ -228,6 +264,19 @@ jobs:
                   # Start a collapsible group in the GitHub Actions log for better readability
                   echo "::group::PR Status"
                   echo "PR created successfully: ${{ steps.create-pr.outputs.pr_url }}"
+                  # End the collapsible group in the GitHub Actions log
+                  echo "::endgroup::"
+
+            - name: ✅ Report No Changes
+              if: steps.check-tokens.outputs.needs_sync == 'true' && steps.commit-files.outputs.changes_committed == 'false' && steps.check-ahead.outputs.branch_ahead == 'false'
+              run: |
+                  # Start a collapsible group in the GitHub Actions log for better readability
+                  echo "::group::No Changes Required"
+                  echo "Design tokens are already up to date. No changes were made."
+                  echo "- Tokens file was checked and found to be identical"
+                  echo "- No generated files needed updating"
+                  echo "- Branch is not ahead of master"
+                  echo "- No pull request was created"
                   # End the collapsible group in the GitHub Actions log
                   echo "::endgroup::"
 

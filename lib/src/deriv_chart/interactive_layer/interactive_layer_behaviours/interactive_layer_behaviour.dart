@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/types.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
 import 'package:flutter/gestures.dart';
@@ -140,12 +141,16 @@ abstract class InteractiveLayerBehaviour {
           interactiveLayerBehaviour: this,
         ),
         StateChangeAnimationDirection.forward,
-        animate: false,
+        waitForAnimation: false,
       );
 
   /// The drawings of the interactive layer.
   Set<DrawingToolState> getToolState(DrawingV2 drawing) =>
       currentState.getToolState(drawing);
+
+  /// Returns the z-order for the tool drawings.
+  DrawingZOrder getToolZOrder(DrawingV2 drawing) =>
+      currentState.getToolZOrder(drawing);
 
   /// The extra drawings that the current interactive state can show in
   /// [InteractiveLayerBase].
