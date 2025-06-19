@@ -132,6 +132,7 @@ Widget _buildDropdownContent<T>(
     opacity: hasMeasuredSize ? 1 : 0,
     duration: const Duration(milliseconds: 240),
     child: ClipRRect(
+      borderRadius: BorderRadius.circular(8),
       child: Material(
         key: dropdownKey,
         borderRadius: BorderRadius.circular(8),
