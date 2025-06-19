@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 /// A dropdown list of line thickness options.
 ///
 /// This widget displays a list of line thickness options for selection.
-class DropdownThicknessList extends StatelessWidget {
+class LineThicknessDropdown extends StatelessWidget {
   /// Creates a list of line thickness options.
-  const DropdownThicknessList({
+  const LineThicknessDropdown({
     required this.selectedThickness,
     required this.onChanged,
     Key? key,
@@ -63,15 +63,15 @@ class _ThicknessOptionButton extends StatelessWidget {
       width: 60,
       height: thickness.toDouble(),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: selected ? Colors.black : Colors.white,
         borderRadius: BorderRadius.circular(thickness / 2),
       ),
     );
 
     final Widget thicknessLabel = Text(
-      '$thickness px',
-      style: const TextStyle(
-        color: Colors.white,
+      '${thickness.toInt()} px',
+      style: TextStyle(
+        color: selected ? Colors.black : Colors.white,
         fontSize: 12,
       ),
     );
@@ -83,8 +83,7 @@ class _ThicknessOptionButton extends StatelessWidget {
         height: 32,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
-          border: selected ? Border.all(color: Colors.white, width: 1) : null,
-          color: selected ? Colors.black26 : Colors.transparent,
+          color: selected ? Colors.white : Colors.transparent,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Row(

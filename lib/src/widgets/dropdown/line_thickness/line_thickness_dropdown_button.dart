@@ -1,14 +1,20 @@
 import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
-import 'package:deriv_chart/src/widgets/line_thickness/dropdown_line_thickness.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-import '../color_picker/color_picker_dropdown.dart';
+import '../show_dropdown.dart';
+import 'line_thickness_dropdown.dart';
 
+/// A button to show a line [thickness] value and open the LineThickness
+/// dropdown when it's tapped.
 class LineThicknessDropdownButton extends StatelessWidget {
-  const LineThicknessDropdownButton(
-      {super.key, required this.thickness, required this.onValueChanged});
+  /// Initializes LineThicknessDropdownButton
+  const LineThicknessDropdownButton({
+    required this.thickness,
+    required this.onValueChanged,
+    super.key,
+  });
 
+  /// LineThickness
   final double thickness;
 
   /// Will be called when a color is selected from the dropdown.
@@ -38,7 +44,7 @@ class LineThicknessDropdownButton extends StatelessWidget {
               Offset(buttonSize.width / 2, buttonSize.height / 2));
 
           // Show the dropdown at this position
-          showColorPickerDropdown<double>(
+          showDropdown<double>(
             context: context,
             originWidgetPosition: position,
             originWidgetSize: buttonSize,
@@ -48,7 +54,7 @@ class LineThicknessDropdownButton extends StatelessWidget {
               double selectedColor,
               ValueChanged<double> onValueChanged,
             ) =>
-                DropdownThicknessList(
+                LineThicknessDropdown(
               selectedThickness: thickness,
               onChanged: (double selectedColor) {
                 onValueChanged(selectedColor);

@@ -1,7 +1,7 @@
-import 'package:deriv_chart/src/widgets/color_picker/color_picker_dropdown.dart';
 import 'package:flutter/material.dart';
 
-import 'dropdown_color_grid.dart';
+import '../dropdown/show_dropdown.dart';
+import 'color_grid_dropdown.dart';
 
 /// A button that shows a color picker dropdown when tapped.
 class ColorPickerDropdownButton extends StatelessWidget {
@@ -31,7 +31,7 @@ class ColorPickerDropdownButton extends StatelessWidget {
             .localToGlobal(Offset(buttonSize.width / 2, buttonSize.height / 2));
 
         // Show the dropdown at this position
-        showColorPickerDropdown<Color>(
+        showDropdown<Color>(
           context: context,
           originWidgetPosition: position,
           originWidgetSize: buttonSize,
@@ -41,7 +41,7 @@ class ColorPickerDropdownButton extends StatelessWidget {
             Color selectedColor,
             ValueChanged<Color> onColorSelected,
           ) =>
-              DropdownColorGrid(
+              ColorGridDropdown(
             selectedColor: selectedColor,
             onChanged: (Color selectedColor) {
               onColorSelected(selectedColor);

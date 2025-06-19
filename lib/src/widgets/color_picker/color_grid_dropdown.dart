@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 /// Grid of color options for dropdown color picker.
 /// 2 columns and 5 rows layout as shown in the design.
-class DropdownColorGrid extends StatelessWidget {
+class ColorGridDropdown extends StatelessWidget {
   /// Creates a grid from given colors.
-  const DropdownColorGrid({
+  const ColorGridDropdown({
     required this.selectedColor,
     required this.onChanged,
     Key? key,
