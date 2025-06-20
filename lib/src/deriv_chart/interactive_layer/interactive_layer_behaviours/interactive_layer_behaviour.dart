@@ -165,18 +165,36 @@ abstract class InteractiveLayerBehaviour {
   List<Widget> get previewWidgets => currentState.previewWidgets;
 
   /// Handles tap event.
-  void onTap(TapUpDetails details) => currentState.onTap(details);
+  bool onTap(TapUpDetails details) => currentState.onTap(details);
 
   /// Handles pan update event.
-  void onPanUpdate(DragUpdateDetails details) =>
+  bool onPanUpdate(DragUpdateDetails details) =>
       currentState.onPanUpdate(details);
 
   /// Handles pan end event.
-  void onPanEnd(DragEndDetails details) => currentState.onPanEnd(details);
+  bool onPanEnd(DragEndDetails details) => currentState.onPanEnd(details);
 
   /// Handles pan start event.
-  void onPanStart(DragStartDetails details) => currentState.onPanStart(details);
+  bool onPanStart(DragStartDetails details) => currentState.onPanStart(details);
 
   /// Handles hover event.
-  void onHover(PointerHoverEvent event) => currentState.onHover(event);
+  bool onHover(PointerHoverEvent event) => currentState.onHover(event);
+
+  /// Checks if a point hits any drawing (both regular drawings and preview drawings).
+  ///
+  /// This method is used for hit testing to determine if a given local position
+  /// intersects with any interactive drawing elements.
+  ///
+  /// Returns `true` if the position hits any drawing, `false` otherwise.
+  bool hitTestDrawings(Offset localPosition) {
+    // Check regular and preview drawings
+    for (final drawing in [...interactiveLayer.drawings, ...previewDrawings]) {
+      if (drawing.hitTest(localPosition, interactiveLayer.epochToX,
+          interactiveLayer.quoteToY)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import '../../widgets/color_picker_widget.dart';
@@ -139,8 +140,11 @@ class ThemeCustomizationScreen extends BaseChartScreen {
 
 class _ThemeCustomizationScreenState
     extends BaseChartScreenState<ThemeCustomizationScreen> {
-  bool _useDarkTheme = true;
+  bool _useDarkTheme = false;
   bool _useCustomTheme = false;
+  bool _showCrosshair = true;
+  bool _useLargeScreenCrosshair = kIsWeb; // Default based on platform
+  bool _useDrawingToolsV2 = true;
 
   // Custom theme colors
   Color _gridColor = const Color(0xFF323738);
@@ -185,6 +189,11 @@ class _ThemeCustomizationScreenState
       granularity: 3600000, // 1 hour
       theme: theme,
       activeSymbol: 'THEME_CUSTOMIZATION_CHART',
+      showCrosshair: _showCrosshair,
+      crosshairVariant: _useLargeScreenCrosshair
+          ? CrosshairVariant.largeScreen
+          : CrosshairVariant.smallScreen,
+      useDrawingToolsV2: _useDrawingToolsV2,
     );
   }
 
@@ -261,6 +270,46 @@ class _ThemeCustomizationScreenState
                             _backgroundColor = const Color(0xFFFFFFFF);
                           }
                         }
+                      });
+                    },
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Show Crosshair:'),
+                  const SizedBox(width: 8),
+                  Switch(
+                    value: _showCrosshair,
+                    onChanged: (value) {
+                      setState(() {
+                        _showCrosshair = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _useLargeScreenCrosshair = !_useLargeScreenCrosshair;
+                  });
+                },
+                child: Text(
+                  'Crosshair Style: ${_useLargeScreenCrosshair ? 'Large' : 'Small'}',
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Drawing Tools V2:'),
+                  const SizedBox(width: 8),
+                  Switch(
+                    value: _useDrawingToolsV2,
+                    onChanged: (value) {
+                      setState(() {
+                        _useDrawingToolsV2 = value;
                       });
                     },
                   ),

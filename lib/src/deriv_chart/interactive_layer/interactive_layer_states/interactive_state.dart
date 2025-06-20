@@ -89,19 +89,44 @@ abstract class InteractiveState {
   QuoteToY get quoteToY => interactiveLayer.quoteToY;
 
   /// Handles tap event.
-  void onTap(TapUpDetails details) {}
+  /// Returns true if the tap was handled by a drawing tool, false otherwise.
+  bool onTap(TapUpDetails details) {
+    // Default implementation returns false
+    // Subclasses can override this to provide specific tap handling logic
+    return false;
+  }
 
   /// Handles pan update event.
-  void onPanUpdate(DragUpdateDetails details) {}
+  /// Returns true if the pan update is affecting a drawing tool, false otherwise.
+  bool onPanUpdate(DragUpdateDetails details) {
+    // Default implementation returns false
+    // Subclasses can override this to provide specific pan update handling logic
+    return false;
+  }
 
   /// Handles pan end event.
-  void onPanEnd(DragEndDetails details) {}
+  /// Returns true if the pan end is affecting a drawing tool, false otherwise.
+  bool onPanEnd(DragEndDetails details) {
+    // Default implementation returns false
+    // Subclasses can override this to provide specific pan end handling logic
+    return false;
+  }
 
   /// Handles pan start event.
-  void onPanStart(DragStartDetails details) {}
+  /// Returns true if the pan was started on a drawing tool, false otherwise.
+  bool onPanStart(DragStartDetails details) {
+    // Default implementation returns false
+    // Subclasses can override this to provide specific pan start handling logic
+    return false;
+  }
 
   /// Handles hover event.
-  void onHover(PointerHoverEvent event) {}
+  /// Returns true if the hover is over a drawing tool, false otherwise.
+  bool onHover(PointerHoverEvent event) {
+    // Default implementation returns false
+    // Subclasses can override this to provide specific hover handling logic
+    return false;
+  }
 }
 
 /// Extension that provides utility methods for interactive states.

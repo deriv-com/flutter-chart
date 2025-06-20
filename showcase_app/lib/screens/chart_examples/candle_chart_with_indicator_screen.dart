@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'base_chart_screen.dart';
@@ -17,7 +18,7 @@ enum ColorType {
   bearishWick
 }
 
-/// Screen that displays a candle chart with a bottom indicator.
+/// Screen that displays a candle chart with an indicator.
 class CandleChartWithIndicatorScreen extends BaseChartScreen {
   /// Initialize the candle chart with indicator screen.
   const CandleChartWithIndicatorScreen({Key? key}) : super(key: key);
@@ -35,6 +36,10 @@ class _CandleChartWithIndicatorScreenState
   Color _bearishWickColor = CandleBearishThemeColors.candleBearishWickDefault;
   bool _showRSI = true;
   int _rsiPeriod = 14;
+  bool _showCrosshair = true;
+  bool _useLargeScreenCrosshair = kIsWeb; // Default based on platform
+  bool _useDarkTheme = false;
+  bool _useDrawingToolsV2 = true;
 
   // Create an indicators repository to manage indicators
   late final Repository<IndicatorConfig> _indicatorsRepo;
@@ -95,6 +100,12 @@ class _CandleChartWithIndicatorScreenState
       granularity: 3600000, // 1 hour
       activeSymbol: 'CANDLE_CHART_WITH_INDICATOR',
       indicatorsRepo: _indicatorsRepo, // Pass the indicators repository
+      showCrosshair: _showCrosshair,
+      crosshairVariant: _useLargeScreenCrosshair
+          ? CrosshairVariant.largeScreen
+          : CrosshairVariant.smallScreen,
+      theme: _useDarkTheme ? ChartDefaultDarkTheme() : ChartDefaultLightTheme(),
+      useDrawingToolsV2: _useDrawingToolsV2,
     );
   }
 
@@ -105,6 +116,78 @@ class _CandleChartWithIndicatorScreenState
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // Theme toggle
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Theme:'),
+              const SizedBox(width: 8),
+              const Text('Light'),
+              Switch(
+                value: _useDarkTheme,
+                onChanged: (value) {
+                  setState(() {
+                    _useDarkTheme = value;
+                  });
+                },
+              ),
+              const Text('Dark'),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Crosshair controls
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Show Crosshair:'),
+                  const SizedBox(width: 8),
+                  Switch(
+                    value: _showCrosshair,
+                    onChanged: (value) {
+                      setState(() {
+                        _showCrosshair = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(width: 16),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _useLargeScreenCrosshair = !_useLargeScreenCrosshair;
+                  });
+                },
+                child: Text(
+                  'Crosshair: ${_useLargeScreenCrosshair ? 'Large' : 'Small'}',
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Drawing Tools V2 toggle
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Drawing Tools V2:'),
+              const SizedBox(width: 8),
+              Switch(
+                value: _useDrawingToolsV2,
+                onChanged: (value) {
+                  setState(() {
+                    _useDrawingToolsV2 = value;
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
           // RSI Indicator controls
           Row(
             children: [

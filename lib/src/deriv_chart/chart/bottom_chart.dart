@@ -1,8 +1,6 @@
 import 'package:deriv_chart/src/widgets/bottom_indicator_title.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/crosshair/crosshair_area_web.dart';
 import 'package:provider/provider.dart';
 
 import 'basic_chart.dart';
@@ -173,18 +171,18 @@ class _BottomChartState extends BasicChartState<BottomChart> {
       ),
     );
   }
-
-  Widget _buildCrosshairAreaWeb() => CrosshairAreaWeb(
-        mainSeries: widget.mainSeries,
-        epochFromCanvasX: xAxis.epochFromX,
-        quoteFromCanvasY: chartQuoteFromCanvasY,
-        epochToCanvasX: xAxis.xFromEpoch,
-        quoteToCanvasY: chartQuoteToCanvasY,
-        quoteLabelsTouchAreaWidth: quoteLabelsTouchAreaWidth,
-        showCrosshairCursor: widget.showCrosshair,
-        onCrosshairDisappeared: widget.onCrosshairDisappeared,
-        onCrosshairHover: widget.onCrosshairHover,
-      );
+// TODO(Jim): Remember to address the crosshair area for web indicators.
+  // Widget _buildCrosshairAreaWeb() => CrosshairAreaWeb(
+  //       mainSeries: widget.mainSeries,
+  //       epochFromCanvasX: xAxis.epochFromX,
+  //       quoteFromCanvasY: chartQuoteFromCanvasY,
+  //       epochToCanvasX: xAxis.xFromEpoch,
+  //       quoteToCanvasY: chartQuoteToCanvasY,
+  //       quoteLabelsTouchAreaWidth: quoteLabelsTouchAreaWidth,
+  //       showCrosshairCursor: widget.showCrosshair,
+  //       onCrosshairDisappeared: widget.onCrosshairDisappeared,
+  //       onCrosshairHover: widget.onCrosshairHover,
+  //     );
 
   @override
   Widget build(BuildContext context) {
@@ -208,7 +206,7 @@ class _BottomChartState extends BasicChartState<BottomChart> {
                 Expanded(child: super.build(context)),
               ],
             ),
-            if (kIsWeb) _buildCrosshairAreaWeb(),
+            // if (kIsWeb) _buildCrosshairAreaWeb(), // TODO(Jim): Address the crosshair area for web indicators.
             _buildBottomChartOptions(context)
           ],
         ),

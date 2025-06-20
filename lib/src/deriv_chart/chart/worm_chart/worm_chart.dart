@@ -1,6 +1,7 @@
 import 'dart:ui';
-import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/crosshair/index_base_cross_hair.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_variant.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/find.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/index_base_cross_hair.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/conversion.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
@@ -16,6 +17,7 @@ class WormChart extends StatefulWidget {
   /// Initializes
   const WormChart({
     required this.ticks,
+    required this.crosshairVariant,
     this.pipSize = 4,
     this.zoomFactor = 0.05,
     this.updateAnimationDuration = Duration.zero,
@@ -95,6 +97,12 @@ class WormChart extends StatefulWidget {
   /// For now having this callback here in worm chart until
   /// a more solid solution is found.
   final VoidCallback? onTap;
+
+  /// The variant of the crosshair to be used.
+  /// This is used to determine the type of crosshair to display.
+  /// The default is [CrosshairVariant.smallScreen].
+  /// [CrosshairVariant.largeScreen] is mostly for web.
+  final CrosshairVariant crosshairVariant;
 
   @override
   _WormChartState createState() => _WormChartState();
@@ -216,6 +224,7 @@ class _WormChartState extends State<WormChart>
                         ),
                       ),
                     ),
+                    // TODO(Jim): Test this.
                     IndexBaseCrossHair(
                       indexToX: _indexToX,
                       quoteToY: _quoteToY,
@@ -224,6 +233,7 @@ class _WormChartState extends State<WormChart>
                       enabled: widget.crossHairEnabled,
                       pipSize: widget.pipSize,
                       onTap: widget.onTap,
+                      crosshairVariant: widget.crosshairVariant,
                     ),
                   ],
                 ),

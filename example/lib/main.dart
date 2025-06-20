@@ -447,6 +447,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           _loadHistory(500);
                         }
                       },
+                      useDrawingToolsV2: true,
                     ),
                   ),
                   // ignore: unnecessary_null_comparison

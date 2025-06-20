@@ -121,6 +121,78 @@ class TextStyles {
     fontSize: 12,
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.w600,
-    height: 1.67, // lineHeight (20px) / fontSize (12px) = 1.67
+    height: 1.67, // lineHeight (20px) / fontSize (12px) = ~1.67
+  );
+
+  static const TextStyle crosshairInformationBoxTitleStyle = TextStyle(
+    fontFeatures: <FontFeature>[
+      FontFeature.liningFigures(),
+      FontFeature.tabularFigures(),
+      FontFeature.proportionalFigures(),
+    ],
+
+    fontFamily: fontFamilyDeriv,
+
+    fontSize: 10,
+
+    fontStyle: FontStyle.normal,
+
+    fontWeight: FontWeight.w600,
+
+    height: 2, // lineHeight (20px) / fontSize (10px) = 2
+  );
+
+  static const TextStyle crosshairInformationBoxQuoteStyle = TextStyle(
+    fontFeatures: <FontFeature>[
+      FontFeature.liningFigures(),
+      FontFeature.tabularFigures(),
+      FontFeature.proportionalFigures(),
+    ],
+
+    fontFamily: fontFamilyDeriv,
+
+    fontSize: 12,
+
+    fontStyle: FontStyle.normal,
+
+    fontWeight: FontWeight.w400,
+
+    height: 1.67, // lineHeight (20px) / fontSize (12px) = ~1.67
+  );
+
+  static const TextStyle crosshairInformationBoxTimeLabelStyle = TextStyle(
+    fontFeatures: <FontFeature>[
+      FontFeature.liningFigures(),
+      FontFeature.tabularFigures(),
+      FontFeature.proportionalFigures(),
+    ],
+
+    fontFamily: fontFamilyDeriv,
+
+    fontSize: 10,
+
+    fontStyle: FontStyle.normal,
+
+    fontWeight: FontWeight.w400,
+
+    height: 2, // lineHeight (20px) / fontSize (10px) = 2
+  );
+
+  static const TextStyle crosshairAxisLabelStyle = TextStyle(
+    fontFeatures: <FontFeature>[
+      FontFeature.liningFigures(),
+      FontFeature.tabularFigures(),
+      FontFeature.proportionalFigures(),
+    ],
+
+    fontFamily: fontFamilyDeriv,
+
+    fontSize: 12,
+
+    fontStyle: FontStyle.normal,
+
+    fontWeight: FontWeight.w400,
+
+    height: 1.67, // lineHeight (20px) / fontSize (12px) = ~1.67
   );
 }

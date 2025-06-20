@@ -141,12 +141,13 @@ class InteractiveAddingToolState extends InteractiveState
   }
 
   @override
-  void onPanEnd(DragEndDetails details) {
+  bool onPanEnd(DragEndDetails details) {
     if (_isAddingToolBeingDragged) {
       _drawingPreview?.onDragEnd(
           details, epochFromX, quoteFromY, epochToX, quoteToY);
 
       _isAddingToolBeingDragged = false;
+      return true; // Ended dragging the tool being added. Jim - Verify this
     }
 
     // To trigger the animation of the interactive layer, so the adding preview
@@ -155,10 +156,11 @@ class InteractiveAddingToolState extends InteractiveState
       this,
       StateChangeAnimationDirection.backward,
     );
+    return false; // Not dragging the tool being added. Jim - Verify this
   }
 
   @override
-  void onPanStart(DragStartDetails details) {
+  bool onPanStart(DragStartDetails details) {
     if (_drawingPreview?.hitTest(details.localPosition, epochToX, quoteToY) ??
         false) {
       // To trigger the animation of the interactive layer, so the adding
@@ -176,13 +178,15 @@ class InteractiveAddingToolState extends InteractiveState
         epochToX,
         quoteToY,
       );
+      return true; // Started dragging the tool being added. Jim - Verify this
     } else {
       _isAddingToolBeingDragged = false;
+      return false; // Not dragging the tool being added. Jim - Verify this
     }
   }
 
   @override
-  void onPanUpdate(DragUpdateDetails details) {
+  bool onPanUpdate(DragUpdateDetails details) {
     if (_isAddingToolBeingDragged) {
       _drawingPreview?.onDragUpdate(
         details,
@@ -191,11 +195,13 @@ class InteractiveAddingToolState extends InteractiveState
         epochToX,
         quoteToY,
       );
+      return true; // Dragging the adding tool. Jim - Verify this
     }
+    return false; // Not dragging the adding tool. Jim - Verify this
   }
 
   @override
-  void onHover(PointerHoverEvent event) {
+  bool onHover(PointerHoverEvent event) {
     _drawingPreview?.onHover(
       event,
       epochFromX,
@@ -203,10 +209,12 @@ class InteractiveAddingToolState extends InteractiveState
       epochToX,
       quoteToY,
     );
+
+    return true; // Always return true as we're in adding mode
   }
 
   @override
-  void onTap(TapUpDetails details) {
+  bool onTap(TapUpDetails details) {
     _drawingPreview!.onCreateTap(
       details,
       epochFromX,
@@ -214,5 +222,6 @@ class InteractiveAddingToolState extends InteractiveState
       epochToX,
       quoteToY,
     );
+    return true; // Always return true as we're in adding mode
   }
 }
