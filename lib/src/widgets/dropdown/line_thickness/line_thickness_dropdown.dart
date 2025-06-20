@@ -18,7 +18,7 @@ class LineThicknessDropdown extends StatelessWidget {
   final ValueChanged<double> onChanged;
 
   /// The predefined line thickness options
-  static const List<double> _thicknessOptions = [1, 2, 3, 4, 5];
+  static const List<double> _thicknessOptions = [1, 2, 3, 4];
 
   @override
   Widget build(BuildContext context) => Container(
