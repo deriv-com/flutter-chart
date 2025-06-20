@@ -165,15 +165,6 @@ The Y-axis scale is determined by:
 
 The grid system uses the coordinate system to place grid lines and labels at appropriate intervals, enhancing readability and providing visual reference points.
 
-## Performance Considerations
-
-### Clipping and Culling
-
-For optimal performance, the chart only renders data points that are within the visible area:
-
-The `isVisible` method checks if a data point is within the visible area of the chart. It compares the epoch and quote values against the current bounds to determine visibility.
-
-
 ## Coordinate System in Action
 
 ### Handling User Interactions
