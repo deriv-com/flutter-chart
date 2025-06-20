@@ -17,11 +17,9 @@ The Interactive Layer V2 is a new implementation for drawing tools that introduc
 
 ## Getting Started
 
-## Basic Setup
+### Basic Usage
 
-### Enabling Interactive Layer V2
-
-To enable the Interactive Layer V2, simply set the `useDrawingToolsV2` flag to `true` when using the `DerivChart` widget:
+To enable the Interactive Layer V2, simply set the `useDrawingToolsV2` flag to `true`:
 
 ```dart
 DerivChart(
@@ -34,87 +32,102 @@ DerivChart(
 )
 ```
 
-### Standard Setup
+### Widget Compatibility
 
-Either when using `DerivChart` or `Chart` widgets, users can set the `useDrawingToolsV2` flag as `true` to enable the Interactive Layer V2:
+The usage is the same for both `DerivChart` and `Chart` widgets:
 
 ```dart
+// Using DerivChart
 DerivChart(
-  useDrawingToolsV2: true, // Enable Interactive Layer V2
+  useDrawingToolsV2: true,
   mainSeries: CandleSeries(candles),
-  granularity: 60000,
-  activeSymbol: 'R_100',
-  pipSize: 4,
-  drawingToolsRepo: myDrawingToolsRepo, // Optional
+  // Other parameters...
+)
+
+// Using Chart widget directly
+Chart(
+  useDrawingToolsV2: true,
+  mainSeries: CandleSeries(candles),
+  // Other parameters...
 )
 ```
 
-When using the `Chart` widget directly, the usage is the same as `DerivChart`:
+### Behavior Customization
+
+You can customize the Interactive Layer behavior by passing either mobile or desktop behaviors:
 
 ```dart
-// For advanced usage of Interactive Layer, we can create a controller instance
+// Mobile behavior - optimized for touch interactions
+final InteractiveLayerBehaviour mobileBehaviour = InteractiveLayerMobileBehaviour();
+
+// Desktop behavior - optimized for mouse and keyboard interactions
+final InteractiveLayerBehaviour desktopBehaviour = InteractiveLayerDesktopBehaviour();
+
+Chart(
+  useDrawingToolsV2: true,
+  interactiveLayerBehaviour: mobileBehaviour, // or desktopBehaviour
+  mainSeries: CandleSeries(candles),
+  // Other parameters...
+)
+```
+
+### Dynamic Platform Detection
+
+You can make the behavior instantiation dynamic by checking the platform on your side:
+
+```dart
+// Dynamic platform-based behavior selection
+final InteractiveLayerBehaviour behaviour = kIsWeb
+    ? InteractiveLayerDesktopBehaviour() // For web/desktop
+    : InteractiveLayerMobileBehaviour(); // For mobile
+
+Chart(
+  useDrawingToolsV2: true,
+  interactiveLayerBehaviour: behaviour,
+  mainSeries: CandleSeries(candles),
+  // Other parameters...
+)
+```
+
+**Note**: If you don't provide a behavior, the package will use the `kIsWeb` flag internally to automatically select the appropriate behavior.
+
+### Controller for Advanced Control
+
+To have control over the Interactive Layer and get updates of the current state, you can create a controller:
+
+```dart
+// Create a controller instance
 final InteractiveLayerController controller = InteractiveLayerController();
 
-// Pass the controller to the behavior - this provides runtime control like canceling adding tools
-// programmatically or showing user guides when a tool is being added
+// Pass the controller to the behavior
 final InteractiveLayerBehaviour behaviour = InteractiveLayerMobileBehaviour(
   controller: controller
 );
 
 Chart(
-  useDrawingToolsV2: true, // Enable Interactive Layer V2
-  interactiveLayerBehaviour: behaviour, // Pass behavior instance to define the behavior explicitly
+  useDrawingToolsV2: true,
+  interactiveLayerBehaviour: behaviour,
   mainSeries: CandleSeries(candles),
-  pipSize: 2,
-  granularity: 60000,
   // Other parameters...
 )
 ```
 
-## Customizing Interactive Layer Behavior
+The controller allows you to:
+- Cancel adding tools programmatically: `controller.cancelAdding()`
+- Listen to state changes and show user guidance
+- Get updates about the current state of the layer
 
-The Interactive Layer V2 allows you to customize how drawing tools behave by providing a specific `InteractiveLayerBehaviour` implementation.
+**Real Implementation Example**: See [`example/lib/main.dart`](../example/lib/main.dart) where a `ListenableBuilder` listens to the controller's state changes and shows a cancel button when adding tools.
 
-### Platform-Specific Behaviors
+## Advanced Customization
 
-The `InteractiveLayerBehaviour` defines how the layer will behave. By default, there are two implementations:
+### Custom Platform Behavior
 
-- **Desktop Behavior**: `InteractiveLayerDesktopBehaviour` - Optimized for mouse and keyboard interactions
-- **Mobile Behavior**: `InteractiveLayerMobileBehaviour` - Optimized for touch-friendly environments
-
-The behavior is customizable by creating custom behavior and passing it to the chart.
-
-#### Automatic Platform Detection
-
-By default, the package will automatically select the appropriate behavior based on the `kIsWeb` flag, but you can explicitly specify which behavior to use:
-
-```dart
-// Automatic platform detection (recommended)
-DerivChart(
-  useDrawingToolsV2: true,
-  mainSeries: CandleSeries(candles),
-  // The package will automatically choose desktop or mobile behavior
-)
-
-// Manual platform-specific behavior
-final InteractiveLayerBehaviour behaviour = kIsWeb
-    ? InteractiveLayerDesktopBehaviour() // For mouse-based interactions
-    : InteractiveLayerMobileBehaviour();  // For touch-based interactions
-
-DerivChart(
-  useDrawingToolsV2: true,
-  interactiveLayerBehaviour: behaviour,
-  mainSeries: CandleSeries(candles),
-)
-```
-
-#### Conditional Platform Behavior
-
-You can make this conditional and check your environment to send the mobile or desktop behavior accordingly:
+You can create more sophisticated platform detection logic:
 
 ```dart
 // Example: Force mobile behavior on tablets even if on web
-final bool isMobileEnvironment = Platform.isAndroid || Platform.isIOS || 
+final bool isMobileEnvironment = Platform.isAndroid || Platform.isIOS ||
     (kIsWeb && MediaQuery.of(context).size.width < 768);
 
 final InteractiveLayerBehaviour behaviour = isMobileEnvironment
@@ -128,37 +141,12 @@ DerivChart(
 )
 ```
 
-### Using a Controller
+### Controller State Management
 
-For advanced usage of the Interactive Layer, you can create a controller instance and pass it to the behavior class to have runtime control over the layer, such as:
-
-- **Starting a tool addition flow**
-- **Canceling the flow programmatically**
-- **Getting updated information about the current state of the layer**
-- **Performing actions in the consumer app** (like showing user guides or steps when a tool is being added)
+The controller provides detailed state information that you can use to enhance user experience:
 
 ```dart
-// Create a controller
-final InteractiveLayerController controller = InteractiveLayerController();
-
-// Create a mobile behavior with the controller
-final InteractiveLayerBehaviour behaviour = InteractiveLayerMobileBehaviour(
-  controller: controller
-);
-
-// Use it with DerivChart
-DerivChart(
-  useDrawingToolsV2: true,
-  interactiveLayerBehaviour: behaviour,
-  mainSeries: CandleSeries(candles),
-  // Other parameters...
-)
-
-// Use the controller to cancel adding
-controller.cancelAdding();
-
 // Listen to state changes to show user guidance
-// Example: Check if the controller current state is adding state and call cancelAdding method
 ListenableBuilder(
   listenable: controller,
   builder: (context, _) {
@@ -179,7 +167,7 @@ ListenableBuilder(
 )
 ```
 
-**Real Implementation Example**: You can see a complete working example of this pattern in [`example/lib/main.dart`](../example/lib/main.dart) where a `ListenableBuilder` listens to the controller's state changes. When the controller's current state is `InteractiveAddingToolState`, it shows a cancel button that calls the `cancelAdding()` method of the controller.
+**Real Implementation**: See the complete implementation in [`example/lib/main.dart`](../example/lib/main.dart) lines 462-482, where the controller state is monitored and a cancel button is shown during tool addition.
 
 ### Complete Example
 
@@ -251,196 +239,6 @@ class _ChartWithInteractiveLayerState extends State<ChartWithInteractiveLayer> {
   }
 }
 ```
-
-## Managing Drawing Tools
-
-### Creating a Drawing Tools Repository
-
-The `AddOnsRepository` class is used to manage drawing tools:
-
-```dart
-final drawingToolsRepo = AddOnsRepository<DrawingToolConfig>(
-  createAddOn: (Map<String, dynamic> map) => DrawingToolConfig.fromJson(map),
-  sharedPrefKey: 'R_100', // Use the symbol code for saving settings
-);
-```
-
-### Adding Drawing Tools
-
-You can add drawing tools to the repository programmatically:
-
-```dart
-// Add a horizontal line
-drawingToolsRepo.add(HorizontalLineDrawingToolConfig(
-  value: 125.0,
-  color: Colors.red,
-  lineStyle: LineStyle.dashed,
-));
-
-// Add a trend line
-drawingToolsRepo.add(TrendLineDrawingToolConfig(
-  startPoint: Point(1625097600000, 120.0), // (epoch, quote)
-  endPoint: Point(1625184000000, 130.0),   // (epoch, quote)
-  color: Colors.blue,
-  lineStyle: LineStyle.solid,
-));
-```
-
-### Removing Drawing Tools
-
-To remove a drawing tool:
-
-```dart
-drawingToolsRepo.remove(drawingToolConfig);
-```
-
-### Clearing All Drawing Tools
-
-To remove all drawing tools:
-
-```dart
-drawingToolsRepo.clear();
-```
-
-## User Interaction Modes
-
-The Interactive Layer supports different interaction modes:
-
-### Normal Mode
-
-In normal mode, users can:
-- Select existing drawing tools by tapping on them
-- Initiate adding new drawing tools
-
-### Selected Tool Mode
-
-When a drawing tool is selected, users can:
-- Move the entire tool by dragging it
-- Modify specific points of the tool using control handles
-- Delete the tool (typically through a context menu or delete button)
-
-### Adding Tool Mode
-
-When adding a new tool, users can:
-- Tap on the chart to define points for the new tool
-- Drag to position certain types of tools
-- Confirm the addition with a final tap
-
-## Platform-Specific Behavior
-
-The Interactive Layer automatically adapts to different platforms:
-
-### Desktop Behavior
-
-On desktop platforms, the Interactive Layer:
-- Supports hover effects
-- Uses mouse clicks for precise positioning
-- May use keyboard shortcuts for additional functionality
-
-### Mobile Behavior
-
-On mobile platforms, the Interactive Layer:
-- Uses touch gestures optimized for finger input
-- Provides larger touch targets
-- May use multi-touch gestures for certain operations
-
-## Adding Drawing Tools via UI
-
-To enable users to add drawing tools through the UI:
-
-1. Create a button or menu item for each drawing tool type
-2. When the user selects a tool, call the appropriate method:
-
-```dart
-// When the user clicks on the "Add Horizontal Line" button
-void onAddHorizontalLinePressed() {
-  final config = HorizontalLineDrawingToolConfig(
-    color: Colors.red,
-    lineStyle: LineStyle.dashed,
-  );
-  
-  // If using DerivChart with automatic repository management
-  derivChartController.addDrawingTool(config);
-  
-  // Or if managing the repository yourself
-  drawingToolsRepo.add(config);
-}
-```
-
-## Customizing Drawing Tools
-
-You can customize the appearance and behavior of drawing tools:
-
-```dart
-// Customize a horizontal line
-final horizontalLine = HorizontalLineDrawingToolConfig(
-  value: 125.0,
-  color: Colors.red,
-  lineStyle: LineStyle.dashed,
-  lineThickness: 2.0,
-  extendToRight: true,  // Extend the line to the right edge of the chart
-  labelVisible: true,   // Show a label with the price value
-  labelPosition: LabelPosition.right,
-);
-
-// Customize a trend line
-final trendLine = TrendLineDrawingToolConfig(
-  startPoint: Point(1625097600000, 120.0),
-  endPoint: Point(1625184000000, 130.0),
-  color: Colors.blue,
-  lineStyle: LineStyle.solid,
-  lineThickness: 2.0,
-  extendToRight: false,
-  extendToLeft: false,
-);
-```
-
-## Listening to Drawing Tool Events
-
-You can listen to events related to drawing tools:
-
-```dart
-DerivChart(
-  // ... other parameters
-  onDrawingToolAdded: (DrawingToolConfig config) {
-    print('Drawing tool added: ${config.type}');
-  },
-  onDrawingToolRemoved: (DrawingToolConfig config) {
-    print('Drawing tool removed: ${config.type}');
-  },
-  onDrawingToolSelected: (DrawingToolConfig config) {
-    print('Drawing tool selected: ${config.type}');
-  },
-)
-```
-
-## Available Drawing Tools
-
-The Deriv Chart library includes several built-in drawing tools:
-
-| Tool | Description | Configuration Class |
-|------|-------------|---------------------|
-| Horizontal Line | A horizontal line at a specific price level | `HorizontalLineDrawingToolConfig` |
-| Vertical Line | A vertical line at a specific time point | `VerticalLineDrawingToolConfig` |
-| Trend Line | A line connecting two points | `TrendLineDrawingToolConfig` |
-| Ray | A line extending from a point in one direction | `RayDrawingToolConfig` |
-| Rectangle | A rectangle defined by two corner points | `RectangleDrawingToolConfig` |
-| Channel | Parallel lines defining a price channel | `ChannelDrawingToolConfig` |
-| Fibonacci Fan | Fibonacci fan lines from a point | `FibonacciFanDrawingToolConfig` |
-
-## Best Practices
-
-1. **Platform Adaptation**: Let the Interactive Layer handle platform-specific behavior automatically by using the appropriate `InteractiveLayerBehaviour` implementation.
-
-2. **Repository Management**: Use the `AddOnsRepository` to manage drawing tools, which provides persistence and easy addition/removal of tools.
-
-3. **User Experience**: Provide clear UI elements for adding, selecting, and removing drawing tools to ensure a good user experience.
-
-4. **Error Handling**: Implement proper error handling for cases where drawing tools might be invalid or outside the visible chart area.
-
-5. **Performance**: Be mindful of the number of drawing tools added to a chart, as a large number can impact performance.
-
-6. **Controller Usage**: Use the `InteractiveLayerController` to provide user guidance and control over the drawing process.
 
 ## Next Steps
 
