@@ -307,7 +307,8 @@ class _InteractiveLayerGestureHandlerState
   void _checkIsAToolAdded() {
     for (final drawing in widget.drawings) {
       if (drawing.id == _addedDrawing) {
-        widget.interactiveLayerBehaviour.aNewToolsIsAdded(drawing);
+        WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback(
+            (_) => widget.interactiveLayerBehaviour.aNewToolsIsAdded(drawing));
         break;
       }
     }
