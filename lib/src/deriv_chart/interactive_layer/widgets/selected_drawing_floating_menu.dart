@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dar
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/interactable_drawing.dart';
 import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../interactive_layer_behaviours/interactive_layer_behaviour.dart';
 import '../interactive_layer_controller.dart';
@@ -40,6 +41,8 @@ class _SelectedDrawingFloatingMenuState
     extends State<SelectedDrawingFloatingMenu> {
   // Store the menu size
   Size _menuSize = Size.zero;
+
+  MouseCursor _cursor = SystemMouseCursors.grab;
 
   late final InteractiveLayerController _controller;
   late final Animation<double> _scaleAnimation;
@@ -86,7 +89,10 @@ class _SelectedDrawingFloatingMenuState
       top: _controller.floatingMenuPosition.dy,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
+        onPanEnd: (_) => _cursor = SystemMouseCursors.grab,
         onPanUpdate: (details) {
+          _cursor = SystemMouseCursors.grabbing;
+
           // Calculate new position
           final newPosition = _controller.floatingMenuPosition + details.delta;
 
@@ -141,13 +147,16 @@ class _SelectedDrawingFloatingMenuState
     );
   }
 
-  Widget _buildDragIcon() => SizedBox(
-        width: 32,
-        height: 32,
-        child: Icon(
-          Icons.drag_indicator,
-          size: 18,
-          color: CoreDesignTokens.coreColorSolidSlate50.withOpacity(0.4),
+  Widget _buildDragIcon() => MouseRegion(
+        cursor: _cursor,
+        child: SizedBox(
+          width: 32,
+          height: 32,
+          child: Icon(
+            Icons.drag_indicator,
+            size: 18,
+            color: CoreDesignTokens.coreColorSolidSlate50.withOpacity(0.4),
+          ),
         ),
       );
 
