@@ -12,6 +12,7 @@ import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/gestures.dart';
 
 import '../../helpers/types.dart';
+import '../../interactive_layer_states/interactive_adding_tool_state.dart';
 import '../drawing_adding_preview.dart';
 import 'adding_tool_alignment_cross_hair.dart';
 import 'trend_line_interactable_drawing.dart';
@@ -25,7 +26,10 @@ class TrendLineAddingPreviewDesktop
   TrendLineAddingPreviewDesktop({
     required super.interactiveLayerBehaviour,
     required super.interactableDrawing,
-  });
+    required super.onAddingStateChange,
+  }) {
+    onAddingStateChange(AddingStateInfo(0, 2));
+  }
 
   Offset? _hoverPosition;
 
@@ -87,19 +91,19 @@ class TrendLineAddingPreviewDesktop
     QuoteFromY quoteFromY,
     EpochToX epochToX,
     QuoteToY quoteToY,
-    VoidCallback onDone,
   ) {
     if (interactableDrawing.startPoint == null) {
       interactableDrawing.startPoint = EdgePoint(
         epoch: epochFromX(details.localPosition.dx),
         quote: quoteFromY(details.localPosition.dy),
       );
+      onAddingStateChange(AddingStateInfo(1, 2));
     } else {
       interactableDrawing.endPoint ??= EdgePoint(
         epoch: epochFromX(details.localPosition.dx),
         quote: quoteFromY(details.localPosition.dy),
       );
-      onDone();
+      onAddingStateChange(AddingStateInfo(2, 2));
     }
   }
 

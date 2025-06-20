@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'package:collection/collection.dart';
 import 'package:deriv_chart/src/add_ons/extensions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/drawing.dart';
@@ -26,6 +28,12 @@ class DrawingTools {
   bool? shouldStopDrawing;
 
   /// Selected drawing tool.
+  @Deprecated('''
+  This property and possibly the whole class will be removed in future versions.
+  To start adding a drawing tool, instead of setting a value to 
+  selectedDrawingTool, use [InteractiveLayerController.startAddingNewTool]
+  method.
+  ''')
   DrawingToolConfig? selectedDrawingTool;
 
   /// Keep the reference to the drawing tools repository.

@@ -1,6 +1,7 @@
 export 'interactive_layer_behaviours/interactive_layer_behaviour.dart';
 export 'interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 export 'interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
+export 'interactive_layer_controller.dart';
 export 'interactive_layer_states/interactive_adding_tool_state.dart';
 export 'interactive_layer_states/interactive_adding_tool_state_mobile.dart';
 export 'interactive_layer_states/interactive_hover_state.dart';

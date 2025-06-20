@@ -9,6 +9,7 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
 import '../../helpers/types.dart';
+import '../../interactive_layer_states/interactive_adding_tool_state.dart';
 import '../drawing_adding_preview.dart';
 import 'horizontal_line_interactable_drawing.dart';
 
@@ -21,6 +22,7 @@ class HorizontalLineAddingPreviewMobile
   HorizontalLineAddingPreviewMobile({
     required super.interactiveLayerBehaviour,
     required super.interactableDrawing,
+    required super.onAddingStateChange,
   }) {
     if (interactableDrawing.startPoint == null) {
       final interactiveLayer = interactiveLayerBehaviour.interactiveLayer;
@@ -33,6 +35,8 @@ class HorizontalLineAddingPreviewMobile
         epoch: interactiveLayer.epochFromX(centerX),
         quote: interactiveLayer.quoteFromY(centerY),
       );
+
+      onAddingStateChange(AddingStateInfo(0, 1));
     }
   }
 
@@ -121,13 +125,12 @@ class HorizontalLineAddingPreviewMobile
     QuoteFromY quoteFromY,
     EpochToX epochToX,
     QuoteToY quoteToY,
-    VoidCallback onDone,
   ) {
     interactableDrawing.startPoint ??= EdgePoint(
       epoch: epochFromX(details.localPosition.dx),
       quote: quoteFromY(details.localPosition.dy),
     );
 
-    onDone();
+    onAddingStateChange(AddingStateInfo(1, 1));
   }
 }
