@@ -13,19 +13,47 @@ The rendering pipeline in the Deriv Chart library consists of several stages:
 
 This pipeline ensures efficient rendering and a responsive user experience, even with large datasets.
 
+## The ChartData Interface
+
+At the core of the rendering pipeline is the `ChartData` interface, which defines the contract for all visual elements except for drawing tool that can be rendered on a chart:
+
+```dart
+abstract class ChartData {
+  late String id;
+  bool didUpdate(ChartData? oldData);
+  bool shouldRepaint(ChartData? oldData);
+  void update(int leftEpoch, int rightEpoch);
+  double get minValue;
+  double get maxValue;
+  int? getMinEpoch();
+  int? getMaxEpoch();
+  void paint(
+    Canvas canvas,
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme theme,
+    ChartScaleModel chartScaleModel,
+  );
+}
+```
+
+All chart elements implement this interface, including:
+- Chart types (LineSeries, CandleSeries, OHLCSeries, HollowCandleSeries)
+- Technical indicators (both overlay and bottom indicators)
+- Annotations (horizontal barriers, vertical barriers, tick indicators)
+- Markers and other visual elements
+
+The `ChartData` interface provides a unified way for the chart to:
+1. Calculate visible data based on the current viewport
+2. Determine min/max values for proper scaling
+3. Paint elements on the canvas with appropriate coordinate transformations
+
 ## Data Processing Stage
 
 The data processing stage prepares the raw market data for visualization:
-
-### Data Sorting
-
-All data is sorted chronologically by epoch (timestamp):
-
-```dart
-void sortData() {
-  data.sort((a, b) => a.epoch.compareTo(b.epoch));
-}
-```
 
 ### Visible Data Calculation
 
@@ -583,28 +611,76 @@ void onPaintData(
 The complete rendering flow is as follows:
 
 1. **Data Update**:
-   - New data is received
-   - Data is sorted chronologically
-   - `updateVisibleRange` is called with the current viewport
+   - Each `ChartData` implementation's `update(leftEpoch, rightEpoch)` method is called
+   - Each implementation calculates its visible data subset based on the current viewport
 
-2. **Viewport Update**:
-   - User scrolls or zooms
-   - `XAxisModel` updates `rightBoundEpoch` and `msPerPx`
-   - `updateVisibleRange` is called with the new viewport
-
-3. **Y-Axis Update**:
-   - Visible data min/max values are calculated
+2. **Y-Axis Update**:
+   - Each `ChartData` implementation calculates its `minValue` and `maxValue` for the visible data
+   - The chart collects these values using the `ChartDataListExtension` methods:
+     ```dart
+     double getMinValue() {
+       final Iterable<double> minValues =
+           where((ChartData? c) => c != null && !c.minValue.isNaN)
+               .map((ChartData? c) => c!.minValue);
+       return minValues.isEmpty ? double.nan : minValues.reduce(min);
+     }
+     
+     double getMaxValue() {
+       final Iterable<double> maxValues =
+           where((ChartData? c) => c != null && !c.maxValue.isNaN)
+               .map((ChartData? c) => c!.maxValue);
+       return maxValues.isEmpty ? double.nan : maxValues.reduce(max);
+     }
+     ```
    - Y-axis bounds are updated with padding
    - `quotePerPx` is recalculated
 
 4. **Painting**:
    - Each layer's `CustomPaint` is triggered to repaint
-   - Each layer's painter calls the appropriate `SeriesPainter`
-   - Each `SeriesPainter` renders its content using the coordinate conversion functions
+   - The chart calls the `paint` method on each of its `ChartData` objects:
+     ```dart
+     void paint(
+       Canvas canvas,
+       Size size,
+       EpochToX epochToX,
+       QuoteToY quoteToY,
+       AnimationInfo animationInfo,
+       ChartConfig chartConfig,
+       ChartTheme theme,
+       ChartScaleModel chartScaleModel,
+     );
+     ```
+   - Each `ChartData` implementation renders its content using the coordinate conversion functions
 
 5. **Composition**:
    - Flutter composites all layers into the final chart
    - The chart is displayed on the screen
+
+## Painter Classes
+
+The Deriv Chart library uses a decoupled painter architecture to promote code reuse:
+
+1. **Specialized Painters**: Each visual element type has specialized painters:
+   - `LinePainter`: Renders line graphs (used by LineSeries and many indicators)
+   - `CandlePainter`: Renders candlestick charts
+   - `OHLCPainter`: Renders OHLC charts
+   - `HorizontalBarrierPainter`: Renders horizontal barriers
+   - `VerticalBarrierPainter`: Renders vertical barriers
+   - `MarkerPainter`: Renders markers
+
+2. **Painter Reuse**: The same painter can be used by different `ChartData` implementations:
+   - `LinePainter` is used by LineSeries, Moving Average indicators, and other line-based indicators
+   - This approach ensures consistent rendering across different chart elements
+
+3. **Painter Composition**: Complex chart elements can use multiple painters:
+   - Bollinger Bands uses both `LinePainter` (for the middle line) and specialized painters for the bands
+   - MACD uses `LinePainter` for signal line and histogram painters for the bars
+
+This decoupled approach allows for:
+- Better code organization
+- Easier maintenance
+- Consistent visual appearance
+- Code reuse across different chart elements
 
 ## Next Steps
 
