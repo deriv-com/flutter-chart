@@ -456,16 +456,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     Align(
                       child: _buildConnectionStatus(),
                     ),
-                  Align(
+                  Container(
                     alignment: Alignment.topRight,
+                    padding: const EdgeInsets.all(16),
                     child: ListenableBuilder(
                       listenable: _interactiveLayerController,
                       builder: (_, __) {
                         if (_interactiveLayerController.currentState
                             is InteractiveAddingToolState) {
                           return Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text('Cancel adding!'),
+                              const Text('Cancel adding'),
                               IconButton(
                                 onPressed:
                                     _interactiveLayerController.cancelAdding,
