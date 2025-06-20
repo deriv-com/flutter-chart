@@ -117,7 +117,7 @@ When using external repositories, you're responsible for:
 
 ### Available Indicators
 
-The library includes many built-in indicators such as:
+The library includes a comprehensive set of built-in indicators. Here are some of the most commonly used ones:
 
 | Indicator | Type | Description |
 |-----------|------|-------------|
@@ -127,6 +127,12 @@ The library includes many built-in indicators such as:
 | MACD | Bottom | Moving Average Convergence Divergence |
 | Stochastic Oscillator | Bottom | Compares closing price to price range |
 | Awesome Oscillator | Bottom | Shows market momentum |
+| Ichimoku Cloud | Overlay | Comprehensive trend indicator showing support/resistance |
+| Parabolic SAR | Overlay | Identifies potential reversals in market trend |
+| ATR | Bottom | Average True Range measures volatility |
+| Williams %R | Bottom | Momentum indicator showing overbought/oversold levels |
+
+This is not an exhaustive list. For a complete list of all available indicators and their implementation details, refer to the [GitHub repository](https://github.com/deriv-com/flutter-chart/tree/master/lib/src/deriv_chart/chart/data_visualization/chart_series/indicators_series).
 
 ## Annotations
 
