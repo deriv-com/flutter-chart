@@ -29,6 +29,7 @@ void showDropdown<T>({
   required ValueChanged<T> onValueSelected,
   required DropdownBuilder<T> dropdownBuilder,
   double gapWithOriginWidget = 8,
+  double paddingWithBorder = 8,
 }) {
   // Get screen size to determine dropdown direction
   final screenSize = MediaQuery.of(context).size;
@@ -75,10 +76,25 @@ void showDropdown<T>({
                         originWidgetHalfHeight +
                         gapWithOriginWidget;
 
-                final double newLeftPosition = originWidgetPosition.dx -
+                // Keep the original left position based on the origin widget
+                double newLeftPosition = originWidgetPosition.dx -
                     (originWidgetSize.width / 2); // Center the dropdown
 
-                // Update the state with the measured dimensions and position
+                // Check if the dropdown would go off screen edges
+                final double rightEdge = newLeftPosition + size.width;
+                final double leftEdge = newLeftPosition;
+
+                if (rightEdge > screenSize.width) {
+                  // Adjust if dropdown goes off the right edge of the screen
+                  newLeftPosition =
+                      screenSize.width - size.width - paddingWithBorder;
+                }
+
+                if (leftEdge < 0) {
+                  // Adjust if dropdown goes off the left edge of the screen
+                  newLeftPosition = paddingWithBorder;
+                }
+
                 setState(() {
                   topPosition = newTopPosition;
                   leftPosition = newLeftPosition;
