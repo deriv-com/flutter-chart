@@ -381,5 +381,4 @@ class _ThemeSwitcherExampleState extends State<ThemeSwitcherExample> {
 
 Now that you understand how to create and use custom themes in the Deriv Chart library, you can explore:
 
-- [Real-time Data](real_time_data.md) - Understand how to handle real-time data updates
 - [API Reference](../api_reference/chart_widget.md) - Explore the complete API

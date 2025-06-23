@@ -156,7 +156,7 @@ These functions enable plotting any data point on the canvas and handling user i
 
 ## Data Visualization
 
-The chart library uses a flexible data visualization system:
+The chart library uses a flexible data visualization system built around the `ChartData` interface:
 
 ```
 ┌─────────────┐
@@ -188,6 +188,11 @@ ChartData is an abstract class representing any data that can be displayed on th
 - Annotations (barriers)
 - Markers
 
+The `ChartData` interface defines the core contract for all visual elements that can be rendered on a chart. It provides methods for:
+- Data updates based on viewport changes
+- Min/max value calculation for Y-axis scaling
+- Custom painting on the canvas
+
 ### Series
 
 Series is the base class for all chart series, handling:
@@ -208,6 +213,17 @@ DataSeries extends Series to handle sequential data with:
 - **CandleSeries**: Displays candlestick charts from OHLC data
 - **OHLCSeries**: Displays OHLC charts from OHLC data
 - **Indicator Series**: Displays technical indicators
+
+### Rendering Process
+
+The data visualization system follows a 4-step rendering pipeline that is triggered whenever the viewport changes:
+
+1. **Viewport Changes**: User interactions trigger zoom or scroll events
+2. **Data Update**: Chart data objects update their visible data based on new viewport bounds
+3. **Y-Axis Calculation**: Overall min/max values are calculated for proper scaling
+4. **Painting**: Custom painters render all visual elements on the canvas
+
+For detailed information about how ChartData rendering works, including the complete rendering pipeline, coordinate mapping, and optimization techniques, see [Rendering Pipeline](rendering_pipeline.md).
 
 ## Painter System
 
