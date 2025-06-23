@@ -9,7 +9,6 @@ import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
-import '../../enums/drawing_tool_state.dart';
 import '../../helpers/types.dart';
 import '../../interactive_layer_states/interactive_adding_tool_state.dart';
 import '../drawing_adding_preview.dart';
