@@ -4,10 +4,12 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/paint_helpers.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/drawing_v2.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
+import '../../enums/drawing_tool_state.dart';
 import '../../helpers/types.dart';
 import '../../interactive_layer_states/interactive_adding_tool_state.dart';
 import '../drawing_adding_preview.dart';
@@ -42,9 +44,20 @@ class HorizontalLineAddingPreviewMobile
 
   @override
   bool hitTest(Offset offset, EpochToX epochToX, QuoteToY quoteToY) {
-    // TODO(NA): To be more accurate, implement a hitTest specific for preview
-    // instead of relying on its interactable drawing.
-    return interactableDrawing.hitTest(offset, epochToX, quoteToY);
+    if (interactableDrawing.startPoint == null) {
+      return false;
+    }
+    // Convert start and end points from epoch/quote to screen coordinates
+    final Offset startOffset = Offset(
+      epochToX(interactableDrawing.startPoint!.epoch),
+      quoteToY(interactableDrawing.startPoint!.quote),
+    );
+
+    // For horizontal line when we're adding it, we only need to check if the
+    // point is near the line's y-coordinate, because it shows the label during
+    // the whole process of adding the tool.
+    final double distance = (offset.dy - startOffset.dy).abs();
+    return distance <= hitTestMargin;
   }
 
   @override

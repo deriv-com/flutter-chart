@@ -80,12 +80,11 @@ class HorizontalLineInteractableDrawing
       return false;
     }
 
-    final isNotSelectedOrAdding = !(state.contains(DrawingToolState.selected) ||
-        state.contains(DrawingToolState.adding));
+    final isNotSelected = !state.contains(DrawingToolState.selected);
 
     final isOutsideContent = offset.dx > drawingContext.contentSize.width;
 
-    if (isNotSelectedOrAdding && isOutsideContent) {
+    if (isNotSelected && isOutsideContent) {
       return false;
     }
 
