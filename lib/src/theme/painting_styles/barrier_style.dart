@@ -51,6 +51,8 @@ class HorizontalBarrierStyle extends BarrierStyle {
     this.arrowSize = 5,
     this.hasArrow = true,
     this.hasLine = true,
+    this.labelShapeBackgroundColor = const Color(0xFF000000),
+    this.lineColor = const Color(0xFF000000),
     TextStyle textStyle = const TextStyle(
       fontSize: 10,
       height: 1.3,
@@ -102,8 +104,52 @@ class HorizontalBarrierStyle extends BarrierStyle {
   /// initial color.
   final Color secondaryBackgroundColor;
 
+  /// Background color of the label shape.
+  final Color labelShapeBackgroundColor;
+
+  /// Color of the line.
+  final Color lineColor;
+
+  /// Creates a copy of this object.
+  HorizontalBarrierStyle copyWith({
+    LabelShape? labelShape,
+    double? labelHeight,
+    double? labelPadding,
+    Color? color,
+    Color? titleBackgroundColor,
+    Color? secondaryBackgroundColor,
+    bool? isDashed,
+    bool? hasBlinkingDot,
+    Color? blinkingDotColor,
+    double? arrowSize,
+    bool? hasArrow,
+    bool? hasLine,
+    Color? labelShapeBackgroundColor,
+    Color? lineColor,
+  }) =>
+      HorizontalBarrierStyle(
+        labelShape: labelShape ?? this.labelShape,
+        labelHeight: labelHeight ?? this.labelHeight,
+        labelPadding: labelPadding ?? this.labelPadding,
+        color: color ?? this.color,
+        titleBackgroundColor: titleBackgroundColor ?? this.titleBackgroundColor,
+        secondaryBackgroundColor:
+            secondaryBackgroundColor ?? this.secondaryBackgroundColor,
+        isDashed: isDashed ?? this.isDashed,
+        hasBlinkingDot: hasBlinkingDot ?? this.hasBlinkingDot,
+        blinkingDotColor: blinkingDotColor ?? this.blinkingDotColor,
+        arrowSize: arrowSize ?? this.arrowSize,
+        hasArrow: hasArrow ?? this.hasArrow,
+        hasLine: hasLine ?? this.hasLine,
+        textStyle: textStyle.copyWith(),
+        labelShapeBackgroundColor:
+            labelShapeBackgroundColor ?? this.labelShapeBackgroundColor,
+        lineColor: lineColor ?? this.lineColor,
+      );
+
   @override
-  String toString() => '${super.toString()}, $hasBlinkingDot $labelShape';
+  String toString() =>
+      '${super.toString()}, $hasBlinkingDot $labelShape $labelShapeBackgroundColor $lineColor';
 }
 
 /// Vertical barrier style.

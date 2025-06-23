@@ -2,6 +2,9 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/functions/m
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_dot_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_highlight_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_variant.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -337,5 +340,92 @@ abstract class DataSeries<T extends Tick> extends Series {
 
   /// Each sub-class should implement and return appropriate cross-hair text
   /// based on its own requirements.
-  Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme);
+  Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme,
+      CrosshairVariant crosshairVariant);
+
+  /// Returns a CrosshairHighlightPainter for highlighting the element at the crosshair position.
+  /// Each series type should implement this to return the appropriate highlight painter.
+  ///
+  /// This method is responsible for creating a painter that will visually highlight
+  /// the data element (tick, candle, etc.) at the crosshair position. Different chart
+  /// types (line, candle, OHLC) will implement this differently to provide appropriate
+  /// visual feedback to the user about which data point they are examining.
+  ///
+  /// For candle-based charts, this typically involves drawing a highlighted version
+  /// of the candle with different colors or effects. For line charts, it might involve
+  /// drawing a dot or circle at the point.
+  ///
+  /// Parameters:
+  /// * [crosshairTick] - The tick data to highlight at the crosshair position.
+  /// * [quoteToY] - Function that converts a price quote to a Y-coordinate on the canvas.
+  /// * [xCenter] - The X-coordinate center position where the highlight should be drawn.
+  /// * [granularity] - The time granularity of the chart in seconds (e.g., 60 for 1-minute candles).
+  ///   This is used to calculate appropriate widths for elements like candles.
+  /// * [xFromEpoch] - Function that converts a timestamp (epoch) to an X-coordinate on the canvas.
+  ///   This is used in conjunction with granularity to determine element widths.
+  /// * [theme] - The chart theme containing colors and styles for the highlight.
+  ///
+  /// Returns:
+  /// A CrosshairHighlightPainter that will paint the highlighted element, or null if
+  /// no highlighting is needed for this series type.
+  CrosshairHighlightPainter getCrosshairHighlightPainter(
+    T crosshairTick,
+    double Function(double) quoteToY,
+    double xCenter,
+    int granularity,
+    double Function(int) xFromEpoch,
+    ChartTheme theme,
+  );
+
+  /// Returns a CrosshairDotPainter for painting a dot at the crosshair position.
+  /// Each series type should implement this to return the appropriate dot painter.
+  ///
+  /// This method is responsible for creating a painter that will draw a dot
+  /// at the crosshair position for chart types that support dot visualization.
+  /// Different chart types will implement this differently - some may return
+  /// a dot painter with visible colors, while others may return a dot painter
+  /// with transparent colors for no-op behavior.
+  ///
+  /// For line charts and similar types, this typically involves drawing a dot
+  /// at the crosshair position. For candle-based charts, this returns a
+  /// CrosshairDotPainter with transparent colors since they don't show dots.
+  ///
+  /// Parameters:
+  /// * [theme] - The chart theme containing colors and styling information.
+  ///
+  /// Returns:
+  /// A CrosshairDotPainter that will paint the dot (or transparent for no-op).
+  CrosshairDotPainter getCrosshairDotPainter(
+    ChartTheme theme,
+  );
+
+  /// Returns the height of the crosshair details box for this series type.
+  /// Each series type should implement this to return the appropriate height.
+  ///
+  /// This method is responsible for providing the height in pixels that the
+  /// crosshair details information box should have for this specific series type.
+  /// Different chart types require different amounts of space to display their
+  /// information - candle charts typically need more space to show OHLC data,
+  /// while line charts need less space for just price information.
+  ///
+  /// Returns:
+  /// The height in pixels for the crosshair details box.
+  double getCrosshairDetailsBoxHeight();
+
+  /// Creates a virtual tick for crosshair display when cursor is outside data range.
+  /// Each series type should implement this to return the appropriate tick type.
+  ///
+  /// This method is responsible for creating a virtual data point that represents
+  /// the cursor position when it's outside the actual data range. Different chart
+  /// types will create different types of ticks - line charts create simple Tick
+  /// objects, while candle charts create Candle objects with all OHLC values
+  /// set to the same quote value.
+  ///
+  /// Parameters:
+  /// * [epoch] - The timestamp for the virtual tick.
+  /// * [quote] - The price/quote value for the virtual tick.
+  ///
+  /// Returns:
+  /// A virtual tick of the appropriate type for this series.
+  T createVirtualTick(int epoch, double quote);
 }

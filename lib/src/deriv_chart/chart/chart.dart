@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/mobile_chart_frame_dividers.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_variant.dart';
 import 'package:deriv_chart/src/theme/dimens.dart';
 import 'package:flutter/foundation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
@@ -21,6 +22,7 @@ import '../../misc/chart_controller.dart';
 import '../../models/tick.dart';
 import '../../theme/chart_default_dark_theme.dart';
 import '../../theme/chart_theme.dart';
+import '../interactive_layer/interactive_layer_behaviours/interactive_layer_behaviour.dart';
 import 'bottom_chart.dart';
 import 'bottom_chart_mobile.dart';
 import 'data_visualization/annotations/chart_annotation.dart';
@@ -43,6 +45,8 @@ class Chart extends StatefulWidget {
   const Chart({
     required this.mainSeries,
     required this.granularity,
+    required this.crosshairVariant,
+    this.interactiveLayerBehaviour,
     this.drawingTools,
     this.pipSize = 4,
     this.controller,
@@ -74,8 +78,12 @@ class Chart extends StatefulWidget {
     this.showDataFitButton,
     this.showScrollToLastTickButton,
     this.loadingAnimationColor,
+    this.useDrawingToolsV2 = false,
     Key? key,
   }) : super(key: key);
+
+  /// Whether to use new drawing tools or not.
+  final bool useDrawingToolsV2;
 
   /// Chart's main data series.
   final DataSeries<Tick> mainSeries;
@@ -184,6 +192,15 @@ class Chart extends StatefulWidget {
 
   /// Chart's indicators
   final Repository<IndicatorConfig>? indicatorsRepo;
+
+  /// The variant of the crosshair to be used.
+  /// This is used to determine the type of crosshair to display.
+  /// The default is [CrosshairVariant.smallScreen].
+  /// [CrosshairVariant.largeScreen] is mostly for web.
+  final CrosshairVariant crosshairVariant;
+
+  /// The interactive layer behaviour.
+  final InteractiveLayerBehaviour? interactiveLayerBehaviour;
 
   @override
   State<StatefulWidget> createState() =>
@@ -305,7 +322,7 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
         Provider<ChartScaleModel>.value(value: _chartScaleModel),
       ],
       child: Ink(
-        color: _chartTheme.base08Color,
+        color: _chartTheme.backgroundColor,
         child: GestureManager(
           child: XAxisWrapper(
             maxEpoch: chartDataList.getMaxEpoch(),

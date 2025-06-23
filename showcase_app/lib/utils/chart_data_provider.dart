@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'dart:math';
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:flutter/material.dart';
 
 /// Utility class for generating sample chart data.
 class ChartDataProvider {
@@ -62,7 +61,10 @@ class ChartDataProvider {
   }
 
   /// Generate sample barriers.
-  static List<ChartAnnotation<ChartObject>> generateBarriers(List<Tick> ticks) {
+  static List<ChartAnnotation<ChartObject>> generateBarriers(
+    List<Tick> ticks, {
+    ChartTheme? theme,
+  }) {
     if (ticks.isEmpty) {
       return [];
     }
@@ -89,18 +91,15 @@ class ChartDataProvider {
         ticks[ticks.length ~/ 2],
         title: 'Mid-point',
         style: const VerticalBarrierStyle(
-          color: Color(0xFFFF6444),
+          color: BrandColors.orange,
         ),
       ),
 
       // Tick indicator at the last tick
       TickIndicator(
         lastTick,
-        style: const HorizontalBarrierStyle(
-          color: Color(0xFFFF6444),
-          labelShape: LabelShape.pentagon,
-          hasBlinkingDot: true,
-          hasArrow: false,
+        style: theme?.currentSpotStyle.copyWith(
+          color: BrandColors.orange,
         ),
         visibility: HorizontalBarrierVisibility.keepBarrierLabelVisible,
       ),

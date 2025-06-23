@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 /// This include all text styles according to Deriv theme guideline.
 class TextStyles {
   static const String appFontFamily = 'IBMPlexSans';
+  static const String fontFamilyDeriv = 'Inter';
 
   static const TextStyle display1 = TextStyle(
     fontFamily: appFontFamily,
@@ -97,5 +98,101 @@ class TextStyles {
     height: 1.4,
     fontWeight: FontWeight.w400,
     fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
+  );
+
+  static const TextStyle gridTextStyle = TextStyle(
+    fontFeatures: <FontFeature>[
+      FontFeature.liningFigures(),
+      FontFeature.tabularFigures(),
+    ],
+    fontFamily: fontFamilyDeriv,
+    fontSize: 10,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w400,
+    height: 2, // lineHeight (20px) / fontSize (10px) = 2
+  );
+
+  static const TextStyle currentSpotTextStyle = TextStyle(
+    fontFeatures: <FontFeature>[
+      FontFeature.liningFigures(),
+      FontFeature.tabularFigures(),
+    ],
+    fontFamily: fontFamilyDeriv,
+    fontSize: 12,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w600,
+    height: 1.67, // lineHeight (20px) / fontSize (12px) = ~1.67
+  );
+
+  static const TextStyle crosshairInformationBoxTitleStyle = TextStyle(
+    fontFeatures: <FontFeature>[
+      FontFeature.liningFigures(),
+      FontFeature.tabularFigures(),
+      FontFeature.proportionalFigures(),
+    ],
+
+    fontFamily: fontFamilyDeriv,
+
+    fontSize: 10,
+
+    fontStyle: FontStyle.normal,
+
+    fontWeight: FontWeight.w600,
+
+    height: 2, // lineHeight (20px) / fontSize (10px) = 2
+  );
+
+  static const TextStyle crosshairInformationBoxQuoteStyle = TextStyle(
+    fontFeatures: <FontFeature>[
+      FontFeature.liningFigures(),
+      FontFeature.tabularFigures(),
+      FontFeature.proportionalFigures(),
+    ],
+
+    fontFamily: fontFamilyDeriv,
+
+    fontSize: 12,
+
+    fontStyle: FontStyle.normal,
+
+    fontWeight: FontWeight.w400,
+
+    height: 1.67, // lineHeight (20px) / fontSize (12px) = ~1.67
+  );
+
+  static const TextStyle crosshairInformationBoxTimeLabelStyle = TextStyle(
+    fontFeatures: <FontFeature>[
+      FontFeature.liningFigures(),
+      FontFeature.tabularFigures(),
+      FontFeature.proportionalFigures(),
+    ],
+
+    fontFamily: fontFamilyDeriv,
+
+    fontSize: 10,
+
+    fontStyle: FontStyle.normal,
+
+    fontWeight: FontWeight.w400,
+
+    height: 2, // lineHeight (20px) / fontSize (10px) = 2
+  );
+
+  static const TextStyle crosshairAxisLabelStyle = TextStyle(
+    fontFeatures: <FontFeature>[
+      FontFeature.liningFigures(),
+      FontFeature.tabularFigures(),
+      FontFeature.proportionalFigures(),
+    ],
+
+    fontFamily: fontFamilyDeriv,
+
+    fontSize: 12,
+
+    fontStyle: FontStyle.normal,
+
+    fontWeight: FontWeight.w400,
+
+    height: 1.67, // lineHeight (20px) / fontSize (12px) = ~1.67
   );
 }

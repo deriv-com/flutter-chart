@@ -212,7 +212,7 @@ class XAxisState extends State<XAxisBase> with TickerProviderStateMixin {
                           ? yAxisLabelsAreaWidth
                           : 100,
                       height: _chartTheme.gridStyle.xLabelsAreaHeight,
-                      color: _chartTheme.base08Color,
+                      color: _chartTheme.backgroundColor,
                     ))
               ],
             );

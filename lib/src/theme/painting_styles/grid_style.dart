@@ -5,20 +5,20 @@ import 'package:flutter/material.dart';
 class GridStyle with EquatableMixin {
   /// Initializes a style for defining the style of the chart's grid.
   const GridStyle({
-    this.gridLineColor = const Color(0xFF151717),
+    this.gridLineColor = const Color(0x0A181C25),
     this.gridLineHighlightColor = const Color(0xFF262A2A),
     this.xLabelStyle = const TextStyle(
       fontSize: 10,
-      height: 1.3,
+      height: 2,
       fontWeight: FontWeight.normal,
-      color: Color(0xFFC2C2C2),
+      color: Color(0x3D181C25),
       fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
     ),
     this.yLabelStyle = const TextStyle(
       fontSize: 10,
-      height: 1.3,
+      height: 2,
       fontWeight: FontWeight.normal,
-      color: Colors.white,
+      color: Color(0x3D181C25),
       shadows: <Shadow>[
         Shadow(blurRadius: 4),
       ],

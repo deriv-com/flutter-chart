@@ -1,5 +1,114 @@
 # Drawing Tools
 
+## Setup Guide
+
+### Setting Up Drawing Tools
+
+The Deriv Chart library provides two implementations of drawing tools:
+
+1. **Legacy Drawing Tools** (Original Implementation)
+2. **Interactive Layer Drawing Tools** (New Implementation with V2)
+
+#### Comparing the Two Implementations
+
+| Feature | Legacy Drawing Tools | Interactive Layer (V2) |
+|---------|---------------------|------------------------|
+| Platform Optimization | Generic implementation | Specialized behaviors for desktop and mobile |
+| State Management | Basic state | Comprehensive state pattern with clear transitions |
+| Visual Feedback | Limited | Enhanced visual cues and animations |
+| Customization | Limited | Extensive customization through behaviors |
+| Architecture | Widget-based | Component-based with clear separation of concerns |
+| Hover Support | Limited | Full hover state support (on desktop) |
+| Touch Optimization | Basic | Enhanced touch targets and gestures for mobile |
+
+#### Required Imports
+
+For both implementations, you'll need to import the appropriate packages:
+
+```dart
+// For both implementations
+import 'package:deriv_chart/deriv_chart.dart';
+```
+
+#### Legacy Drawing Tools Setup
+
+To use the original drawing tools implementation:
+
+```dart
+import 'package:deriv_chart/deriv_chart.dart';
+
+// In your widget build method
+Chart(
+  mainSeries: yourDataSeries,
+  granularity: yourGranularity,
+  drawingTools: DrawingTools(), // Initialize the drawing tools
+  useDrawingToolsV2: false, // Set to false to use legacy implementation
+  // other chart parameters...
+)
+```
+
+#### Interactive Layer Drawing Tools Setup (V2)
+
+The new implementation provides improved behavior, more control over platform-specific interactions, and better visual hints for users:
+
+```dart
+import 'package:deriv_chart/deriv_chart.dart';
+
+// In your widget build method
+Chart(
+  mainSeries: yourDataSeries,
+  granularity: yourGranularity,
+  useDrawingToolsV2: true, // Enable the new drawing tools implementation
+  interactiveLayerBehaviour: InteractiveLayerDesktopBehaviour(), // For desktop platforms
+  // other chart parameters...
+)
+```
+
+For mobile applications:
+
+```dart
+import 'package:deriv_chart/deriv_chart.dart';
+
+// In your widget build method
+Chart(
+  mainSeries: yourDataSeries,
+  granularity: yourGranularity,
+  useDrawingToolsV2: true,
+  interactiveLayerBehaviour: InteractiveLayerMobileBehaviour(), // Optimized for touch interactions
+  // other chart parameters...
+)
+```
+
+If you don't specify an `interactiveLayerBehaviour`, the chart will use `InteractiveLayerDesktopBehaviour` on web and `InteractiveLayerMobileBehaviour` on other platforms.
+
+
+#### Custom Interactive Layer Behavior
+
+You can create custom implementations of `InteractiveLayerBehaviour` to tailor the drawing tools experience to your specific needs:
+
+```dart
+import 'package:deriv_chart/deriv_chart.dart';
+
+class CustomInteractiveLayerBehaviour extends InteractiveLayerBehaviour {
+  // Override to customize behavior
+}
+
+// In your widget build method
+Chart(
+  mainSeries: yourDataSeries,
+  granularity: yourGranularity,
+  useDrawingToolsV2: true,
+  interactiveLayerBehaviour: CustomInteractiveLayerBehaviour(),
+  // other chart parameters...
+)
+```
+
+## Implementation Details
+
+### Legacy Drawing Tools Implementation
+
+The following sections describe the implementation details of the legacy drawing tools system. If you're using the new V2 implementation with `useDrawingToolsV2: true`, please refer to the [Interactive Layer documentation](interactive_layer.md) for detailed information about its architecture and components.
+
 The process initiates by opening the drawing tools dialog and selecting a preferred drawing tool. Subsequently, the user can add specific taps on the Deriv chart to start drawing with default configurations.
 
 The GestureDetector on the Deriv chart, utilized by the `drawingCreator` captures user input. Within the `onTap` method, every captured input will be added to the list of edgePoints. Simultaneously, the `drawingParts` list is created to store the drawing parts. Both lists are then passed to the `onAddDrawing` callback, which adds the complete drawing to the drawing repository and saves it in shared preferences based on the active Symbol, so the drawing data can be retrieved based on the chart's symbol.

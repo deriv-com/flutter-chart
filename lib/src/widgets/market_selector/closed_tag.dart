@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,13 +15,13 @@ class ClosedTag extends StatelessWidget {
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(4)),
-        border: Border.all(color: theme.accentRedColor, width: 0.8),
+        border: Border.all(color: LegacyLightThemeColors.accentRed, width: 0.8),
       ),
       child: Text(
         'CLOSED',
         style: theme.textStyle(
           textStyle: theme.caption2,
-          color: theme.accentRedColor,
+          color: LegacyLightThemeColors.accentRed,
         ),
       ),
     );

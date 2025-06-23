@@ -41,6 +41,7 @@ export 'src/add_ons/indicators_ui/stochastic_oscillator_indicator/stochastic_osc
 export 'src/add_ons/indicators_ui/williams_r/williams_r_indicator_config.dart';
 export 'src/add_ons/indicators_ui/zigzag_indicator/zigzag_indicator_config.dart';
 export 'src/add_ons/repository.dart';
+export 'src/deriv_chart/interactive_layer/interactive_layer_export.dart';
 export 'src/deriv_chart/chart/chart.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_active_contract.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_closed_indicator.dart';
@@ -154,3 +155,6 @@ export 'src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_props.dart';
 export 'src/theme/colors.dart';
 export 'src/add_ons/drawing_tools_ui/drawing_tools_dialog.dart';
+export 'src/deriv_chart/interactive_layer/crosshair/crosshair_variant.dart';
+export 'src/deriv_chart/interactive_layer/crosshair/crosshair_candle_highlight_painter.dart';
+export 'src/deriv_chart/interactive_layer/crosshair/crosshair_dot_painter.dart';

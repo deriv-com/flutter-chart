@@ -151,7 +151,7 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
         paintEndMarker(canvas, theme, anchor - Offset(1, 20 * zoom + 5),
             style.backgroundColor, zoom);
 
-        final Color fontColor = theme.base08Color;
+        final Color fontColor = theme.backgroundColor;
         _drawTick(canvas, marker, anchor, style, paint, fontColor, zoom);
         break;
       case MarkerType.tick:
@@ -252,7 +252,7 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
         color: style.backgroundColor.withOpacity(opacity),
         fontSize: style.activeMarkerText.fontSize! * zoom,
         fontWeight: FontWeight.bold,
-        backgroundColor: theme.base08Color.withOpacity(opacity),
+        backgroundColor: theme.backgroundColor.withOpacity(opacity),
       );
 
       final TextPainter textPainter = makeTextPainter(marker.text!, textStyle);

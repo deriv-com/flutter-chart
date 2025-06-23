@@ -5,7 +5,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/interactable_drawing.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/drawing_context.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/types.dart';
 import 'package:flutter/material.dart';
 
 /// Drawing tools config
@@ -13,7 +14,7 @@ import 'package:flutter/material.dart';
 abstract class DrawingToolConfig extends AddOnConfig {
   /// Initializes
   const DrawingToolConfig({
-    required this.configId,
+    required super.configId,
     required this.drawingData,
     // TODO(Bahar-Deriv): Move edgePoints to drawingData.
     required this.edgePoints,
@@ -62,9 +63,6 @@ abstract class DrawingToolConfig extends AddOnConfig {
   /// Drawing tool edge points.
   final List<EdgePoint> edgePoints;
 
-  /// Drawing tool config id.
-  final String? configId;
-
   /// Key of drawing tool name property in JSON.
   static const String nameKey = 'name';
 
@@ -72,7 +70,13 @@ abstract class DrawingToolConfig extends AddOnConfig {
   static String configIdKey = 'configId';
 
   /// Returns back the [InteractableDrawing] instance of this drawing tool.
-  InteractableDrawing getInteractableDrawing() {
+  ///
+  /// [getDrawingState] is a callback that returns the current state of a
+  /// [InteractableDrawing].
+  InteractableDrawing getInteractableDrawing(
+    DrawingContext drawingContext,
+    GetDrawingState getDrawingState,
+  ) {
     throw UnimplementedError('getInteractableDrawing() is not implemented.');
   }
 

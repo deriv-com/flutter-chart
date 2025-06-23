@@ -354,13 +354,14 @@ class _FullscreenChartState extends State<FullscreenChart> {
           return CandleSeries(ticks as List<Candle>);
       }
     }
-    return LineSeries(ticks, style: const LineStyle(hasArea: true))
-        as DataSeries<Tick>;
+    return LineSeries(
+      ticks,
+    ) as DataSeries<Tick>;
   }
 
   @override
   Widget build(BuildContext context) => Material(
-        color: const Color(0xFF0E0E0E),
+        color: DarkThemeColors.backgroundDynamicHighest,
         child: Column(
           children: <Widget>[
             Padding(
@@ -395,10 +396,19 @@ class _FullscreenChartState extends State<FullscreenChart> {
                               TickIndicator(
                                 ticks.last,
                                 style: const HorizontalBarrierStyle(
-                                  color: Colors.redAccent,
+                                  color: DarkThemeColors.currentSpotDotColor,
                                   labelShape: LabelShape.pentagon,
                                   hasBlinkingDot: true,
                                   hasArrow: false,
+                                  lineColor:
+                                      DarkThemeColors.currentSpotLineColor,
+                                  isDashed: false,
+                                  labelShapeBackgroundColor:
+                                      DarkThemeColors.currentSpotContainerColor,
+                                  textStyle: TextStyle(
+                                    color: DarkThemeColors.currentSpotTextColor,
+                                    fontSize: 10,
+                                  ),
                                 ),
                                 visibility: HorizontalBarrierVisibility
                                     .keepBarrierLabelVisible,
@@ -423,6 +433,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           _loadHistory(500);
                         }
                       },
+                      useDrawingToolsV2: true,
                     ),
                   ),
                   // ignore: unnecessary_null_comparison

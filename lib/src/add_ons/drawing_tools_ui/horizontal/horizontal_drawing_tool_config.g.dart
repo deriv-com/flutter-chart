@@ -20,6 +20,10 @@ HorizontalDrawingToolConfig _$HorizontalDrawingToolConfigFromJson(
       lineStyle: json['lineStyle'] == null
           ? const LineStyle(thickness: 0.9, color: Colors.white)
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+      labelStyle: json['labelStyle'] == null
+          ? TextStyles.currentSpotTextStyle
+          : const TextStyleJsonConverter()
+              .fromJson(json['labelStyle'] as Map<String, dynamic>),
       pattern: $enumDecodeNullable(_$DrawingPatternsEnumMap, json['pattern']) ??
           DrawingPatterns.solid,
       enableLabel: json['enableLabel'] as bool? ?? true,
@@ -34,6 +38,7 @@ Map<String, dynamic> _$HorizontalDrawingToolConfigToJson(
       'edgePoints': instance.edgePoints,
       'configId': instance.configId,
       'lineStyle': instance.lineStyle,
+      'labelStyle': const TextStyleJsonConverter().toJson(instance.labelStyle),
       'pattern': _$DrawingPatternsEnumMap[instance.pattern]!,
       'enableLabel': instance.enableLabel,
     };

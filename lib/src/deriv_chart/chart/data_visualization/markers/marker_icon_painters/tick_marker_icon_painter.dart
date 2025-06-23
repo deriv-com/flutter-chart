@@ -283,7 +283,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   void _drawEntryPoint(Canvas canvas, ChartTheme theme, Offset anchor,
       Color color, double zoom, double opacity) {
     final Paint paint = Paint()
-      ..color = theme.base08Color.withOpacity(opacity)
+      ..color = theme.backgroundColor.withOpacity(opacity)
       ..style = PaintingStyle.fill;
     final double radius = 3 * zoom;
     canvas.drawCircle(
@@ -339,7 +339,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
         color: (marker.color ?? style.backgroundColor).withOpacity(opacity),
         fontSize: style.activeMarkerText.fontSize! * zoom,
         fontWeight: FontWeight.bold,
-        backgroundColor: theme.base08Color.withOpacity(opacity),
+        backgroundColor: theme.backgroundColor.withOpacity(opacity),
       );
 
       final TextPainter textPainter = makeTextPainter(marker.text!, textStyle);

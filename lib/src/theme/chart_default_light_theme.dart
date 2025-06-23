@@ -1,3 +1,6 @@
+import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:deriv_chart/src/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -8,41 +11,130 @@ import 'colors.dart';
 /// light theme-related colors and styles for the chart package.
 class ChartDefaultLightTheme extends ChartDefaultTheme {
   @override
-  Color get accentRedColor => LightThemeColors.accentRed;
+  Color get backgroundColor => LightThemeColors.backgroundDynamicHighest;
 
   @override
-  Color get accentGreenColor => LightThemeColors.accentGreen;
+  Color get areaLineColor => LightThemeColors.areaLineColor;
 
   @override
-  Color get accentYellowColor => LightThemeColors.accentYellow;
+  Color get areaGradientStart => LightThemeColors.areaGradientStart;
 
   @override
-  Color get base01Color => LightThemeColors.base01;
+  Color get areaGradientEnd => LightThemeColors.areaGradientEnd;
 
   @override
-  Color get base02Color => LightThemeColors.base02;
+  Color get gridLineColor => LightThemeColors.gridLineColor;
 
   @override
-  Color get base03Color => LightThemeColors.base03;
+  Color get currentSpotContainerColor =>
+      LightThemeColors.currentSpotContainerColor;
 
   @override
-  Color get base04Color => LightThemeColors.base04;
+  Color get currentSpotTextColor => LightThemeColors.currentSpotTextColor;
 
   @override
-  Color get base05Color => LightThemeColors.base05;
+  Color get currentSpotLineColor => LightThemeColors.currentSpotLineColor;
 
   @override
-  Color get base06Color => LightThemeColors.base06;
+  Color get crosshairInformationBoxContainerGlassColor =>
+      LightThemeColors.crosshairInformationBoxContainerGlassColor;
 
   @override
-  Color get base07Color => LightThemeColors.base07;
+  Color get crosshairInformationBoxContainerNormalColor =>
+      LightThemeColors.crosshairInformationBoxContainerNormalColor;
 
   @override
-  Color get base08Color => LightThemeColors.base08;
+  Color get crosshairInformationBoxTextDefault =>
+      LightThemeColors.crosshairInformationBoxTextDefault;
 
   @override
-  Color get hoverColor => LightThemeColors.hover;
+  Color get crosshairInformationBoxTextLoss =>
+      LightThemeColors.crosshairInformationBoxTextLoss;
+
+  @override
+  Color get crosshairInformationBoxTextProfit =>
+      LightThemeColors.crosshairInformationBoxTextProfit;
+
+  @override
+  Color get crosshairInformationBoxTextStatic =>
+      LightThemeColors.crosshairInformationBoxTextStatic;
+
+  @override
+  Color get crosshairInformationBoxTextSubtle =>
+      LightThemeColors.crosshairInformationBoxTextSubtle;
+
+  @override
+  Color get crosshairLineDesktopColor =>
+      LightThemeColors.crosshairLineDesktopColor;
+
+  @override
+  Color get crosshairLineResponsiveLowerLineGradientEnd =>
+      LightThemeColors.crosshairLineResponsiveLowerLineGradientEnd;
+
+  @override
+  Color get crosshairLineResponsiveLowerLineGradientStart =>
+      LightThemeColors.crosshairLineResponsiveLowerLineGradientStart;
+
+  @override
+  Color get crosshairLineResponsiveUpperLineGradientEnd =>
+      LightThemeColors.crosshairLineResponsiveUpperLineGradientEnd;
+
+  @override
+  Color get crosshairLineResponsiveUpperLineGradientStart =>
+      LightThemeColors.crosshairLineResponsiveUpperLineGradientStart;
+
+  @override
+  Color get currentSpotDotColor => LightThemeColors.currentSpotDotColor;
+
+  @override
+  Color get currentSpotDotEffect => LightThemeColors.currentSpotDotEffect;
+
+  @override
+  Color get gridTextColor => LightThemeColors.gridTextColor;
+
+  @override
+  GridStyle get gridStyle => GridStyle(
+        gridLineColor: gridLineColor,
+        xLabelStyle: textStyle(textStyle: gridTextStyle, color: gridTextColor),
+        yLabelStyle: textStyle(textStyle: gridTextStyle, color: gridTextColor),
+      );
+
+  @override
+  LineStyle get lineStyle => LineStyle(
+        color: areaLineColor,
+        hasArea: true,
+        areaGradientColors: (
+          start: areaGradientStart,
+          end: areaGradientEnd,
+        ),
+        thickness: areaLineThickness,
+      );
+
+  @override
+  HorizontalBarrierStyle get currentSpotStyle => HorizontalBarrierStyle(
+      color: currentSpotContainerColor,
+      textStyle: textStyle(
+          textStyle: currentSpotTextStyle, color: currentSpotTextColor),
+      isDashed: false,
+      labelShapeBackgroundColor: currentSpotContainerColor,
+      lineColor: currentSpotLineColor,
+      blinkingDotColor: currentSpotDotColor);
 
   @override
   TextStyle get overLine => TextStyles.overLine;
+
+  @override
+  Color get base01Color => LegacyLightThemeColors.base01;
+
+  @override
+  Color get base03Color => LegacyLightThemeColors.base03;
+
+  @override
+  Color get base04Color => LegacyLightThemeColors.base04;
+
+  @override
+  Color get base05Color => LegacyLightThemeColors.base05;
+
+  @override
+  Color get base07Color => LegacyLightThemeColors.base07;
 }

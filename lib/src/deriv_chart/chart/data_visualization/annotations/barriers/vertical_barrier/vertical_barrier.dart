@@ -49,6 +49,14 @@ class VerticalBarrier extends Barrier {
   @override
   BarrierObject createObject() => VerticalBarrierObject(epoch!, quote: quote);
 
+  // Force repaint to ensure vertical barrier gets cleared when out of range.
+  // Safe since onPaint() in [VerticalBarrierPainter] checks
+  // series.isOnRange before drawing.
+  @override
+  bool shouldRepaint(covariant Barrier previous) {
+    return true;
+  }
+
   @override
   List<double> recalculateMinMax() =>
       isOnRange ? super.recalculateMinMax() : <double>[double.nan, double.nan];

@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:deriv_chart/src/deriv_chart/chart/mobile_chart_frame_dividers.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/colors.dart';
 import 'package:deriv_chart/src/theme/dimens.dart';
 import 'package:deriv_chart/src/theme/text_styles.dart';
 import 'package:deriv_chart/src/widgets/bottom_indicator_title.dart';
@@ -110,7 +113,7 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
   Widget _buildChartFrame(BuildContext context) => Container(
         constraints: const BoxConstraints.expand(),
         child: MobileChartFrameDividers(
-          color: context.read<ChartTheme>().hoverColor,
+          color: LegacyLightThemeColors.hover,
           rightPadding: (context.read<XAxisModel>().rightPadding ?? 0) +
               context.read<ChartTheme>().gridStyle.labelHorizontalPadding,
           sides: const ChartFrameSides(right: true),
@@ -126,10 +129,10 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
         onSwap: widget.onSwap,
       );
 
-  Widget _buildDivider() => Divider(
+  Widget _buildDivider() => const Divider(
         height: 0.5,
         thickness: 1,
-        color: theme.hoverColor,
+        color: LegacyLightThemeColors.hover,
       );
 
   Widget _buildCollapsedBottomChart(BuildContext context) => Container(
@@ -187,29 +190,37 @@ class IndicatorLabelMobile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ChartTheme theme = context.read<ChartTheme>();
-    return Container(
-      padding: const EdgeInsets.all(Dimens.margin04),
-      decoration: BoxDecoration(
-        color: theme.hoverColor,
-        borderRadius: BorderRadius.circular(Dimens.margin04),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          // Different styling for mobile version.
-          BottomIndicatorTitle(
-            title,
-            theme.textStyle(
-              color: theme.base01Color,
-              textStyle: theme.textStyle(
-                textStyle: TextStyles.caption,
-                color: theme.base01Color,
-              ),
-            ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(Dimens.margin04),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+            sigmaX: theme.crosshairInformationBoxContainerGlassBackgroundBlur,
+            sigmaY: theme.crosshairInformationBoxContainerGlassBackgroundBlur),
+        child: Container(
+          padding: const EdgeInsets.all(Dimens.margin04),
+          decoration: BoxDecoration(
+            color: theme.crosshairInformationBoxContainerGlassColor,
+            borderRadius: BorderRadius.circular(Dimens.margin04),
           ),
-          const SizedBox(width: Dimens.margin08),
-          _buildIcons(context),
-        ],
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              // Different styling for mobile version.
+              BottomIndicatorTitle(
+                title,
+                theme.textStyle(
+                  color: theme.base01Color,
+                  textStyle: theme.textStyle(
+                    textStyle: TextStyles.caption,
+                    color: theme.base01Color,
+                  ),
+                ),
+              ),
+              const SizedBox(width: Dimens.margin08),
+              _buildIcons(context),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -256,13 +267,15 @@ class IndicatorLabelMobile extends StatelessWidget {
           color: Colors.transparent,
           clipBehavior: Clip.antiAlias,
           child: IconButton(
+            style: IconButton.styleFrom(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap),
             icon: Icon(
               iconData,
               size: 16,
               color: context.read<ChartTheme>().base01Color,
             ),
             onPressed: onPressed,
-            padding: EdgeInsets.zero,
+            padding: const EdgeInsets.all(Dimens.margin04),
             constraints: const BoxConstraints(),
           ),
         ),

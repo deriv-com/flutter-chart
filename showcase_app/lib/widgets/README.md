@@ -80,9 +80,9 @@ A utility class for color-related operations.
 final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
 final themeColors = ColorUtils.getThemeColors(isDarkTheme);
 
-// Get positive/negative color presets
-final positiveColors = ColorUtils.getPositiveColors();
-final negativeColors = ColorUtils.getNegativeColors();
+// Get bullish/bearish color presets
+final bullishColors = ColorUtils.getBullishColors();
+final bearishColors = ColorUtils.getBearishColors();
 
 // Check contrast for accessibility
 final contrastInfo = ColorUtils.checkContrast(foregroundColor, backgroundColor);
@@ -96,7 +96,7 @@ final colorName = ColorUtils.getColorName(myColor);
 
 The color picker widgets are designed to work seamlessly with the chart theme system. They can be used to customize various aspects of the chart appearance, such as:
 
-- Positive/negative candle colors
+- Bullish/bearish candle colors
 - Grid colors
 - Background colors
 - Line colors
@@ -106,19 +106,19 @@ Example:
 
 ```dart
 DerivColorPicker(
-  label: 'Positive Color:',
-  selectedColor: _positiveColor,
+  label: 'Bullish Color:',
+  selectedColor: _bullishColor,
   onColorChanged: (color) {
     setState(() {
-      _positiveColor = color;
+      _bullishColor = color;
       
       // Update the chart theme
       _chartTheme = CustomDarkTheme(
-        customPositiveColor: _positiveColor,
+        customBullishColor: _bullishColor,
         // other properties...
       );
     });
   },
-  // Use predefined positive color presets
-  presetColors: ColorUtils.getPositiveColors(),
+  // Use predefined bullish color presets
+  presetColors: ColorUtils.getBullishColors(),
 )

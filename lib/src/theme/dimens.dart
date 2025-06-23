@@ -1,3 +1,5 @@
+import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
+
 /// This class includes dimensions according to Deriv design guidelines.
 ///
 /// More dimens values can be added here following the convention margin_x
@@ -33,4 +35,17 @@ class Dimens {
 
   /// Border radius x-large.
   static const double borderRadius24 = 24;
+
+  /// 1.5 rem (Value: 24)
+  static const double crosshairInformationBoxContainerGlassBackgroundBlur =
+      CoreDesignTokens.coreSize1200;
+
+  /// Default area line thickness 1
+  static const double areaLineDefaultThickness = 1;
+
+  /// Medium area line thickness 1.5
+  static const double areaLineMediumThickness = 1.5;
+
+  /// Large area line thickness 2
+  static const double areaLineLargeThickness = 2;
 }

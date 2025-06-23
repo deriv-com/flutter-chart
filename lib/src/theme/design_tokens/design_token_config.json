@@ -1,0 +1,43 @@
+{
+  "tokenCategories": {
+    "core": {
+      "outputPath": "lib/src/theme/design_tokens/core_design_tokens.dart",
+      "className": "CoreDesignTokens",
+      "tokenNames": [
+        "core/border",
+        "core/color/solid",
+        "core/color/opacity",
+        "core/color/gradients",
+        "core/boxShadow",
+        "core/opacity",
+        "core/spacing",
+        "core/typography",
+        "core/motion",
+        "core/sizing",
+        "semantic/global",
+        "semantic/viewPort/default"
+      ]
+    },
+    "light": {
+      "outputPath": "lib/src/theme/design_tokens/light_theme_design_tokens.dart",
+      "className": "LightThemeDesignTokens",
+      "tokenNames": [
+        "semantic/theme/light"
+      ]
+    },
+    "dark": {
+      "outputPath": "lib/src/theme/design_tokens/dark_theme_design_tokens.dart",
+      "className": "DarkThemeDesignTokens",
+      "tokenNames": [
+        "semantic/theme/dark"
+      ]
+    },
+    "component": {
+      "outputPath": "lib/src/theme/design_tokens/component_design_tokens.dart",
+      "className": "ComponentDesignTokens",
+      "tokenNames": [
+        "component/component"
+      ]
+    }
+  }
+}

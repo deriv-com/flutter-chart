@@ -90,6 +90,7 @@ class DraggableEdgePoint extends EdgePoint {
       );
 
   /// Creates a copy of this object.
+  @override
   DraggableEdgePoint copyWith({
     int? epoch,
     double? quote,

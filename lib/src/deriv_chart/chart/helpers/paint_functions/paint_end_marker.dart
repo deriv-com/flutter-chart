@@ -36,7 +36,7 @@ void paintEndMarker(
 
   final Paint paint = Paint()
     ..style = PaintingStyle.fill
-    ..color = theme.base08Color.withOpacity(1);
+    ..color = theme.backgroundColor.withOpacity(1);
 
   // This path defines a simple rectangle that serves as the background for the flag and was generated with http://demo.qunee.com/svg2canvas/.
   final Path path = Path()

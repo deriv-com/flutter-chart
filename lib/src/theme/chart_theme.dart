@@ -10,37 +10,90 @@ import 'package:flutter/material.dart';
 /// Any app which wants to define the chart's theme should pass an
 /// implementation of this interface.
 abstract class ChartTheme {
+  Color get backgroundColor;
+
+  GridStyle get gridStyle;
+
+  TextStyle get currentSpotTextStyle;
+
+  Color get gridLineColor;
+
+  Color get gridTextColor;
+
+  TextStyle get gridTextStyle;
+
+  Color get areaLineColor;
+
+  double get areaLineThickness;
+
+  Color get areaGradientStart;
+
+  Color get areaGradientEnd;
+
+  Color get candleBullishBodyDefault;
+
+  Color get candleBullishBodyActive;
+
+  Color get candleBullishWickDefault;
+
+  Color get candleBullishWickActive;
+
+  Color get candleBearishBodyDefault;
+
+  Color get candleBearishBodyActive;
+
+  Color get candleBearishWickDefault;
+
+  Color get candleBearishWickActive;
+
+  Color get currentSpotContainerColor;
+
+  Color get currentSpotDotColor;
+
+  Color get currentSpotDotEffect;
+
+  Color get currentSpotLineColor;
+
+  Color get currentSpotTextColor;
+
+  Color get crosshairLineDesktopColor;
+
+  Color get crosshairLineResponsiveUpperLineGradientStart;
+
+  Color get crosshairLineResponsiveUpperLineGradientEnd;
+
+  Color get crosshairLineResponsiveLowerLineGradientStart;
+
+  Color get crosshairLineResponsiveLowerLineGradientEnd;
+
+  Color get crosshairInformationBoxTextDefault;
+
+  Color get crosshairInformationBoxTextSubtle;
+
+  Color get crosshairInformationBoxTextStatic;
+
+  Color get crosshairInformationBoxTextProfit;
+
+  Color get crosshairInformationBoxTextLoss;
+
+  Color get crosshairInformationBoxContainerNormalColor;
+
+  Color get crosshairInformationBoxContainerGlassColor;
+
+  double get crosshairInformationBoxContainerGlassBackgroundBlur;
+
+  TextStyle get crosshairInformationBoxTitleStyle;
+
+  TextStyle get crosshairInformationBoxQuoteStyle;
+
+  TextStyle get crosshairInformationBoxTimeLabelStyle;
+
+  TextStyle get crosshairAxisLabelStyle;
+
+  /// The style of the current tick indicator.
+  HorizontalBarrierStyle get currentSpotStyle;
+
   String get fontFamily;
-
-  Color get brandCoralColor;
-
-  Color get brandGreenishColor;
-
-  Color get brandOrangeColor;
-
-  Color get accentRedColor;
-
-  Color get accentGreenColor;
-
-  Color get accentYellowColor;
-
-  Color get base01Color;
-
-  Color get base02Color;
-
-  Color get base03Color;
-
-  Color get base04Color;
-
-  Color get base05Color;
-
-  Color get base06Color;
-
-  Color get base07Color;
-
-  Color get base08Color;
-
-  Color get hoverColor;
 
   double get margin04Chart;
 
@@ -64,8 +117,6 @@ abstract class ChartTheme {
 
   TextStyle get caption2;
 
-  GridStyle get gridStyle;
-
   TextStyle get subheading;
 
   TextStyle get body2;
@@ -75,9 +126,6 @@ abstract class ChartTheme {
   TextStyle get title;
 
   TextStyle get overLine;
-
-  /// The style of the current tick indicator.
-  HorizontalBarrierStyle get currentTickStyle;
 
   /// The painting styles of candlestick chart.
   CandleStyle get candleStyle;
@@ -111,4 +159,34 @@ abstract class ChartTheme {
     required TextStyle textStyle,
     Color? color,
   });
+
+  /// This is a legacy method to get the legacy base01 color.
+  /// It is used for backward compatibility with older versions of the chart.
+  /// It should not be used in new code, as it'll be removed soon.
+  // TODO(Jim): Remove this method when an alternative is available.
+  Color get base01Color;
+
+  /// This is a legacy method to get the legacy base03 color.
+  /// It is used for backward compatibility with older versions of the chart.
+  /// It should not be used in new code, as it'll be removed soon.
+  // TODO(Jim): Remove this method when an alternative is available.
+  Color get base03Color;
+
+  /// This is a legacy method to get the legacy base04 color.
+  /// It is used for backward compatibility with older versions of the chart.
+  /// It should not be used in new code, as it'll be removed soon.
+  // TODO(Jim): Remove this method when an alternative is available.
+  Color get base04Color;
+
+  /// This is a legacy method to get the legacy base05 color.
+  /// It is used for backward compatibility with older versions of the chart.
+  /// It should not be used in new code, as it'll be removed soon.
+  // TODO(Jim): Remove this method when an alternative is available.
+  Color get base05Color;
+
+  /// This is a legacy method to get the legacy base07 color.
+  /// It is used for backward compatibility with older versions of the chart.
+  /// It should not be used in new code, as it'll be removed soon.
+  // TODO(Jim): Remove this method when an alternative is available.
+  Color get base07Color;
 }

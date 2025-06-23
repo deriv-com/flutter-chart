@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_serie
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_dot.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
+import 'package:deriv_chart/src/theme/colors.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
@@ -47,15 +48,15 @@ class AccumulatorsClosedIndicatorPainter
     Color color = theme.base03Color;
     if (series.activeContract?.profit != null) {
       if (series.activeContract!.profit! > 0) {
-        color = theme.accentGreenColor;
+        color = LegacyLightThemeColors.accentGreen;
       } else if (series.activeContract!.profit! < 0) {
-        color = theme.accentRedColor;
+        color = LegacyLightThemeColors.accentRed;
       }
     }
 
     if (series.exitTick.quote > series.highBarrier ||
         series.exitTick.quote < series.lowBarrier) {
-      color = theme.accentRedColor;
+      color = LegacyLightThemeColors.accentRed;
     }
     _linePaint.color = color;
     _linePaintFill.color = color;

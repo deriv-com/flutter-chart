@@ -22,6 +22,9 @@ class OscillatorLinePainter extends LinePainter {
     double? bottomHorizontalLine,
     this.topHorizontalLinesStyle = const LineStyle(color: Colors.blueGrey),
     this.bottomHorizontalLinesStyle = const LineStyle(color: Colors.blueGrey),
+    this.labelStyle = const HorizontalBarrierStyle(
+      textStyle: TextStyle(fontSize: 10, color: Color(0xFF0E0E0E)),
+    ),
     LineStyle? secondaryHorizontalLinesStyle,
     List<double> secondaryHorizontalLines = const <double>[],
   })  : _topHorizontalLine = topHorizontalLine,
@@ -42,6 +45,9 @@ class OscillatorLinePainter extends LinePainter {
 
   /// Line style of the top horizontal line
   final LineStyle topHorizontalLinesStyle;
+
+  /// Line style of the bottom horizontal line
+  final HorizontalBarrierStyle labelStyle;
 
   /// Line style of the bottom horizontal line
   final LineStyle bottomHorizontalLinesStyle;
@@ -208,21 +214,17 @@ class OscillatorLinePainter extends LinePainter {
   }
 
   void _paintLabels(Size size, QuoteToY quoteToY, Canvas canvas) {
-    final HorizontalBarrierStyle style = HorizontalBarrierStyle(
-      textStyle: TextStyle(fontSize: 10, color: theme.base01Color),
-    );
-
     if (_topHorizontalLine != null) {
       final TextPainter topValuePainter = makeTextPainter(
         _topHorizontalLine!.toStringAsFixed(0),
-        style.textStyle,
+        labelStyle.textStyle,
       );
       final Rect topLabelArea = Rect.fromCenter(
         center: Offset(
             size.width - rightMargin - padding - topValuePainter.width / 2,
             quoteToY(_topHorizontalLine!)),
         width: topValuePainter.width + padding * 2,
-        height: style.labelHeight,
+        height: labelStyle.labelHeight,
       );
       paintWithTextPainter(
         canvas,
@@ -234,7 +236,7 @@ class OscillatorLinePainter extends LinePainter {
     if (_bottomHorizontalLine != null) {
       final TextPainter bottomValuePainter = makeTextPainter(
         _bottomHorizontalLine!.toStringAsFixed(0),
-        style.textStyle,
+        labelStyle.textStyle,
       );
 
       final Rect bottomLabelArea = Rect.fromCenter(
@@ -242,7 +244,7 @@ class OscillatorLinePainter extends LinePainter {
             size.width - rightMargin - padding - bottomValuePainter.width / 2,
             quoteToY(_bottomHorizontalLine!)),
         width: bottomValuePainter.width + padding * 2,
-        height: style.labelHeight,
+        height: labelStyle.labelHeight,
       );
 
       paintWithTextPainter(

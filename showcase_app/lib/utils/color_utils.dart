@@ -12,39 +12,43 @@ class ColorUtils {
       BrandColors.orange,
 
       // Accent colors
-      isDarkTheme ? DarkThemeColors.accentGreen : LightThemeColors.accentGreen,
-      isDarkTheme ? DarkThemeColors.accentRed : LightThemeColors.accentRed,
-      isDarkTheme
-          ? DarkThemeColors.accentYellow
-          : LightThemeColors.accentYellow,
+      LegacyDarkThemeColors.accentGreen,
+      LegacyLightThemeColors.accentRed,
+      const Color(0xFFFFAD3A), // accentYellow
 
       // Base colors
-      isDarkTheme ? DarkThemeColors.base01 : LightThemeColors.base01,
-      isDarkTheme ? DarkThemeColors.base04 : LightThemeColors.base04,
-      isDarkTheme ? DarkThemeColors.base07 : LightThemeColors.base07,
+      isDarkTheme
+          ? LegacyDarkThemeColors.base01
+          : LegacyLightThemeColors.base01,
+      isDarkTheme
+          ? LegacyDarkThemeColors.base04
+          : LegacyLightThemeColors.base04,
+      isDarkTheme
+          ? LegacyDarkThemeColors.base07
+          : LegacyLightThemeColors.base07,
     ];
   }
 
-  /// Returns a list of positive color presets.
-  static List<Color> getPositiveColors() {
+  /// Returns a list of bullish color presets.
+  static List<Color> getBullishColors() {
     return [
       Colors.green,
       Colors.lightGreen,
       Colors.teal,
       Colors.cyan,
-      DarkThemeColors.accentGreen,
+      CandleBullishThemeColors.candleBullishBodyDefault,
       Colors.greenAccent,
     ];
   }
 
-  /// Returns a list of negative color presets.
-  static List<Color> getNegativeColors() {
+  /// Returns a list of bearish color presets.
+  static List<Color> getBearishColors() {
     return [
       Colors.red,
       Colors.redAccent,
       Colors.deepOrange,
       Colors.pink,
-      DarkThemeColors.accentRed,
+      CandleBearishThemeColors.candleBearishBodyDefault,
       BrandColors.coral,
     ];
   }

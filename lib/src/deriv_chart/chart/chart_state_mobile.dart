@@ -141,6 +141,9 @@ class _ChartStateMobile extends _ChartState {
                   quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
                   showCurrentTickBlinkAnimation:
                       widget.showCurrentTickBlinkAnimation ?? true,
+                  crosshairVariant: widget.crosshairVariant,
+                  interactiveLayerBehaviour: widget.interactiveLayerBehaviour,
+                  useDrawingToolsV2: widget.useDrawingToolsV2,
                 ),
                 Align(
                   alignment: Alignment.topLeft,
@@ -157,10 +160,10 @@ class _ChartStateMobile extends _ChartState {
           ),
           if (context.read<ChartConfig>().chartAxisConfig.showFrame &&
               bottomIndicatorsList.isNotEmpty)
-            Divider(
+            const Divider(
               height: 0.5,
               thickness: 1,
-              color: context.read<ChartTheme>().hoverColor,
+              color: Color(0xFF242828),
             ),
           if (_isAllBottomIndicatorsHidden)
             ...bottomIndicatorsList
@@ -177,7 +180,7 @@ class _ChartStateMobile extends _ChartState {
   Widget _buildMainChartFrame(BuildContext context) => Container(
         constraints: const BoxConstraints.expand(),
         child: MobileChartFrameDividers(
-          color: context.read<ChartTheme>().hoverColor,
+          color: const Color(0xFF242828),
           rightPadding: (context.read<XAxisModel>().rightPadding ?? 0) +
               _chartTheme.gridStyle.labelHorizontalPadding,
         ),

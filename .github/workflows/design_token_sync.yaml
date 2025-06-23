@@ -1,0 +1,296 @@
+name: Design Token Sync
+
+# Add concurrency control to prevent multiple workflow runs from interfering with each other
+concurrency:
+    # Define a concurrency group name to ensure only one workflow with this name runs at a time
+    group: design-token-sync
+    # If a new workflow run is triggered, cancel any in-progress workflow runs in the same group
+    cancel-in-progress: true
+
+# Define environment variables for easier maintenance
+env:
+    SYNC_BRANCH_NAME: design-token-sync
+on:
+    schedule:
+        # Run bi-weekly on the 1st and 15th of each month at midnight UTC
+        # Cron syntax: minute hour day-of-month month day-of-week
+        - cron: "0 0 1,15 * *"
+    # Allow manual triggering of the workflow from the GitHub Actions UI
+    workflow_dispatch:
+jobs:
+    sync-design-tokens:
+        runs-on: ubuntu-latest
+        # Set a maximum duration for this job to prevent it from running indefinitely
+        timeout-minutes: 30
+        # Define specific GitHub permissions needed for this job
+        permissions:
+            # Grant write access to repository contents (needed for pushing changes)
+            contents: write
+            # Grant write access to pull requests (needed for creating PRs)
+            pull-requests: write
+        steps:
+            - name: 📥 Checkout flutter-chart repository
+              uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+              with:
+                  # Fetch the complete git history (not just the latest commit)
+                  fetch-depth: 0
+
+            - name: 🔍 Check if quill-tokens has been updated
+              id: check-tokens
+              run: |
+                  # Start a collapsible group in the GitHub Actions log for better readability
+                  echo "::group::Checking for token updates"
+                  # Clone the quill-tokens repository to a temporary directory
+                  git clone https://github.com/deriv-com/quill-tokens.git /tmp/quill-tokens
+
+                  # Get the last modified date of the tokens.json file in the quill-tokens repository
+                  QUILL_TOKENS_LAST_MODIFIED=$(git -C /tmp/quill-tokens log -1 --format=%cd --date=iso -- data/tokens.json)
+                  # Output the date for debugging purposes
+                  echo "Quill tokens last modified: $QUILL_TOKENS_LAST_MODIFIED"
+
+                  # Get the last modified date of the local tokens.json file in the flutter-chart repository
+                  FLUTTER_CHART_TOKENS_LAST_MODIFIED=$(git log -1 --format=%cd --date=iso -- lib/src/theme/design_tokens/tokens.json)
+                  # Output the date for debugging purposes
+                  echo "Flutter chart tokens last modified: $FLUTTER_CHART_TOKENS_LAST_MODIFIED"
+
+                  # Convert the ISO format dates to Unix timestamps for numerical comparison
+                  QUILL_TIMESTAMP=$(date -d "$QUILL_TOKENS_LAST_MODIFIED" +%s)
+                  FLUTTER_TIMESTAMP=$(date -d "$FLUTTER_CHART_TOKENS_LAST_MODIFIED" +%s)
+
+                  # Compare the files to check if they have different content
+                  if [ -f /tmp/quill-tokens/data/tokens.json ] && [ -f lib/src/theme/design_tokens/tokens.json ]; then
+                    # Check if the content of the files is different
+                    if ! cmp -s /tmp/quill-tokens/data/tokens.json lib/src/theme/design_tokens/tokens.json; then
+                      echo "Files have different content, need to sync"
+                      # Set the output variable 'needs_sync' to true for use in conditional steps
+                      echo "needs_sync=true" >> $GITHUB_OUTPUT
+                    else
+                      # Files are identical, no need to sync
+                      echo "Files are identical, no updates needed"
+                      # Set the output variable 'needs_sync' to false for use in conditional steps
+                      echo "needs_sync=false" >> $GITHUB_OUTPUT
+                    fi
+                  else
+                    echo "One of the files doesn't exist"
+                    # Set the output variable 'needs_sync' to false for use in conditional steps
+                    echo "needs_sync=false" >> $GITHUB_OUTPUT
+                  fi
+                  # End the collapsible group in the GitHub Actions log
+                  echo "::endgroup::"
+
+            - name: 🌿 Setup branch for token updates
+              if: steps.check-tokens.outputs.needs_sync == 'true'
+              run: |
+                  # Start a collapsible group in the GitHub Actions log for better readability
+                  echo "::group::Setting up branch for token updates"
+
+                  # Configure Git identity for any git operations
+                  git config user.name "GitHub Actions Bot"
+                  git config user.email "actions@github.com"
+
+                  git checkout master
+
+                  echo "Pulling latest changes from master branch in case new commits have been pushed"
+                  git pull origin master
+
+                  # Check if the branch exists in the remote repository
+                  if git ls-remote --heads origin $SYNC_BRANCH_NAME | grep $SYNC_BRANCH_NAME; then
+                    echo "Branch exists in remote - checking out existing branch"
+                    git checkout $SYNC_BRANCH_NAME
+
+                    echo "Merging latest master changes into $SYNC_BRANCH_NAME branch"
+                    # Merge the latest changes from the master branch into the sync branch
+                    # Use --no-edit to skip the merge commit message editor
+                    git merge master --no-edit
+                  else
+                    echo "Branch does not exist - creating new branch from updated master"
+                    git checkout -b $SYNC_BRANCH_NAME
+                  fi
+
+                  # End the collapsible group in the GitHub Actions log
+                  echo "::endgroup::"
+
+            - name: 📝 Update tokens file
+              if: steps.check-tokens.outputs.needs_sync == 'true'
+              id: update-tokens
+              run: |
+                  # Start a collapsible group in the GitHub Actions log for better readability
+                  echo "::group::Updating tokens file"
+                  # Copy the updated tokens file from the temporary quill-tokens directory to our repository
+                  cp /tmp/quill-tokens/data/tokens.json lib/src/theme/design_tokens/tokens.json
+
+                  git config user.name "GitHub Actions Bot"
+                  git config user.email "actions@github.com"
+
+                  git add lib/src/theme/design_tokens/tokens.json
+
+                  # Check if there are any changes to commit
+                  if git diff --staged --quiet; then
+                    echo "No changes to commit after copying tokens file"
+                    echo "tokens_updated=false" >> $GITHUB_OUTPUT
+                  else
+                    git commit -m "chore: sync design tokens from quill-tokens repository"
+                    echo "tokens_updated=true" >> $GITHUB_OUTPUT
+                  fi
+                  # End the collapsible group in the GitHub Actions log
+                  echo "::endgroup::"
+
+            - name: 🐦 Setup Flutter
+              if: steps.check-tokens.outputs.needs_sync == 'true'
+              uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
+              with:
+                  flutter-version: "3.24.1"
+                  channel: stable
+                  cache: true
+
+            - name: 📦 Install dependencies
+              if: steps.check-tokens.outputs.needs_sync == 'true'
+              run: |
+                  echo "::group::Installing Flutter dependencies"
+                  flutter pub get
+                  echo "::endgroup::"
+
+            - name: ⚙️ Run generate and check token files script
+              if: steps.check-tokens.outputs.needs_sync == 'true'
+              id: generate-tokens
+              run: |
+                  # Start a collapsible group in the GitHub Actions log for better readability
+                  echo "::group::Generating token files"
+                  # Make the script executable (ensure it has the proper permissions)
+                  chmod +x ./scripts/generate_and_check_token_files.sh
+
+                  # Run the script that generates and validates token files
+                  if ./scripts/generate_and_check_token_files.sh; then
+                    echo "Token generation and validation completed successfully"
+                    echo "generation_success=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "Token generation and validation failed"
+                    echo "generation_success=false" >> $GITHUB_OUTPUT
+                    exit 1
+                  fi
+
+                  # End the collapsible group in the GitHub Actions log
+                  echo "::endgroup::"
+
+            - name: 💾 Commit generated files
+              if: steps.check-tokens.outputs.needs_sync == 'true' && steps.generate-tokens.outputs.generation_success == 'true'
+              id: commit-files
+              run: |
+                  # Start a collapsible group in the GitHub Actions log for better readability
+                  echo "::group::Committing generated files"
+                  git add lib/src/theme/design_tokens/
+
+                  # Check if there are any changes to commit (git diff --staged --quiet exits with 0 if no changes)
+                  if git diff --staged --quiet; then
+                    echo "No changes to commit"
+                    # Set the output variable 'changes_committed' to false for use in conditional steps
+                    echo "changes_committed=false" >> $GITHUB_OUTPUT
+                  else
+                    # Changes detected, commit them with a descriptive message including the current date
+                    # Skip trufllehog check for tokens.json, since it contains SHA hashes that are flagged as secrets
+                    git commit -m "chore: generate design token files ($(date +%Y-%m-%d))" --no-verify
+                    # Set the output variable 'changes_committed' to true for use in conditional steps
+                    echo "changes_committed=true" >> $GITHUB_OUTPUT
+                  fi
+
+                  # Push all changes to the sync branch
+                  git push origin $SYNC_BRANCH_NAME
+                  # End the collapsible group in the GitHub Actions log
+                  echo "::endgroup::"
+
+            - name: 🔍 Check if branch is ahead of master
+              if: steps.check-tokens.outputs.needs_sync == 'true'
+              id: check-ahead
+              run: |
+                  # Start a collapsible group in the GitHub Actions log for better readability
+                  echo "::group::Checking if branch is ahead of master"
+
+                  # Check if the current branch has commits ahead of master
+                  AHEAD_COUNT=$(git rev-list --count master..$SYNC_BRANCH_NAME)
+                  echo "Branch $SYNC_BRANCH_NAME is $AHEAD_COUNT commits ahead of master"
+
+                  if [ "$AHEAD_COUNT" -gt 0 ]; then
+                    echo "Branch has commits ahead of master, should create PR"
+                    echo "branch_ahead=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "Branch is not ahead of master"
+                    echo "branch_ahead=false" >> $GITHUB_OUTPUT
+                  fi
+
+                  # End the collapsible group in the GitHub Actions log
+                  echo "::endgroup::"
+
+            - name: 🔀 Create Pull Request
+              if: steps.check-tokens.outputs.needs_sync == 'true' && (steps.commit-files.outputs.changes_committed == 'true' || steps.check-ahead.outputs.branch_ahead == 'true')
+              id: create-pr
+              continue-on-error: true # Don't fail the workflow if PR creation fails
+              run: |
+                  # Start a collapsible group in the GitHub Actions log for better readability
+                  echo "::group::Creating Pull Request"
+                  # Install GitHub CLI (gh) for creating pull requests
+                  sudo apt-get update
+                  sudo apt-get install -y gh
+
+                  # Authenticate with GitHub CLI using the workflow's GITHUB_TOKEN
+                  gh auth login --with-token <<< ${{ github.token }}
+
+                  # Close any existing PR from this branch (if it exists) to avoid duplicates
+                  gh pr close "$SYNC_BRANCH_NAME" || true
+
+                  # Create a new PR with specified base branch, title, head branch, and description
+                  if gh pr create \
+                    --base "master" \
+                    --title "chore: Design Token Update ($(date +%Y-%m-%d))" \
+                    --head "$SYNC_BRANCH_NAME" \
+                    --body "This PR updates the design tokens from the quill-tokens repository. Automated PR created by the Design Token Sync workflow."; then
+                    echo "PR created successfully"
+                    # Get the URL of the created PR
+                    PR_URL=$(gh pr view --json url -q .url)
+                    echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
+                    echo "pr_created=true" >> $GITHUB_OUTPUT
+                  else
+                    echo "Failed to create PR"
+                    # Set the output variable 'pr_created' to false for use in conditional steps
+                    echo "pr_created=false" >> $GITHUB_OUTPUT
+                    # Exit with error code 1 to indicate failure of this step
+                    exit 1
+                  fi
+                  # End the collapsible group in the GitHub Actions log
+                  echo "::endgroup::"
+
+            - name: ✅ Report PR Success
+              if: steps.create-pr.outcome == 'success' && steps.create-pr.outputs.pr_created == 'true'
+              run: |
+                  # Start a collapsible group in the GitHub Actions log for better readability
+                  echo "::group::PR Status"
+                  echo "PR created successfully: ${{ steps.create-pr.outputs.pr_url }}"
+                  # End the collapsible group in the GitHub Actions log
+                  echo "::endgroup::"
+
+            - name: ✅ Report No Changes
+              if: steps.check-tokens.outputs.needs_sync == 'true' && steps.commit-files.outputs.changes_committed == 'false' && steps.check-ahead.outputs.branch_ahead == 'false'
+              run: |
+                  # Start a collapsible group in the GitHub Actions log for better readability
+                  echo "::group::No Changes Required"
+                  echo "Design tokens are already up to date. No changes were made."
+                  echo "- Tokens file was checked and found to be identical"
+                  echo "- No generated files needed updating"
+                  echo "- Branch is not ahead of master"
+                  echo "- No pull request was created"
+                  # End the collapsible group in the GitHub Actions log
+                  echo "::endgroup::"
+
+            - name: ❌ Report PR Failure
+              # Always run this step, but only process if PR creation failed or reported failure
+              if: always() && (steps.create-pr.outcome == 'failure' || (steps.create-pr.outcome == 'success' && steps.create-pr.outputs.pr_created != 'true'))
+              run: |
+                  # Start a collapsible group in the GitHub Actions log for better readability
+                  echo "::group::PR Creation Failed"
+                  echo "Failed to create PR. This could be due to:"
+                  echo "- Network issues"
+                  echo "- Authentication problems"
+                  echo "- GitHub API rate limits"
+                  echo "- Existing PR with conflicts"
+                  echo "Check the logs above for more details."
+                  # End the collapsible group in the GitHub Actions log
+                  echo "::endgroup::"

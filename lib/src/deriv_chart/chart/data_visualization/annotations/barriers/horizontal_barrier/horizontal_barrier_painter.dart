@@ -132,25 +132,8 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       height: style.labelHeight,
     );
 
-    // Line.
-    if (arrowType == BarrierArrowType.none) {
-      final double lineStartX = series.longLine ? 0 : (dotX ?? 0);
-      final double lineEndX = labelArea.left;
-
-      // To erase the line behind title.
-      if (series.title != null) {
-        canvas.saveLayer(
-          Rect.fromLTRB(lineStartX, y - 1, lineEndX, y + 1),
-          Paint(),
-        );
-      }
-
-      if (lineStartX < lineEndX && style.hasLine) {
-        _paintLine(canvas, lineStartX, lineEndX, y, style);
-      }
-    }
-
     // Title.
+    Rect? titleArea;
     if (series.title != null) {
       final TextPainter titlePainter = makeTextPainter(
         series.title!,
@@ -159,19 +142,13 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       final double titleEndX = labelArea.left - _distanceBetweenTitleAndLabel;
       final double titleAreaWidth =
           titlePainter.width + _titleHorizontalPadding * 2;
-      final Rect titleArea = Rect.fromCenter(
+      titleArea = Rect.fromCenter(
         center: Offset(titleEndX - titleAreaWidth / 2, y),
         width: titleAreaWidth,
         height: titlePainter.height,
       );
 
-      // Erase the line behind title.
-      if (arrowType == BarrierArrowType.none) {
-        canvas
-          ..drawRect(titleArea, Paint()..blendMode = BlendMode.clear)
-          ..restore();
-      }
-
+      // Paint the title text
       paintWithTextPainter(
         canvas,
         painter: titlePainter,
@@ -179,8 +156,34 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       );
     }
 
+    // Draw the horizontal line, splitting it into segments to avoid
+    // overlapping with the title text if present
+    if (arrowType == BarrierArrowType.none && style.hasLine) {
+      final double lineStartX = series.longLine ? 0 : (dotX ?? 0);
+      final double lineEndX = labelArea.left;
+
+      if (lineStartX < lineEndX) {
+        if (titleArea != null) {
+          // Draw line in two segments - before and after the title
+          // First segment: from lineStartX to left of title
+          if (lineStartX < titleArea.left) {
+            _paintLine(canvas, lineStartX, titleArea.left, y, style);
+          }
+
+          // Second segment: from right of title to lineEndX
+          if (titleArea.right < lineEndX) {
+            _paintLine(canvas, titleArea.right, lineEndX, y, style);
+          }
+        } else {
+          // Draw a continuous line
+          _paintLine(canvas, lineStartX, lineEndX, y, style);
+        }
+      }
+    }
+
     // Label.
-    paintLabelBackground(canvas, labelArea, style.labelShape, _paint);
+    paintLabelBackground(canvas, labelArea, style.labelShape, _paint,
+        labelBackgroundColor: style.labelShapeBackgroundColor);
     paintWithTextPainter(
       canvas,
       painter: valuePainter,
@@ -215,7 +218,9 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
   /// Paints a background based on the given [LabelShape] for the label text.
   void paintLabelBackground(
       Canvas canvas, Rect rect, LabelShape shape, Paint paint,
-      {double radius = 4}) {
+      {double radius = 4, Color? labelBackgroundColor}) {
+    paint.color = labelBackgroundColor ?? paint.color;
+
     if (shape == LabelShape.rectangle) {
       canvas.drawRRect(
         RRect.fromRectAndRadius(rect, Radius.elliptical(radius, 4)),
@@ -247,10 +252,11 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
         mainLineEndX,
         mainLineStartX,
         y,
-        style.color,
+        style.lineColor,
         1,
       );
     } else {
+      _paint.color = style.lineColor;
       canvas.drawLine(
           Offset(mainLineStartX, y), Offset(mainLineEndX, y), _paint);
     }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'base_chart_screen.dart';
@@ -15,6 +16,10 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
   bool _showHorizontalBarrier = true;
   bool _showVerticalBarrier = true;
   bool _showTickIndicator = true;
+  bool _showCrosshair = true;
+  bool _useLargeScreenCrosshair = kIsWeb; // Default based on platform
+  bool _useDarkTheme = false;
+  bool _useDrawingToolsV2 = true;
 
   HorizontalBarrier? _horizontalBarrier;
   VerticalBarrier? _verticalBarrier;
@@ -71,13 +76,14 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
       ),
     );
 
+    final theme = Theme.of(context).brightness == Brightness.dark
+        ? ChartDefaultDarkTheme()
+        : ChartDefaultLightTheme();
+
     _tickIndicator = TickIndicator(
       lastTick,
-      style: const HorizontalBarrierStyle(
+      style: theme.currentSpotStyle.copyWith(
         color: Colors.orange,
-        labelShape: LabelShape.pentagon,
-        hasBlinkingDot: true,
-        hasArrow: false,
       ),
       visibility: HorizontalBarrierVisibility.keepBarrierLabelVisible,
     );
@@ -150,6 +156,12 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
       pipSize: 2,
       granularity: 60000, // 1 minute
       activeSymbol: 'BARRIERS_CHART',
+      showCrosshair: _showCrosshair,
+      crosshairVariant: _useLargeScreenCrosshair
+          ? CrosshairVariant.largeScreen
+          : CrosshairVariant.smallScreen,
+      theme: _useDarkTheme ? ChartDefaultDarkTheme() : ChartDefaultLightTheme(),
+      useDrawingToolsV2: _useDrawingToolsV2,
     );
   }
 
@@ -176,6 +188,44 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // Theme toggle
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Theme:'),
+              const SizedBox(width: 8),
+              const Text('Light'),
+              Switch(
+                value: _useDarkTheme,
+                onChanged: (value) {
+                  setState(() {
+                    _useDarkTheme = value;
+                  });
+                },
+              ),
+              const Text('Dark'),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Drawing Tools V2 toggle
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Drawing Tools V2:'),
+              const SizedBox(width: 8),
+              Switch(
+                value: _useDrawingToolsV2,
+                onChanged: (value) {
+                  setState(() {
+                    _useDrawingToolsV2 = value;
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
           // First row: Horizontal and Vertical toggles
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -202,6 +252,41 @@ class _BarriersScreenState extends BaseChartScreenState<BarriersScreen> {
                       _showVerticalBarrier = value;
                     });
                   }),
+                ),
+              ),
+            ],
+          ),
+
+          // Crosshair controls
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 16),
+                  child: _buildBarrierToggle('Show Crosshair:', _showCrosshair,
+                      (value) {
+                    setState(() {
+                      _showCrosshair = value;
+                    });
+                  }),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(left: 16),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _useLargeScreenCrosshair = !_useLargeScreenCrosshair;
+                      });
+                    },
+                    child: Text(
+                      'Crosshair: ${_useLargeScreenCrosshair ? 'Large' : 'Small'}',
+                    ),
+                  ),
                 ),
               ),
             ],

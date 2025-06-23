@@ -16,6 +16,10 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
     this.thickness = 1,
     this.hasArea = false,
     this.markerRadius = 4,
+    this.areaGradientColors = const (
+      start: Color(0x29000000), // LightThemeColors.areaGradientStart
+      end: Color(0x00000000), // LightThemeColors.areaGradientEnd
+    ),
   });
 
   /// Initializes from JSON.
@@ -37,23 +41,28 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
   /// Marker radius.
   final double markerRadius;
 
+  /// Area gradient colors.
+  final ({Color start, Color end}) areaGradientColors;
+
   /// Creates a copy of this object.
   LineStyle copyWith({
     Color? color,
     double? thickness,
     bool? hasArea,
     double? markerRadius,
+    ({Color start, Color end})? areaGradientColors,
   }) =>
       LineStyle(
         color: color ?? this.color,
         thickness: thickness ?? this.thickness,
         hasArea: hasArea ?? this.hasArea,
         markerRadius: markerRadius ?? this.markerRadius,
+        areaGradientColors: areaGradientColors ?? this.areaGradientColors,
       );
 
   @override
   String toString() =>
-      '${super.toString()}$color, $thickness, $hasArea, $markerRadius';
+      '${super.toString()}$color, $thickness, $hasArea, $markerRadius ${areaGradientColors.start} ${areaGradientColors.end}';
 
   @override
   List<Object> get props => <Object>[
@@ -61,5 +70,7 @@ class LineStyle extends DataSeriesStyle with EquatableMixin {
         thickness,
         hasArea,
         markerRadius,
+        areaGradientColors.start,
+        areaGradientColors.end,
       ];
 }

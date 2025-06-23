@@ -39,7 +39,7 @@ class MarketItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final ChartTheme theme = Provider.of<ChartTheme>(context);
     return Container(
-      color: theme.base08Color,
+      color: theme.backgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[

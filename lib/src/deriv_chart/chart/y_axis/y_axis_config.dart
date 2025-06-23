@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+// TODO(NA): Change to a non-singleton class in the future, since it can be an
+// anti-pattern in some cases, and usually leads to tight coupling in the
+// codebase.
 ///Singleton class to manage configuration and operations related to the Y-axis
 ///in custom painting
 class YAxisConfig {

@@ -1,5 +1,7 @@
 # Deriv Chart
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/deriv-com/flutter-chart)
+
 A financial charting library for Flutter applications, offering a comprehensive suite of features for technical analysis and trading visualization. It supports multiple chart types (candlestick, line, etc.), a wide range of technical indicators (RSI, MACD, Bollinger Bands, etc.), and interactive drawing tools. The library comes with customizable themes to match your application's visual style. Built specifically for financial applications, it includes essential features like price markers, barriers, and crosshairs, making it ideal for trading platforms, financial analysis tools, and market data visualization.
 
 
@@ -430,6 +432,23 @@ For more detailed information, check out these documentation files:
 - [Drawing Tools](doc/drawing_tools.md)
 - [DerivChart Widget Usage](doc/deriv_chart_widget_usage.md)
 - [Contributing](doc/contribution.md)
+
+## Documentation Diagrams
+
+The project uses Mermaid diagrams for visualizing architecture and processes. These diagrams are stored as separate files and referenced in the documentation.
+
+### Updating Diagrams
+
+1. Update diagrams and generate SVG files from the Mermaid code:
+   - Update diagram code. You can use the [Mermaid Live Editor](https://mermaid.live/) or any other Mermaid-compatible editor.
+   - Use the ![mermaid_script](scripts/convert_mmd_to_svg.sh) to generate SVG files 
+
+2. The documentation files (like `doc/interactive_layer.md`) reference these SVG files using standard Markdown image syntax:
+   ```markdown
+   ![Diagram Title](diagrams/diagram_filename.svg)
+   ```
+
+This approach separates the diagram code from the documentation, making both easier to maintain.
 
 ## Dependencies
 

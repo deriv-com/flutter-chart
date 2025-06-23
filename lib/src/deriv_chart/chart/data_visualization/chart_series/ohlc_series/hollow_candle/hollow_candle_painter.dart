@@ -12,9 +12,10 @@ class HollowCandlePainter extends OhlcPainter {
   /// Initializes
   HollowCandlePainter(DataSeries<Candle> series) : super(series);
 
-  late Color _positiveColor;
-  late Color _negativeColor;
-  late Color _neutralColor;
+  late Color _candleBullishBodyColor;
+  late Color _candleBearishBodyColor;
+  late Color _candleBullishWickColor;
+  late Color _candleBearishWickColor;
 
   @override
   void onPaintCandle(
@@ -24,17 +25,21 @@ class HollowCandlePainter extends OhlcPainter {
   ) {
     final CandleStyle style = series.style as CandleStyle? ?? theme.candleStyle;
 
-    _positiveColor = style.positiveColor;
-    _negativeColor = style.negativeColor;
-    _neutralColor = style.neutralColor;
+    _candleBullishBodyColor = style.candleBullishBodyColor;
+    _candleBearishBodyColor = style.candleBearishBodyColor;
+    _candleBullishWickColor = style.candleBullishWickColor;
+    _candleBearishWickColor = style.candleBearishWickColor;
 
-    final Color _candleColor = currentPainting.yClose > prevPainting.yClose
-        ? _negativeColor
-        : currentPainting.yClose < prevPainting.yClose
-            ? _positiveColor
-            : _neutralColor;
+    // Check if the current candle is bullish or bearish.
+    final bool isBullishCandle = currentPainting.yOpen > currentPainting.yClose;
 
-    _drawWick(canvas, _candleColor, currentPainting);
+    final Color _candleColor =
+        isBullishCandle ? _candleBullishBodyColor : _candleBearishBodyColor;
+
+    final Color candleWickColor =
+        isBullishCandle ? _candleBullishWickColor : _candleBearishWickColor;
+
+    _drawWick(canvas, candleWickColor, currentPainting);
 
     if (currentPainting.yOpen == currentPainting.yClose) {
       _drawLine(canvas, _candleColor, currentPainting);

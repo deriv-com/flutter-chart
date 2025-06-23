@@ -15,7 +15,7 @@ class NoResultPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ChartTheme theme = Provider.of<ChartTheme>(context);
     return Ink(
-      color: theme.base08Color,
+      color: theme.backgroundColor,
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -1,5 +1,4 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;

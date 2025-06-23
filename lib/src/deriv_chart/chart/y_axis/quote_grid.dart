@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 ///A Model for calculating the grid intervals and quotes.
 class YAxisModel {
   ///Initializes a Model for calculating the grid intervals and quotes.
@@ -22,12 +24,36 @@ class YAxisModel {
         _topPadding = topPadding,
         _bottomPadding = bottomPadding;
 
+  /// Initializes a model with zero values.
+  YAxisModel.zero()
+      : _quoteGridInterval = 0,
+        _topBoundQuote = 0,
+        _bottomBoundQuote = 0,
+        _canvasHeight = 0,
+        _topPadding = 0,
+        _bottomPadding = 0;
+
   final double _quoteGridInterval;
   final double _topBoundQuote;
   final double _bottomBoundQuote;
   final double _canvasHeight;
   final double _topPadding;
   final double _bottomPadding;
+
+  /// Top padding.
+  double get topPadding => _topPadding;
+
+  /// Bottom padding.
+  double get bottomPadding => _bottomPadding;
+
+  /// Top bound quote
+  double get topBoundQuote => _topBoundQuote;
+
+  /// Bottom bound quote
+  double get bottomBoundQuote => _bottomBoundQuote;
+
+  /// The height of the canvas.
+  double get canvasHeight => _canvasHeight;
 
   /// Calculates the grid lines for a quote.
   List<double> gridQuotes() {
@@ -113,4 +139,10 @@ double quoteGridInterval(
     hasEnoughDistanceBetweenLines,
     orElse: () => intervals.last,
   );
+}
+
+/// A notifier for the Y-axis model.
+class YAxisNotifier extends ValueNotifier<YAxisModel> {
+  /// Initializes a notifier for the Y-axis model.
+  YAxisNotifier(super.value);
 }

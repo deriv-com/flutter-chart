@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/theme/painting_styles/bar_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/entry_spot_style.dart';
 import 'package:flutter/material.dart';
 
-import 'colors.dart';
 import 'dimens.dart';
 import 'text_styles.dart';
 
@@ -14,6 +13,12 @@ import 'text_styles.dart';
 abstract class ChartDefaultTheme implements ChartTheme {
   final Map<TextStyle, Map<Color, TextStyle>> _textStyle =
       <TextStyle, Map<Color, TextStyle>>{};
+
+  @override
+  TextStyle get currentSpotTextStyle => TextStyles.currentSpotTextStyle;
+
+  @override
+  TextStyle get gridTextStyle => TextStyles.gridTextStyle;
 
   @override
   double get margin04Chart => Dimens.margin04;
@@ -64,56 +69,78 @@ abstract class ChartDefaultTheme implements ChartTheme {
   TextStyle get title => TextStyles.title;
 
   @override
-  Color get brandCoralColor => BrandColors.coral;
+  Color get candleBullishBodyDefault =>
+      CandleBullishThemeColors.candleBullishBodyDefault;
 
   @override
-  Color get brandGreenishColor => BrandColors.greenish;
+  Color get candleBullishBodyActive =>
+      CandleBullishThemeColors.candleBullishBodyActive;
 
   @override
-  Color get brandOrangeColor => BrandColors.orange;
+  Color get candleBullishWickDefault =>
+      CandleBullishThemeColors.candleBullishWickDefault;
 
   @override
-  GridStyle get gridStyle => GridStyle(
-        gridLineColor: base07Color,
-        xLabelStyle: textStyle(
-          textStyle: caption2,
-          color: base03Color,
-        ),
-        yLabelStyle: textStyle(
-          textStyle: caption2,
-          color: base03Color,
-        ),
-      );
+  Color get candleBullishWickActive =>
+      CandleBullishThemeColors.candleBullishWickActive;
 
   @override
-  HorizontalBarrierStyle get currentTickStyle => HorizontalBarrierStyle(
-        color: brandCoralColor,
-        textStyle: textStyle(textStyle: caption2, color: base01Color),
-      );
+  Color get candleBearishBodyDefault =>
+      CandleBearishThemeColors.candleBearishBodyDefault;
+
+  @override
+  Color get candleBearishBodyActive =>
+      CandleBearishThemeColors.candleBearishBodyActive;
+
+  @override
+  Color get candleBearishWickDefault =>
+      CandleBearishThemeColors.candleBearishWickDefault;
+
+  @override
+  Color get candleBearishWickActive =>
+      CandleBearishThemeColors.candleBearishWickActive;
+
+  @override
+  double get crosshairInformationBoxContainerGlassBackgroundBlur =>
+      Dimens.crosshairInformationBoxContainerGlassBackgroundBlur;
+
+  @override
+  TextStyle get crosshairInformationBoxTitleStyle =>
+      TextStyles.crosshairInformationBoxTitleStyle;
+
+  @override
+  TextStyle get crosshairInformationBoxQuoteStyle =>
+      TextStyles.crosshairInformationBoxQuoteStyle;
+
+  @override
+  TextStyle get crosshairInformationBoxTimeLabelStyle =>
+      TextStyles.crosshairInformationBoxTimeLabelStyle;
+
+  @override
+  TextStyle get crosshairAxisLabelStyle => TextStyles.crosshairAxisLabelStyle;
+
+  @override
+  double get areaLineThickness => Dimens.areaLineDefaultThickness;
 
   @override
   CandleStyle get candleStyle => CandleStyle(
-        positiveColor: accentGreenColor,
-        negativeColor: accentRedColor,
         neutralColor: base04Color,
+        candleBullishWickColor: candleBullishWickDefault,
+        candleBearishWickColor: candleBearishWickDefault,
       );
 
   @override
-  BarStyle get barStyle => BarStyle(
-        positiveColor: accentGreenColor,
-        negativeColor: accentRedColor,
+  BarStyle get barStyle => const BarStyle(
+        positiveColor: LegacyLightThemeColors.accentGreen,
       );
 
   @override
-  LineStyle get lineStyle => LineStyle(color: brandGreenishColor);
+  LineStyle get lineStyle => const LineStyle();
 
   // TODO(Ramin): Use the values from the chart theme itself. so if later the
   // theme changes the default styles also get updated accordingly.
   @override
-  MarkerStyle get markerStyle => MarkerStyle(
-        upColor: accentGreenColor,
-        downColor: accentRedColor,
-      );
+  MarkerStyle get markerStyle => const MarkerStyle();
 
   @override
   EntrySpotStyle get entrySpotStyle => const EntrySpotStyle();
@@ -121,7 +148,7 @@ abstract class ChartDefaultTheme implements ChartTheme {
   @override
   HorizontalBarrierStyle get horizontalBarrierStyle => HorizontalBarrierStyle(
         color: base04Color,
-        titleBackgroundColor: base08Color,
+        titleBackgroundColor: backgroundColor,
         textStyle: TextStyles.overLine,
       );
 
@@ -148,7 +175,7 @@ abstract class ChartDefaultTheme implements ChartTheme {
     required TextStyle textStyle,
     Color? color,
   }) {
-    color ??= DarkThemeColors.base01;
+    color ??= LegacyDarkThemeColors.base01;
 
     return _getStyle(textStyle: textStyle, color: color);
   }

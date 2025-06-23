@@ -1,0 +1,30 @@
+sequenceDiagram
+    participant User
+    participant ILB as InteractiveLayerBase
+    participant ILMB as InteractiveLayerMobileBehaviour
+    participant IATSM as InteractiveAddingToolStateMobile
+    participant HLID as HorizontalLineInteractableDrawing
+    participant HLAPM as HorizontalLineAddingPreviewMobile
+
+    User->>ILB: 1. Select Horizontal Line
+    ILB->>ILMB: 2. onAddDrawingTool(config)
+    ILMB->>IATSM: 3. updateStateTo(AddingToolStateMobile)
+    Note over ILMB,IATSM: State transition
+    IATSM-->>ILMB: 4. Create HorizontalLineInteractableDrawing
+
+    IATSM->>HLID: 5. getAddingPreviewForMobileBehaviour()
+    HLID->>HLAPM: 6. Create HorizontalLineAddingPreviewMobile
+
+    HLAPM->>ILB: 7. Show preview on chart
+
+    User->>ILB: 8. Drag to position line
+    ILB->>HLAPM: 9. onDragUpdate()
+    HLAPM->>HLID: 10. Update position
+
+    User->>ILB: 11. Tap outside preview
+    ILB->>HLAPM: 12. onTap()
+    HLAPM->>HLID: 13. onCreateTap()
+    HLID->>HLID: 14. Set startPoint
+    HLID->>HLAPM: 15. onDone()
+
+    Note over User,HLAPM: Drawing is added to chart and state returns to Normal
