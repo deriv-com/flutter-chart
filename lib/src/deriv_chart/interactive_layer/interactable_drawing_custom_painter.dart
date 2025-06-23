@@ -98,6 +98,8 @@ class InteractableDrawingCustomPainter extends CustomPainter {
       size,
       epochToX,
       quoteToY,
+      epochFromX,
+      quoteFromY,
       animationInfo,
       chartConfig,
       theme,
