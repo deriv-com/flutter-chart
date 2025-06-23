@@ -161,6 +161,8 @@ Widget _buildOutsideArea(OverlayEntry overlayEntry) => Positioned.fill(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => overlayEntry.remove(),
+        onPanDown: (_) => overlayEntry.remove(),
+        onTapDown: (_) => overlayEntry.remove(),
         child: Container(
           color: Colors.transparent,
         ),
