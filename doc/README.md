@@ -83,7 +83,6 @@ If you're new to the Deriv Chart library, start here to learn the basics:
 Understand the fundamental concepts behind the Deriv Chart library:
 
 - [Architecture](core_concepts/architecture.md) - Overview of the library's architecture
-- [Data Models](core_concepts/data_models.md) - Learn about the data structures
 - [Coordinate System](core_concepts/coordinate_system.md) - How coordinates are managed
 - [Rendering Pipeline](core_concepts/rendering_pipeline.md) - How data is rendered
 

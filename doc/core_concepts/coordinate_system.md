@@ -229,5 +229,4 @@ Now that you understand the coordinate system used in the Deriv Chart library, y
 
 - [Rendering Pipeline](rendering_pipeline.md) - Learn how data is rendered on the canvas
 - [Architecture](architecture.md) - Understand the overall architecture of the library
-- [Data Models](data_models.md) - Explore the data models used in the library
 - [Interactive Layer](../features/drawing_tools/overview.md) - Learn about the interactive drawing tools

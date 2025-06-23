@@ -386,6 +386,5 @@ AddOnsRepository is a ChangeNotifier that:
 
 Now that you understand the architecture of the Deriv Chart library, you can explore:
 
-- [Data Models](data_models.md) - Learn about the data structures used in the chart
 - [Coordinate System](coordinate_system.md) - Understand how coordinates are managed
 - [Rendering Pipeline](rendering_pipeline.md) - Explore how data is rendered on the canvas
