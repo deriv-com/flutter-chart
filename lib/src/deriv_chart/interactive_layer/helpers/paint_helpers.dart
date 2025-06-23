@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/chart_date_utils.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart' as intl;
 
 /// Draws alignment guides (horizontal and vertical lines) for a single point
 void drawPointAlignmentGuides(Canvas canvas, Size size, Offset pointOffset,
@@ -262,10 +262,7 @@ void drawEpochLabel({
 }) {
   // Calculate X position based on the epoch
   final double xPosition = epochToX(epoch);
-
-  final DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(epoch);
-  final intl.DateFormat formatter = intl.DateFormat('MM/dd/yy HH:mm:ss');
-  final String formattedTime = formatter.format(dateTime);
+  final String formattedTime = ChartDateUtils.formatCompactDateTime(epoch);
 
   // Create text painter to measure text dimensions
   final TextPainter textPainter = _getTextPainter(
