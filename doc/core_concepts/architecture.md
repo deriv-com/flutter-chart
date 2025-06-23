@@ -248,7 +248,7 @@ DataPainter extends SeriesPainter to provide common painting functionality for D
 
 ## Interactive Layer
 
-The Interactive Layer manages user interactions with drawing tools:
+The Interactive Layer manages user interactions with drawing tools and provides a sophisticated state-based architecture for handling drawing tool creation, selection, and manipulation.
 
 ```
 ┌─────────────────────────┐
@@ -268,6 +268,16 @@ The Interactive Layer manages user interactions with drawing tools:
 └─────────────────┘└─────────────────┘└─────────────────┘└─────────────────┘
 ```
 
+### Key Components
+
+The Interactive Layer consists of several key components:
+
+- **InteractiveState**: Defines different modes of interaction (normal, selected, adding)
+- **InteractiveLayerBehaviour**: Provides platform-specific interaction handling and customizes state transitions
+- **DrawingV2**: The base interface for all drawable elements on the chart
+- **InteractableDrawing**: Concrete implementations of drawing tools that can be interacted with
+- **DrawingAddingPreview**: Specialized components for handling the drawing creation process
+
 ### InteractiveState
 
 InteractiveState defines the current mode of interaction with the chart:
@@ -286,6 +296,9 @@ Each drawing tool has its own state:
 - **hovered**: Pointer is hovering over the tool
 - **adding**: Tool is being created
 - **dragging**: Tool is being moved
+- **animating**: Tool is being animated
+
+For detailed information about the Interactive Layer architecture, components, and implementation details, see [Interactive Layer](interactive_layer.md).
 
 ## Theme System
 

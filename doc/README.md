@@ -112,7 +112,7 @@ Explore the features available in the Deriv Chart library:
 
 ### Interactive Layer
 
-- [Interactive Layer](interactive_layer.md) - Understand the interactive layer architecture
+- [Interactive Layer](core_concepts/interactive_layer.md) - Understand the interactive layer architecture
 
 ## Advanced Usage
 

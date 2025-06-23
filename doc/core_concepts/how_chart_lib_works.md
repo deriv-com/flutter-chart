@@ -142,7 +142,7 @@ The market data(input data of chart) is a list of _Ticks_ or _OHLC_.
 
 Chart widget is a Canvas that we paint all data of chart inside this Canvas.
 
-![plot](chart_scheme.png)
+![plot](../chart_scheme.png)
 
 this widget has X-Axis and Y-Axis enabled by default.
 
@@ -202,7 +202,7 @@ Zooming in the chart happens by updating **msPerPx**.
 
 ## Data Visualisation
 
-![plot](data_series.png)
+![plot](../data_series.png)
 We have an abstract class named **ChartData** that represents any type of data that the chart takes and makes it paint its self on the chart's canvas including _Line_, _Candle_ data, _Markers_, _barriers_, etc.
 A **ChartData** can be anything that shows some data on the chart. The chart can take a bunch of ChartData objects and paint them on its canvas.
 
@@ -246,7 +246,7 @@ They have the `createPainter` object to paint the **BarrierObject** that gets in
 
 # Painter classes
 
-![plot](data_painters.png)
+![plot](../data_painters.png)
 
 **SeriesPainter** is an abstract class responsible for painting its [series] data.
 
@@ -329,7 +329,7 @@ Chart has its own default dark and light themes that switch depending on Theme.o
 - Maintains its own Y-axis range and scaling while sharing the X-axis viewport
 - Can be dynamically added, removed, or reordered
 - Supports user interactions like zooming and scrolling in sync with MainChart
-![plot](basic-chart.png)
+![plot](../basic-chart.png)
 
 # Chart
 
@@ -342,7 +342,7 @@ Chart has its own default dark and light themes that switch depending on Theme.o
 
 \*if you want to have indicators and drawing tools in the chart, you should use **\*DerivChart** instead of **Chart\*\***
 
-![plot](deriv-chart.png)
+![plot](../deriv-chart.png)
 
 # Widgets
 
@@ -362,7 +362,7 @@ CustomDraggableSheet is a wrapper widget to be used combined with a bottom sheet
 
 ### Drawing Tools
 
-For a brief explanation of how drawing tools work, please refer to [Drawing Tools](drawing_tools.md) section.
+For a brief explanation of how drawing tools work, please refer to [Drawing Tools](../drawing_tools.md) section.
 
 ### Interactive Layer (New Implementation)
 
