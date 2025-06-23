@@ -1,7 +1,5 @@
-import 'dart:ui';
-
-import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/widgets/glassy_blur_effect_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -142,37 +140,22 @@ Widget _buildDropdownContent<T>(
   ValueChanged<T> onColorSelected,
   DropdownBuilder<T> builder,
   OverlayEntry overlayEntry,
-) {
-  final ChartTheme theme = context.read<ChartTheme>();
-  return AnimatedOpacity(
-    opacity: hasMeasuredSize ? 1 : 0,
-    duration: const Duration(milliseconds: 240),
-    child: ClipRRect(
-      borderRadius: BorderRadius.circular(8),
+) =>
+    AnimatedOpacity(
+      opacity: hasMeasuredSize ? 1 : 0,
+      duration: const Duration(milliseconds: 240),
       child: Material(
         key: dropdownKey,
         borderRadius: BorderRadius.circular(8),
-        // TODO(NA): use color from theme variables when it's added there.
-        color: CoreDesignTokens.coreColorSolidSlate1100,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: theme.crosshairInformationBoxContainerGlassBackgroundBlur,
-            sigmaY: theme.crosshairInformationBoxContainerGlassBackgroundBlur,
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: builder(initialColor, (T selectedColor) {
-              onColorSelected(selectedColor);
-              overlayEntry.remove();
-            }),
-          ),
+        color: Colors.transparent,
+        child: GlassyBlurEffectWidget(
+          child: builder(initialColor, (T selectedColor) {
+            onColorSelected(selectedColor);
+            overlayEntry.remove();
+          }),
         ),
       ),
-    ),
-  );
-}
+    );
 
 Widget _buildOutsideArea(OverlayEntry overlayEntry) => Positioned.fill(
       child: GestureDetector(

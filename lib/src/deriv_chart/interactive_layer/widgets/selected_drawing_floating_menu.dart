@@ -1,9 +1,15 @@
+import 'dart:ui';
+
+import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_item.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/interactable_drawing.dart';
 import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
+import 'package:deriv_chart/src/widgets/glassy_blur_effect_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import '../interactive_layer_behaviours/interactive_layer_behaviour.dart';
 import '../interactive_layer_controller.dart';
@@ -125,14 +131,7 @@ class _SelectedDrawingFloatingMenuState
               child: child,
             ),
           ),
-          child: Container(
-            decoration: BoxDecoration(
-              // TODO(NA): use a color from theme when the theme specification in
-              // design documents has included the color for this menu.
-              color: CoreDesignTokens.coreColorSolidSlate1100,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            padding: const EdgeInsets.only(right: 8, top: 4, bottom: 4),
+          child: GlassyBlurEffectWidget(
             child: Row(
               children: <Widget>[
                 _buildDragIcon(),
