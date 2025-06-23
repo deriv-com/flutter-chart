@@ -201,8 +201,10 @@ class TrendLineInteractableDrawing
           paintStyle.linePaintStyle(lineStyle.color, lineStyle.thickness);
       canvas.drawLine(startOffset, endOffset, paint);
 
-      // Add neon glow effect if selected
-      if (drawingState.contains(DrawingToolState.selected)) {
+      // Add neon glow effect if selected but not dragging individual points
+      if (drawingState.contains(DrawingToolState.selected) &&
+          !(drawingState.contains(DrawingToolState.dragging) &&
+              isDraggingStartPoint != null)) {
         final neonPaint = Paint()
           ..color = config.lineStyle.color.withOpacity(0.4)
           ..strokeWidth = 8 * animationInfo.stateChangePercent
@@ -212,23 +214,61 @@ class TrendLineInteractableDrawing
         canvas.drawLine(startOffset, endOffset, neonPaint);
       }
 
-      // Draw endpoints with glowy effect if selected or hovered
+      // Only draw points when there's an active interaction (selected, hovered, or dragging)
       if (drawingState.contains(DrawingToolState.selected) ||
           drawingState.contains(DrawingToolState.hovered) ||
           drawingState.contains(DrawingToolState.dragging)) {
-        drawPointsFocusedCircle(
-          paintStyle,
-          lineStyle,
-          canvas,
-          startOffset,
-          drawingState.contains(DrawingToolState.selected)
-              ? 10 * animationInfo.stateChangePercent
-              : 10,
-          drawingState.contains(DrawingToolState.selected)
-              ? 3 * animationInfo.stateChangePercent
-              : 3,
-          endOffset,
-        );
+        // Draw both points as normal circles first
+        drawPointOffset(
+            startOffset, epochToX, quoteToY, canvas, paintStyle, lineStyle,
+            radius: 4);
+        drawPointOffset(
+            endOffset, epochToX, quoteToY, canvas, paintStyle, lineStyle,
+            radius: 4);
+
+        // Then add glowy effect on top based on state
+        if (drawingState.contains(DrawingToolState.dragging) &&
+            isDraggingStartPoint != null) {
+          // When dragging, only show glow on the point being dragged
+          final Offset draggedPointOffset =
+              isDraggingStartPoint! ? startOffset : endOffset;
+          drawFocusedCircle(
+            paintStyle,
+            lineStyle,
+            canvas,
+            draggedPointOffset,
+            10 * animationInfo.stateChangePercent,
+            3 * animationInfo.stateChangePercent,
+          );
+        } else if (drawingState.contains(DrawingToolState.dragging) &&
+            isDraggingStartPoint == null) {
+          // When dragging the whole line, show glow on both points
+          drawPointsFocusedCircle(
+            paintStyle,
+            lineStyle,
+            canvas,
+            startOffset,
+            10 * animationInfo.stateChangePercent,
+            3 * animationInfo.stateChangePercent,
+            endOffset,
+          );
+        } else if (drawingState.contains(DrawingToolState.selected) ||
+            drawingState.contains(DrawingToolState.hovered)) {
+          // When not dragging, show glow on both points
+          drawPointsFocusedCircle(
+            paintStyle,
+            lineStyle,
+            canvas,
+            startOffset,
+            drawingState.contains(DrawingToolState.selected)
+                ? 10 * animationInfo.stateChangePercent
+                : 10,
+            drawingState.contains(DrawingToolState.selected)
+                ? 3 * animationInfo.stateChangePercent
+                : 3,
+            endOffset,
+          );
+        }
       }
 
       // Draw alignment guides when dragging
