@@ -121,20 +121,10 @@ class InteractiveAddingToolState extends InteractiveState
 
   @override
   Set<DrawingToolState> getToolState(DrawingV2 drawing) {
-    final String? addingDrawingId = _drawingPreview != null
-        ? interactiveLayerBehaviour
-            .getAddingDrawingPreview(
-              _drawingPreview!.interactableDrawing,
-              (_) {},
-            )
-            .id
-        : null;
+    final String? addingDrawingId = _drawingPreview?.interactableDrawing.id;
 
     final Set<DrawingToolState> states = drawing.id == addingDrawingId
-        ? {
-            DrawingToolState.adding,
-            if (_isAddingToolBeingDragged) DrawingToolState.dragging
-          }
+        ? {DrawingToolState.adding}
         : {DrawingToolState.normal};
 
     return states;

@@ -42,6 +42,8 @@ class HorizontalLineAddingPreviewMobile
 
   @override
   bool hitTest(Offset offset, EpochToX epochToX, QuoteToY quoteToY) {
+    // TODO(NA): To be more accurate, implement a hitTest specific for preview
+    // instead of relying on its interactable drawing.
     return interactableDrawing.hitTest(offset, epochToX, quoteToY);
   }
 
