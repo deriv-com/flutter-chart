@@ -5,10 +5,62 @@ import 'package:flutter/gestures.dart';
 import '../enums/drawing_tool_state.dart';
 import '../interactable_drawings/drawing_v2.dart';
 import '../enums/state_change_direction.dart';
+import '../interactable_drawings/interactable_drawing.dart';
 import 'interactive_hover_state.dart';
 import 'interactive_normal_state.dart';
 import 'interactive_selected_tool_state.dart';
 import 'interactive_state.dart';
+
+/// Represents the information about the tool being added to the interactive
+/// layer.
+class AddingStateInfo {
+  /// Creates an instance of [AddingStateInfo].
+  AddingStateInfo({
+    required this.addingToolType,
+    required this.addingTool,
+    required this.step,
+  });
+
+  /// The type of the tool being added.
+  final Type addingToolType;
+
+  /// The configuration of the tool being added.
+  final InteractableDrawing<DrawingToolConfig> addingTool;
+
+  /// Indicates the current step in the process of adding a tool.
+  final AddingToolStep step;
+}
+
+/// Represents a step in the process of adding a tool to the interactive layer,
+/// indicating which point the user is expected to set.
+class AddingToolStep {
+  const AddingToolStep._(this.step);
+
+  /// Creates a step where the layer is expecting the user to add the Nth point
+  /// of the tool.
+  ///
+  /// This can be used for tools that require more than two points.
+  factory AddingToolStep.awaitingPointN(int pointN) => AddingToolStep._(pointN);
+
+  /// The code of the step.
+  final int step;
+
+  /// The layer is expecting the user to add the first point of the tool.
+  static const awaitingFirstPoint = AddingToolStep._(1);
+
+  /// The layer is expecting the user to add the second point of the tool,
+  /// which is typically the endpoint for most tools.
+  static const awaitingEndPoint = AddingToolStep._(2);
+
+  /// The layer is expecting the user to add a single point for the tool.
+  ///
+  /// Some tools, such as [HorizontalLineInteractableDrawing], require only one
+  /// point only.
+  static const awaitingTheOnlyPoint = AddingToolStep._(0);
+
+  @override
+  String toString() => 'AddingToolStep(step: $step)';
+}
 
 /// The state of the interactive layer when a tool is being added.
 ///
@@ -79,12 +131,13 @@ class InteractiveAddingToolState extends InteractiveState
   }
 
   @override
-  void onPanEnd(DragEndDetails details) {
+  bool onPanEnd(DragEndDetails details) {
     if (_isAddingToolBeingDragged) {
       _drawingPreview?.onDragEnd(
           details, epochFromX, quoteFromY, epochToX, quoteToY);
 
       _isAddingToolBeingDragged = false;
+      return true; // Ended dragging the tool being added. Jim - Verify this
     }
 
     // To trigger the animation of the interactive layer, so the adding preview
@@ -93,10 +146,11 @@ class InteractiveAddingToolState extends InteractiveState
       this,
       StateChangeAnimationDirection.backward,
     );
+    return false; // Not dragging the tool being added. Jim - Verify this
   }
 
   @override
-  void onPanStart(DragStartDetails details) {
+  bool onPanStart(DragStartDetails details) {
     if (_drawingPreview?.hitTest(details.localPosition, epochToX, quoteToY) ??
         false) {
       // To trigger the animation of the interactive layer, so the adding
@@ -114,13 +168,15 @@ class InteractiveAddingToolState extends InteractiveState
         epochToX,
         quoteToY,
       );
+      return true; // Started dragging the tool being added. Jim - Verify this
     } else {
       _isAddingToolBeingDragged = false;
+      return false; // Not dragging the tool being added. Jim - Verify this
     }
   }
 
   @override
-  void onPanUpdate(DragUpdateDetails details) {
+  bool onPanUpdate(DragUpdateDetails details) {
     if (_isAddingToolBeingDragged) {
       _drawingPreview?.onDragUpdate(
         details,
@@ -129,11 +185,13 @@ class InteractiveAddingToolState extends InteractiveState
         epochToX,
         quoteToY,
       );
+      return true; // Dragging the adding tool. Jim - Verify this
     }
+    return false; // Not dragging the adding tool. Jim - Verify this
   }
 
   @override
-  void onHover(PointerHoverEvent event) {
+  bool onHover(PointerHoverEvent event) {
     _drawingPreview?.onHover(
       event,
       epochFromX,
@@ -141,10 +199,12 @@ class InteractiveAddingToolState extends InteractiveState
       epochToX,
       quoteToY,
     );
+
+    return true; // Always return true as we're in adding mode
   }
 
   @override
-  void onTap(TapUpDetails details) {
+  bool onTap(TapUpDetails details) {
     _drawingPreview!
         .onCreateTap(details, epochFromX, quoteFromY, epochToX, quoteToY, () {
       interactiveLayer
@@ -166,5 +226,6 @@ class InteractiveAddingToolState extends InteractiveState
 
       _drawingPreview = null;
     });
+    return true; // Always return true as we're in adding mode
   }
 }

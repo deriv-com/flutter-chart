@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import 'base_chart_screen.dart';
@@ -32,6 +33,10 @@ class _HollowCandleScreenState
   Color _bearishBodyColor = CandleBearishThemeColors.candleBearishBodyDefault;
   Color _bullishWickColor = CandleBullishThemeColors.candleBullishWickDefault;
   Color _bearishWickColor = CandleBearishThemeColors.candleBearishWickDefault;
+  bool _showCrosshair = true;
+  bool _useLargeScreenCrosshair = kIsWeb; // Default based on platform
+  bool _useDarkTheme = false;
+  bool _useDrawingToolsV2 = true;
 
   @override
   String getTitle() => 'Hollow Candle Chart';
@@ -53,7 +58,12 @@ class _HollowCandleScreenState
       pipSize: 2,
       granularity: 3600000, // 1 hour
       activeSymbol: 'HOLLOW_CANDLE_CHART',
-      useDrawingToolsV2: true,
+      showCrosshair: _showCrosshair,
+      crosshairVariant: _useLargeScreenCrosshair
+          ? CrosshairVariant.largeScreen
+          : CrosshairVariant.smallScreen,
+      theme: _useDarkTheme ? ChartDefaultDarkTheme() : ChartDefaultLightTheme(),
+      useDrawingToolsV2: _useDrawingToolsV2,
     );
   }
 
@@ -65,6 +75,77 @@ class _HollowCandleScreenState
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Theme toggle
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Theme:'),
+                const SizedBox(width: 8),
+                const Text('Light'),
+                Switch(
+                  value: _useDarkTheme,
+                  onChanged: (value) {
+                    setState(() {
+                      _useDarkTheme = value;
+                    });
+                  },
+                ),
+                const Text('Dark'),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Crosshair controls
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Show Crosshair:'),
+                    const SizedBox(width: 8),
+                    Switch(
+                      value: _showCrosshair,
+                      onChanged: (value) {
+                        setState(() {
+                          _showCrosshair = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _useLargeScreenCrosshair = !_useLargeScreenCrosshair;
+                    });
+                  },
+                  child: Text(
+                    'Crosshair: ${_useLargeScreenCrosshair ? 'Large' : 'Small'}',
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Drawing Tools V2 toggle
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Drawing Tools V2:'),
+                const SizedBox(width: 8),
+                Switch(
+                  value: _useDrawingToolsV2,
+                  onChanged: (value) {
+                    setState(() {
+                      _useDrawingToolsV2 = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
             _buildColorRow(
               label: 'Bullish Body:',
               colors: [

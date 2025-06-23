@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/deriv_chart.dart';
 import '../../widgets/color_picker_widget.dart';
@@ -17,6 +18,10 @@ class _CandleChartScreenState extends BaseChartScreenState<CandleChartScreen> {
   Color _bearishBodyColor = CandleBearishThemeColors.candleBearishBodyDefault;
   Color _bullishWickColor = CandleBullishThemeColors.candleBullishWickDefault;
   Color _bearishWickColor = CandleBearishThemeColors.candleBearishWickDefault;
+  bool _showCrosshair = true;
+  bool _useLargeScreenCrosshair = kIsWeb; // Default based on platform
+  bool _useDarkTheme = false;
+  bool _useDrawingToolsV2 = true;
 
   @override
   String getTitle() => 'Candle Chart';
@@ -47,7 +52,12 @@ class _CandleChartScreenState extends BaseChartScreenState<CandleChartScreen> {
       activeSymbol: 'CANDLE_CHART',
       // Explicitly set an empty indicators repository to remove any default indicators
       indicatorsRepo: _emptyIndicatorsRepo,
-      useDrawingToolsV2: true,
+      showCrosshair: _showCrosshair,
+      crosshairVariant: _useLargeScreenCrosshair
+          ? CrosshairVariant.largeScreen
+          : CrosshairVariant.smallScreen,
+      theme: _useDarkTheme ? ChartDefaultDarkTheme() : ChartDefaultLightTheme(),
+      useDrawingToolsV2: _useDrawingToolsV2,
     );
   }
 
@@ -59,6 +69,77 @@ class _CandleChartScreenState extends BaseChartScreenState<CandleChartScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Theme toggle
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Theme:'),
+                const SizedBox(width: 8),
+                const Text('Light'),
+                Switch(
+                  value: _useDarkTheme,
+                  onChanged: (value) {
+                    setState(() {
+                      _useDarkTheme = value;
+                    });
+                  },
+                ),
+                const Text('Dark'),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Crosshair controls
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Show Crosshair:'),
+                    const SizedBox(width: 8),
+                    Switch(
+                      value: _showCrosshair,
+                      onChanged: (value) {
+                        setState(() {
+                          _showCrosshair = value;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _useLargeScreenCrosshair = !_useLargeScreenCrosshair;
+                    });
+                  },
+                  child: Text(
+                    'Crosshair: ${_useLargeScreenCrosshair ? 'Large' : 'Small'}',
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // Drawing Tools V2 toggle
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Drawing Tools V2:'),
+                const SizedBox(width: 8),
+                Switch(
+                  value: _useDrawingToolsV2,
+                  onChanged: (value) {
+                    setState(() {
+                      _useDrawingToolsV2 = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
             DerivColorPicker(
               label: 'Bullish Body:',
               selectedColor: _bullishBodyColor,

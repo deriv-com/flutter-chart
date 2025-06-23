@@ -1,13 +1,16 @@
-import 'package:deriv_chart/src/deriv_chart/chart/crosshair/find.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_variant.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/find.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/gestures/gesture_manager.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/large_screen_crosshair_line_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/small_screen_crosshair_line_painter.dart';
 import 'package:deriv_chart/src/models/tick.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'crosshair_dot_painter.dart';
-import 'crosshair_line_painter.dart';
 
 /// A Cross-hair widget to work with index of data rather than epoch.
 class IndexBaseCrossHair extends StatefulWidget {
@@ -17,6 +20,7 @@ class IndexBaseCrossHair extends StatefulWidget {
     required this.indexToX,
     required this.xToIndex,
     required this.ticks,
+    required this.crosshairVariant,
     this.enabled = false,
     this.pipSize = 4,
     this.crossHairContentPadding = 4,
@@ -58,6 +62,12 @@ class IndexBaseCrossHair extends StatefulWidget {
   /// A temporary solution for the issue when we wrap the worm chart with
   /// GestureDetector to have the onTap.
   final VoidCallback? onTap;
+
+  /// The variant of the crosshair to be used.
+  /// This is used to determine the type of crosshair to display.
+  /// The default is [CrosshairVariant.smallScreen].
+  /// [CrosshairVariant.largeScreen] is mostly for web.
+  final CrosshairVariant crosshairVariant;
 
   @override
   _IndexBaseCrossHairState createState() => _IndexBaseCrossHairState();
@@ -125,6 +135,10 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
   @override
   Widget build(BuildContext context) => LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
+          final ChartTheme theme = context.read<ChartTheme>();
+          final Color dotColor = theme.currentSpotDotColor;
+          final Color dotEffect = theme.currentSpotDotEffect;
+
           if (_crossHairIndex == null) {
             return const SizedBox.shrink();
           }
@@ -140,7 +154,11 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
                   left: widget.indexToX(_crossHairIndex!),
                   child: CustomPaint(
                     size: Size(1, constraints.maxHeight),
-                    painter: const CrosshairDotPainter(),
+                    painter:
+                        widget.crosshairVariant == CrosshairVariant.smallScreen
+                            ? CrosshairDotPainter(
+                                dotColor: dotColor, dotBorderColor: dotEffect)
+                            : null,
                   ),
                 ),
                 if (_crossHairDetailSize != null) ...<Widget>[
@@ -162,7 +180,14 @@ class _IndexBaseCrossHairState extends State<IndexBaseCrossHair>
                         1,
                         constraints.maxHeight - _crossHairDetailSize!.height,
                       ),
-                      painter: const CrosshairLinePainter(),
+                      painter: widget.crosshairVariant ==
+                              CrosshairVariant.smallScreen
+                          ? SmallScreenCrosshairLinePainter(
+                              theme: theme,
+                            )
+                          : LargeScreenCrosshairLinePainter(
+                              theme: theme,
+                            ),
                     ),
                   )
                 ]

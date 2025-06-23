@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
@@ -8,6 +10,7 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/gestures.dart';
+
 import 'package:flutter/material.dart';
 import '../../helpers/types.dart';
 import '../drawing_adding_preview.dart';
@@ -24,22 +27,12 @@ class TrendLineAddingPreviewDesktop
   });
 
   Offset? _hoverPosition;
-  EpochFromX? _epochFromX;
-  QuoteFromY? _quoteFromY;
-
-  @override
-  bool hitTest(Offset offset, EpochToX epochToX, QuoteToY quoteToY) => false;
 
   @override
   void onHover(PointerHoverEvent event, EpochFromX epochFromX,
       QuoteFromY quoteFromY, EpochToX epochToX, QuoteToY quoteToY) {
     _hoverPosition = event.localPosition;
-    _epochFromX = epochFromX;
-    _quoteFromY = quoteFromY;
   }
-
-  @override
-  String get id => 'trend-line-adding-preview-desktop';
 
   @override
   void paint(
@@ -59,6 +52,8 @@ class TrendLineAddingPreviewDesktop
       Size size,
       EpochToX epochToX,
       QuoteToY quoteToY,
+      EpochFromX? epochFromX,
+      QuoteFromY? quoteFromY,
       AnimationInfo animationInfo,
       ChartConfig chartConfig,
       ChartTheme chartTheme,
@@ -81,27 +76,13 @@ class TrendLineAddingPreviewDesktop
             paintStyle.linePaintStyle(lineStyle.color, lineStyle.thickness));
 
         // Draw alignment guides with labels
-        _drawAlignmentGuidesWithLabels(
-          canvas,
-          size,
-          _hoverPosition!,
-          epochToX,
-          quoteToY,
-          chartConfig,
-          chartTheme,
-        );
+        _drawAlignmentGuidesWithLabels(canvas, size, _hoverPosition!, epochToX,
+            quoteToY, chartConfig, chartTheme, epochFromX, quoteFromY);
       }
     } else if (_hoverPosition != null) {
       // Show alignment guides with labels when hovering before first point is set
-      _drawAlignmentGuidesWithLabels(
-        canvas,
-        size,
-        _hoverPosition!,
-        epochToX,
-        quoteToY,
-        chartConfig,
-        chartTheme,
-      );
+      _drawAlignmentGuidesWithLabels(canvas, size, _hoverPosition!, epochToX,
+          quoteToY, chartConfig, chartTheme, epochFromX, quoteFromY);
     }
 
     if (interactableDrawing.endPoint != null) {
@@ -142,14 +123,16 @@ class TrendLineAddingPreviewDesktop
     QuoteToY quoteToY,
     ChartConfig chartConfig,
     ChartTheme chartTheme,
+    EpochFromX? epochFromX,
+    QuoteFromY? quoteFromY,
   ) {
     // Draw the basic alignment guides
     drawPointAlignmentGuides(canvas, size, pointOffset,
         lineColor: interactableDrawing.config.lineStyle.color);
 
-    if (_epochFromX != null && _quoteFromY != null) {
-      final int epoch = _epochFromX!(pointOffset.dx);
-      final double quote = _quoteFromY!(pointOffset.dy);
+    if (epochFromX != null && quoteFromY != null) {
+      final int epoch = epochFromX(pointOffset.dx);
+      final double quote = quoteFromY(pointOffset.dy);
 
       // Draw value label on the right side
       drawValueLabel(
@@ -183,4 +166,10 @@ class TrendLineAddingPreviewDesktop
       );
     }
   }
+
+  @override
+  String get id => 'line-adding-preview-desktop';
+
+  @override
+  bool hitTest(Offset offset, EpochToX epochToX, QuoteToY quoteToY) => false;
 }

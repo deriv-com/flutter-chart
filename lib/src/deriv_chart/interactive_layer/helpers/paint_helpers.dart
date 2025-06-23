@@ -246,26 +246,6 @@ void drawValueLabel({
   );
 }
 
-/// Returns a [TextPainter] for the given formatted value and color.
-TextPainter _getTextPainter(
-  String formattedValue, {
-  TextStyle textStyle = const TextStyle(
-    color: Colors.white38,
-    fontSize: 14,
-    fontWeight: FontWeight.normal,
-  ),
-}) {
-  final TextPainter textPainter = TextPainter(
-    text: TextSpan(
-      text: formattedValue,
-      style: textStyle,
-    ),
-    textDirection: TextDirection.ltr,
-    textAlign: TextAlign.center,
-  );
-  return textPainter;
-}
-
 /// Draws an epoch label rectangle on the x-axis with formatted time
 ///
 /// This draws a rounded rectangle with the formatted epoch time inside it.
@@ -333,4 +313,24 @@ void drawEpochLabel({
       rect.top + (rectHeight - textPainter.height) / 2,
     ),
   );
+}
+
+/// Returns a [TextPainter] for the given formatted value and color.
+TextPainter _getTextPainter(
+  String formattedValue, {
+  TextStyle textStyle = const TextStyle(
+    color: Colors.white38,
+    fontSize: 14,
+    fontWeight: FontWeight.normal,
+  ),
+}) {
+  final TextPainter textPainter = TextPainter(
+    text: TextSpan(
+      text: formattedValue,
+      style: textStyle,
+    ),
+    textDirection: TextDirection.ltr,
+    textAlign: TextAlign.center,
+  );
+  return textPainter;
 }

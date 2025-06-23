@@ -6,6 +6,8 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_pattern.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/point.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/drawing_context.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/types.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/text_style_json_converter.dart';
 import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/drawing_context.dart';

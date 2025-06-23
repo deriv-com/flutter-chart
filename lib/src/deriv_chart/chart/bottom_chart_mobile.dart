@@ -194,8 +194,8 @@ class IndicatorLabelMobile extends StatelessWidget {
       borderRadius: BorderRadius.circular(Dimens.margin04),
       child: BackdropFilter(
         filter: ImageFilter.blur(
-            sigmaX: Dimens.crosshairInformationBoxContainerGlassBackgroundBlur,
-            sigmaY: Dimens.crosshairInformationBoxContainerGlassBackgroundBlur),
+            sigmaX: theme.crosshairInformationBoxContainerGlassBackgroundBlur,
+            sigmaY: theme.crosshairInformationBoxContainerGlassBackgroundBlur),
         child: Container(
           padding: const EdgeInsets.all(Dimens.margin04),
           decoration: BoxDecoration(

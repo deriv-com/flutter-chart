@@ -257,6 +257,8 @@ class TrendLineInteractableDrawing
     ui.Size size,
     EpochToX epochToX,
     QuoteToY quoteToY,
+    epochFromX,
+    quoteFromY,
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme chartTheme,

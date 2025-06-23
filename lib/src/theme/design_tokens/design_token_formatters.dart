@@ -61,6 +61,8 @@ class ColorTokenFormatter implements DesignTokenValueFormatter {
         // Add alpha channel if not present
         hex = 'FF$hex';
       }
+      // Ensure hex values are uppercase
+      hex = hex.toUpperCase();
       return 'Color(0x$hex)';
     } else if (value.startsWith('rgba')) {
       // Handle rgba values
@@ -81,7 +83,6 @@ class ColorTokenFormatter implements DesignTokenValueFormatter {
       // Extract the token reference (remove the curly braces)
       final String tokenRef = value.substring(1, value.length - 1);
 
-      // Convert to camelCase using the existing convertToDartPropertyName function
       return DesignTokenUtils.convertToDartPropertyName(tokenRef, category);
     } else if (value.contains('linear-gradient')) {
       // Convert linear gradient string to LinearGradient object
@@ -252,7 +253,6 @@ class NumericTokenFormatter implements DesignTokenValueFormatter {
       // Extract the token reference (remove the curly braces)
       final String tokenRef = value.substring(1, value.length - 1);
 
-      // Convert to camelCase using the existing convertToDartPropertyName function
       return DesignTokenUtils.convertToDartPropertyName(tokenRef, category);
     }
 
@@ -295,7 +295,6 @@ class PercentageTokenFormatter implements DesignTokenValueFormatter {
       final String tokenRef =
           originalValue.substring(1, originalValue.length - 1);
 
-      // Convert to camelCase using the existing convertToDartPropertyName function
       return DesignTokenUtils.convertToDartPropertyName(tokenRef, category);
     }
     return originalValue;
@@ -326,7 +325,6 @@ class BoxShadowTokenFormatter implements DesignTokenValueFormatter {
       // Extract the token reference (remove the curly braces)
       final String tokenRef = value.substring(1, value.length - 1);
 
-      // Convert to camelCase using the existing convertToDartPropertyName function
       return DesignTokenUtils.convertToDartPropertyName(tokenRef, category);
     }
     return "'$value'";
@@ -350,18 +348,229 @@ class BoxShadowTokenFormatter implements DesignTokenValueFormatter {
   }
 }
 
-/// Formatter for font-related tokens (fontFamilies, fontWeights, textDecoration)
-class FontTokenFormatter implements DesignTokenValueFormatter {
+/// Formatter for font family tokens
+class FontFamilyTokenFormatter implements DesignTokenValueFormatter {
   @override
   String format(dynamic value, String category) {
-    if (value is String && value.startsWith('{') && value.endsWith('}')) {
-      // Extract the token reference (remove the curly braces)
-      final String tokenRef = value.substring(1, value.length - 1);
+    return DesignTokenUtils.formatTokenReference(value, category);
+  }
+}
 
-      // Convert to camelCase using the existing convertToDartPropertyName function
-      return DesignTokenUtils.convertToDartPropertyName(tokenRef, category);
+/// Formatter specifically for text decoration tokens
+class TextDecorationTokenFormatter implements DesignTokenValueFormatter {
+  @override
+  String format(dynamic value, String category) {
+    // First check if it's a token reference
+    if (value is String && value.startsWith('{') && value.endsWith('}')) {
+      return DesignTokenUtils.formatTokenReference(value, category);
     }
-    return "'$value'";
+
+    // Handle text decoration values
+    if (value is String) {
+      return _mapToTextDecoration(value);
+    }
+
+    return DesignTokenUtils.formatTokenReference(value, category);
+  }
+
+  /// Maps text decoration strings to Flutter TextDecoration constants
+  String _mapToTextDecoration(String decoration) {
+    switch (decoration.toLowerCase()) {
+      case 'none':
+        return 'TextDecoration.none';
+      case 'underline':
+        return 'TextDecoration.underline';
+      case 'overline':
+        return 'TextDecoration.overline';
+      case 'line-through':
+      case 'linethrough':
+        return 'TextDecoration.lineThrough';
+      default:
+        return "'$decoration'";
+    }
+  }
+}
+
+/// Formatter specifically for font style tokens (italic, normal)
+class FontStyleTokenFormatter implements DesignTokenValueFormatter {
+  @override
+  String format(dynamic value, String category) {
+    // First check if it's a token reference
+    if (value is String && value.startsWith('{') && value.endsWith('}')) {
+      return DesignTokenUtils.formatTokenReference(value, category);
+    }
+
+    // Handle font style values
+    if (value is String) {
+      return _mapToFontStyle(value);
+    }
+
+    return DesignTokenUtils.formatTokenReference(value, category);
+  }
+
+  /// Maps font style strings to Flutter FontStyle constants
+  String _mapToFontStyle(String style) {
+    switch (style.toLowerCase()) {
+      case 'italic':
+        return 'FontStyle.italic';
+      case 'normal':
+        return 'FontStyle.normal';
+      default:
+        return "'$style'";
+    }
+  }
+}
+
+/// Formatter specifically for line height tokens
+class LineHeightTokenFormatter implements DesignTokenValueFormatter {
+  @override
+  String format(dynamic value, String category) {
+    // First check if it's a token reference
+    if (value is String && value.startsWith('{') && value.endsWith('}')) {
+      return DesignTokenUtils.formatTokenReference(value, category);
+    }
+
+    // Handle line height values
+    if (value is String) {
+      return _mapToLineHeight(value);
+    }
+
+    return DesignTokenUtils.formatTokenReference(value, category);
+  }
+
+  /// Maps line height strings to appropriate Flutter values
+  String _mapToLineHeight(String lineHeight) {
+    switch (lineHeight.toLowerCase()) {
+      case 'auto':
+        return '1.0'; // In Flutter, auto line height can be represented as 1.0 (normal line height multiplier)
+      case 'normal':
+        return '1.0'; // Normal line height is 1.0 in Flutter (default multiplier)
+      default:
+        // Try to parse as a number
+        final double? numValue = double.tryParse(lineHeight);
+        if (numValue != null) {
+          return numValue.toString();
+        }
+        // If it ends with px, remove it and parse
+        if (lineHeight.endsWith('px')) {
+          final String numericPart =
+              lineHeight.substring(0, lineHeight.length - 2);
+          final double? pxValue = double.tryParse(numericPart);
+          if (pxValue != null) {
+            return pxValue.toString();
+          }
+        }
+        return "'$lineHeight'";
+    }
+  }
+}
+
+/// Formatter specifically for font weight tokens
+class FontWeightTokenFormatter implements DesignTokenValueFormatter {
+  @override
+  String format(dynamic value, String category) {
+    // First check if it's a token reference
+    if (value is String && value.startsWith('{') && value.endsWith('}')) {
+      return DesignTokenUtils.formatTokenReference(value, category);
+    }
+
+    // Handle string values that might be font styles incorrectly categorized as font weights
+    if (value is String) {
+      // Check if it's actually a font style (italic, normal)
+      if (_isFontStyle(value)) {
+        return _mapToFontStyle(value);
+      }
+
+      // Check if it's a special font weight value that should remain as string
+      if (_isSpecialFontWeight(value)) {
+        return "'$value'";
+      }
+
+      // Try to parse as numeric font weight
+      final int? fontWeight = int.tryParse(value);
+      if (fontWeight != null) {
+        return _mapToFontWeight(fontWeight);
+      }
+    }
+
+    return DesignTokenUtils.formatTokenReference(value, category);
+  }
+
+  /// Checks if a value is actually a font style (incorrectly categorized as font weight)
+  ///
+  /// The quill design systems sometimes incorrectly categorize font style values
+  /// (like 'italic' or 'normal') as font weights. This method identifies such
+  /// cases so they can be handled appropriately.
+  ///
+  /// Parameters:
+  /// - value: The string value to check
+  ///
+  /// Returns:
+  /// true if the value represents a font style rather than a font weight
+  bool _isFontStyle(String value) {
+    final String lowerValue = value.toLowerCase();
+    return lowerValue == 'italic' ||
+        lowerValue == 'normal' ||
+        lowerValue.contains('italic');
+  }
+
+  /// Checks if a value is a special font weight that should remain as string
+  ///
+  /// Some font weight values are non-standard or compound styles that cannot
+  /// be mapped to Flutter's FontWeight constants. These should be kept as
+  /// string literals for custom handling in the application.
+  ///
+  /// Parameters:
+  /// - value: The string value to check
+  ///
+  /// Returns:
+  /// true if the value should be kept as a string literal rather than mapped to FontWeight
+  bool _isSpecialFontWeight(String value) {
+    final String lowerValue = value.toLowerCase();
+    return lowerValue == 'solid' ||
+        lowerValue == 'fill' ||
+        lowerValue.contains(
+            'bold italic'); // Keep compound styles as strings. They would need to be handled differently in actual usage.
+  }
+
+  /// Maps font style strings to Flutter FontStyle constants
+  String _mapToFontStyle(String style) {
+    switch (style.toLowerCase()) {
+      case 'italic':
+        return 'FontStyle.italic';
+      case 'normal':
+        return 'FontStyle.normal';
+      default:
+        // For compound styles like "Bold Italic", keep as string. They would need to be handled differently in actual usage
+        return "'$style'";
+    }
+  }
+
+  /// Maps numeric font weight values to Flutter FontWeight constants
+  String _mapToFontWeight(int weight) {
+    switch (weight) {
+      case 100:
+        return 'FontWeight.w100';
+      case 200:
+        return 'FontWeight.w200';
+      case 300:
+        return 'FontWeight.w300';
+      case 400:
+        return 'FontWeight.w400';
+      case 500:
+        return 'FontWeight.w500';
+      case 600:
+        return 'FontWeight.w600';
+      case 700:
+        return 'FontWeight.w700';
+      case 800:
+        return 'FontWeight.w800';
+      case 900:
+        return 'FontWeight.w900';
+      default:
+        // For non-standard weights, fall back to FontWeight.w() constructor
+        return 'FontWeight.w$weight';
+    }
   }
 }
 
@@ -391,6 +600,69 @@ class DurationTokenFormatter implements DesignTokenValueFormatter {
 
     // If we couldn't parse it, return the original string
     return "'$cleanedValue'";
+  }
+}
+
+/// Formatter for motion tokens (cubic-bezier easing curves)
+class MotionTokenFormatter implements DesignTokenValueFormatter {
+  @override
+  String format(dynamic value, String category) {
+    return _formatMotionValue(value.toString());
+  }
+
+  /// Formats a motion value to a Flutter Curve object
+  String _formatMotionValue(String value) {
+    // Remove any surrounding quotes
+    final String cleanedValue = value.replaceAll('\'', '').replaceAll('"', '');
+
+    // Check if the value is a cubic-bezier (motion easing)
+    if (cleanedValue.contains('cubic-bezier')) {
+      final cubicBezierFormatter = CubicBezierTokenFormatter();
+      return cubicBezierFormatter.convertCubicBezierToDartObject(cleanedValue);
+    }
+
+    // Handle non-cubic-bezier motion values
+    return _handleNonBezierMotionValue(cleanedValue);
+  }
+
+  /// Handles non-cubic-bezier motion values
+  ///
+  /// This method processes motion values that are not cubic-bezier functions.
+  /// It first checks if the value is a token reference, and if not, handles
+  /// common CSS easing keywords. For truly unrecognized values, it throws
+  /// an error to prevent invalid Dart code generation.
+  ///
+  /// Parameters:
+  /// - value: The motion value to process
+  ///
+  /// Returns:
+  /// A string representation of a Flutter Curve constant or token reference
+  String _handleNonBezierMotionValue(String value) {
+    // Check if it's a token reference first
+    if (value.startsWith('{') && value.endsWith('}')) {
+      // Extract the token reference (remove the curly braces)
+      final String tokenRef = value.substring(1, value.length - 1);
+      return DesignTokenUtils.convertToDartPropertyName(tokenRef, 'core');
+    }
+
+    // Handle common CSS easing keywords that might appear in design tokens
+    switch (value.toLowerCase().trim()) {
+      case 'ease':
+        return 'Curves.ease /* CSS ease curve */';
+      case 'ease-in':
+        return 'Curves.easeIn /* CSS ease-in curve */';
+      case 'ease-out':
+        return 'Curves.easeOut /* CSS ease-out curve */';
+      case 'ease-in-out':
+        return 'Curves.easeInOut /* CSS ease-in-out curve */';
+      case 'linear':
+        return 'Curves.linear /* CSS linear curve */';
+      default:
+        // For unrecognized values, throw an error to prevent invalid code generation
+        // This is safer than silently converting to a potentially incorrect fallback
+        throw ArgumentError('Unrecognized motion easing value: "$value". '
+            'Expected cubic-bezier(...) function, token reference, or standard CSS easing keyword.');
+    }
   }
 }
 
@@ -446,32 +718,84 @@ class CubicBezierTokenFormatter implements DesignTokenValueFormatter {
   }
 }
 
-/// Factory for creating token formatters based on token type
+/// Factory for creating token formatters based on token type (Factory Pattern)
+///
+/// This factory class implements the Factory Pattern to create appropriate
+/// formatter instances based on the token type. It maintains a registry of
+/// formatters and provides a centralized way to obtain the correct formatter
+/// for any given design token type.
+///
+/// The factory pattern allows for:
+/// - Centralized formatter management
+/// - Easy addition of new token types and formatters
+/// - Consistent formatter instantiation
+/// - Fallback to default formatter for unknown types
+///
+/// Usage:
+/// ```dart
+/// final formatter = TokenFormatterFactory.getFormatter('color');
+/// final result = formatter.format('#FF0000', 'core');
+/// ```
 class TokenFormatterFactory {
+  /// Registry of token type to formatter mappings
+  ///
+  /// Maps token type strings to their corresponding formatter instances.
+  /// Each formatter is responsible for converting design tokens of a specific
+  /// type into appropriate Dart/Flutter code representations.
   static final Map<String, DesignTokenValueFormatter> _formatters = {
-    'color': ColorTokenFormatter(),
-    'borderRadius': NumericTokenFormatter(),
-    'borderWidth': NumericTokenFormatter(),
-    'spacing': NumericTokenFormatter(),
-    'sizing': NumericTokenFormatter(),
-    'opacity': PercentageTokenFormatter(),
-    'fontSizes': NumericTokenFormatter(),
-    'lineHeights': NumericTokenFormatter(),
-    'paragraphSpacing': NumericTokenFormatter(),
-    'fontFamilies': FontTokenFormatter(),
-    'fontWeights': FontTokenFormatter(),
-    'textDecoration': FontTokenFormatter(),
-    'boxShadow': BoxShadowTokenFormatter(),
-    'duration': DurationTokenFormatter(),
+    'color': ColorTokenFormatter(), // Hex, rgba, gradients, token references
+    'borderRadius':
+        NumericTokenFormatter(), // Border radius values with px units
+    'borderWidth': NumericTokenFormatter(), // Border width values with px units
+    'spacing': NumericTokenFormatter(), // Spacing/padding values with px units
+    'sizing': NumericTokenFormatter(), // Width/height values with px units
+    'opacity': PercentageTokenFormatter(), // Opacity values as percentages
+    'fontSizes': NumericTokenFormatter(), // Font size values with px units
+    'lineHeights':
+        LineHeightTokenFormatter(), // Line height values (auto, normal, numeric)
+    'paragraphSpacing':
+        NumericTokenFormatter(), // Paragraph spacing with px units
+    'fontFamilies':
+        FontFamilyTokenFormatter(), // Font family names and token references
+    'fontWeights':
+        FontWeightTokenFormatter(), // Font weight values (100-900, named weights)
+    'textDecoration': TextDecorationTokenFormatter(), // Text decoration styles
+    'fontStyle':
+        FontStyleTokenFormatter(), // Font style values (italic, normal)
+    'boxShadow': BoxShadowTokenFormatter(), // Box shadow definitions
+    'duration':
+        DurationTokenFormatter(), // Animation duration values in milliseconds
+    'motion':
+        MotionTokenFormatter(), // Motion tokens (cubic-bezier easing curves)
   };
 
   /// Get a formatter for the specified token type
+  ///
+  /// Returns the appropriate formatter instance for the given token type.
+  /// If no specific formatter is found, returns a default formatter that
+  /// handles basic token reference resolution and string formatting.
+  ///
+  /// Parameters:
+  /// - type: The token type string (e.g., 'color', 'spacing', 'fontWeights')
+  ///
+  /// Returns:
+  /// A DesignTokenValueFormatter instance capable of formatting the specified token type
   static DesignTokenValueFormatter getFormatter(String type) {
     return _formatters[type] ?? _DefaultTokenFormatter();
   }
 }
 
 /// Default formatter for token types that don't have a specific formatter
+///
+/// This formatter serves as a fallback for token types that don't have
+/// dedicated formatters. It provides basic functionality for:
+/// - Token reference resolution
+/// - Auto-detection of common token patterns (rgba, gradients, cubic-bezier, durations)
+/// - Delegation to appropriate specialized formatters when patterns are detected
+/// - Basic string formatting for unrecognized values
+///
+/// The default formatter ensures that the system can handle new or unknown
+/// token types gracefully without breaking the formatting process.
 class _DefaultTokenFormatter implements DesignTokenValueFormatter {
   @override
   String format(dynamic value, String category) {
@@ -491,14 +815,12 @@ class _DefaultTokenFormatter implements DesignTokenValueFormatter {
             ? colorFormatter.convertGradientStringToDartObject(value, category)
             : 'Invalid formatter';
       } else if (value.contains('cubic-bezier')) {
-        // Convert cubic-bezier to Cubic object
-        return TokenFormatterFactory.getFormatter('duration')
+        return TokenFormatterFactory.getFormatter('motion')
             .format(value, category);
       } else if (value.startsWith('{') && value.endsWith('}')) {
         // Extract the token reference (remove the curly braces)
         final String tokenRef = value.substring(1, value.length - 1);
 
-        // Convert to camelCase using the existing convertToDartPropertyName function
         return DesignTokenUtils.convertToDartPropertyName(tokenRef, category);
       } else if (value.endsWith('ms')) {
         // Handle motion duration values
