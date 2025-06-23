@@ -119,7 +119,6 @@ Explore the features available in the Deriv Chart library:
 Take your charts to the next level with advanced techniques:
 
 - [Custom Themes](advanced_usage/custom_themes.md) - Create custom chart themes
-- [Performance Optimization](advanced_usage/performance_optimization.md) - Optimize chart performance
 - [Real-time Data](advanced_usage/real_time_data.md) - Handle real-time data updates
 - [Custom Indicators](advanced_usage/custom_indicators.md) - Create your own indicators
 - [Custom Drawing Tools](advanced_usage/custom_drawing_tools.md) - Create your own drawing tools

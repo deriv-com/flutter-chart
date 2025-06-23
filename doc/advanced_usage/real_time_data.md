@@ -685,6 +685,5 @@ class _HistoricalAndRealTimeChartExampleState extends State<HistoricalAndRealTim
 
 Now that you understand how to handle real-time data in the Deriv Chart library, you can explore:
 
-- [Performance Optimization](performance_optimization.md) - Optimize chart performance
 - [Custom Indicators](custom_indicators.md) - Create custom indicators
 - [Custom Drawing Tools](custom_drawing_tools.md) - Implement custom drawing tools
