@@ -159,6 +159,8 @@ Provided by each chart widget (main chart and bottom charts) to components in ea
 
 These functions enable plotting any data point on the canvas and handling user interactions.
 
+For detailed information about the coordinate system implementation and usage, see [Coordinate System](coordinate_system.md).
+
 ## Data Visualization
 
 The chart library uses a flexible data visualization system built around the `ChartData` interface:
@@ -357,6 +359,8 @@ ChartTheme is an interface defining all themeable aspects of the chart:
 Users can create custom themes by:
 - Implementing the ChartTheme interface
 - Extending one of the default themes and overriding specific properties
+
+For detailed information about creating and customizing themes, see [Custom Themes](../advanced_usage/custom_themes.md).
 
 ## DerivChart
 
