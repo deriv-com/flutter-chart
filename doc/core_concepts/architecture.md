@@ -149,8 +149,11 @@ The Y-axis is managed by each chart (MainChart and BottomCharts) and uses:
 ### Coordinate Conversion
 
 The chart provides conversion functions:
-- `xFromEpoch`: Converts timestamp to X-coordinate
-- `yFromQuote`: Converts price to Y-coordinate
+Provided by XAxisWrapper and sepcifically XAxisModel which is provided at the root of the chart widget hirerachy:
+   - `xFromEpoch`: Converts timestamp to X-coordinate
+   - `yFromQuote`: Converts price to Y-coordinate
+
+Provided by each chart widget (main chart and bottom charts) to componenet in each chart.
 - `epochFromX`: Converts X-coordinate to timestamp
 - `quoteFromY`: Converts Y-coordinate to price
 
@@ -204,10 +207,8 @@ Series is the base class for all chart series, handling:
 
 ### DataSeries
 
-DataSeries extends Series to handle sequential data with:
-- Sorted data management
-- Visible data calculation
-- Min/max value determination
+DataSeries extends Series to handle sequential sorted data with.
+Every chart type and many indicators are an implementation of this class.
 
 ### Specific Series Types
 
