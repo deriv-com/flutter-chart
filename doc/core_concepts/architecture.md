@@ -26,7 +26,7 @@ The Deriv Chart library follows a layered architecture with clear separation of 
    - Manages chart data entries and live data state
    - Handles data fit mode and zoom level (msPerPx)
    - Controls scroll animation and visible area changes
-   - Provides the conversion function for coordinate system to work to convert epoch to X position in the canvas and vice versa. These conversion functions are shared among all components of the chart.
+   - Provides the conversion functions for the coordinate system to convert epoch to X position in the canvas and vice versa. These conversion functions are shared among all components of the chart.
 
 2. **GestureManager**: The middle layer that:
    - Handles user interactions (pan, zoom, tap)
@@ -38,7 +38,7 @@ The Deriv Chart library follows a layered architecture with clear separation of 
    - Coordinates shared X-axis between charts
    - Manages Y-axis for each chart section
    - Renders data visualization
-   - Each chart provides the conversion function for coordinate system to work to convert the quote to Y position in canvas and vice versa
+   - Each chart provides the conversion functions for the coordinate system to convert the quote to Y position in the canvas and vice versa
 
 This layered structure ensures:
 - Clear separation of concerns
@@ -149,11 +149,11 @@ The Y-axis is managed by each chart (MainChart and BottomCharts) and uses:
 ### Coordinate Conversion
 
 The chart provides conversion functions:
-Provided by XAxisWrapper and sepcifically XAxisModel which is provided at the root of the chart widget hirerachy:
+Provided by XAxisWrapper and specifically XAxisModel which is provided at the root of the chart widget hierarchy:
    - `xFromEpoch`: Converts timestamp to X-coordinate
    - `yFromQuote`: Converts price to Y-coordinate
 
-Provided by each chart widget (main chart and bottom charts) to componenet in each chart.
+Provided by each chart widget (main chart and bottom charts) to components in each chart.
 - `epochFromX`: Converts X-coordinate to timestamp
 - `quoteFromY`: Converts Y-coordinate to price
 
@@ -207,7 +207,7 @@ Series is the base class for all chart series, handling:
 
 ### DataSeries
 
-DataSeries extends Series to handle sequential sorted data with.
+DataSeries extends Series to handle sequential sorted data.
 Every chart type and many indicators are an implementation of this class.
 
 ### Specific Series Types
