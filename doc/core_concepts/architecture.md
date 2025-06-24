@@ -26,6 +26,7 @@ The Deriv Chart library follows a layered architecture with clear separation of 
    - Manages chart data entries and live data state
    - Handles data fit mode and zoom level (msPerPx)
    - Controls scroll animation and visible area changes
+   - Provides the conversion function for coordinate system to work to convert epoch to X position in the canvas and vice versa. These conversion functions are shared among all components of the chart.
 
 2. **GestureManager**: The middle layer that:
    - Handles user interactions (pan, zoom, tap)
@@ -37,6 +38,7 @@ The Deriv Chart library follows a layered architecture with clear separation of 
    - Coordinates shared X-axis between charts
    - Manages Y-axis for each chart section
    - Renders data visualization
+   - Each chart provides the conversion function for coordinate system to work to convert the quote to Y position in canvas and vice versa
 
 This layered structure ensures:
 - Clear separation of concerns
