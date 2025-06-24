@@ -1,25 +1,20 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/enums/drawing_tool_state.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/enums/state_change_direction.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 import '../../helpers/paint_helpers.dart';
 import '../../helpers/types.dart';
-import '../drawing_adding_preview.dart';
 import '../drawing_v2.dart';
-import 'trend_line_interactable_drawing.dart';
+import 'trend_line_adding_preview.dart';
 
 /// A class to show a preview and handle adding a [TrendLineInteractableDrawing]
 /// to the chart. This is for when we're on [InteractiveLayerMobileBehaviour]
-class TrendLineAddingPreviewMobile
-    extends DrawingAddingPreview<TrendLineInteractableDrawing> {
+class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
   /// Initializes [TrendLineInteractableDrawing].
   TrendLineAddingPreviewMobile({
     required super.interactiveLayerBehaviour,
@@ -59,88 +54,43 @@ class TrendLineAddingPreviewMobile
     ChartTheme chartTheme,
     GetDrawingState getDrawingState,
   ) {
-    final LineStyle lineStyle = interactableDrawing.config.lineStyle;
-    final DrawingPaintStyle paintStyle = DrawingPaintStyle();
-
+    final (paintStyle, lineStyle) = getStyles();
     final EdgePoint? startPoint = interactableDrawing.startPoint;
     final EdgePoint? endPoint = interactableDrawing.endPoint;
-    final Set<DrawingToolState> drawingState = getDrawingState(this);
 
     if (startPoint != null && endPoint != null) {
-      // End point is also spawned at the chart, user can move it, we should
-      // show alignment cross-hair on end point.
+      final startOffset = edgePointToOffset(startPoint, epochToX, quoteToY);
+      final endOffset = edgePointToOffset(endPoint, epochToX, quoteToY);
 
-      final startOffset =
-          Offset(epochToX(startPoint.epoch), quoteToY(startPoint.quote));
-      final targetEndOffset =
-          Offset(epochToX(endPoint.epoch), quoteToY(endPoint.quote));
+      // Draw start point
+      drawStyledPointOffset(
+          startOffset, epochToX, quoteToY, canvas, paintStyle, lineStyle);
 
-      late final Offset endOffset;
-
-      endOffset = targetEndOffset;
-
-      drawPointOffset(
-        startOffset,
-        epochToX,
-        quoteToY,
-        canvas,
-        paintStyle,
-        lineStyle,
-      );
+      // Draw focused effect and alignment guides for start point if dragging
       if (interactableDrawing.isDraggingStartPoint != null &&
           interactableDrawing.isDraggingStartPoint!) {
-        drawFocusedCircle(
-          paintStyle,
-          lineStyle,
-          canvas,
-          startOffset,
-          4 + 8 * animationInfo.stateChangePercent,
-          4,
-        );
-
+        drawStyledFocusedCircle(paintStyle, lineStyle, canvas, startOffset,
+            animationInfo.stateChangePercent);
         drawPointAlignmentGuides(canvas, size, startOffset);
       }
 
-      drawPointOffset(
-          endOffset, epochToX, quoteToY, canvas, paintStyle, lineStyle,
-          radius: 4);
+      // Draw end point
+      drawStyledPointOffset(
+          endOffset, epochToX, quoteToY, canvas, paintStyle, lineStyle);
 
+      // Draw focused effect and alignment guides for end point if dragging
       if (interactableDrawing.isDraggingStartPoint != null &&
           !interactableDrawing.isDraggingStartPoint!) {
-        drawFocusedCircle(
-          paintStyle,
-          lineStyle,
-          canvas,
-          endOffset,
-          4 + 8 * animationInfo.stateChangePercent,
-          4,
-        );
-
+        drawStyledFocusedCircle(paintStyle, lineStyle, canvas, endOffset,
+            animationInfo.stateChangePercent);
         drawPointAlignmentGuides(canvas, size, endOffset);
       }
 
-      // Use glowy paint style if selected, otherwise use normal paint style
-      final Paint paint = drawingState.contains(DrawingToolState.selected) ||
-              drawingState.contains(DrawingToolState.dragging)
-          ? paintStyle.linePaintStyle(
-              lineStyle.color, 1 + 1 * animationInfo.stateChangePercent)
-          : paintStyle.linePaintStyle(lineStyle.color, lineStyle.thickness);
-
-      final Path linePath = _createLinePath(startOffset, endOffset);
-
-      canvas.drawPath(
-        dashPath(linePath, dashArray: CircularIntervalList([4, 4])),
-        Paint()
-          ..color = paint.color
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = paint.strokeWidth,
-      );
+      // Draw the preview line with dashed style
+      drawPreviewLine(canvas, startOffset, endOffset, paintStyle, lineStyle,
+          isDashed: true);
     }
   }
-
-  Path _createLinePath(Offset start, Offset end) => Path()
-    ..moveTo(start.dx, start.dy)
-    ..lineTo(end.dx, end.dy);
 
   @override
   void onCreateTap(

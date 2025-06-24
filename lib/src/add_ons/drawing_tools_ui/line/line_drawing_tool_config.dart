@@ -29,6 +29,8 @@ class LineDrawingToolConfig extends DrawingToolConfig {
     this.labelStyle = const TextStyle(
       color: CoreDesignTokens.coreColorSolidBlue700,
       fontSize: 12,
+      fontWeight: FontWeight.normal,
+      fontFamily: 'Inter',
     ),
     this.overlayStyle,
     this.pattern = DrawingPatterns.solid,

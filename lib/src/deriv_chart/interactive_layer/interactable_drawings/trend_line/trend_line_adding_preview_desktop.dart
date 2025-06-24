@@ -1,23 +1,17 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/paint_helpers.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/gestures.dart';
-
 import 'package:flutter/material.dart';
+
 import '../../helpers/types.dart';
-import '../drawing_adding_preview.dart';
-import 'trend_line_interactable_drawing.dart';
+import 'trend_line_adding_preview.dart';
 
 /// A class to show a preview and handle adding [TrendLineInteractableDrawing]
 /// to the chart. It's for when we're on [InteractiveLayerDesktopBehaviour]
-class TrendLineAddingPreviewDesktop
-    extends DrawingAddingPreview<TrendLineInteractableDrawing> {
+class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
   /// Initializes [TrendLineInteractableDrawing].
   TrendLineAddingPreviewDesktop({
     required super.interactiveLayerBehaviour,
@@ -56,35 +50,33 @@ class TrendLineAddingPreviewDesktop
       ChartConfig chartConfig,
       ChartTheme chartTheme,
       GetDrawingState getDrawingState) {
-    final LineStyle lineStyle = interactableDrawing.config.lineStyle;
-    final DrawingPaintStyle paintStyle = DrawingPaintStyle();
-
+    final (paintStyle, lineStyle) = getStyles();
     final EdgePoint? startPoint = interactableDrawing.startPoint;
 
     if (startPoint != null) {
-      drawPoint(startPoint, epochToX, quoteToY, canvas, paintStyle, lineStyle);
+      drawStyledPoint(
+          startPoint, epochToX, quoteToY, canvas, paintStyle, lineStyle);
 
       if (_hoverPosition != null) {
         // endPoint doesn't exist yet and it means we're creating this line.
         // Drawing preview line from startPoint to hoverPosition.
         final Offset startPosition =
-            Offset(epochToX(startPoint.epoch), quoteToY(startPoint.quote));
-
-        canvas.drawLine(startPosition, _hoverPosition!,
-            paintStyle.linePaintStyle(lineStyle.color, lineStyle.thickness));
+            edgePointToOffset(startPoint, epochToX, quoteToY);
+        drawPreviewLine(
+            canvas, startPosition, _hoverPosition!, paintStyle, lineStyle);
 
         // Draw alignment guides with labels
-        _drawAlignmentGuidesWithLabels(canvas, size, _hoverPosition!, epochToX,
+        drawAlignmentGuidesWithLabels(canvas, size, _hoverPosition!, epochToX,
             quoteToY, chartConfig, chartTheme, epochFromX, quoteFromY);
       }
     } else if (_hoverPosition != null) {
       // Show alignment guides with labels when hovering before first point is set
-      _drawAlignmentGuidesWithLabels(canvas, size, _hoverPosition!, epochToX,
+      drawAlignmentGuidesWithLabels(canvas, size, _hoverPosition!, epochToX,
           quoteToY, chartConfig, chartTheme, epochFromX, quoteFromY);
     }
 
     if (interactableDrawing.endPoint != null) {
-      drawPoint(interactableDrawing.endPoint!, epochToX, quoteToY, canvas,
+      drawStyledPoint(interactableDrawing.endPoint!, epochToX, quoteToY, canvas,
           paintStyle, lineStyle);
     }
   }
@@ -98,71 +90,7 @@ class TrendLineAddingPreviewDesktop
     QuoteToY quoteToY,
     VoidCallback onDone,
   ) {
-    if (interactableDrawing.startPoint == null) {
-      interactableDrawing.startPoint = EdgePoint(
-        epoch: epochFromX(details.localPosition.dx),
-        quote: quoteFromY(details.localPosition.dy),
-      );
-    } else {
-      interactableDrawing.endPoint ??= EdgePoint(
-        epoch: epochFromX(details.localPosition.dx),
-        quote: quoteFromY(details.localPosition.dy),
-      );
-      onDone();
-    }
-  }
-
-  /// Draws alignment guides with value and epoch labels
-  void _drawAlignmentGuidesWithLabels(
-    Canvas canvas,
-    Size size,
-    Offset pointOffset,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    ChartConfig chartConfig,
-    ChartTheme chartTheme,
-    EpochFromX? epochFromX,
-    QuoteFromY? quoteFromY,
-  ) {
-    // Draw the basic alignment guides
-    drawPointAlignmentGuides(canvas, size, pointOffset,
-        lineColor: interactableDrawing.config.lineStyle.color);
-
-    if (epochFromX != null && quoteFromY != null) {
-      final int epoch = epochFromX(pointOffset.dx);
-      final double quote = quoteFromY(pointOffset.dy);
-
-      // Draw value label on the right side
-      drawValueLabel(
-        canvas: canvas,
-        quoteToY: quoteToY,
-        value: quote,
-        pipSize: chartConfig.pipSize,
-        size: size,
-        textStyle: TextStyle(
-          color: interactableDrawing.config.lineStyle.color,
-          fontSize: 12,
-          fontWeight: FontWeight.normal,
-        ),
-        color: interactableDrawing.config.lineStyle.color,
-        backgroundColor: chartTheme.backgroundColor,
-      );
-
-      // Draw epoch label at the bottom
-      drawEpochLabel(
-        canvas: canvas,
-        epochToX: epochToX,
-        epoch: epoch,
-        size: size,
-        textStyle: TextStyle(
-          color: interactableDrawing.config.lineStyle.color,
-          fontSize: 12,
-          fontWeight: FontWeight.normal,
-        ),
-        color: interactableDrawing.config.lineStyle.color,
-        backgroundColor: chartTheme.backgroundColor,
-      );
-    }
+    createPoint(details.localPosition, epochFromX, quoteFromY, onDone);
   }
 
   @override
