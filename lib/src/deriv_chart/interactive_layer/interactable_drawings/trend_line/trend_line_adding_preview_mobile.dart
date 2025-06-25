@@ -2,12 +2,10 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/enums/drawing_tool_state.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/enums/state_change_direction.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
-import '../../helpers/paint_helpers.dart';
 import '../../helpers/types.dart';
 import '../drawing_v2.dart';
 import 'trend_line_adding_preview.dart';
@@ -53,7 +51,20 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
     ChartConfig chartConfig,
     ChartTheme chartTheme,
     GetDrawingState getDrawingState,
-  ) {
+  ) {}
+
+  @override
+  void paintOverYAxis(
+      Canvas canvas,
+      Size size,
+      EpochToX epochToX,
+      QuoteToY quoteToY,
+      EpochFromX? epochFromX,
+      QuoteFromY? quoteFromY,
+      AnimationInfo animationInfo,
+      ChartConfig chartConfig,
+      ChartTheme chartTheme,
+      GetDrawingState getDrawingState) {
     final (paintStyle, lineStyle) = getStyles();
     final EdgePoint? startPoint = interactableDrawing.startPoint;
     final EdgePoint? endPoint = interactableDrawing.endPoint;
@@ -71,7 +82,17 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
           interactableDrawing.isDraggingStartPoint!) {
         drawStyledFocusedCircle(paintStyle, lineStyle, canvas, startOffset,
             animationInfo.stateChangePercent);
-        drawPointAlignmentGuides(canvas, size, startOffset);
+        drawAlignmentGuidesWithLabels(
+          canvas,
+          size,
+          startOffset,
+          epochToX,
+          quoteToY,
+          chartConfig,
+          chartTheme,
+          interactiveLayerBehaviour.interactiveLayer.epochFromX,
+          interactiveLayerBehaviour.interactiveLayer.quoteFromY,
+        );
       }
 
       // Draw end point
@@ -83,7 +104,44 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
           !interactableDrawing.isDraggingStartPoint!) {
         drawStyledFocusedCircle(paintStyle, lineStyle, canvas, endOffset,
             animationInfo.stateChangePercent);
-        drawPointAlignmentGuides(canvas, size, endOffset);
+        drawAlignmentGuidesWithLabels(
+          canvas,
+          size,
+          endOffset,
+          epochToX,
+          quoteToY,
+          chartConfig,
+          chartTheme,
+          interactiveLayerBehaviour.interactiveLayer.epochFromX,
+          interactiveLayerBehaviour.interactiveLayer.quoteFromY,
+        );
+      }
+
+      // Draw alignment guides with labels for both points when dragging the entire line
+      if (interactableDrawing.isDraggingStartPoint == null &&
+          getDrawingState(this).contains(DrawingToolState.dragging)) {
+        drawAlignmentGuidesWithLabels(
+          canvas,
+          size,
+          startOffset,
+          epochToX,
+          quoteToY,
+          chartConfig,
+          chartTheme,
+          interactiveLayerBehaviour.interactiveLayer.epochFromX,
+          interactiveLayerBehaviour.interactiveLayer.quoteFromY,
+        );
+        drawAlignmentGuidesWithLabels(
+          canvas,
+          size,
+          endOffset,
+          epochToX,
+          quoteToY,
+          chartConfig,
+          chartTheme,
+          interactiveLayerBehaviour.interactiveLayer.epochFromX,
+          interactiveLayerBehaviour.interactiveLayer.quoteFromY,
+        );
       }
 
       // Draw the preview line with dashed style
@@ -114,11 +172,6 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
   @override
   void onDragStart(DragStartDetails details, EpochFromX epochFromX,
       QuoteFromY quoteFromY, EpochToX epochToX, QuoteToY quoteToY) {
-    interactiveLayerBehaviour.updateStateTo(
-      interactiveLayerBehaviour.currentState,
-      StateChangeAnimationDirection.forward,
-    );
-
     interactableDrawing.onDragStart(
         details, epochFromX, quoteFromY, epochToX, quoteToY);
   }
@@ -126,11 +179,6 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
   @override
   void onDragEnd(DragEndDetails details, EpochFromX epochFromX,
       QuoteFromY quoteFromY, EpochToX epochToX, QuoteToY quoteToY) {
-    interactiveLayerBehaviour.updateStateTo(
-      interactiveLayerBehaviour.currentState,
-      StateChangeAnimationDirection.backward,
-    );
-
     interactableDrawing.onDragEnd(
       details,
       epochFromX,
