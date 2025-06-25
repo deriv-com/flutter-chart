@@ -10,8 +10,53 @@ import '../../helpers/types.dart';
 import '../drawing_v2.dart';
 import 'trend_line_adding_preview.dart';
 
-/// A class to show a preview and handle adding a [TrendLineInteractableDrawing]
-/// to the chart. This is for when we're on [InteractiveLayerMobileBehaviour]
+/// Mobile-specific implementation for trend line adding preview.
+///
+/// This class handles trend line creation and preview specifically for mobile/touch
+/// environments where users interact via touch gestures. It extends
+/// [TrendLineAddingPreview] to inherit shared functionality while implementing
+/// mobile-specific interaction patterns optimized for touch interfaces.
+///
+/// ## Mobile Interaction Flow:
+/// 1. **Auto-Initialization**: Automatically creates default start and end points
+/// 2. **Visual Preview**: Shows dashed preview line with draggable endpoints
+/// 3. **Drag Interaction**: Users can drag individual points or the entire line
+/// 4. **Tap to Confirm**: Tapping outside the preview confirms the trend line
+///
+/// ## Key Features:
+/// - **Touch-Optimized**: Larger hit areas and visual feedback for touch interaction
+/// - **Drag Support**: Full drag functionality for repositioning points and lines
+/// - **Visual Feedback**: Focused circles and alignment guides during interactions
+/// - **Auto-Positioning**: Intelligent default placement of trend line points
+///
+/// ## Default Positioning:
+/// When initialized, the trend line is automatically positioned with:
+/// - Start point at bottom-left quarter of the chart (25% width, 75% height)
+/// - End point at top-right quarter of the chart (75% width, 25% height)
+/// - This provides a diagonal trend line that users can easily adjust
+///
+/// ## Drag States:
+/// The class tracks different drag states for optimal user experience:
+/// - **Individual Point Dragging**: When dragging start or end points specifically
+/// - **Whole Line Dragging**: When dragging the line itself to move both points
+/// - **Visual Feedback**: Different visual effects based on what's being dragged
+///
+/// ## Usage:
+/// This class is typically instantiated by the drawing system when a user
+/// selects the trend line tool on a mobile platform:
+///
+/// ```dart
+/// final preview = TrendLineAddingPreviewMobile(
+///   interactiveLayerBehaviour: mobileBehaviour,
+///   interactableDrawing: trendLineDrawing,
+/// );
+/// ```
+///
+/// ## Performance Considerations:
+/// - Efficient hit testing for touch interactions
+/// - Smooth drag animations with proper state management
+/// - Optimized rendering during drag operations
+/// - Minimal redraws during interaction states
 class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
   /// Initializes [TrendLineInteractableDrawing].
   TrendLineAddingPreviewMobile({

@@ -28,7 +28,67 @@ import '../interactable_drawing.dart';
 import 'trend_line_adding_preview_desktop.dart';
 import 'trend_line_adding_preview_mobile.dart';
 
-/// Interactable drawing for trend-line drawing tool.
+/// Interactable drawing implementation for trend line drawing tool.
+///
+/// This class represents a complete trend line drawing that can be interacted with
+/// on the chart. It handles all aspects of trend line behavior including rendering,
+/// hit testing, drag interactions, and state management. The class extends
+/// [InteractableDrawing] to provide trend line-specific functionality.
+///
+/// ## Core Functionality:
+/// - **Rendering**: Draws the trend line with points, glow effects, and labels
+/// - **Hit Testing**: Determines if user interactions hit the line or its endpoints
+/// - **Drag Interactions**: Supports dragging individual points or the entire line
+/// - **State Management**: Tracks selection, hover, and drag states
+/// - **Configuration**: Manages line styling, colors, and thickness
+///
+/// ## Interaction States:
+/// The trend line supports multiple interaction states:
+/// - **Normal**: Basic line rendering without special effects
+/// - **Hovered**: Subtle visual feedback when mouse hovers over the line
+/// - **Selected**: Enhanced visibility with glow effects and control points
+/// - **Dragging**: Real-time updates during drag operations with alignment guides
+///
+/// ## Drag Behavior:
+/// The class supports three types of drag operations:
+/// - **Start Point Drag**: When [isDraggingStartPoint] is `true`
+/// - **End Point Drag**: When [isDraggingStartPoint] is `false`
+/// - **Whole Line Drag**: When [isDraggingStartPoint] is `null`
+///
+/// ## Visual Elements:
+/// When active, the trend line displays:
+/// - Main line connecting start and end points
+/// - Control points at both endpoints (when selected/hovered)
+/// - Neon glow effect around the line (when selected)
+/// - Focused circles around dragged points
+/// - Alignment guides during drag operations
+/// - Value and epoch labels on chart axes
+///
+/// ## Platform Support:
+/// The class works with both desktop and mobile platforms through different
+/// preview implementations:
+/// - [TrendLineAddingPreviewDesktop] for mouse-based interactions
+/// - [TrendLineAddingPreviewMobile] for touch-based interactions
+///
+/// ## Usage Example:
+/// ```dart
+/// final trendLine = TrendLineInteractableDrawing(
+///   config: LineDrawingToolConfig(
+///     lineStyle: LineStyle(color: Colors.blue, thickness: 2.0),
+///     labelStyle: TextStyle(color: Colors.blue),
+///   ),
+///   startPoint: EdgePoint(epoch: 1000, quote: 1.2345),
+///   endPoint: EdgePoint(epoch: 2000, quote: 1.2400),
+///   drawingContext: context,
+///   getDrawingState: (drawing) => {DrawingToolState.normal},
+/// );
+/// ```
+///
+/// ## Performance Considerations:
+/// - Efficient hit testing using mathematical line-to-point distance calculations
+/// - Optimized rendering with early returns for off-screen elements
+/// - Smooth drag operations with delta-based coordinate updates
+/// - Minimal repaints during state changes
 class TrendLineInteractableDrawing
     extends InteractableDrawing<LineDrawingToolConfig> {
   /// Initializes [TrendLineInteractableDrawing].

@@ -12,8 +12,44 @@ import 'trend_line_interactable_drawing.dart';
 
 /// Base class for trend line adding preview implementations.
 ///
-/// This class contains shared functionality between desktop and mobile
-/// implementations to eliminate code duplication.
+/// This abstract class provides shared functionality between desktop and mobile
+/// implementations to eliminate code duplication and ensure consistent behavior.
+/// It follows the Template Method pattern where platform-specific implementations
+/// override abstract methods while sharing common drawing and interaction logic.
+///
+/// ## Responsibilities:
+/// - Consistent point drawing and styling across platforms
+/// - Shared coordinate transformations between screen and chart coordinates
+/// - Common validation logic for points and line segments
+/// - Unified alignment guide rendering with labels
+/// - Standardized preview line drawing with optional dashing
+///
+/// ## Usage:
+/// This class should not be instantiated directly. Instead, use platform-specific
+/// implementations:
+/// - [TrendLineAddingPreviewDesktop] for desktop interactions
+/// - [TrendLineAddingPreviewMobile] for mobile/touch interactions
+///
+/// ## Architecture:
+/// The class maintains shared constants for consistent styling and provides
+/// utility methods that both desktop and mobile implementations can use.
+/// Platform-specific behavior is implemented in the concrete classes through
+/// method overrides.
+///
+/// ## Example:
+/// ```dart
+/// // Desktop implementation
+/// final desktopPreview = TrendLineAddingPreviewDesktop(
+///   interactiveLayerBehaviour: desktopBehaviour,
+///   interactableDrawing: trendLine,
+/// );
+///
+/// // Mobile implementation
+/// final mobilePreview = TrendLineAddingPreviewMobile(
+///   interactiveLayerBehaviour: mobileBehaviour,
+///   interactableDrawing: trendLine,
+/// );
+/// ```
 abstract class TrendLineAddingPreview
     extends DrawingAddingPreview<TrendLineInteractableDrawing> {
   /// Initializes the base trend line adding preview.
@@ -33,7 +69,20 @@ abstract class TrendLineAddingPreview
   /// Inner radius for focused circle effect
   static const double focusedPointInnerRadius = 4;
 
-  /// Shared method to draw a point with consistent styling
+  /// Draws a trend line point with consistent styling across platforms.
+  ///
+  /// This method provides a standardized way to draw trend line endpoints
+  /// using the shared [pointRadius] constant. It converts the [EdgePoint]
+  /// to screen coordinates and renders a styled circle.
+  ///
+  /// Parameters:
+  /// - [point]: The chart coordinate point to draw
+  /// - [epochToX]: Function to convert epoch to screen X coordinate
+  /// - [quoteToY]: Function to convert quote to screen Y coordinate
+  /// - [canvas]: The canvas to draw on
+  /// - [paintStyle]: Drawing paint configuration
+  /// - [lineStyle]: Line styling configuration
+  /// - [radius]: Optional custom radius (defaults to [pointRadius])
   void drawStyledPoint(
     EdgePoint point,
     EpochToX epochToX,
@@ -47,7 +96,20 @@ abstract class TrendLineAddingPreview
         radius: radius);
   }
 
-  /// Shared method to draw a point at a specific offset
+  /// Draws a trend line point at a specific screen offset with consistent styling.
+  ///
+  /// This method is useful when you already have screen coordinates and want
+  /// to draw a point without coordinate conversion. It maintains consistent
+  /// styling with other trend line points.
+  ///
+  /// Parameters:
+  /// - [offset]: The screen coordinate position to draw the point
+  /// - [epochToX]: Function to convert epoch to screen X coordinate (for consistency)
+  /// - [quoteToY]: Function to convert quote to screen Y coordinate (for consistency)
+  /// - [canvas]: The canvas to draw on
+  /// - [paintStyle]: Drawing paint configuration
+  /// - [lineStyle]: Line styling configuration
+  /// - [radius]: Optional custom radius (defaults to [pointRadius])
   void drawStyledPointOffset(
     Offset offset,
     EpochToX epochToX,
@@ -61,7 +123,22 @@ abstract class TrendLineAddingPreview
         radius: radius);
   }
 
-  /// Shared method to draw focused circle effect
+  /// Draws a focused circle effect around a point during interactions.
+  ///
+  /// This method creates a glowing circle effect that appears when a point
+  /// is being dragged or is in focus. The effect scales with the animation
+  /// percentage to provide smooth visual feedback.
+  ///
+  /// The focused circle consists of:
+  /// - An outer circle with radius [focusedPointOuterRadius] * [animationPercent]
+  /// - An inner circle with radius [focusedPointInnerRadius] * [animationPercent]
+  ///
+  /// Parameters:
+  /// - [paintStyle]: Drawing paint configuration
+  /// - [lineStyle]: Line styling configuration for colors
+  /// - [canvas]: The canvas to draw on
+  /// - [offset]: Screen position where to draw the focused effect
+  /// - [animationPercent]: Animation progress (0.0 to 1.0) for scaling effect
   void drawStyledFocusedCircle(
     DrawingPaintStyle paintStyle,
     LineStyle lineStyle,
@@ -79,7 +156,26 @@ abstract class TrendLineAddingPreview
     );
   }
 
-  /// Shared method to draw alignment guides with labels
+  /// Draws alignment guides with coordinate labels for enhanced user feedback.
+  ///
+  /// This method provides visual assistance during trend line creation by drawing:
+  /// - Horizontal and vertical alignment guides through the point
+  /// - Value label on the right Y-axis showing the quote price
+  /// - Epoch label on the bottom X-axis showing the time coordinate
+  ///
+  /// The guides help users precisely position trend line points by showing
+  /// exact coordinate values and visual alignment references.
+  ///
+  /// Parameters:
+  /// - [canvas]: The canvas to draw on
+  /// - [size]: Size of the drawing area
+  /// - [pointOffset]: Screen position where guides should intersect
+  /// - [epochToX]: Function to convert epoch to screen X coordinate
+  /// - [quoteToY]: Function to convert quote to screen Y coordinate
+  /// - [chartConfig]: Chart configuration for formatting (pip size, etc.)
+  /// - [chartTheme]: Theme configuration for colors and styling
+  /// - [epochFromX]: Optional function to convert screen X to epoch (for labels)
+  /// - [quoteFromY]: Optional function to convert screen Y to quote (for labels)
   void drawAlignmentGuidesWithLabels(
     Canvas canvas,
     Size size,
@@ -128,7 +224,25 @@ abstract class TrendLineAddingPreview
     }
   }
 
-  /// Shared method to draw a preview line
+  /// Draws a preview line between two points with optional dashed styling.
+  ///
+  /// This method renders the trend line preview during creation, allowing users
+  /// to see how the line will appear before finalizing it. The line can be
+  /// drawn as either solid or dashed based on the platform requirements.
+  ///
+  /// Features:
+  /// - Solid line drawing for desktop hover previews
+  /// - Dashed line drawing for mobile touch previews
+  /// - Consistent styling with the configured line properties
+  /// - Efficient path-based rendering for dashed lines
+  ///
+  /// Parameters:
+  /// - [canvas]: The canvas to draw on
+  /// - [startPosition]: Screen coordinate of the line start
+  /// - [endPosition]: Screen coordinate of the line end
+  /// - [paintStyle]: Drawing paint configuration
+  /// - [lineStyle]: Line styling (color, thickness)
+  /// - [isDashed]: Whether to draw a dashed line (default: false)
   void drawPreviewLine(
     Canvas canvas,
     Offset startPosition,
@@ -157,18 +271,58 @@ abstract class TrendLineAddingPreview
     }
   }
 
-  /// Shared method to get paint style and line style
+  /// Retrieves the current drawing paint style and line style configuration.
+  ///
+  /// This utility method provides a convenient way to get both the paint style
+  /// and line style needed for drawing operations. It returns a record tuple
+  /// for easy destructuring in calling code.
+  ///
+  /// Returns:
+  /// A record containing:
+  /// - [DrawingPaintStyle]: Default paint style for drawing operations
+  /// - [LineStyle]: The configured line style from the interactable drawing
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final (paintStyle, lineStyle) = getStyles();
+  /// ```
   (DrawingPaintStyle, LineStyle) getStyles() {
     return (DrawingPaintStyle(), interactableDrawing.config.lineStyle);
   }
 
-  /// Shared method to convert EdgePoint to Offset
+  /// Converts a chart coordinate point to screen coordinates.
+  ///
+  /// This utility method transforms an [EdgePoint] containing epoch and quote
+  /// values into screen pixel coordinates using the provided transformation
+  /// functions. This is essential for rendering chart elements at the correct
+  /// screen positions.
+  ///
+  /// Parameters:
+  /// - [point]: The chart coordinate point to convert
+  /// - [epochToX]: Function to convert epoch to screen X coordinate
+  /// - [quoteToY]: Function to convert quote to screen Y coordinate
+  ///
+  /// Returns:
+  /// An [Offset] representing the screen coordinates
   Offset edgePointToOffset(
       EdgePoint point, EpochToX epochToX, QuoteToY quoteToY) {
     return Offset(epochToX(point.epoch), quoteToY(point.quote));
   }
 
-  /// Shared method to convert Offset to EdgePoint
+  /// Converts screen coordinates to a chart coordinate point.
+  ///
+  /// This utility method transforms screen pixel coordinates into an [EdgePoint]
+  /// containing epoch and quote values using the provided inverse transformation
+  /// functions. This is essential for handling user interactions and converting
+  /// screen touches/clicks to chart coordinates.
+  ///
+  /// Parameters:
+  /// - [offset]: The screen coordinate position to convert
+  /// - [epochFromX]: Function to convert screen X coordinate to epoch
+  /// - [quoteFromY]: Function to convert screen Y coordinate to quote
+  ///
+  /// Returns:
+  /// An [EdgePoint] representing the chart coordinates
   EdgePoint offsetToEdgePoint(
       Offset offset, EpochFromX epochFromX, QuoteFromY quoteFromY) {
     return EdgePoint(
@@ -177,12 +331,36 @@ abstract class TrendLineAddingPreview
     );
   }
 
-  /// Shared validation method
+  /// Validates whether a point is valid and can be used for drawing.
+  ///
+  /// This simple validation method checks if an [EdgePoint] is not null.
+  /// It can be extended in the future to include additional validation
+  /// logic such as coordinate range checks or data validity.
+  ///
+  /// Parameters:
+  /// - [point]: The point to validate
+  ///
+  /// Returns:
+  /// `true` if the point is valid (not null), `false` otherwise
   bool isValidPoint(EdgePoint? point) {
     return point != null;
   }
 
-  /// Shared method to handle point creation
+  /// Handles the creation of trend line points during the drawing process.
+  ///
+  /// This method manages the two-step process of creating a trend line:
+  /// 1. First click/tap creates the start point
+  /// 2. Second click/tap creates the end point and completes the line
+  ///
+  /// The method automatically determines which point to create based on the
+  /// current state of the trend line and calls the completion callback when
+  /// both points are set.
+  ///
+  /// Parameters:
+  /// - [position]: Screen position where the user clicked/tapped
+  /// - [epochFromX]: Function to convert screen X coordinate to epoch
+  /// - [quoteFromY]: Function to convert screen Y coordinate to quote
+  /// - [onDone]: Callback to execute when the trend line is complete
   void createPoint(
     Offset position,
     EpochFromX epochFromX,

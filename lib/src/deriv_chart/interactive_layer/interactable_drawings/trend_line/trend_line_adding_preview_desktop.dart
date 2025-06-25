@@ -9,8 +9,45 @@ import 'package:flutter/material.dart';
 import '../../helpers/types.dart';
 import 'trend_line_adding_preview.dart';
 
-/// A class to show a preview and handle adding [TrendLineInteractableDrawing]
-/// to the chart. It's for when we're on [InteractiveLayerDesktopBehaviour]
+/// Desktop-specific implementation for trend line adding preview.
+///
+/// This class handles trend line creation and preview specifically for desktop
+/// environments where users interact via mouse hover and click events. It extends
+/// [TrendLineAddingPreview] to inherit shared functionality while implementing
+/// desktop-specific interaction patterns.
+///
+/// ## Desktop Interaction Flow:
+/// 1. **Hover Phase**: User moves mouse over chart, alignment guides appear
+/// 2. **First Click**: Sets the start point of the trend line
+/// 3. **Preview Phase**: Shows preview line from start point to mouse position
+/// 4. **Second Click**: Sets the end point and completes the trend line
+///
+/// ## Key Features:
+/// - Real-time hover feedback with alignment guides and labels
+/// - Preview line that follows mouse cursor after first point is set
+/// - Immediate visual feedback for point placement
+/// - Consistent styling with shared base class methods
+///
+/// ## Usage:
+/// This class is typically instantiated by the drawing system when a user
+/// selects the trend line tool on a desktop platform:
+///
+/// ```dart
+/// final preview = TrendLineAddingPreviewDesktop(
+///   interactiveLayerBehaviour: desktopBehaviour,
+///   interactableDrawing: trendLineDrawing,
+/// );
+/// ```
+///
+/// ## State Management:
+/// - Tracks hover position for real-time preview updates
+/// - Manages point creation sequence (start → end)
+/// - Handles completion callback when both points are set
+///
+/// ## Performance Considerations:
+/// - Hover events are processed efficiently without heavy computations
+/// - Alignment guides are only drawn when hovering
+/// - Preview line updates smoothly with mouse movement
 class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
   /// Initializes [TrendLineInteractableDrawing].
   TrendLineAddingPreviewDesktop({
