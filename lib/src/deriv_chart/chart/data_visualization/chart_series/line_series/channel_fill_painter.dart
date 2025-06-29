@@ -170,4 +170,12 @@ class ChannelFillPainter extends DataPainter<DataSeries<Tick>> {
 
     return;
   }
+
+  @override
+  List<CustomPainterSemantics> buildSemantics(
+      {required ui.Size size,
+      required EpochToX epochToX,
+      required QuoteToY quoteToY}) {
+    return <CustomPainterSemantics>[];
+  }
 }
