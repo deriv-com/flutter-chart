@@ -124,6 +124,46 @@ class ChartDefaultLightTheme extends ChartDefaultTheme {
   TextStyle get overLine => TextStyles.overLine;
 
   @override
+  Color get floatingMenuContainerGlassColor =>
+      LightThemeColors.floatingMenuContainerGlassColor;
+
+  @override
+  Color get floatingMenuDragIconColor =>
+      LightThemeColors.floatingMenuDragIconColor;
+
+  @override
+  Color get lineThicknessDropdownButtonTextColor =>
+      LightThemeColors.lineThicknessDropdownButtonTextColor;
+
+  @override
+  TextStyle get lineThicknessDropdownButtonTextStyle =>
+      TextStyles.lineThicknessDropdownButtonTextStyle;
+
+  @override
+  Color get lineThicknessDropdownItemSelectedBackgroundColor =>
+      LightThemeColors.lineThicknessDropdownItemSelectedBackgroundColor;
+
+  @override
+  Color get lineThicknessDropdownItemSelectedTextColor =>
+      LightThemeColors.lineThicknessDropdownItemSelectedTextColor;
+
+  @override
+  Color get lineThicknessDropdownItemUnselectedTextColor =>
+      LightThemeColors.lineThicknessDropdownItemUnselectedTextColor;
+
+  @override
+  Color get lineThicknessDropdownItemSelectedLineColor =>
+      LightThemeColors.lineThicknessDropdownItemSelectedLineColor;
+
+  @override
+  Color get lineThicknessDropdownItemUnselectedLineColor =>
+      LightThemeColors.lineThicknessDropdownItemUnselectedLineColor;
+
+  @override
+  TextStyle get lineThicknessDropdownItemTextStyle =>
+      TextStyles.lineThicknessDropdownItemTextStyle;
+
+  @override
   Color get base01Color => LegacyLightThemeColors.base01;
 
   @override

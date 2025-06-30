@@ -1,14 +1,14 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/interactable_drawing.dart';
-import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/widgets/glassy_blur_effect_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../interactive_layer_behaviours/interactive_layer_behaviour.dart';
 import '../interactive_layer_controller.dart';
 
-// TODO(NA): get the colors and dimensions from the [ChartTheme].
 /// A floating menu that appears when a drawing is selected.
 class SelectedDrawingFloatingMenu extends StatefulWidget {
   /// Creates a floating menu for the selected drawing.
@@ -143,18 +143,22 @@ class _SelectedDrawingFloatingMenuState
     );
   }
 
-  Widget _buildDragIcon() => MouseRegion(
-        cursor: _cursor,
-        child: SizedBox(
-          width: 32,
-          height: 32,
-          child: Icon(
-            Icons.drag_indicator,
-            size: 18,
-            color: CoreDesignTokens.coreColorSolidSlate50.withOpacity(0.4),
-          ),
+  Widget _buildDragIcon() {
+    final ChartTheme theme = context.watch<ChartTheme>();
+
+    return MouseRegion(
+      cursor: _cursor,
+      child: SizedBox(
+        width: 32,
+        height: 32,
+        child: Icon(
+          Icons.drag_indicator,
+          size: 18,
+          color: theme.floatingMenuDragIconColor,
         ),
-      );
+      ),
+    );
+  }
 
   Widget _buildDrawingMenuOptions() => widget.drawing.getToolBarMenu(
         onUpdate: widget.onUpdateDrawing,

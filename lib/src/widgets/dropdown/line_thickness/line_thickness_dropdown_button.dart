@@ -1,5 +1,6 @@
-import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../show_dropdown.dart';
 import 'line_thickness_dropdown.dart';
@@ -22,12 +23,14 @@ class LineThicknessDropdownButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ChartTheme theme = context.watch<ChartTheme>();
+
     return SizedBox(
       width: 32,
       height: 32,
       child: TextButton(
         style: TextButton.styleFrom(
-          foregroundColor: Colors.white38,
+          foregroundColor: theme.lineThicknessDropdownButtonTextColor,
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(),
           shape: RoundedRectangleBorder(
@@ -63,12 +66,9 @@ class LineThicknessDropdownButton extends StatelessWidget {
           );
         },
         child: Text(
-          '${thickness.toInt()}px',
-          style: const TextStyle(
-            fontSize: 14,
-            color: CoreDesignTokens.coreColorSolidSlate50,
-            fontWeight: FontWeight.normal,
-            height: 2,
+          '${thickness.toInt()} px',
+          style: theme.lineThicknessDropdownButtonTextStyle.copyWith(
+            color: theme.lineThicknessDropdownButtonTextColor,
           ),
           textAlign: TextAlign.center,
         ),

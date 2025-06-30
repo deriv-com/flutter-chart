@@ -1,4 +1,6 @@
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// A dropdown list of line thickness options.
 ///
@@ -21,26 +23,28 @@ class LineThicknessDropdown extends StatelessWidget {
   static const List<double> _thicknessOptions = [1, 2, 3, 4];
 
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final thickness in _thicknessOptions)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: _ThicknessOptionButton(
-                  thickness: thickness,
-                  selected: thickness == selectedThickness,
-                  onTap: () => onChanged(thickness),
-                ),
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final thickness in _thicknessOptions)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: _ThicknessOptionButton(
+                thickness: thickness,
+                selected: thickness == selectedThickness,
+                onTap: () => onChanged(thickness),
               ),
-          ],
-        ),
-      );
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 class _ThicknessOptionButton extends StatelessWidget {
@@ -57,20 +61,25 @@ class _ThicknessOptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ChartTheme theme = context.watch<ChartTheme>();
+
     final Widget thicknessLine = Container(
       width: 60,
       height: thickness.toDouble(),
       decoration: BoxDecoration(
-        color: selected ? Colors.black : Colors.white,
+        color: selected
+            ? theme.lineThicknessDropdownItemSelectedLineColor
+            : theme.lineThicknessDropdownItemUnselectedLineColor,
         borderRadius: BorderRadius.circular(thickness / 2),
       ),
     );
 
     final Widget thicknessLabel = Text(
       '${thickness.toInt()} px',
-      style: TextStyle(
-        color: selected ? Colors.black : Colors.white,
-        fontSize: 12,
+      style: theme.lineThicknessDropdownItemTextStyle.copyWith(
+        color: selected
+            ? theme.lineThicknessDropdownItemSelectedTextColor
+            : theme.lineThicknessDropdownItemUnselectedTextColor,
       ),
     );
 
@@ -81,7 +90,9 @@ class _ThicknessOptionButton extends StatelessWidget {
         height: 32,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
-          color: selected ? Colors.white : Colors.transparent,
+          color: selected
+              ? theme.lineThicknessDropdownItemSelectedBackgroundColor
+              : Colors.transparent,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Row(

@@ -124,6 +124,46 @@ class ChartDefaultDarkTheme extends ChartDefaultTheme {
   TextStyle get overLine => TextStyles.overLine;
 
   @override
+  Color get floatingMenuContainerGlassColor =>
+      DarkThemeColors.floatingMenuContainerGlassColor;
+
+  @override
+  Color get floatingMenuDragIconColor =>
+      DarkThemeColors.floatingMenuDragIconColor;
+
+  @override
+  Color get lineThicknessDropdownButtonTextColor =>
+      DarkThemeColors.lineThicknessDropdownButtonTextColor;
+
+  @override
+  TextStyle get lineThicknessDropdownButtonTextStyle =>
+      TextStyles.lineThicknessDropdownButtonTextStyle;
+
+  @override
+  Color get lineThicknessDropdownItemSelectedBackgroundColor =>
+      DarkThemeColors.lineThicknessDropdownItemSelectedBackgroundColor;
+
+  @override
+  Color get lineThicknessDropdownItemSelectedTextColor =>
+      DarkThemeColors.lineThicknessDropdownItemSelectedTextColor;
+
+  @override
+  Color get lineThicknessDropdownItemUnselectedTextColor =>
+      DarkThemeColors.lineThicknessDropdownItemUnselectedTextColor;
+
+  @override
+  Color get lineThicknessDropdownItemSelectedLineColor =>
+      DarkThemeColors.lineThicknessDropdownItemSelectedLineColor;
+
+  @override
+  Color get lineThicknessDropdownItemUnselectedLineColor =>
+      DarkThemeColors.lineThicknessDropdownItemUnselectedLineColor;
+
+  @override
+  TextStyle get lineThicknessDropdownItemTextStyle =>
+      TextStyles.lineThicknessDropdownItemTextStyle;
+
+  @override
   Color get base01Color => LegacyDarkThemeColors.base01;
 
   @override

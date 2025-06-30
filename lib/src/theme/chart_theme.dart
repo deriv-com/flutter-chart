@@ -90,6 +90,26 @@ abstract class ChartTheme {
 
   TextStyle get crosshairAxisLabelStyle;
 
+  Color get floatingMenuContainerGlassColor;
+
+  Color get floatingMenuDragIconColor;
+
+  Color get lineThicknessDropdownButtonTextColor;
+
+  TextStyle get lineThicknessDropdownButtonTextStyle;
+
+  Color get lineThicknessDropdownItemSelectedBackgroundColor;
+
+  Color get lineThicknessDropdownItemSelectedTextColor;
+
+  Color get lineThicknessDropdownItemUnselectedTextColor;
+
+  Color get lineThicknessDropdownItemSelectedLineColor;
+
+  Color get lineThicknessDropdownItemUnselectedLineColor;
+
+  TextStyle get lineThicknessDropdownItemTextStyle;
+
   /// The style of the current tick indicator.
   HorizontalBarrierStyle get currentSpotStyle;
 
