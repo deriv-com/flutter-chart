@@ -197,7 +197,8 @@ void drawValueLabel({
   final double rectWidth = textPainter.width + 24;
   const double rectHeight = 24; // Fixed height to match the image
 
-  final double rectRight = size.width;
+  // Add 8px gap between the chart content and the label
+  final double rectRight = size.width - 8;
   final double rectLeft = rectRight - rectWidth;
 
   final Rect rect = Rect.fromLTRB(
