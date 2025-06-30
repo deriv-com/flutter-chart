@@ -374,6 +374,7 @@ class _InteractiveLayerGestureHandlerState
       interactiveLayer: this,
       onUpdate: () => setState(() {}),
       stateChangeController: _stateChangeController,
+      crosshairController: widget.crosshairController,
     );
     // Initialize the drawing tool gesture recognizer once
     _drawingToolGestureRecognizer = DrawingToolGestureRecognizer(

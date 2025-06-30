@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/line/line_drawing_tool_config.dart';
@@ -7,11 +9,14 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/extensions/extensions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/enums/drawing_tool_state.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/widgets/color_picker.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
 
 import '../../helpers/paint_helpers.dart';
 import '../../helpers/types.dart';
@@ -23,7 +28,67 @@ import '../interactable_drawing.dart';
 import 'trend_line_adding_preview_desktop.dart';
 import 'trend_line_adding_preview_mobile.dart';
 
-/// Interactable drawing for trend-line drawing tool.
+/// Interactable drawing implementation for trend line drawing tool.
+///
+/// This class represents a complete trend line drawing that can be interacted with
+/// on the chart. It handles all aspects of trend line behavior including rendering,
+/// hit testing, drag interactions, and state management. The class extends
+/// [InteractableDrawing] to provide trend line-specific functionality.
+///
+/// ## Core Functionality:
+/// - **Rendering**: Draws the trend line with points, glow effects, and labels
+/// - **Hit Testing**: Determines if user interactions hit the line or its endpoints
+/// - **Drag Interactions**: Supports dragging individual points or the entire line
+/// - **State Management**: Tracks selection, hover, and drag states
+/// - **Configuration**: Manages line styling, colors, and thickness
+///
+/// ## Interaction States:
+/// The trend line supports multiple interaction states:
+/// - **Normal**: Basic line rendering without special effects
+/// - **Hovered**: Subtle visual feedback when mouse hovers over the line
+/// - **Selected**: Enhanced visibility with glow effects and control points
+/// - **Dragging**: Real-time updates during drag operations with alignment guides
+///
+/// ## Drag Behavior:
+/// The class supports three types of drag operations:
+/// - **Start Point Drag**: When [isDraggingStartPoint] is `true`
+/// - **End Point Drag**: When [isDraggingStartPoint] is `false`
+/// - **Whole Line Drag**: When [isDraggingStartPoint] is `null`
+///
+/// ## Visual Elements:
+/// When active, the trend line displays:
+/// - Main line connecting start and end points
+/// - Control points at both endpoints (when selected/hovered)
+/// - Neon glow effect around the line (when selected)
+/// - Focused circles around dragged points
+/// - Alignment guides during drag operations
+/// - Value and epoch labels on chart axes
+///
+/// ## Platform Support:
+/// The class works with both desktop and mobile platforms through different
+/// preview implementations:
+/// - [TrendLineAddingPreviewDesktop] for mouse-based interactions
+/// - [TrendLineAddingPreviewMobile] for touch-based interactions
+///
+/// ## Usage Example:
+/// ```dart
+/// final trendLine = TrendLineInteractableDrawing(
+///   config: LineDrawingToolConfig(
+///     lineStyle: LineStyle(color: Colors.blue, thickness: 2.0),
+///     labelStyle: TextStyle(color: Colors.blue),
+///   ),
+///   startPoint: EdgePoint(epoch: 1000, quote: 1.2345),
+///   endPoint: EdgePoint(epoch: 2000, quote: 1.2400),
+///   drawingContext: context,
+///   getDrawingState: (drawing) => {DrawingToolState.normal},
+/// );
+/// ```
+///
+/// ## Performance Considerations:
+/// - Efficient hit testing using mathematical line-to-point distance calculations
+/// - Optimized rendering with early returns for off-screen elements
+/// - Smooth drag operations with delta-based coordinate updates
+/// - Minimal repaints during state changes
 class TrendLineInteractableDrawing
     extends InteractableDrawing<LineDrawingToolConfig> {
   /// Initializes [TrendLineInteractableDrawing].
@@ -50,6 +115,10 @@ class TrendLineInteractableDrawing
   ///
   /// [false]: dragging the end point.
   bool? isDraggingStartPoint;
+
+  @override
+  void onHover(PointerHoverEvent event, EpochFromX epochFromX,
+      QuoteFromY quoteFromY, EpochToX epochToX, QuoteToY quoteToY) {}
 
   @override
   void onDragStart(
@@ -179,50 +248,208 @@ class TrendLineInteractableDrawing
   ) {
     final LineStyle lineStyle = config.lineStyle;
     final DrawingPaintStyle paintStyle = DrawingPaintStyle();
-    // Check if this drawing is selected
-
     final drawingState = getDrawingState(this);
+
     if (startPoint != null && endPoint != null) {
       final Offset startOffset =
           Offset(epochToX(startPoint!.epoch), quoteToY(startPoint!.quote));
       final Offset endOffset =
           Offset(epochToX(endPoint!.epoch), quoteToY(endPoint!.quote));
 
-      // Use glowy paint style if selected, otherwise use normal paint style
-      final Paint paint = drawingState.contains(DrawingToolState.selected) ||
-              drawingState.contains(DrawingToolState.dragging)
-          ? paintStyle.linePaintStyle(
-              lineStyle.color, 1 + 1 * animationInfo.stateChangePercent)
-          : paintStyle.linePaintStyle(lineStyle.color, lineStyle.thickness);
-
+      // Draw the main line
+      final Paint paint =
+          paintStyle.linePaintStyle(lineStyle.color, lineStyle.thickness);
       canvas.drawLine(startOffset, endOffset, paint);
 
-      // Draw endpoints with glowy effect if selected
-      if ((drawingState.contains(DrawingToolState.selected) &&
-              !drawingState.contains(DrawingToolState.hovered)) ||
+      // Add neon glow effect if selected but not dragging individual points
+      if (drawingState.contains(DrawingToolState.selected) &&
+          !(drawingState.contains(DrawingToolState.dragging) &&
+              isDraggingStartPoint != null)) {
+        final neonPaint = Paint()
+          ..color = config.lineStyle.color.withOpacity(0.4)
+          ..strokeWidth = 8 * animationInfo.stateChangePercent
+          ..strokeCap = StrokeCap.round
+          ..style = PaintingStyle.stroke
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+        canvas.drawLine(startOffset, endOffset, neonPaint);
+      }
+
+      // Only draw points when there's an active interaction (selected, hovered, or dragging)
+      if (drawingState.contains(DrawingToolState.selected) ||
+          drawingState.contains(DrawingToolState.hovered) ||
           drawingState.contains(DrawingToolState.dragging)) {
-        drawPointsFocusedCircle(
-          paintStyle,
-          lineStyle,
-          canvas,
-          startOffset,
-          10 * animationInfo.stateChangePercent,
-          3 * animationInfo.stateChangePercent,
-          endOffset,
-        );
-      } else if (drawingState.contains(DrawingToolState.hovered)) {
-        drawPointsFocusedCircle(
-            paintStyle, lineStyle, canvas, startOffset, 10, 3, endOffset);
+        // Draw both points as normal circles first
+        drawPointOffset(
+            startOffset, epochToX, quoteToY, canvas, paintStyle, lineStyle,
+            radius: 4);
+        drawPointOffset(
+            endOffset, epochToX, quoteToY, canvas, paintStyle, lineStyle,
+            radius: 4);
+
+        // Then add glowy effect on top based on state
+        if (drawingState.contains(DrawingToolState.dragging) &&
+            isDraggingStartPoint != null) {
+          // When dragging, only show glow on the point being dragged
+          final Offset draggedPointOffset =
+              isDraggingStartPoint! ? startOffset : endOffset;
+          drawFocusedCircle(
+            paintStyle,
+            lineStyle,
+            canvas,
+            draggedPointOffset,
+            10 * animationInfo.stateChangePercent,
+            3 * animationInfo.stateChangePercent,
+          );
+        } else if (drawingState.contains(DrawingToolState.dragging) &&
+            isDraggingStartPoint == null) {
+          // When dragging the whole line, show glow on both points
+          drawPointsFocusedCircle(
+            paintStyle,
+            lineStyle,
+            canvas,
+            startOffset,
+            10 * animationInfo.stateChangePercent,
+            3 * animationInfo.stateChangePercent,
+            endOffset,
+          );
+        } else if (drawingState.contains(DrawingToolState.selected) ||
+            drawingState.contains(DrawingToolState.hovered)) {
+          // When not dragging, show glow on both points
+          drawPointsFocusedCircle(
+            paintStyle,
+            lineStyle,
+            canvas,
+            startOffset,
+            drawingState.contains(DrawingToolState.selected)
+                ? 10 * animationInfo.stateChangePercent
+                : 10,
+            drawingState.contains(DrawingToolState.selected)
+                ? 3 * animationInfo.stateChangePercent
+                : 3,
+            endOffset,
+          );
+        }
       }
 
       // Draw alignment guides when dragging
       if (drawingState.contains(DrawingToolState.dragging) &&
           isDraggingStartPoint != null) {
         if (isDraggingStartPoint!) {
-          drawPointAlignmentGuides(canvas, size, startOffset);
+          drawPointAlignmentGuides(canvas, size, startOffset,
+              lineColor: config.lineStyle.color);
         } else {
-          drawPointAlignmentGuides(canvas, size, endOffset);
+          drawPointAlignmentGuides(canvas, size, endOffset,
+              lineColor: config.lineStyle.color);
         }
+      } else if (drawingState.contains(DrawingToolState.dragging) &&
+          isDraggingStartPoint == null) {
+        drawPointAlignmentGuides(canvas, size, startOffset,
+            lineColor: config.lineStyle.color);
+        drawPointAlignmentGuides(canvas, size, endOffset,
+            lineColor: config.lineStyle.color);
+      }
+    }
+  }
+
+  @override
+  void paintOverYAxis(
+    ui.Canvas canvas,
+    ui.Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    epochFromX,
+    quoteFromY,
+    AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
+    GetDrawingState getDrawingState,
+  ) {
+    if (getDrawingState(this).contains(DrawingToolState.selected)) {
+      // Draw value label for start point
+      if (startPoint != null) {
+        drawValueLabel(
+          canvas: canvas,
+          quoteToY: quoteToY,
+          value: startPoint!.quote,
+          pipSize: chartConfig.pipSize,
+          animationProgress: animationInfo.stateChangePercent,
+          size: size,
+          textStyle: config.labelStyle,
+          color: config.lineStyle.color,
+          backgroundColor: chartTheme.backgroundColor,
+        );
+      }
+
+      // Draw value label for end point (offset slightly to avoid overlap)
+      if (endPoint != null &&
+          startPoint != null &&
+          endPoint!.quote != startPoint!.quote) {
+        drawValueLabel(
+          canvas: canvas,
+          quoteToY: quoteToY,
+          value: endPoint!.quote,
+          pipSize: chartConfig.pipSize,
+          animationProgress: animationInfo.stateChangePercent,
+          size: size,
+          textStyle: config.labelStyle,
+          color: config.lineStyle.color,
+          backgroundColor: chartTheme.backgroundColor,
+        );
+      }
+    }
+    // Paint X-axis labels when selected
+    paintXAxisLabels(
+      canvas,
+      size,
+      epochToX,
+      quoteToY,
+      animationInfo,
+      chartConfig,
+      chartTheme,
+      getDrawingState,
+    );
+  }
+
+  /// Paints epoch labels on the X-axis when the trend line is selected.
+  void paintXAxisLabels(
+    ui.Canvas canvas,
+    ui.Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
+    GetDrawingState getDrawingState,
+  ) {
+    if (getDrawingState(this).contains(DrawingToolState.selected)) {
+      // Draw epoch label for start point
+      if (startPoint != null) {
+        drawEpochLabel(
+          canvas: canvas,
+          epochToX: epochToX,
+          epoch: startPoint!.epoch,
+          size: size,
+          textStyle: config.labelStyle,
+          animationProgress: animationInfo.stateChangePercent,
+          color: config.lineStyle.color,
+          backgroundColor: chartTheme.backgroundColor,
+        );
+      }
+
+      // Draw epoch label for end point (only if different from start point to avoid overlap)
+      if (endPoint != null &&
+          startPoint != null &&
+          endPoint!.epoch != startPoint!.epoch) {
+        drawEpochLabel(
+          canvas: canvas,
+          epochToX: epochToX,
+          epoch: endPoint!.epoch,
+          size: size,
+          textStyle: config.labelStyle,
+          animationProgress: animationInfo.stateChangePercent,
+          color: config.lineStyle.color,
+          backgroundColor: chartTheme.backgroundColor,
+        );
       }
     }
   }
@@ -359,6 +586,51 @@ class TrendLineInteractableDrawing
           );
 
   @override
-  Widget buildDrawingToolBarMenu(UpdateDrawingTool onUpdate) =>
-      const Text('[Trend Line Options]');
+  Widget buildDrawingToolBarMenu(UpdateDrawingTool onUpdate) => Row(
+        children: <Widget>[
+          _buildLineThicknessIcon(),
+          const SizedBox(width: 4),
+          _buildColorPickerIcon(onUpdate)
+        ],
+      );
+
+  Widget _buildColorPickerIcon(UpdateDrawingTool onUpdate) => SizedBox(
+        width: 32,
+        height: 32,
+        child: ColorPicker(
+          currentColor: config.lineStyle.color,
+          onColorChanged: (newColor) => onUpdate(config.copyWith(
+            lineStyle: config.lineStyle.copyWith(color: newColor),
+            labelStyle: config.labelStyle.copyWith(color: newColor),
+          )),
+        ),
+      );
+
+  Widget _buildLineThicknessIcon() => SizedBox(
+        width: 32,
+        height: 32,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white38,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          onPressed: () {
+            // update line thickness
+          },
+          child: Text(
+            '${config.lineStyle.thickness.toInt()}px',
+            style: const TextStyle(
+              fontSize: 14,
+              color: CoreDesignTokens.coreColorSolidSlate50,
+              fontWeight: FontWeight.normal,
+              height: 2,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
 }

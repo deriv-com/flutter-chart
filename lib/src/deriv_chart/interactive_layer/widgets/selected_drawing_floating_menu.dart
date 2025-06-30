@@ -2,6 +2,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/interactable_drawing.dart';
 import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../interactive_layer_behaviours/interactive_layer_behaviour.dart';
@@ -72,6 +73,8 @@ class _SelectedDrawingFloatingMenuState
     if (renderBox != null) {
       setState(() {
         _menuSize = renderBox.size;
+        // Update the controller with the menu size
+        _controller.floatingMenuSize = _menuSize;
       });
     }
   }
@@ -86,6 +89,11 @@ class _SelectedDrawingFloatingMenuState
       top: _controller.floatingMenuPosition.dy,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
+        onPanStart: (details) {
+          // Hide the crosshair when starting to drag the toolbar
+          widget.interactiveLayerBehaviour.crosshairController
+              ?.onExit(const PointerExitEvent());
+        },
         onPanUpdate: (details) {
           // Calculate new position
           final newPosition = _controller.floatingMenuPosition + details.delta;
@@ -108,6 +116,9 @@ class _SelectedDrawingFloatingMenuState
 
           _controller.floatingMenuPosition = Offset(constrainedX, constrainedY);
           setState(() {});
+        },
+        onPanEnd: (details) {
+          // Consume the pan end event to prevent it from propagating to underlying widgets
         },
         child: AnimatedBuilder(
           animation: widget.interactiveLayerBehaviour.stateChangeController,
