@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/widgets/chart_bottom_sheet.dart';
-import 'package:deriv_chart/src/widgets/color_picker/material_color_grid.dart';
 import 'package:flutter/material.dart';
+
+import 'material_color_grid.dart';
 
 /// Color picker sheet.
 class ColorPickerSheet extends StatefulWidget {

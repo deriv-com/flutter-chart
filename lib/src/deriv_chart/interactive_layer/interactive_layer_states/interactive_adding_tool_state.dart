@@ -5,61 +5,29 @@ import 'package:flutter/gestures.dart';
 import '../enums/drawing_tool_state.dart';
 import '../interactable_drawings/drawing_v2.dart';
 import '../enums/state_change_direction.dart';
-import '../interactable_drawings/interactable_drawing.dart';
 import 'interactive_hover_state.dart';
 import 'interactive_normal_state.dart';
 import 'interactive_selected_tool_state.dart';
 import 'interactive_state.dart';
 
-/// Represents the information about the tool being added to the interactive
-/// layer.
+/// Represents the information about progress of the tool being added to the
+/// interactive layer.
 class AddingStateInfo {
   /// Creates an instance of [AddingStateInfo].
-  AddingStateInfo({
-    required this.addingToolType,
-    required this.addingTool,
-    required this.step,
-  });
+  AddingStateInfo(this.currentStep, this.totalSteps);
 
-  /// The type of the tool being added.
-  final Type addingToolType;
+  /// The current step of the adding process of a [DrawingAddingPreview].
+  final int currentStep;
 
-  /// The configuration of the tool being added.
-  final InteractableDrawing<DrawingToolConfig> addingTool;
+  /// The total number of steps required to complete the adding process.
+  final int totalSteps;
 
-  /// Indicates the current step in the process of adding a tool.
-  final AddingToolStep step;
-}
-
-/// Represents a step in the process of adding a tool to the interactive layer,
-/// indicating which point the user is expected to set.
-class AddingToolStep {
-  const AddingToolStep._(this.step);
-
-  /// Creates a step where the layer is expecting the user to add the Nth point
-  /// of the tool.
-  ///
-  /// This can be used for tools that require more than two points.
-  factory AddingToolStep.awaitingPointN(int pointN) => AddingToolStep._(pointN);
-
-  /// The code of the step.
-  final int step;
-
-  /// The layer is expecting the user to add the first point of the tool.
-  static const awaitingFirstPoint = AddingToolStep._(1);
-
-  /// The layer is expecting the user to add the second point of the tool,
-  /// which is typically the endpoint for most tools.
-  static const awaitingEndPoint = AddingToolStep._(2);
-
-  /// The layer is expecting the user to add a single point for the tool.
-  ///
-  /// Some tools, such as [HorizontalLineInteractableDrawing], require only one
-  /// point only.
-  static const awaitingTheOnlyPoint = AddingToolStep._(0);
+  /// Indicates whether the adding process is finished.
+  bool get isFinished => currentStep == totalSteps;
 
   @override
-  String toString() => 'AddingToolStep(step: $step)';
+  String toString() =>
+      'AddingStateInfo(currentStep: $currentStep, totalSteps: $totalSteps)';
 }
 
 /// The state of the interactive layer when a tool is being added.
@@ -88,8 +56,47 @@ class InteractiveAddingToolState extends InteractiveState
         interactiveLayerBehaviour.interactiveLayer.drawingContext,
         interactiveLayerBehaviour.getToolState,
       ),
+      _onAddingStateChange,
     );
   }
+
+  void _onAddingStateChange(
+    AddingStateInfo addingStateInfo,
+  ) {
+    _addingStateInfo = addingStateInfo;
+    interactiveLayerBehaviour.updateStateTo(
+      this,
+      StateChangeAnimationDirection.forward,
+      animate: false,
+    );
+
+    if (addingStateInfo.isFinished) {
+      interactiveLayer
+        ..clearAddingDrawing()
+        ..addDrawing(_drawingPreview!.interactableDrawing.getUpdatedConfig());
+
+      // Update the state to selected tool state with the newly added drawing.
+      //
+      // Once we have saved the drawing config in [AddOnsRepository] we should
+      // update to selected state with the interactable drawing that comes from
+      // that configs and not the preview one.
+      interactiveLayerBehaviour.updateStateTo(
+        InteractiveSelectedToolState(
+          selected: _drawingPreview!.interactableDrawing,
+          interactiveLayerBehaviour: interactiveLayerBehaviour,
+        ),
+        StateChangeAnimationDirection.forward,
+      );
+
+      _drawingPreview = null;
+    }
+  }
+
+  /// The initial state information for adding a tool.
+  AddingStateInfo? _addingStateInfo;
+
+  /// Getter to get the [_addingStateInfo] instance.
+  AddingStateInfo? get addingStateInfo => _addingStateInfo;
 
   /// The tool being added.
   ///
@@ -114,17 +121,10 @@ class InteractiveAddingToolState extends InteractiveState
 
   @override
   Set<DrawingToolState> getToolState(DrawingV2 drawing) {
-    final String? addingDrawingId = _drawingPreview != null
-        ? interactiveLayerBehaviour
-            .getAddingDrawingPreview(_drawingPreview!.interactableDrawing)
-            .id
-        : null;
+    final String? addingDrawingId = _drawingPreview?.interactableDrawing.id;
 
     final Set<DrawingToolState> states = drawing.id == addingDrawingId
-        ? {
-            DrawingToolState.adding,
-            if (_isAddingToolBeingDragged) DrawingToolState.dragging
-          }
+        ? {DrawingToolState.adding}
         : {DrawingToolState.normal};
 
     return states;
@@ -205,27 +205,13 @@ class InteractiveAddingToolState extends InteractiveState
 
   @override
   bool onTap(TapUpDetails details) {
-    _drawingPreview!
-        .onCreateTap(details, epochFromX, quoteFromY, epochToX, quoteToY, () {
-      interactiveLayer
-        ..clearAddingDrawing()
-        ..addDrawing(_drawingPreview!.interactableDrawing.getUpdatedConfig());
-
-      // Update the state to selected tool state with the newly added drawing.
-      //
-      // Once we have saved the drawing config in [AddOnsRepository] we should
-      // update to selected state with the interactable drawing that comes from
-      // that configs and not the preview one.
-      interactiveLayerBehaviour.updateStateTo(
-        InteractiveSelectedToolState(
-          selected: _drawingPreview!.interactableDrawing,
-          interactiveLayerBehaviour: interactiveLayerBehaviour,
-        ),
-        StateChangeAnimationDirection.forward,
-      );
-
-      _drawingPreview = null;
-    });
+    _drawingPreview!.onCreateTap(
+      details,
+      epochFromX,
+      quoteFromY,
+      epochToX,
+      quoteToY,
+    );
     return true; // Always return true as we're in adding mode
   }
 }
