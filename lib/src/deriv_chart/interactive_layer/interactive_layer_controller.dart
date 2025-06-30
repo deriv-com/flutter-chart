@@ -32,6 +32,9 @@ class InteractiveLayerController extends ChangeNotifier {
   /// The current position of the floating menu.
   Offset floatingMenuPosition;
 
+  /// The size of the floating menu.
+  Size floatingMenuSize = Size.zero;
+
   /// The current state of the interactive layer.
   set currentState(InteractiveState state) {
     _currentState = state;
@@ -50,5 +53,24 @@ class InteractiveLayerController extends ChangeNotifier {
   ) {
     _selectedDrawing = drawing;
     notifyListeners();
+  }
+
+  /// Checks if a given local position is within the floating menu bounds.
+  ///
+  /// Returns `true` if the position is within the floating menu area,
+  /// `false` otherwise.
+  bool isPointInFloatingMenu(Offset localPosition) {
+    if (floatingMenuSize == Size.zero || _selectedDrawing == null) {
+      return false;
+    }
+
+    final Rect menuRect = Rect.fromLTWH(
+      floatingMenuPosition.dx,
+      floatingMenuPosition.dy,
+      floatingMenuSize.width,
+      floatingMenuSize.height,
+    );
+
+    return menuRect.contains(localPosition);
   }
 }
