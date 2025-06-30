@@ -126,13 +126,16 @@ class _SelectedDrawingFloatingMenuState
             ),
           ),
           child: GlassyBlurEffectWidget(
-            child: Row(
-              children: <Widget>[
-                _buildDragIcon(),
-                _buildDrawingMenuOptions(),
-                const SizedBox(width: 4),
-                _buildRemoveButton(context),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4, bottom: 4, right: 8),
+              child: Row(
+                children: <Widget>[
+                  _buildDragIcon(),
+                  _buildDrawingMenuOptions(),
+                  const SizedBox(width: 4),
+                  _buildRemoveButton(context),
+                ],
+              ),
             ),
           ),
         ),
