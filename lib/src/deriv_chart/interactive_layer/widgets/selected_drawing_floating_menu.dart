@@ -91,8 +91,7 @@ class _SelectedDrawingFloatingMenuState
         behavior: HitTestBehavior.opaque,
         onPanStart: (details) {
           // Hide the crosshair when starting to drag the toolbar
-          widget.interactiveLayerBehaviour.crosshairController
-              ?.onExit(const PointerExitEvent());
+          widget.interactiveLayerBehaviour.interactiveLayer.hideCrosshair();
         },
         onPanUpdate: (details) {
           // Calculate new position

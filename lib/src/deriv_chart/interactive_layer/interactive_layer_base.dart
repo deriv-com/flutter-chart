@@ -59,4 +59,10 @@ abstract class InteractiveLayerBase {
 
   /// Removes the [drawing] from the interactive layer and the chart.
   void removeDrawing(DrawingToolConfig drawing);
+
+  /// Hides the crosshair if it's currently active.
+  ///
+  /// This method provides a clean way to hide the crosshair when other
+  /// UI elements need to take precedence over crosshair interactions.
+  void hideCrosshair();
 }

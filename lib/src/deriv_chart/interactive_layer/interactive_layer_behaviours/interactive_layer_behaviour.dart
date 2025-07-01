@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_controller.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/types.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
@@ -55,22 +54,17 @@ abstract class InteractiveLayerBehaviour {
   /// The callback that is called when the interactive layer needs to be updated.
   late final VoidCallback onUpdate;
 
-  /// The crosshair controller for managing crosshair visibility.
-  CrosshairController? crosshairController;
-
   /// Initializes the [InteractiveLayerBehaviour].
   void init({
     required InteractiveLayerBase interactiveLayer,
     required VoidCallback onUpdate,
     required AnimationController stateChangeController,
-    CrosshairController? crosshairController,
   }) {
     if (_initialized) {
       return;
     }
 
     this.stateChangeController = stateChangeController;
-    this.crosshairController = crosshairController;
 
     _initialized = true;
     this.interactiveLayer = interactiveLayer;
