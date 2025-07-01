@@ -252,12 +252,7 @@ class TrendLineInteractableDrawing
       final Offset endOffset =
           Offset(epochToX(endPoint!.epoch), quoteToY(endPoint!.quote));
 
-      // Draw the main line
-      final Paint paint =
-          paintStyle.linePaintStyle(lineStyle.color, lineStyle.thickness);
-      canvas.drawLine(startOffset, endOffset, paint);
-
-      // Add neon glow effect if selected but not dragging individual points
+      // Draw neon glow effect first if selected but not dragging individual points
       if (drawingState.contains(DrawingToolState.selected) &&
           !(drawingState.contains(DrawingToolState.dragging) &&
               isDraggingStartPoint != null)) {
@@ -269,6 +264,11 @@ class TrendLineInteractableDrawing
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
         canvas.drawLine(startOffset, endOffset, neonPaint);
       }
+
+      // Draw the main line on top to keep it crisp
+      final Paint paint =
+          paintStyle.linePaintStyle(lineStyle.color, lineStyle.thickness);
+      canvas.drawLine(startOffset, endOffset, paint);
 
       // Only draw points when there's an active interaction (selected, hovered, or dragging)
       if (drawingState.contains(DrawingToolState.selected) ||
