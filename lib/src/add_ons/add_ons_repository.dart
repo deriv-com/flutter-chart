@@ -117,6 +117,14 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     notifyListeners();
   }
 
+  @override
+  void remove(T config) {
+    final index = items.indexWhere((item) => item.configId == config.configId);
+    if (index != -1) {
+      removeAt(index);
+    }
+  }
+
   /// Removes all indicator/drawing tool from repository and
   /// updates storage.
   @override

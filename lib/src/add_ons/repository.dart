@@ -23,6 +23,9 @@ abstract class Repository<T> extends ChangeNotifier {
   /// Removes indicator or drawing tool at [index].
   void removeAt(int index);
 
+  /// Removes a specific indicator or drawing tool from the repository.
+  void remove(T config);
+
   /// Swaps two elements of a list.
   void swap(int index1, int index2);
 

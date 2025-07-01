@@ -4,10 +4,12 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/enums/drawing_tool_state.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
 
 import '../../helpers/paint_helpers.dart';
-import '../../interactable_drawing_custom_painter.dart';
+import '../../helpers/types.dart';
 import '../drawing_v2.dart';
 
 /// A cross-hair used for aligning the adding tool.
@@ -38,8 +40,16 @@ class AddingToolAlignmentCrossHair extends DrawingV2 {
   }
 
   @override
-  void paint(Canvas canvas, Size size, EpochToX epochToX, QuoteToY quoteToY,
-      AnimationInfo animationInfo, GetDrawingState getDrawingState) {
+  void paint(
+    Canvas canvas,
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
+    GetDrawingState getDrawingState,
+  ) {
     if (_currentHoverPosition == null) {
       return;
     }
@@ -63,4 +73,16 @@ class AddingToolAlignmentCrossHair extends DrawingV2 {
     DrawingV2 oldDrawing,
   ) =>
       true;
+
+  @override
+  void paintOverYAxis(
+    Canvas canvas,
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
+    GetDrawingState getDrawingState,
+  ) {}
 }

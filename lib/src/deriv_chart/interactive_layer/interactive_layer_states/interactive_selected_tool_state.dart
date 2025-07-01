@@ -1,8 +1,18 @@
-import 'package:deriv_chart/deriv_chart.dart';
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
+import '../helpers/types.dart';
+import '../interactable_drawings/drawing_v2.dart';
+import '../interactable_drawings/interactable_drawing.dart';
+import '../interactive_layer_states/interactive_state.dart';
 import '../enums/drawing_tool_state.dart';
 import '../enums/state_change_direction.dart';
+import '../widgets/selected_drawing_floating_menu.dart';
+import 'interactive_hover_state.dart';
+import 'interactive_normal_state.dart';
 
 /// The state of the interactive layer when a tool is selected.
 ///
@@ -24,7 +34,9 @@ class InteractiveSelectedToolState extends InteractiveState
   InteractiveSelectedToolState({
     required this.selected,
     required super.interactiveLayerBehaviour,
-  });
+  }) {
+    interactiveLayerBehaviour.controller.selectedDrawing = selected;
+  }
 
   /// The selected tool.
   ///
@@ -58,17 +70,31 @@ class InteractiveSelectedToolState extends InteractiveState
   }
 
   @override
-  void onPanEnd(DragEndDetails details) {
-    selected.onDragEnd(details, epochFromX, quoteFromY, epochToX, quoteToY);
-    _draggingStartedOnTool = false;
-    interactiveLayer.saveDrawing(selected);
+  DrawingZOrder getToolZOrder(DrawingV2 drawing) {
+    if (drawing.id == selected.config.configId) {
+      return DrawingZOrder.top;
+    }
+
+    return super.getToolZOrder(drawing);
   }
 
   @override
-  void onPanStart(DragStartDetails details) {
+  bool onPanEnd(DragEndDetails details) {
+    if (_draggingStartedOnTool) {
+      selected.onDragEnd(details, epochFromX, quoteFromY, epochToX, quoteToY);
+      _draggingStartedOnTool = false;
+      interactiveLayer.saveDrawing(selected.getUpdatedConfig());
+      return true; // Ended dragging a tool
+    }
+    return false; // Not dragging a tool
+  }
+
+  @override
+  bool onPanStart(DragStartDetails details) {
     if (selected.hitTest(details.localPosition, epochToX, quoteToY)) {
       _draggingStartedOnTool = true;
       selected.onDragStart(details, epochFromX, quoteFromY, epochToX, quoteToY);
+      return true; // Started dragging on the selected tool
     } else {
       final InteractableDrawing<DrawingToolConfig>? hitDrawing =
           anyDrawingHit(details.localPosition);
@@ -82,13 +108,17 @@ class InteractiveSelectedToolState extends InteractiveState
             interactiveLayerBehaviour: interactiveLayerBehaviour,
           )..onPanStart(details),
           StateChangeAnimationDirection.forward,
+          waitForAnimation: false,
+          animate: false,
         );
+        return true; // Started dragging on another tool
       }
+      return false; // No tool was hit
     }
   }
 
   @override
-  void onPanUpdate(DragUpdateDetails details) {
+  bool onPanUpdate(DragUpdateDetails details) {
     if (_draggingStartedOnTool) {
       selected.onDragUpdate(
         details,
@@ -97,13 +127,20 @@ class InteractiveSelectedToolState extends InteractiveState
         epochToX,
         quoteToY,
       );
+      return true; // Dragging a tool
     }
+    return false; // Not dragging a tool
   }
 
   @override
-  void onTap(TapUpDetails details) {
+  bool onTap(TapUpDetails details) {
     final InteractableDrawing<DrawingToolConfig>? hitDrawing =
         anyDrawingHit(details.localPosition);
+
+    if (hitDrawing?.id == selected.id) {
+      // If the tapped drawing is the same as the selected one, do nothing.
+      return true; // Indicate tap was handled even though nothing was done.
+    }
 
     if (hitDrawing != null) {
       // when a tool is tap/hit, keep selected state. it might be the same
@@ -114,15 +151,54 @@ class InteractiveSelectedToolState extends InteractiveState
           interactiveLayerBehaviour: interactiveLayerBehaviour,
         ),
         StateChangeAnimationDirection.forward,
+        waitForAnimation: false,
+        animate: false,
       );
+      return true; // A drawing was hit
     } else {
       // If tap is on empty space, return to normal state.
       interactiveLayerBehaviour.updateStateTo(
         InteractiveNormalState(
             interactiveLayerBehaviour: interactiveLayerBehaviour),
         StateChangeAnimationDirection.backward,
-        waitForAnimation: true,
       );
+      return false; // No drawing was hit
     }
   }
+
+  @override
+  bool onHover(PointerHoverEvent event) {
+    return getToolState(selected).contains(DrawingToolState.dragging);
+  }
+
+  @override
+  List<Widget> get previewWidgets => [_buildSelectedDrawingFloatingMenu()];
+
+  Widget _buildSelectedDrawingFloatingMenu() => SelectedDrawingFloatingMenu(
+        drawing: selected,
+        interactiveLayerBehaviour: interactiveLayerBehaviour,
+        onUpdateDrawing: (config) {
+          interactiveLayer.saveDrawing(config);
+          interactiveLayerBehaviour.updateStateTo(
+            this,
+            StateChangeAnimationDirection.forward,
+            animate: false,
+          );
+        },
+        onRemoveDrawing: (config) {
+          if (selected.id != config.configId) {
+            return;
+          }
+
+          interactiveLayerBehaviour.updateStateTo(
+            InteractiveNormalState(
+              interactiveLayerBehaviour: interactiveLayerBehaviour,
+            ),
+            StateChangeAnimationDirection.backward,
+            waitForAnimation: false,
+          );
+
+          interactiveLayer.removeDrawing(config);
+        },
+      );
 }

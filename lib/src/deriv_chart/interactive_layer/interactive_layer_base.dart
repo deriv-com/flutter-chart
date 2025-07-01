@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/drawing_context.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_states/interactive_selected_tool_state.dart';
 import 'package:flutter/animation.dart';
 
@@ -19,7 +20,10 @@ abstract class InteractiveLayerBase {
   /// and from [InteractiveSelectedToolState] to [InteractiveNormalState] can be
   /// backward. so the [InteractiveLayerBase] can animate the transition
   /// accordingly.
-  Future<void> animateStateChange(StateChangeAnimationDirection direction);
+  Future<void> animateStateChange(
+    StateChangeAnimationDirection direction, {
+    bool animate = true,
+  });
 
   /// The drawings of the interactive layer.
   List<InteractableDrawing<DrawingToolConfig>> get drawings;
@@ -41,15 +45,18 @@ abstract class InteractiveLayerBase {
   QuoteToY get quoteToY;
 
   /// The size of the interactive layer.
-  Size? get layerSize;
+  DrawingContext get drawingContext;
 
   /// Clears the adding drawing.
   void clearAddingDrawing();
 
   /// Adds the [drawing] to the interactive layer.
-  DrawingToolConfig addDrawing(InteractableDrawing<DrawingToolConfig> drawing);
+  DrawingToolConfig addDrawing(DrawingToolConfig drawing);
 
   /// Save the drawings with the latest changes (positions or anything) to the
   /// repository.
-  void saveDrawing(InteractableDrawing<DrawingToolConfig> drawing);
+  void saveDrawing(DrawingToolConfig drawing);
+
+  /// Removes the [drawing] from the interactive layer and the chart.
+  void removeDrawing(DrawingToolConfig drawing);
 }

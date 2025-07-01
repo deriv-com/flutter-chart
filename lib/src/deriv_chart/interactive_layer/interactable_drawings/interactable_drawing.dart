@@ -1,12 +1,16 @@
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
 import '../../chart/data_visualization/chart_data.dart';
 import '../../chart/data_visualization/models/animation_info.dart';
+import '../drawing_context.dart';
 import '../enums/drawing_tool_state.dart';
-import '../interactable_drawing_custom_painter.dart';
+import '../helpers/types.dart';
 import '../interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import '../interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
 import 'drawing_adding_preview.dart';
@@ -23,16 +27,59 @@ import 'drawing_v2.dart';
 abstract class InteractableDrawing<T extends DrawingToolConfig>
     implements DrawingV2 {
   /// Initializes [InteractableDrawing].
-  InteractableDrawing({required this.config});
+  InteractableDrawing({
+    required T drawingConfig,
+    required this.drawingContext,
+    required this.getDrawingState,
+  }) {
+    config = drawingConfig.copyWith() as T;
+    _prevConfig = config.copyWith() as T;
+  }
 
   @override
   String get id => config.configId ?? '';
 
   /// The drawing tool config.
-  final T config;
+  late T config;
+
+  /// The previous drawing tool config.
+  ///
+  /// Whenever there is a change in the internal [config] this will be hold the
+  /// previous state of the config before change. so it can be used in the
+  /// config comparisons.
+  late T _prevConfig;
+
+  /// A callback to get the updated state of any drawing tool when calling it.
+  final DrawingContext drawingContext;
+
+  /// A callback to get the current state of a drawing.
+  final GetDrawingState getDrawingState;
+
+  /// Returns the current state of this drawing tool.
+  Set<DrawingToolState> get state => getDrawingState(this);
 
   /// Returns the updated config.
   T getUpdatedConfig();
+
+  /// Returns the widget for the toolbar menu of the drawing tool.
+  /// [config] is the current configuration of the drawing tool.
+  ///
+  /// The [onUpdate] callback is called when the user updates the drawing tool
+  /// configuration through the toolbar menu.
+  Widget getToolBarMenu({required UpdateDrawingTool onUpdate}) {
+    final toolBar = buildDrawingToolBarMenu((config) {
+      _prevConfig = this.config;
+      this.config = config as T;
+
+      onUpdate(config);
+    });
+
+    return toolBar;
+  }
+
+  /// Builds the toolbar menu for the drawing tool.
+  @protected
+  Widget buildDrawingToolBarMenu(UpdateDrawingTool onUpdate);
 
   /// Returns `true` if the drawing tool is hit by the given offset.
   @override
@@ -94,6 +141,9 @@ abstract class InteractableDrawing<T extends DrawingToolConfig>
     EpochToX epochToX,
     QuoteToY quoteToY,
     AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
+    // TODO(NA): remove this and use instance state getter directly.
     GetDrawingState getDrawingState,
   );
 
@@ -102,11 +152,26 @@ abstract class InteractableDrawing<T extends DrawingToolConfig>
     Set<DrawingToolState> drawingState,
     covariant InteractableDrawing<T> oldDrawing,
   ) {
-    return config != oldDrawing.config ||
+    final configChanged = config != _prevConfig;
+    _prevConfig = config;
+
+    return configChanged ||
         drawingState.contains(DrawingToolState.dragging) ||
         drawingState.contains(DrawingToolState.adding) ||
         drawingState.contains(DrawingToolState.animating);
   }
+
+  @override
+  void paintOverYAxis(
+    Canvas canvas,
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    AnimationInfo animationInfo,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
+    GetDrawingState getDrawingState,
+  ) {}
 
   @override
   bool isInViewPort(EpochRange epochRange, QuoteRange quoteRange);

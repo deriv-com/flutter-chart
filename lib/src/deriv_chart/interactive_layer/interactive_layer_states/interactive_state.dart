@@ -1,8 +1,10 @@
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/widgets.dart';
 
 import '../enums/drawing_tool_state.dart';
+import '../helpers/types.dart';
 import '../interactable_drawings/drawing_v2.dart';
 import '../interactable_drawings/interactable_drawing.dart';
 import '../interactive_layer_base.dart';
@@ -27,13 +29,18 @@ abstract class InteractiveState {
   /// The [interactiveLayer] parameter provides a reference to the layer that owns
   /// this state, allowing the state to call methods on the layer such as updating
   /// to a new state or adding/saving drawings.
-  InteractiveState({required this.interactiveLayerBehaviour});
+  InteractiveState({required this.interactiveLayerBehaviour}) {
+    interactiveLayerBehaviour.controller.selectedDrawing = null;
+  }
 
   /// Returns the state of the drawing tool.
   ///
   /// This method determines the visual and behavioral state of a specific drawing tool.
   /// Each concrete state implementation returns different [DrawingToolState] values:
   Set<DrawingToolState> getToolState(DrawingV2 drawing);
+
+  /// Returns the z-order for the tool drawings.
+  DrawingZOrder getToolZOrder(DrawingV2 drawing) => DrawingZOrder.bottom;
 
   /// Additional drawings of the state to be drawn on top of the main drawings.
   ///
@@ -45,6 +52,9 @@ abstract class InteractiveState {
   /// These are usually temporary/preview drawings that a state might want to
   /// render on top of the main drawings.
   List<DrawingV2> get previewDrawings => [];
+
+  /// Additional widgets to be rendered on top of the interactive layer.
+  List<Widget> get previewWidgets => [];
 
   /// The interactive layer.
   ///
@@ -81,19 +91,44 @@ abstract class InteractiveState {
   QuoteToY get quoteToY => interactiveLayer.quoteToY;
 
   /// Handles tap event.
-  void onTap(TapUpDetails details) {}
+  /// Returns true if the tap was handled by a drawing tool, false otherwise.
+  bool onTap(TapUpDetails details) {
+    // Default implementation returns false
+    // Subclasses can override this to provide specific tap handling logic
+    return false;
+  }
 
   /// Handles pan update event.
-  void onPanUpdate(DragUpdateDetails details) {}
+  /// Returns true if the pan update is affecting a drawing tool, false otherwise.
+  bool onPanUpdate(DragUpdateDetails details) {
+    // Default implementation returns false
+    // Subclasses can override this to provide specific pan update handling logic
+    return false;
+  }
 
   /// Handles pan end event.
-  void onPanEnd(DragEndDetails details) {}
+  /// Returns true if the pan end is affecting a drawing tool, false otherwise.
+  bool onPanEnd(DragEndDetails details) {
+    // Default implementation returns false
+    // Subclasses can override this to provide specific pan end handling logic
+    return false;
+  }
 
   /// Handles pan start event.
-  void onPanStart(DragStartDetails details) {}
+  /// Returns true if the pan was started on a drawing tool, false otherwise.
+  bool onPanStart(DragStartDetails details) {
+    // Default implementation returns false
+    // Subclasses can override this to provide specific pan start handling logic
+    return false;
+  }
 
   /// Handles hover event.
-  void onHover(PointerHoverEvent event) {}
+  /// Returns true if the hover is over a drawing tool, false otherwise.
+  bool onHover(PointerHoverEvent event) {
+    // Default implementation returns false
+    // Subclasses can override this to provide specific hover handling logic
+    return false;
+  }
 }
 
 /// Extension that provides utility methods for interactive states.

@@ -6,6 +6,9 @@ import 'interactive_layer_behaviour.dart';
 
 /// The Desktop-specific implementation of the interactive layer behaviour.
 class InteractiveLayerDesktopBehaviour extends InteractiveLayerBehaviour {
+  /// Creates an instance of [InteractiveLayerDesktopBehaviour].
+  InteractiveLayerDesktopBehaviour({super.controller});
+
   @override
   DrawingAddingPreview getAddingDrawingPreview(
     InteractableDrawing<DrawingToolConfig> drawing,
