@@ -32,15 +32,14 @@ class LineThicknessDropdown extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          for (final thickness in _thicknessOptions)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: _ThicknessOptionButton(
-                thickness: thickness,
-                selected: thickness == selectedThickness,
-                onTap: () => onChanged(thickness),
-              ),
+          for (int i = 0; i < _thicknessOptions.length; i++) ...[
+            _ThicknessOptionButton(
+              thickness: _thicknessOptions[i],
+              selected: _thicknessOptions[i] == selectedThickness,
+              onTap: () => onChanged(_thicknessOptions[i]),
             ),
+            if (i < _thicknessOptions.length - 1) const SizedBox(height: 6),
+          ],
         ],
       ),
     );
