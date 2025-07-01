@@ -117,10 +117,6 @@ class TrendLineInteractableDrawing
   bool? isDraggingStartPoint;
 
   @override
-  void onHover(PointerHoverEvent event, EpochFromX epochFromX,
-      QuoteFromY quoteFromY, EpochToX epochToX, QuoteToY quoteToY) {}
-
-  @override
   void onDragStart(
     DragStartDetails details,
     EpochFromX epochFromX,

@@ -73,7 +73,11 @@ class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
     ChartConfig chartConfig,
     ChartTheme chartTheme,
     GetDrawingState getDrawingState,
-  ) {}
+  ) {
+    // This override is intentionally left empty because desktop trend line preview
+    // painting is handled in paintOverYAxis method to ensure proper layering
+    // with alignment guides and labels over the chart axes.
+  }
 
   @override
   void paintOverYAxis(
