@@ -126,6 +126,30 @@ class LightThemeColors {
           .componentTextIconInverseProminentLight; // Hex: #000000
   static final Color lineThicknessDropdownItemUnselectedLineColor =
       ComponentDesignTokens.componentTextIconNormalDefaultLight; // Hex: #FFFFFF
+
+  // Toolbar color palette colors
+  static const Color toolbarColorPaletteIconRed =
+      LightThemeDesignTokens.semanticColorRedSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconYellow =
+      LightThemeDesignTokens.semanticColorYellowSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconMustard =
+      LightThemeDesignTokens.semanticColorMustardSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconGreen =
+      LightThemeDesignTokens.semanticColorGreenSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconSeaWater =
+      LightThemeDesignTokens.semanticColorSeawaterSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconBlue =
+      LightThemeDesignTokens.semanticColorBlueSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconSapphire =
+      LightThemeDesignTokens.semanticColorSapphireSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconBlueBerry =
+      LightThemeDesignTokens.semanticColorBlueberrySolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconGrape =
+      LightThemeDesignTokens.semanticColorGrapeSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconMagenta =
+      LightThemeDesignTokens.semanticColorMagentaSolidSurfaceInverseMid;
+  static final Color toolbarColorPaletteIconBorderColor =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
 }
 
 /// Default colors for dark theme.
@@ -212,6 +236,30 @@ class DarkThemeColors {
   static const Color lineThicknessDropdownItemUnselectedLineColor =
       ComponentDesignTokens
           .componentTextIconNormalProminentDark; // Hex: #FFFFFF
+
+  // Toolbar color palette colors
+  static const Color toolbarColorPaletteIconRed =
+      DarkThemeDesignTokens.semanticColorRedSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconYellow =
+      DarkThemeDesignTokens.semanticColorYellowSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconMustard =
+      DarkThemeDesignTokens.semanticColorMustardSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconGreen =
+      DarkThemeDesignTokens.semanticColorGreenSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconSeaWater =
+      DarkThemeDesignTokens.semanticColorSeawaterSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconBlue =
+      DarkThemeDesignTokens.semanticColorBlueSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconSapphire =
+      DarkThemeDesignTokens.semanticColorSapphireSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconBlueBerry =
+      DarkThemeDesignTokens.semanticColorBlueberrySolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconGrape =
+      DarkThemeDesignTokens.semanticColorGrapeSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconMagenta =
+      DarkThemeDesignTokens.semanticColorMagentaSolidSurfaceInverseMid;
+  static final Color toolbarColorPaletteIconBorderColor =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
 }
 
 /// Candle Bullish colors for light, dark

@@ -177,4 +177,48 @@ class ChartDefaultLightTheme extends ChartDefaultTheme {
 
   @override
   Color get base07Color => LegacyLightThemeColors.base07;
+
+  @override
+  Color get toolbarColorPaletteIconRed =>
+      LightThemeColors.toolbarColorPaletteIconRed;
+
+  @override
+  Color get toolbarColorPaletteIconYellow =>
+      LightThemeColors.toolbarColorPaletteIconYellow;
+
+  @override
+  Color get toolbarColorPaletteIconMustard =>
+      LightThemeColors.toolbarColorPaletteIconMustard;
+
+  @override
+  Color get toolbarColorPaletteIconGreen =>
+      LightThemeColors.toolbarColorPaletteIconGreen;
+
+  @override
+  Color get toolbarColorPaletteIconSeaWater =>
+      LightThemeColors.toolbarColorPaletteIconSeaWater;
+
+  @override
+  Color get toolbarColorPaletteIconBlue =>
+      LightThemeColors.toolbarColorPaletteIconBlue;
+
+  @override
+  Color get toolbarColorPaletteIconSapphire =>
+      LightThemeColors.toolbarColorPaletteIconSapphire;
+
+  @override
+  Color get toolbarColorPaletteIconBlueBerry =>
+      LightThemeColors.toolbarColorPaletteIconBlueBerry;
+
+  @override
+  Color get toolbarColorPaletteIconGrape =>
+      LightThemeColors.toolbarColorPaletteIconGrape;
+
+  @override
+  Color get toolbarColorPaletteIconMagenta =>
+      LightThemeColors.toolbarColorPaletteIconMagenta;
+
+  @override
+  Color get toolbarColorPaletteIconBorderColor =>
+      LightThemeColors.toolbarColorPaletteIconBorderColor;
 }

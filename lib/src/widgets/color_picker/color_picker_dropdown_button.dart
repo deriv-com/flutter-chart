@@ -83,7 +83,7 @@ class ColorPickerIcon extends StatelessWidget {
             height: 14,
             decoration: BoxDecoration(
               color: color,
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
         ),

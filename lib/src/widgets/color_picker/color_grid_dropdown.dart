@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:provider/provider.dart';
 
 /// Grid of color options for dropdown color picker.
 /// 2 columns and 5 rows layout as shown in the design.
@@ -16,45 +18,64 @@ class ColorGridDropdown extends StatelessWidget {
   /// Called when color option is selected.
   final ValueChanged<Color> onChanged;
 
-  /// The predefined colors for the grid (2 columns, 5 rows)
-  static const List<List<Color>> _colorGrid = [
-    [Color(0xFFE74C3C), Color(0xFF3498DB)], // Red, Blue
-    [Color(0xFFE67E22), Color(0xFF0000FF)], // Orange, Bright Blue
-    [Color(0xFFF1C40F), Color(0xFF9B59B6)], // Yellow, Purple
-    [Color(0xFF2ECC71), Color(0xFF673AB7)], // Green, Deep Purple
-    [Color(0xFF1ABC9C), Color(0xFFE91E63)], // Teal, Pink
-  ];
-
   @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(8), // 8px padding
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            for (final List<Color> row in _colorGrid)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                // 6px vertical padding
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    for (int i = 0; i < row.length; i++) ...[
-                      _ColorOptionButton(
-                        color: row[i],
-                        selected: row[i].value == selectedColor.value,
-                        onTap: () => onChanged(row[i]),
-                      ),
-                      if (i < row.length - 1) const SizedBox(width: 4)
-                    ],
+  Widget build(BuildContext context) {
+    final ChartTheme theme = context.watch<ChartTheme>();
+
+    // Build the color grid from theme colors (2 columns, 4 rows)
+    final List<List<Color>> colorGrid = [
+      [
+        theme.toolbarColorPaletteIconRed,
+        theme.toolbarColorPaletteIconBlue,
+      ],
+      [
+        theme.toolbarColorPaletteIconYellow,
+        theme.toolbarColorPaletteIconSapphire,
+      ],
+      [
+        theme.toolbarColorPaletteIconMustard,
+        theme.toolbarColorPaletteIconBlueBerry,
+      ],
+      [
+        theme.toolbarColorPaletteIconGreen,
+        theme.toolbarColorPaletteIconGrape,
+      ],
+      [
+        theme.toolbarColorPaletteIconSeaWater,
+        theme.toolbarColorPaletteIconMagenta,
+      ],
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(8), // 8px padding
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (final List<Color> row in colorGrid)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              // 6px vertical padding
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (int i = 0; i < row.length; i++) ...[
+                    _ColorOptionButton(
+                      color: row[i],
+                      selected: row[i].value == selectedColor.value,
+                      onTap: () => onChanged(row[i]),
+                    ),
+                    if (i < row.length - 1) const SizedBox(width: 4)
                   ],
-                ),
+                ],
               ),
-          ],
-        ),
-      );
+            ),
+        ],
+      ),
+    );
+  }
 }
 
 class _ColorOptionButton extends StatelessWidget {
@@ -71,15 +92,15 @@ class _ColorOptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ChartTheme theme = context.watch<ChartTheme>();
+
     final Widget colorArea = Container(
       width: 16,
       height: 16,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(2),
         border: Border.all(
-          // TODO(NA): use color from core design tokens when the token is there.
-          color: const Color(0x29000000),
-          width: 2,
+          color: theme.toolbarColorPaletteIconBorderColor,
         ),
         color: color,
       ),
@@ -95,7 +116,7 @@ class _ColorOptionButton extends StatelessWidget {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(2),
                     border: Border.all(color: Colors.white, width: 2),
                   ),
                 ),
@@ -113,7 +134,7 @@ class _ColorOptionButton extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(2),
                 // border: selected ? Border.all(color: Colors.white, width: 2) : null,
               ),
               child: colorArea,

@@ -177,4 +177,48 @@ class ChartDefaultDarkTheme extends ChartDefaultTheme {
 
   @override
   Color get base07Color => LegacyDarkThemeColors.base07;
+
+  @override
+  Color get toolbarColorPaletteIconRed =>
+      DarkThemeColors.toolbarColorPaletteIconRed;
+
+  @override
+  Color get toolbarColorPaletteIconYellow =>
+      DarkThemeColors.toolbarColorPaletteIconYellow;
+
+  @override
+  Color get toolbarColorPaletteIconMustard =>
+      DarkThemeColors.toolbarColorPaletteIconMustard;
+
+  @override
+  Color get toolbarColorPaletteIconGreen =>
+      DarkThemeColors.toolbarColorPaletteIconGreen;
+
+  @override
+  Color get toolbarColorPaletteIconSeaWater =>
+      DarkThemeColors.toolbarColorPaletteIconSeaWater;
+
+  @override
+  Color get toolbarColorPaletteIconBlue =>
+      DarkThemeColors.toolbarColorPaletteIconBlue;
+
+  @override
+  Color get toolbarColorPaletteIconSapphire =>
+      DarkThemeColors.toolbarColorPaletteIconSapphire;
+
+  @override
+  Color get toolbarColorPaletteIconBlueBerry =>
+      DarkThemeColors.toolbarColorPaletteIconBlueBerry;
+
+  @override
+  Color get toolbarColorPaletteIconGrape =>
+      DarkThemeColors.toolbarColorPaletteIconGrape;
+
+  @override
+  Color get toolbarColorPaletteIconMagenta =>
+      DarkThemeColors.toolbarColorPaletteIconMagenta;
+
+  @override
+  Color get toolbarColorPaletteIconBorderColor =>
+      DarkThemeColors.toolbarColorPaletteIconBorderColor;
 }
