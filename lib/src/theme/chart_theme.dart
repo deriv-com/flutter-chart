@@ -222,4 +222,5 @@ abstract class ChartTheme {
   Color get toolbarColorPaletteIconGrape;
   Color get toolbarColorPaletteIconMagenta;
   Color get toolbarColorPaletteIconBorderColor;
+  Color get toolbarColorPaletteIconSelectedBorderColor;
 }

@@ -111,22 +111,24 @@ class _ColorOptionButton extends StatelessWidget {
       child: selected
           ? Stack(
               children: <Widget>[
-                _buildColorOption(colorArea),
+                _buildColorOption(colorArea, theme),
                 Container(
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(2),
-                    border: Border.all(color: Colors.white, width: 2),
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(
+                      color: theme.toolbarColorPaletteIconSelectedBorderColor,
+                    ),
                   ),
                 ),
               ],
             )
-          : _buildColorOption(colorArea),
+          : _buildColorOption(colorArea, theme),
     );
   }
 
-  Widget _buildColorOption(Widget colorArea) => SizedBox(
+  Widget _buildColorOption(Widget colorArea, ChartTheme theme) => SizedBox(
         height: 32, // Fixed height for color option
         width: 32, // Fixed width for color option
         child: Stack(
@@ -135,7 +137,6 @@ class _ColorOptionButton extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(2),
-                // border: selected ? Border.all(color: Colors.white, width: 2) : null,
               ),
               child: colorArea,
             )

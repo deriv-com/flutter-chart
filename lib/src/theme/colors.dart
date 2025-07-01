@@ -150,6 +150,8 @@ class LightThemeColors {
       LightThemeDesignTokens.semanticColorMagentaSolidSurfaceInverseMid;
   static final Color toolbarColorPaletteIconBorderColor =
       LightThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
+  static const Color toolbarColorPaletteIconSelectedBorderColor =
+      LightThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
 }
 
 /// Default colors for dark theme.
@@ -260,6 +262,8 @@ class DarkThemeColors {
       DarkThemeDesignTokens.semanticColorMagentaSolidSurfaceInverseMid;
   static final Color toolbarColorPaletteIconBorderColor =
       DarkThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
+  static const Color toolbarColorPaletteIconSelectedBorderColor =
+      DarkThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
 }
 
 /// Candle Bullish colors for light, dark

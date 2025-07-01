@@ -221,4 +221,8 @@ class ChartDefaultDarkTheme extends ChartDefaultTheme {
   @override
   Color get toolbarColorPaletteIconBorderColor =>
       DarkThemeColors.toolbarColorPaletteIconBorderColor;
+
+  @override
+  Color get toolbarColorPaletteIconSelectedBorderColor =>
+      DarkThemeColors.toolbarColorPaletteIconSelectedBorderColor;
 }
