@@ -615,7 +615,8 @@ class TrendLineInteractableDrawing
             ),
           ),
           onPressed: () {
-            // update line thickness
+            // TODO: Implement line thickness selection functionality
+            // This will allow users to change the thickness of the trend line
           },
           child: Text(
             '${config.lineStyle.thickness.toInt()}px',
