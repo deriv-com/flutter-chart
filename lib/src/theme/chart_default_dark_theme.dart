@@ -136,10 +136,6 @@ class ChartDefaultDarkTheme extends ChartDefaultTheme {
       DarkThemeColors.lineThicknessDropdownButtonTextColor;
 
   @override
-  TextStyle get lineThicknessDropdownButtonTextStyle =>
-      TextStyles.lineThicknessDropdownButtonTextStyle;
-
-  @override
   Color get lineThicknessDropdownItemSelectedBackgroundColor =>
       DarkThemeColors.lineThicknessDropdownItemSelectedBackgroundColor;
 
@@ -158,10 +154,6 @@ class ChartDefaultDarkTheme extends ChartDefaultTheme {
   @override
   Color get lineThicknessDropdownItemUnselectedLineColor =>
       DarkThemeColors.lineThicknessDropdownItemUnselectedLineColor;
-
-  @override
-  TextStyle get lineThicknessDropdownItemTextStyle =>
-      TextStyles.lineThicknessDropdownItemTextStyle;
 
   @override
   Color get base01Color => LegacyDarkThemeColors.base01;
