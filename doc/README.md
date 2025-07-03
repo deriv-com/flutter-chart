@@ -99,15 +99,8 @@ Explore the features available in the Deriv Chart library:
 ### Technical Analysis
 
 - [Indicators](features/indicators/overview.md) - Add technical indicators
-  - Moving Averages
-  - Oscillators
-  - Volatility Indicators
-  - Trend Indicators
 
-- [Drawing Tools](features/drawing_tools/overview.md) - Use interactive drawing tools
-  - Lines and Channels
-  - Fibonacci Tools
-  - Geometric Shapes
+- [Drawing Tools](features/drawing_tools/overview.md) - Use interactive layer drawing tools
 
 ### Interactive Layer
 
