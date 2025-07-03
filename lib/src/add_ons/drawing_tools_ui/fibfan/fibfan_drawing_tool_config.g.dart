@@ -18,21 +18,46 @@ FibfanDrawingToolConfig _$FibfanDrawingToolConfigFromJson(
               .toList() ??
           const <EdgePoint>[],
       fillStyle: json['fillStyle'] == null
-          ? const LineStyle(thickness: 0.9, color: Colors.blue)
+          ? const LineStyle(
+              thickness: 0.9, color: CoreDesignTokens.coreColorSolidBlue700)
           : LineStyle.fromJson(json['fillStyle'] as Map<String, dynamic>),
       lineStyle: json['lineStyle'] == null
-          ? const LineStyle(thickness: 0.9, color: Colors.white)
+          ? const LineStyle(
+              thickness: 0.9, color: CoreDesignTokens.coreColorSolidBlue700)
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+      fibonacciLevelColors:
+          (json['fibonacciLevelColors'] as Map<String, dynamic>?)?.map(
+                (k, e) => MapEntry(
+                    k, const ColorConverter().fromJson((e as num).toInt())),
+              ) ??
+              const <String, Color>{
+                'level0': CoreDesignTokens.coreColorSolidBlue700,
+                'level38_2': LightThemeDesignTokens
+                    .semanticColorSeawaterSolidBorderStaticMid,
+                'level50': LightThemeDesignTokens
+                    .semanticColorMustardSolidBorderStaticHigh,
+                'level61_8': LightThemeDesignTokens
+                    .semanticColorYellowSolidBorderStaticMid,
+                'level100': CoreDesignTokens.coreColorSolidBlue700
+              },
+      labelStyle: json['labelStyle'] == null
+          ? const TextStyle(
+              color: CoreDesignTokens.coreColorSolidBlue700, fontSize: 12)
+          : const TextStyleJsonConverter()
+              .fromJson(json['labelStyle'] as Map<String, dynamic>),
       number: (json['number'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$FibfanDrawingToolConfigToJson(
         FibfanDrawingToolConfig instance) =>
     <String, dynamic>{
+      'configId': instance.configId,
       'number': instance.number,
       'drawingData': instance.drawingData,
       'edgePoints': instance.edgePoints,
-      'configId': instance.configId,
       'lineStyle': instance.lineStyle,
       'fillStyle': instance.fillStyle,
+      'fibonacciLevelColors': instance.fibonacciLevelColors
+          .map((k, e) => MapEntry(k, const ColorConverter().toJson(e))),
+      'labelStyle': const TextStyleJsonConverter().toJson(instance.labelStyle),
     };
