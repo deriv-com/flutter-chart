@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 
+import '../../helpers/paint_helpers.dart';
 import '../../helpers/types.dart';
 import '../drawing_v2.dart';
 import 'trend_line_adding_preview.dart';
@@ -96,20 +97,7 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
     ChartConfig chartConfig,
     ChartTheme chartTheme,
     GetDrawingState getDrawingState,
-  ) {}
-
-  @override
-  void paintOverYAxis(
-      Canvas canvas,
-      Size size,
-      EpochToX epochToX,
-      QuoteToY quoteToY,
-      EpochFromX? epochFromX,
-      QuoteFromY? quoteFromY,
-      AnimationInfo animationInfo,
-      ChartConfig chartConfig,
-      ChartTheme chartTheme,
-      GetDrawingState getDrawingState) {
+  ) {
     final (paintStyle, lineStyle) = getStyles();
     final EdgePoint? startPoint = interactableDrawing.startPoint;
     final EdgePoint? endPoint = interactableDrawing.endPoint;
@@ -127,16 +115,12 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
           interactableDrawing.isDraggingStartPoint!) {
         drawStyledFocusedCircle(paintStyle, lineStyle, canvas, startOffset,
             animationInfo.stateChangePercent);
-        drawAlignmentGuidesWithLabels(
+        // Draw only alignment guides (without labels)
+        drawPointAlignmentGuides(
           canvas,
           size,
           startOffset,
-          epochToX,
-          quoteToY,
-          chartConfig,
-          chartTheme,
-          interactiveLayerBehaviour.interactiveLayer.epochFromX,
-          interactiveLayerBehaviour.interactiveLayer.quoteFromY,
+          lineColor: interactableDrawing.config.lineStyle.color,
         );
       }
 
@@ -149,43 +133,30 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
           !interactableDrawing.isDraggingStartPoint!) {
         drawStyledFocusedCircle(paintStyle, lineStyle, canvas, endOffset,
             animationInfo.stateChangePercent);
-        drawAlignmentGuidesWithLabels(
+        // Draw only alignment guides (without labels)
+        drawPointAlignmentGuides(
           canvas,
           size,
           endOffset,
-          epochToX,
-          quoteToY,
-          chartConfig,
-          chartTheme,
-          interactiveLayerBehaviour.interactiveLayer.epochFromX,
-          interactiveLayerBehaviour.interactiveLayer.quoteFromY,
+          lineColor: interactableDrawing.config.lineStyle.color,
         );
       }
 
-      // Draw alignment guides with labels for both points when dragging the entire line
+      // Draw alignment guides for both points when dragging the entire line
       if (interactableDrawing.isDraggingStartPoint == null &&
           getDrawingState(this).contains(DrawingToolState.dragging)) {
-        drawAlignmentGuidesWithLabels(
+        // Draw only alignment guides (without labels)
+        drawPointAlignmentGuides(
           canvas,
           size,
           startOffset,
-          epochToX,
-          quoteToY,
-          chartConfig,
-          chartTheme,
-          interactiveLayerBehaviour.interactiveLayer.epochFromX,
-          interactiveLayerBehaviour.interactiveLayer.quoteFromY,
+          lineColor: interactableDrawing.config.lineStyle.color,
         );
-        drawAlignmentGuidesWithLabels(
+        drawPointAlignmentGuides(
           canvas,
           size,
           endOffset,
-          epochToX,
-          quoteToY,
-          chartConfig,
-          chartTheme,
-          interactiveLayerBehaviour.interactiveLayer.epochFromX,
-          interactiveLayerBehaviour.interactiveLayer.quoteFromY,
+          lineColor: interactableDrawing.config.lineStyle.color,
         );
       }
 
@@ -193,6 +164,92 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
       drawPreviewLine(canvas, startOffset, endOffset, paintStyle, lineStyle,
           isDashed: true);
     }
+  }
+
+  @override
+  void paintOverYAxis(
+      Canvas canvas,
+      Size size,
+      EpochToX epochToX,
+      QuoteToY quoteToY,
+      EpochFromX? epochFromX,
+      QuoteFromY? quoteFromY,
+      AnimationInfo animationInfo,
+      ChartConfig chartConfig,
+      ChartTheme chartTheme,
+      GetDrawingState getDrawingState) {
+    final EdgePoint? startPoint = interactableDrawing.startPoint;
+    final EdgePoint? endPoint = interactableDrawing.endPoint;
+
+    if (startPoint != null &&
+        endPoint != null &&
+        epochFromX != null &&
+        quoteFromY != null) {
+      final startOffset = edgePointToOffset(startPoint, epochToX, quoteToY);
+      final endOffset = edgePointToOffset(endPoint, epochToX, quoteToY);
+
+      // Draw labels for start point if dragging
+      if (interactableDrawing.isDraggingStartPoint != null &&
+          interactableDrawing.isDraggingStartPoint!) {
+        _drawLabelsForPoint(canvas, size, startOffset, epochToX, quoteToY,
+            chartConfig, chartTheme, epochFromX, quoteFromY);
+      }
+
+      // Draw labels for end point if dragging
+      if (interactableDrawing.isDraggingStartPoint != null &&
+          !interactableDrawing.isDraggingStartPoint!) {
+        _drawLabelsForPoint(canvas, size, endOffset, epochToX, quoteToY,
+            chartConfig, chartTheme, epochFromX, quoteFromY);
+      }
+
+      // Draw labels for both points when dragging the entire line
+      if (interactableDrawing.isDraggingStartPoint == null &&
+          getDrawingState(this).contains(DrawingToolState.dragging)) {
+        _drawLabelsForPoint(canvas, size, startOffset, epochToX, quoteToY,
+            chartConfig, chartTheme, epochFromX, quoteFromY);
+        _drawLabelsForPoint(canvas, size, endOffset, epochToX, quoteToY,
+            chartConfig, chartTheme, epochFromX, quoteFromY);
+      }
+    }
+  }
+
+  /// Helper method to draw only the labels for a specific point
+  void _drawLabelsForPoint(
+    Canvas canvas,
+    Size size,
+    Offset pointOffset,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme,
+    EpochFromX epochFromX,
+    QuoteFromY quoteFromY,
+  ) {
+    final int epoch = epochFromX(pointOffset.dx);
+    final double quote = quoteFromY(pointOffset.dy);
+
+    // Draw value label on the right side
+    drawValueLabel(
+      canvas: canvas,
+      quoteToY: quoteToY,
+      value: quote,
+      pipSize: chartConfig.pipSize,
+      size: size,
+      textStyle: interactableDrawing.config.labelStyle,
+      color: interactableDrawing.config.lineStyle.color,
+      backgroundColor: chartTheme.backgroundColor,
+    );
+
+    // Draw epoch label at the bottom
+    drawEpochLabel(
+      canvas: canvas,
+      epochToX: epochToX,
+      epoch: epoch,
+      size: size,
+      textStyle: interactableDrawing.config.labelStyle,
+      color: interactableDrawing.config.lineStyle.color,
+      backgroundColor: chartTheme.backgroundColor,
+    );
   }
 
   @override

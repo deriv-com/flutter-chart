@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import '../../helpers/paint_helpers.dart';
 import '../../helpers/types.dart';
 import 'trend_line_adding_preview.dart';
 
@@ -74,23 +75,6 @@ class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
     ChartTheme chartTheme,
     GetDrawingState getDrawingState,
   ) {
-    // This override is intentionally left empty because desktop trend line preview
-    // painting is handled in paintOverYAxis method to ensure proper layering
-    // with alignment guides and labels over the chart axes.
-  }
-
-  @override
-  void paintOverYAxis(
-      Canvas canvas,
-      Size size,
-      EpochToX epochToX,
-      QuoteToY quoteToY,
-      EpochFromX? epochFromX,
-      QuoteFromY? quoteFromY,
-      AnimationInfo animationInfo,
-      ChartConfig chartConfig,
-      ChartTheme chartTheme,
-      GetDrawingState getDrawingState) {
     final (paintStyle, lineStyle) = getStyles();
     final EdgePoint? startPoint = interactableDrawing.startPoint;
 
@@ -106,19 +90,69 @@ class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
         drawPreviewLine(
             canvas, startPosition, _hoverPosition!, paintStyle, lineStyle);
 
-        // Draw alignment guides with labels
-        drawAlignmentGuidesWithLabels(canvas, size, _hoverPosition!, epochToX,
-            quoteToY, chartConfig, chartTheme, epochFromX, quoteFromY);
+        // Draw only the alignment guides (without labels)
+        drawPointAlignmentGuides(
+          canvas,
+          size,
+          _hoverPosition!,
+          lineColor: interactableDrawing.config.lineStyle.color,
+        );
       }
     } else if (_hoverPosition != null) {
-      // Show alignment guides with labels when hovering before first point is set
-      drawAlignmentGuidesWithLabels(canvas, size, _hoverPosition!, epochToX,
-          quoteToY, chartConfig, chartTheme, epochFromX, quoteFromY);
+      // Show alignment guides when hovering before first point is set
+      drawPointAlignmentGuides(
+        canvas,
+        size,
+        _hoverPosition!,
+        lineColor: interactableDrawing.config.lineStyle.color,
+      );
     }
 
     if (interactableDrawing.endPoint != null) {
       drawStyledPoint(interactableDrawing.endPoint!, epochToX, quoteToY, canvas,
           paintStyle, lineStyle);
+    }
+  }
+
+  @override
+  void paintOverYAxis(
+      Canvas canvas,
+      Size size,
+      EpochToX epochToX,
+      QuoteToY quoteToY,
+      EpochFromX? epochFromX,
+      QuoteFromY? quoteFromY,
+      AnimationInfo animationInfo,
+      ChartConfig chartConfig,
+      ChartTheme chartTheme,
+      GetDrawingState getDrawingState) {
+    // Only draw labels when hover position exists and coordinate conversion functions are available
+    if (_hoverPosition != null && epochFromX != null && quoteFromY != null) {
+      final int epoch = epochFromX(_hoverPosition!.dx);
+      final double quote = quoteFromY(_hoverPosition!.dy);
+
+      // Draw value label on the right side
+      drawValueLabel(
+        canvas: canvas,
+        quoteToY: quoteToY,
+        value: quote,
+        pipSize: chartConfig.pipSize,
+        size: size,
+        textStyle: interactableDrawing.config.labelStyle,
+        color: interactableDrawing.config.lineStyle.color,
+        backgroundColor: chartTheme.backgroundColor,
+      );
+
+      // Draw epoch label at the bottom
+      drawEpochLabel(
+        canvas: canvas,
+        epochToX: epochToX,
+        epoch: epoch,
+        size: size,
+        textStyle: interactableDrawing.config.labelStyle,
+        color: interactableDrawing.config.lineStyle.color,
+        backgroundColor: chartTheme.backgroundColor,
+      );
     }
   }
 
