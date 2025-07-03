@@ -158,6 +158,8 @@ class HorizontalLineInteractableDrawing
     ui.Size size,
     EpochToX epochToX,
     QuoteToY quoteToY,
+    EpochFromX? epochFromX,
+    QuoteFromY? quoteFromY,
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme chartTheme,
