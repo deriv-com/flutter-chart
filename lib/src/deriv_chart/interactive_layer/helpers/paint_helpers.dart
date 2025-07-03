@@ -194,11 +194,12 @@ void drawValueLabel({
   )..layout();
 
   // Create rectangle with padding around the text
-  final double rectWidth = textPainter.width + 24;
+  final double rectWidth =
+      textPainter.width + 16; // Add padding of 8px on each side
   const double rectHeight = 24; // Fixed height to match the image
 
   // Add 8px gap between the chart content and the label
-  final double rectRight = size.width - 8;
+  final double rectRight = size.width - 4;
   final double rectLeft = rectRight - rectWidth;
 
   final Rect rect = Rect.fromLTRB(
