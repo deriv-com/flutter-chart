@@ -110,39 +110,7 @@ Explore the features available in the Deriv Chart library:
 
 Take your charts to the next level with advanced techniques:
 
-- [Custom Themes](advanced_usage/custom_themes.md) - Create custom chart themes
-- [Custom Indicators](advanced_usage/custom_indicators.md) - Create your own indicators
-- [Custom Drawing Tools](advanced_usage/custom_drawing_tools.md) - Create your own drawing tools
-
-## API Reference
-
-Detailed API documentation for the Deriv Chart library:
-
-- [Chart Widget](api_reference/chart_widget.md) - The main chart widget
-- [Series Classes](api_reference/series_classes.md) - Data series classes
-- [Indicator Classes](api_reference/indicator_classes.md) - Technical indicator classes
-- [Drawing Tool Classes](api_reference/drawing_tool_classes.md) - Drawing tool classes
-- [Theme Classes](api_reference/theme_classes.md) - Theme customization classes
-
-## Examples
-
-The library includes several examples to help you get started:
-
-### Basic Examples
-
-- [Line Chart](../example/lib/examples/basic/line_chart_example.dart)
-- [Candlestick Chart](../example/lib/examples/basic/candle_chart_example.dart)
-- [OHLC Chart](../example/lib/examples/basic/ohlc_chart_example.dart)
-- [Hollow Candlestick Chart](../example/lib/examples/basic/hollow_candle_example.dart)
-
-### Feature Examples
-
-- [Chart with Indicators](../example/lib/examples/features/indicators_example.dart)
-- [Chart with Drawing Tools](../example/lib/examples/features/drawing_tools_example.dart)
-- [Chart with Annotations](../example/lib/examples/features/annotations_example.dart)
-- [Chart with Markers](../example/lib/examples/features/markers_example.dart)
-
-You can find these examples in the `example` directory of the repository.
+- [Custom Themes guid](advanced_usage/custom_themes.md) - Create custom chart themes
 
 ## Showcase App
 
