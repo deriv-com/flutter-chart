@@ -157,24 +157,13 @@ The `showcase_app` directory contains a complete Flutter application that demons
 Learn how to contribute to the Deriv Chart library:
 
 - [Contribution Guidelines](contribution.md) - How to contribute
-- [Development Setup](development_setup.md) - Set up your development environment
-- [Code Style](code_style.md) - Follow the code style guidelines
-- [Testing](testing.md) - Write and run tests
 
 ## Compatibility
 
 - **Flutter**: 3.10.1 or higher
 - **Dart**: 3.0.0 or higher
 - **Platforms**: iOS, Android, Web, macOS, Windows, Linux
-
-## Support
-
-If you need help with the Deriv Chart library, you can:
-
-- Check the [FAQ](faq.md) for common questions
-- Open an issue on [GitHub](https://github.com/your-organization/deriv-chart/issues)
-- Contact the maintainers at support@example.com
-
+  
 ## License
 
 The Deriv Chart library is licensed under the [MIT License](../LICENSE).
