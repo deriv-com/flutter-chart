@@ -15,7 +15,6 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../helpers/paint_helpers.dart';
@@ -615,7 +614,7 @@ class TrendLineInteractableDrawing
             ),
           ),
           onPressed: () {
-            // TODO: Implement line thickness selection functionality
+            // TODO(Jim): Implement line thickness selection functionality
             // This will allow users to change the thickness of the trend line
           },
           child: Text(

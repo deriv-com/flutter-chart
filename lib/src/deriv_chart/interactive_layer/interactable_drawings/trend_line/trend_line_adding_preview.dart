@@ -1,8 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
-import 'package:deriv_chart/src/models/chart_config.dart';
-import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
@@ -154,74 +152,6 @@ abstract class TrendLineAddingPreview
       focusedPointOuterRadius * animationPercent,
       focusedPointInnerRadius * animationPercent,
     );
-  }
-
-  /// Draws alignment guides with coordinate labels for enhanced user feedback.
-  ///
-  /// This method provides visual assistance during trend line creation by drawing:
-  /// - Horizontal and vertical alignment guides through the point
-  /// - Value label on the right Y-axis showing the quote price
-  /// - Epoch label on the bottom X-axis showing the time coordinate
-  ///
-  /// The guides help users precisely position trend line points by showing
-  /// exact coordinate values and visual alignment references.
-  ///
-  /// Parameters:
-  /// - [canvas]: The canvas to draw on
-  /// - [size]: Size of the drawing area
-  /// - [pointOffset]: Screen position where guides should intersect
-  /// - [epochToX]: Function to convert epoch to screen X coordinate
-  /// - [quoteToY]: Function to convert quote to screen Y coordinate
-  /// - [chartConfig]: Chart configuration for formatting (pip size, etc.)
-  /// - [chartTheme]: Theme configuration for colors and styling
-  /// - [epochFromX]: Optional function to convert screen X to epoch (for labels)
-  /// - [quoteFromY]: Optional function to convert screen Y to quote (for labels)
-  void drawAlignmentGuidesWithLabels(
-    Canvas canvas,
-    Size size,
-    Offset pointOffset,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    ChartConfig chartConfig,
-    ChartTheme chartTheme,
-    EpochFromX? epochFromX,
-    QuoteFromY? quoteFromY,
-  ) {
-    // Draw the basic alignment guides
-    drawPointAlignmentGuides(
-      canvas,
-      size,
-      pointOffset,
-      lineColor: interactableDrawing.config.lineStyle.color,
-    );
-
-    if (epochFromX != null && quoteFromY != null) {
-      final int epoch = epochFromX(pointOffset.dx);
-      final double quote = quoteFromY(pointOffset.dy);
-
-      // Draw value label on the right side
-      drawValueLabel(
-        canvas: canvas,
-        quoteToY: quoteToY,
-        value: quote,
-        pipSize: chartConfig.pipSize,
-        size: size,
-        textStyle: interactableDrawing.config.labelStyle,
-        color: interactableDrawing.config.lineStyle.color,
-        backgroundColor: chartTheme.backgroundColor,
-      );
-
-      // Draw epoch label at the bottom
-      drawEpochLabel(
-        canvas: canvas,
-        epochToX: epochToX,
-        epoch: epoch,
-        size: size,
-        textStyle: interactableDrawing.config.labelStyle,
-        color: interactableDrawing.config.lineStyle.color,
-        backgroundColor: chartTheme.backgroundColor,
-      );
-    }
   }
 
   /// Draws a preview line between two points with optional dashed styling.
