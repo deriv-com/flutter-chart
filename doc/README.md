@@ -142,13 +142,6 @@ The library includes several examples to help you get started:
 - [Chart with Annotations](../example/lib/examples/features/annotations_example.dart)
 - [Chart with Markers](../example/lib/examples/features/markers_example.dart)
 
-### Advanced Examples
-
-- [Real-time Chart](../example/lib/examples/advanced/real_time_chart_example.dart)
-- [Custom Theme](../example/lib/examples/advanced/custom_theme_example.dart)
-- [Custom Indicator](../example/lib/examples/advanced/custom_indicator_example.dart)
-- [Custom Drawing Tool](../example/lib/examples/advanced/custom_drawing_tool_example.dart)
-
 You can find these examples in the `example` directory of the repository.
 
 ## Showcase App
