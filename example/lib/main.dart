@@ -81,13 +81,16 @@ class _FullscreenChartState extends State<FullscreenChart> {
   static const String defaultAppID = '36544';
   static const String defaultEndpoint = 'blue.derivws.com';
 
+  // Add zoom step constant
+  static const double zoomStep = 1.2; // 20% zoom in/out per button press
+
   List<Tick> ticks = <Tick>[];
   ChartStyle style = ChartStyle.line;
   int granularity = 0;
 
   final List<Barrier> _sampleBarriers = <Barrier>[];
   HorizontalBarrier? _slBarrier, _tpBarrier;
-  bool _sl = false, _tp = false;
+  bool _sl = false, _tp = false, _adaptiveInterval = true;
 
   TickHistorySubscription? _tickHistorySubscription;
 
@@ -296,9 +299,11 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       _updateSampleSLAndTP();
 
-      WidgetsBinding.instance.addPostFrameCallback(
-        (Duration timeStamp) => _controller.scrollToLastTick(),
-      );
+      if (!_adaptiveInterval) {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (Duration timeStamp) => _controller.scrollToLastTick(),
+        );
+      }
     } on BaseAPIException catch (e) {
       dev.log(e.message!, error: e);
     } finally {
@@ -447,6 +452,38 @@ class _FullscreenChartState extends State<FullscreenChart> {
                           _loadHistory(500);
                         }
                       },
+                      chartAxisConfig: ChartAxisConfig(
+                        autoIntervalEnabled: _adaptiveInterval,
+                        autoIntervalTransitionDuration:
+                            Duration(milliseconds: 480),
+                      ),
+                      onGranularityChangeRequested: (int suggestedGranularity) {
+                        print(
+                            'Auto-interval suggests granularity: ${suggestedGranularity}ms');
+
+                        // Only proceed if adaptive interval is enabled
+                        if (!_adaptiveInterval) {
+                          print(
+                              'Adaptive interval is disabled, ignoring suggestion');
+                          return;
+                        }
+
+                        // Convert ms to seconds for the API call
+                        final int suggestedGranularitySeconds =
+                            suggestedGranularity ~/ 1000;
+
+                        print(
+                            'Converting to seconds: ${suggestedGranularitySeconds}s');
+
+                        // Update the granularity if it's different
+                        if (suggestedGranularitySeconds != granularity) {
+                          print(
+                              'Updating granularity from ${granularity}s to ${suggestedGranularitySeconds}s');
+
+                          // Update the granularity and fetch new data
+                          _onIntervalSelected(suggestedGranularitySeconds);
+                        }
+                      },
                     ),
                   ),
                   // ignore: unnecessary_null_comparison
@@ -488,6 +525,20 @@ class _FullscreenChartState extends State<FullscreenChart> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.zoom_out),
+                        onPressed: _zoomOut,
+                        tooltip: 'Zoom Out',
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.zoom_in),
+                        onPressed: _zoomIn,
+                        tooltip: 'Zoom In',
+                      ),
+                    ],
+                  ),
                   IconButton(
                       icon: const Icon(Icons.settings),
                       onPressed: () async {
@@ -600,20 +651,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
               height: 64,
               child: Row(
                 children: <Widget>[
-                  Expanded(
-                    child: CheckboxListTile(
-                      value: _sl,
-                      onChanged: (bool? sl) => setState(() => _sl = sl!),
-                      title: const Text('Stop loss'),
-                    ),
-                  ),
-                  Expanded(
-                    child: CheckboxListTile(
-                      value: _tp,
-                      onChanged: (bool? tp) => setState(() => _tp = tp!),
-                      title: const Text('Take profit'),
-                    ),
-                  ),
+                  _buildToggle(
+                      'Stop loss', _sl, () => setState(() => _sl = !_sl)),
+                  _buildToggle(
+                      'Take profit', _tp, () => setState(() => _tp = !_tp)),
+                  _buildToggle(
+                      'Adaptive interval',
+                      _adaptiveInterval,
+                      () => setState(
+                          () => _adaptiveInterval = !_adaptiveInterval)),
                 ],
               ),
             )
@@ -792,7 +838,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _requestCompleter = Completer<dynamic>();
 
     setState(() {
-      ticks.clear();
+      if (!_adaptiveInterval) {
+        ticks.clear();
+      }
       _clearMarkers();
       _clearBarriers();
     });
@@ -880,5 +928,36 @@ class _FullscreenChartState extends State<FullscreenChart> {
           : defaultEndpoint,
       authEndpoint: '',
     );
+  }
+
+  Widget _buildToggle(String label, bool value, VoidCallback onToggle) {
+    return Expanded(
+      child: CheckboxListTile(
+        title: Text(
+          label,
+          style: const TextStyle(fontSize: 14),
+        ),
+        value: value,
+        onChanged: (_) => onToggle(),
+        controlAffinity: ListTileControlAffinity.leading,
+        contentPadding: EdgeInsets.zero,
+        dense: true,
+      ),
+    );
+  }
+
+  // Add zoom methods
+  void _zoomIn() {
+    final double? currentScale = _controller.scale(zoomStep);
+    if (currentScale != null) {
+      debugPrint('Zoomed in, new msPerPx: $currentScale');
+    }
+  }
+
+  void _zoomOut() {
+    final double? currentScale = _controller.scale(1 / zoomStep);
+    if (currentScale != null) {
+      debugPrint('Zoomed out, new msPerPx: $currentScale');
+    }
   }
 }
