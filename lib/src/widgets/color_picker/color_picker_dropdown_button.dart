@@ -35,7 +35,7 @@ class ColorPickerDropdownButton extends StatelessWidget {
           context: context,
           originWidgetPosition: position,
           originWidgetSize: buttonSize,
-          initialColor: currentColor,
+          initialValue: currentColor,
           onValueSelected: onColorChanged,
           dropdownBuilder: (
             Color selectedColor,
