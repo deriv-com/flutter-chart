@@ -104,4 +104,33 @@ class ChartDateUtils {
         DateTime.fromMillisecondsSinceEpoch(timestamp, isUtc: isUtc);
     return DateFormat('HH:mm:ss').format(time);
   }
+
+  /// Formats a timestamp to a compact date and time string.
+  ///
+  /// This method converts a Unix timestamp (milliseconds since epoch) to a formatted
+  /// date and time string in the format 'MM/dd/yy HH:mm:ss'. It's used for labels
+  /// in drawing tools and interactive elements where a compact representation is needed.
+  ///
+  /// Parameters:
+  /// - [timestamp]: The Unix timestamp in milliseconds since epoch to format
+  /// - [isUtc]: Whether to interpret the timestamp as UTC (true) or local time (false).
+  ///   Defaults to true as chart data is typically stored in UTC.
+  ///
+  /// Returns:
+  /// A formatted string in the pattern 'MM/dd/yy HH:mm:ss' (e.g., '10/01/21 14:30:45')
+  ///
+  /// Example:
+  /// ```dart
+  /// final timestamp = 1633072800000; // 2021-10-01 00:00:00 UTC
+  /// final formatted = ChartDateUtils.formatCompactDateTime(timestamp);
+  /// print(formatted); // Outputs: '10/01/21 00:00:00'
+  /// ```
+  ///
+  /// Note: This format is more compact than the full date format and is suitable
+  /// for labels where space is limited.
+  static String formatCompactDateTime(int timestamp, {bool isUtc = true}) {
+    final DateTime dateTime =
+        DateTime.fromMillisecondsSinceEpoch(timestamp, isUtc: isUtc);
+    return DateFormat('MM/dd/yy HH:mm:ss').format(dateTime);
+  }
 }

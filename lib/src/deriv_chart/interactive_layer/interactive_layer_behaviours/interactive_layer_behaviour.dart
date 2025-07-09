@@ -187,6 +187,12 @@ abstract class InteractiveLayerBehaviour {
   ///
   /// Returns `true` if the position hits any drawing, `false` otherwise.
   bool hitTestDrawings(Offset localPosition) {
+    // First check if the point is within the floating menu bounds
+    // If it is, don't allow drawing hit testing to prevent interference
+    if (controller.isPointInFloatingMenu(localPosition)) {
+      return false;
+    }
+
     // Check regular and preview drawings
     for (final drawing in [...interactiveLayer.drawings, ...previewDrawings]) {
       if (drawing.hitTest(localPosition, interactiveLayer.epochToX,

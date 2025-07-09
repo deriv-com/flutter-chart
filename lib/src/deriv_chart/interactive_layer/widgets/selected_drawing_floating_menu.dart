@@ -75,6 +75,8 @@ class _SelectedDrawingFloatingMenuState
     if (renderBox != null) {
       setState(() {
         _menuSize = renderBox.size;
+        // Update the controller with the menu size
+        _controller.floatingMenuSize = _menuSize;
       });
     }
   }
@@ -89,6 +91,10 @@ class _SelectedDrawingFloatingMenuState
       top: _controller.floatingMenuPosition.dy,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
+        onPanStart: (details) {
+          // Hide the crosshair when starting to drag the toolbar
+          widget.interactiveLayerBehaviour.interactiveLayer.hideCrosshair();
+        },
         onPanEnd: (_) => _cursor = SystemMouseCursors.grab,
         onPanUpdate: (details) {
           _cursor = SystemMouseCursors.grabbing;

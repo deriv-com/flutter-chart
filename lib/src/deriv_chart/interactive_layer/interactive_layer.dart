@@ -665,6 +665,11 @@ class _InteractiveLayerGestureHandlerState
   @override
   DrawingContext get drawingContext => _drawingContext;
 
+  @override
+  void hideCrosshair() {
+    _cancelCrosshair();
+  }
+
   // Update the interaction mode and notify listeners if needed
   void _updateInteractionMode(InteractionMode mode) {
     if (_currentInteractionMode != mode) {
@@ -676,8 +681,14 @@ class _InteractiveLayerGestureHandlerState
 
   // Method to cancel any active crosshair
   void _cancelCrosshair() {
-    if (_currentInteractionMode == InteractionMode.crosshair) {
+    // Always hide the crosshair if it's visible, regardless of interaction mode
+    // This handles cases where crosshair is visible from hover but interaction mode isn't crosshair
+    if (widget.crosshairController.value.isVisible) {
       widget.crosshairController.onExit(const PointerExitEvent());
+    }
+
+    // Only update interaction mode if we were actually in crosshair mode
+    if (_currentInteractionMode == InteractionMode.crosshair) {
       _updateInteractionMode(InteractionMode.none);
     }
   }

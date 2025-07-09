@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer.
 import 'package:flutter/foundation.dart';
 
 import 'interactive_layer_states/interactive_adding_tool_state.dart';
+import 'interactive_layer_states/interactive_selected_tool_state.dart';
 import 'interactive_layer_states/interactive_state.dart';
 
 /// A controller similar to [ListView.scrollController] to control interactive
@@ -32,6 +33,9 @@ class InteractiveLayerController extends ChangeNotifier {
 
   /// The current position of the floating menu.
   Offset floatingMenuPosition;
+
+  /// The size of the floating menu.
+  Size floatingMenuSize = Size.zero;
 
   /// The callback to be called when the user cancels adding a drawing tool.
   VoidCallback? onCancelAdding;
@@ -63,4 +67,24 @@ class InteractiveLayerController extends ChangeNotifier {
   /// [config] to the chart.
   void startAddingNewTool(DrawingToolConfig config) =>
       onAddNewTool?.call(config);
+
+  /// Checks if a given local position is within the floating menu bounds.
+  ///
+  /// Returns `true` if the position is within the floating menu area,
+  /// `false` otherwise.
+  bool isPointInFloatingMenu(Offset localPosition) {
+    if (floatingMenuSize == Size.zero ||
+        !(_currentState is InteractiveSelectedToolState)) {
+      return false;
+    }
+
+    final Rect menuRect = Rect.fromLTWH(
+      floatingMenuPosition.dx,
+      floatingMenuPosition.dy,
+      floatingMenuSize.width,
+      floatingMenuSize.height,
+    );
+
+    return menuRect.contains(localPosition);
+  }
 }

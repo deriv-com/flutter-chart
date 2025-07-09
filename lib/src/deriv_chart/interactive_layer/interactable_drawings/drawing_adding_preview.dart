@@ -151,6 +151,8 @@ abstract class DrawingAddingPreview<
     Size size,
     EpochToX epochToX,
     QuoteToY quoteToY,
+    EpochFromX? epochFromX,
+    QuoteFromY? quoteFromY,
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme chartTheme,
