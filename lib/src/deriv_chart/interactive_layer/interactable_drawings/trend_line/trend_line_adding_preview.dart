@@ -13,44 +13,8 @@ import 'trend_line_interactable_drawing.dart';
 
 /// Base class for trend line adding preview implementations.
 ///
-/// This abstract class provides shared functionality between desktop and mobile
-/// implementations to eliminate code duplication and ensure consistent behavior.
-/// It follows the Template Method pattern where platform-specific implementations
-/// override abstract methods while sharing common drawing and interaction logic.
-///
-/// ## Responsibilities:
-/// - Consistent point drawing and styling across platforms
-/// - Shared coordinate transformations between screen and chart coordinates
-/// - Common validation logic for points and line segments
-/// - Unified alignment guide rendering with labels
-/// - Standardized preview line drawing with optional dashing
-///
-/// ## Usage:
-/// This class should not be instantiated directly. Instead, use platform-specific
-/// implementations:
-/// - [TrendLineAddingPreviewDesktop] for desktop interactions
-/// - [TrendLineAddingPreviewMobile] for mobile/touch interactions
-///
-/// ## Architecture:
-/// The class maintains shared constants for consistent styling and provides
-/// utility methods that both desktop and mobile implementations can use.
-/// Platform-specific behavior is implemented in the concrete classes through
-/// method overrides.
-///
-/// ## Example:
-/// ```dart
-/// // Desktop implementation
-/// final desktopPreview = TrendLineAddingPreviewDesktop(
-///   interactiveLayerBehaviour: desktopBehaviour,
-///   interactableDrawing: trendLine,
-/// );
-///
-/// // Mobile implementation
-/// final mobilePreview = TrendLineAddingPreviewMobile(
-///   interactiveLayerBehaviour: mobileBehaviour,
-///   interactableDrawing: trendLine,
-/// );
-/// ```
+/// Provides shared functionality for desktop and mobile implementations,
+/// including coordinate transformations, styling, and common drawing logic.
 abstract class TrendLineAddingPreview
     extends DrawingAddingPreview<TrendLineInteractableDrawing> {
   /// Initializes the base trend line adding preview.
