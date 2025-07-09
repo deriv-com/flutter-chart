@@ -6,14 +6,14 @@ import 'package:provider/provider.dart';
 /// A builder function type for creating a drop-down picker widget to get the
 /// value for type [T].
 typedef DropdownBuilder<T> = Widget Function(
-  T selectedColor,
-  ValueChanged<T> onColorSelected,
+  T selectedValue,
+  ValueChanged<T> onValueSelected,
 );
 
-/// Shows a color picker dropdown at the specified position.
+/// Shows a dropdown at the specified position.
 ///
-/// This is a stateless function that shows the dropdown and returns the selected color
-/// through the onColorSelected callback.
+/// This is a stateless function that shows the dropdown and returns the selected value
+/// through the onValueSelected callback.
 ///
 /// [originWidgetPosition] is the position of the original button that triggered
 /// the dropdown. Provide the top-left corner of the widget.
@@ -23,7 +23,7 @@ void showDropdown<T>({
   required BuildContext context,
   required Offset originWidgetPosition,
   required Size originWidgetSize,
-  required T initialColor,
+  required T initialValue,
   required ValueChanged<T> onValueSelected,
   required DropdownBuilder<T> dropdownBuilder,
   double gapWithOriginWidget = 8,
@@ -115,7 +115,7 @@ void showDropdown<T>({
                   context,
                   hasMeasuredSize,
                   dropdownKey,
-                  initialColor,
+                  initialValue,
                   onValueSelected,
                   dropdownBuilder,
                   overlayEntry,
@@ -136,8 +136,8 @@ Widget _buildDropdownContent<T>(
   BuildContext context,
   bool hasMeasuredSize,
   GlobalKey<State<StatefulWidget>> dropdownKey,
-  T initialColor,
-  ValueChanged<T> onColorSelected,
+  T initialValue,
+  ValueChanged<T> onValueSelected,
   DropdownBuilder<T> builder,
   OverlayEntry overlayEntry,
 ) =>
@@ -149,8 +149,8 @@ Widget _buildDropdownContent<T>(
         borderRadius: BorderRadius.circular(8),
         color: Colors.transparent,
         child: GlassyBlurEffectWidget(
-          child: builder(initialColor, (T selectedColor) {
-            onColorSelected(selectedColor);
+          child: builder(initialValue, (T selectedValue) {
+            onValueSelected(selectedValue);
             overlayEntry.remove();
           }),
         ),
@@ -158,13 +158,8 @@ Widget _buildDropdownContent<T>(
     );
 
 Widget _buildOutsideArea(OverlayEntry overlayEntry) => Positioned.fill(
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => overlayEntry.remove(),
-        onPanDown: (_) => overlayEntry.remove(),
-        onTapDown: (_) => overlayEntry.remove(),
-        child: Container(
-          color: Colors.transparent,
-        ),
+      child: Listener(
+        behavior: HitTestBehavior.translucent,
+        onPointerDown: (_) => overlayEntry.remove(),
       ),
     );
