@@ -96,7 +96,6 @@ class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
         drawPreviewLine(
             canvas, startPosition, _hoverPosition!, paintStyle, lineStyle);
 
-        // Draw only the alignment guides (without labels)
         drawPointAlignmentGuides(
           canvas,
           size,
@@ -134,31 +133,9 @@ class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
       GetDrawingState getDrawingState) {
     // Only draw labels when hover position exists and coordinate conversion functions are available
     if (_hoverPosition != null && epochFromX != null && quoteFromY != null) {
-      final int epoch = epochFromX(_hoverPosition!.dx);
-      final double quote = quoteFromY(_hoverPosition!.dy);
-
-      // Draw value label on the right side
-      drawValueLabel(
-        canvas: canvas,
-        quoteToY: quoteToY,
-        value: quote,
-        pipSize: chartConfig.pipSize,
-        size: size,
-        textStyle: interactableDrawing.config.labelStyle,
-        color: interactableDrawing.config.lineStyle.color,
-        backgroundColor: chartTheme.backgroundColor,
-      );
-
-      // Draw epoch label at the bottom
-      drawEpochLabel(
-        canvas: canvas,
-        epochToX: epochToX,
-        epoch: epoch,
-        size: size,
-        textStyle: interactableDrawing.config.labelStyle,
-        color: interactableDrawing.config.lineStyle.color,
-        backgroundColor: chartTheme.backgroundColor,
-      );
+      drawPointGuidesAndLabels(canvas, size, _hoverPosition!, epochToX,
+          quoteToY, epochFromX, quoteFromY, chartConfig, chartTheme,
+          showGuides: false);
     }
   }
 

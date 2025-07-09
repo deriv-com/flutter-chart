@@ -2,6 +2,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_states/interactive_adding_tool_state.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
@@ -276,6 +278,80 @@ abstract class TrendLineAddingPreview
   /// `true` if the point is valid (not null), `false` otherwise
   bool isValidPoint(EdgePoint? point) {
     return point != null;
+  }
+
+  /// Draws alignment guides and labels for a point during interactions.
+  ///
+  /// This method provides a unified way to draw both alignment guides and
+  /// coordinate labels for trend line points. It's used by both mobile and
+  /// desktop implementations to ensure consistent visual feedback.
+  ///
+  /// The method draws:
+  /// - Horizontal and vertical alignment guides extending across the chart
+  /// - Value label on the right side showing the quote/price
+  /// - Epoch label at the bottom showing the timestamp
+  ///
+  /// Parameters:
+  /// - [canvas]: The canvas to draw on
+  /// - [size]: The size of the drawing area
+  /// - [pointOffset]: Screen position of the point
+  /// - [epochToX]: Function to convert epoch to screen X coordinate
+  /// - [quoteToY]: Function to convert quote to screen Y coordinate
+  /// - [epochFromX]: Function to convert screen X coordinate to epoch
+  /// - [quoteFromY]: Function to convert screen Y coordinate to quote
+  /// - [chartConfig]: Chart configuration for styling
+  /// - [chartTheme]: Chart theme for colors
+  /// - [showGuides]: Whether to show alignment guides (default: true)
+  /// - [showLabels]: Whether to show coordinate labels (default: true)
+  void drawPointGuidesAndLabels(
+    Canvas canvas,
+    Size size,
+    Offset pointOffset,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+    EpochFromX epochFromX,
+    QuoteFromY quoteFromY,
+    ChartConfig chartConfig,
+    ChartTheme chartTheme, {
+    bool showGuides = true,
+    bool showLabels = true,
+  }) {
+    if (showGuides) {
+      drawPointAlignmentGuides(
+        canvas,
+        size,
+        pointOffset,
+        lineColor: interactableDrawing.config.lineStyle.color,
+      );
+    }
+
+    if (showLabels) {
+      final int epoch = epochFromX(pointOffset.dx);
+      final double quote = quoteFromY(pointOffset.dy);
+
+      // Draw value label on the right side
+      drawValueLabel(
+        canvas: canvas,
+        quoteToY: quoteToY,
+        value: quote,
+        pipSize: chartConfig.pipSize,
+        size: size,
+        textStyle: interactableDrawing.config.labelStyle,
+        color: interactableDrawing.config.lineStyle.color,
+        backgroundColor: chartTheme.backgroundColor,
+      );
+
+      // Draw epoch label at the bottom
+      drawEpochLabel(
+        canvas: canvas,
+        epochToX: epochToX,
+        epoch: epoch,
+        size: size,
+        textStyle: interactableDrawing.config.labelStyle,
+        color: interactableDrawing.config.lineStyle.color,
+        backgroundColor: chartTheme.backgroundColor,
+      );
+    }
   }
 
   /// Handles the creation of trend line points during the drawing process.

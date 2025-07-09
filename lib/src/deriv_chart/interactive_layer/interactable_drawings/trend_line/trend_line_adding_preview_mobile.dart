@@ -119,7 +119,6 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
           interactableDrawing.isDraggingStartPoint!) {
         drawStyledFocusedCircle(paintStyle, lineStyle, canvas, startOffset,
             animationInfo.stateChangePercent);
-        // Draw only alignment guides (without labels)
         drawPointAlignmentGuides(
           canvas,
           size,
@@ -137,7 +136,6 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
           !interactableDrawing.isDraggingStartPoint!) {
         drawStyledFocusedCircle(paintStyle, lineStyle, canvas, endOffset,
             animationInfo.stateChangePercent);
-        // Draw only alignment guides (without labels)
         drawPointAlignmentGuides(
           canvas,
           size,
@@ -150,7 +148,6 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
       if (interactableDrawing.isDraggingStartPoint == null &&
           getDrawingState(interactableDrawing)
               .contains(DrawingToolState.dragging)) {
-        // Draw only alignment guides (without labels)
         drawPointAlignmentGuides(
           canvas,
           size,
@@ -196,66 +193,31 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
       // Draw labels for start point if dragging
       if (interactableDrawing.isDraggingStartPoint != null &&
           interactableDrawing.isDraggingStartPoint!) {
-        _drawLabelsForPoint(canvas, size, startOffset, epochToX, quoteToY,
-            chartConfig, chartTheme, epochFromX, quoteFromY);
+        drawPointGuidesAndLabels(canvas, size, startOffset, epochToX, quoteToY,
+            epochFromX, quoteFromY, chartConfig, chartTheme,
+            showGuides: false);
       }
 
       // Draw labels for end point if dragging
       if (interactableDrawing.isDraggingStartPoint != null &&
           !interactableDrawing.isDraggingStartPoint!) {
-        _drawLabelsForPoint(canvas, size, endOffset, epochToX, quoteToY,
-            chartConfig, chartTheme, epochFromX, quoteFromY);
+        drawPointGuidesAndLabels(canvas, size, endOffset, epochToX, quoteToY,
+            epochFromX, quoteFromY, chartConfig, chartTheme,
+            showGuides: false);
       }
 
       // Draw labels for both points when dragging the entire line
       if (interactableDrawing.isDraggingStartPoint == null &&
           getDrawingState(interactableDrawing)
               .contains(DrawingToolState.dragging)) {
-        _drawLabelsForPoint(canvas, size, startOffset, epochToX, quoteToY,
-            chartConfig, chartTheme, epochFromX, quoteFromY);
-        _drawLabelsForPoint(canvas, size, endOffset, epochToX, quoteToY,
-            chartConfig, chartTheme, epochFromX, quoteFromY);
+        drawPointGuidesAndLabels(canvas, size, startOffset, epochToX, quoteToY,
+            epochFromX, quoteFromY, chartConfig, chartTheme,
+            showGuides: false);
+        drawPointGuidesAndLabels(canvas, size, endOffset, epochToX, quoteToY,
+            epochFromX, quoteFromY, chartConfig, chartTheme,
+            showGuides: false);
       }
     }
-  }
-
-  /// Helper method to draw only the labels for a specific point
-  void _drawLabelsForPoint(
-    Canvas canvas,
-    Size size,
-    Offset pointOffset,
-    EpochToX epochToX,
-    QuoteToY quoteToY,
-    ChartConfig chartConfig,
-    ChartTheme chartTheme,
-    EpochFromX epochFromX,
-    QuoteFromY quoteFromY,
-  ) {
-    final int epoch = epochFromX(pointOffset.dx);
-    final double quote = quoteFromY(pointOffset.dy);
-
-    // Draw value label on the right side
-    drawValueLabel(
-      canvas: canvas,
-      quoteToY: quoteToY,
-      value: quote,
-      pipSize: chartConfig.pipSize,
-      size: size,
-      textStyle: interactableDrawing.config.labelStyle,
-      color: interactableDrawing.config.lineStyle.color,
-      backgroundColor: chartTheme.backgroundColor,
-    );
-
-    // Draw epoch label at the bottom
-    drawEpochLabel(
-      canvas: canvas,
-      epochToX: epochToX,
-      epoch: epoch,
-      size: size,
-      textStyle: interactableDrawing.config.labelStyle,
-      color: interactableDrawing.config.lineStyle.color,
-      backgroundColor: chartTheme.backgroundColor,
-    );
   }
 
   @override
