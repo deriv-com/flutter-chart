@@ -148,7 +148,8 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
 
       // Draw alignment guides for both points when dragging the entire line
       if (interactableDrawing.isDraggingStartPoint == null &&
-          getDrawingState(this).contains(DrawingToolState.dragging)) {
+          getDrawingState(interactableDrawing)
+              .contains(DrawingToolState.dragging)) {
         // Draw only alignment guides (without labels)
         drawPointAlignmentGuides(
           canvas,
@@ -208,7 +209,8 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
 
       // Draw labels for both points when dragging the entire line
       if (interactableDrawing.isDraggingStartPoint == null &&
-          getDrawingState(this).contains(DrawingToolState.dragging)) {
+          getDrawingState(interactableDrawing)
+              .contains(DrawingToolState.dragging)) {
         _drawLabelsForPoint(canvas, size, startOffset, epochToX, quoteToY,
             chartConfig, chartTheme, epochFromX, quoteFromY);
         _drawLabelsForPoint(canvas, size, endOffset, epochToX, quoteToY,
