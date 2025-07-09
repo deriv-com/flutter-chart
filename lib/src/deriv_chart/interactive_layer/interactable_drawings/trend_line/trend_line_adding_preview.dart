@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_states/interactive_adding_tool_state.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
@@ -54,6 +55,7 @@ abstract class TrendLineAddingPreview
   TrendLineAddingPreview({
     required super.interactiveLayerBehaviour,
     required super.interactableDrawing,
+    required super.onAddingStateChange,
   });
 
   /// Constants for consistent styling
@@ -292,18 +294,22 @@ abstract class TrendLineAddingPreview
   /// - [quoteFromY]: Function to convert screen Y coordinate to quote
   /// - [onDone]: Callback to execute when the trend line is complete
   void createPoint(
-    Offset position,
+    TapUpDetails details,
     EpochFromX epochFromX,
     QuoteFromY quoteFromY,
-    VoidCallback onDone,
   ) {
     if (interactableDrawing.startPoint == null) {
-      interactableDrawing.startPoint =
-          offsetToEdgePoint(position, epochFromX, quoteFromY);
+      interactableDrawing.startPoint = EdgePoint(
+        epoch: epochFromX(details.localPosition.dx),
+        quote: quoteFromY(details.localPosition.dy),
+      );
+      onAddingStateChange(AddingStateInfo(1, 2));
     } else {
-      interactableDrawing.endPoint ??=
-          offsetToEdgePoint(position, epochFromX, quoteFromY);
-      onDone();
+      interactableDrawing.endPoint ??= EdgePoint(
+        epoch: epochFromX(details.localPosition.dx),
+        quote: quoteFromY(details.localPosition.dy),
+      );
+      onAddingStateChange(AddingStateInfo(2, 2));
     }
   }
 }

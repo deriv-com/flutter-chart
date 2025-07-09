@@ -124,6 +124,38 @@ class ChartDefaultLightTheme extends ChartDefaultTheme {
   TextStyle get overLine => TextStyles.overLine;
 
   @override
+  Color get floatingMenuContainerGlassColor =>
+      LightThemeColors.floatingMenuContainerGlassColor;
+
+  @override
+  Color get floatingMenuDragIconColor =>
+      LightThemeColors.floatingMenuDragIconColor;
+
+  @override
+  Color get lineThicknessDropdownButtonTextColor =>
+      LightThemeColors.lineThicknessDropdownButtonTextColor;
+
+  @override
+  Color get lineThicknessDropdownItemSelectedBackgroundColor =>
+      LightThemeColors.lineThicknessDropdownItemSelectedBackgroundColor;
+
+  @override
+  Color get lineThicknessDropdownItemSelectedTextColor =>
+      LightThemeColors.lineThicknessDropdownItemSelectedTextColor;
+
+  @override
+  Color get lineThicknessDropdownItemUnselectedTextColor =>
+      LightThemeColors.lineThicknessDropdownItemUnselectedTextColor;
+
+  @override
+  Color get lineThicknessDropdownItemSelectedLineColor =>
+      LightThemeColors.lineThicknessDropdownItemSelectedLineColor;
+
+  @override
+  Color get lineThicknessDropdownItemUnselectedLineColor =>
+      LightThemeColors.lineThicknessDropdownItemUnselectedLineColor;
+
+  @override
   Color get base01Color => LegacyLightThemeColors.base01;
 
   @override
@@ -137,4 +169,52 @@ class ChartDefaultLightTheme extends ChartDefaultTheme {
 
   @override
   Color get base07Color => LegacyLightThemeColors.base07;
+
+  @override
+  Color get toolbarColorPaletteIconRed =>
+      LightThemeColors.toolbarColorPaletteIconRed;
+
+  @override
+  Color get toolbarColorPaletteIconYellow =>
+      LightThemeColors.toolbarColorPaletteIconYellow;
+
+  @override
+  Color get toolbarColorPaletteIconMustard =>
+      LightThemeColors.toolbarColorPaletteIconMustard;
+
+  @override
+  Color get toolbarColorPaletteIconGreen =>
+      LightThemeColors.toolbarColorPaletteIconGreen;
+
+  @override
+  Color get toolbarColorPaletteIconSeaWater =>
+      LightThemeColors.toolbarColorPaletteIconSeaWater;
+
+  @override
+  Color get toolbarColorPaletteIconBlue =>
+      LightThemeColors.toolbarColorPaletteIconBlue;
+
+  @override
+  Color get toolbarColorPaletteIconSapphire =>
+      LightThemeColors.toolbarColorPaletteIconSapphire;
+
+  @override
+  Color get toolbarColorPaletteIconBlueBerry =>
+      LightThemeColors.toolbarColorPaletteIconBlueBerry;
+
+  @override
+  Color get toolbarColorPaletteIconGrape =>
+      LightThemeColors.toolbarColorPaletteIconGrape;
+
+  @override
+  Color get toolbarColorPaletteIconMagenta =>
+      LightThemeColors.toolbarColorPaletteIconMagenta;
+
+  @override
+  Color get toolbarColorPaletteIconBorderColor =>
+      LightThemeColors.toolbarColorPaletteIconBorderColor;
+
+  @override
+  Color get toolbarColorPaletteIconSelectedBorderColor =>
+      LightThemeColors.toolbarColorPaletteIconSelectedBorderColor;
 }

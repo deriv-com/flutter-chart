@@ -10,6 +10,7 @@ import 'package:flutter/gestures.dart';
 
 import '../../helpers/paint_helpers.dart';
 import '../../helpers/types.dart';
+import '../../interactive_layer_states/interactive_adding_tool_state.dart';
 import '../drawing_adding_preview.dart';
 import 'horizontal_line_interactable_drawing.dart';
 
@@ -22,7 +23,10 @@ class HorizontalLineAddingPreviewDesktop
   HorizontalLineAddingPreviewDesktop({
     required super.interactiveLayerBehaviour,
     required super.interactableDrawing,
-  });
+    required super.onAddingStateChange,
+  }) {
+    onAddingStateChange(AddingStateInfo(0, 1));
+  }
 
   Offset? _hoverPosition;
 
@@ -101,14 +105,13 @@ class HorizontalLineAddingPreviewDesktop
     QuoteFromY quoteFromY,
     EpochToX epochToX,
     QuoteToY quoteToY,
-    VoidCallback onDone,
   ) {
     if (interactableDrawing.startPoint == null) {
       interactableDrawing.startPoint = EdgePoint(
         epoch: epochFromX(details.localPosition.dx),
         quote: quoteFromY(details.localPosition.dy),
       );
-      onDone();
+      onAddingStateChange(AddingStateInfo(1, 1));
     }
   }
 }

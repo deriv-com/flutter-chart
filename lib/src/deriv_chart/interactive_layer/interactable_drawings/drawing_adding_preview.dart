@@ -13,6 +13,7 @@ import 'package:flutter/rendering.dart';
 import '../enums/drawing_tool_state.dart';
 import '../helpers/types.dart';
 import '../interactive_layer_behaviours/interactive_layer_behaviour.dart';
+import '../interactive_layer_states/interactive_adding_tool_state.dart';
 
 /// A preview of a drawing that is being added to the [InteractiveLayer].
 ///
@@ -42,7 +43,11 @@ abstract class DrawingAddingPreview<
   DrawingAddingPreview({
     required this.interactiveLayerBehaviour,
     required this.interactableDrawing,
+    required this.onAddingStateChange,
   });
+
+  /// A callback to the current step of the tool adding process.
+  final Function(AddingStateInfo) onAddingStateChange;
 
   /// The current interactive layer behaviour which is active and defines how
   /// this preview should behave.
@@ -98,7 +103,6 @@ abstract class DrawingAddingPreview<
     QuoteFromY quoteFromY,
     EpochToX epochToX,
     QuoteToY quoteToY,
-    VoidCallback onDone,
   );
 
   /// Handles the start of a drag gesture during drawing creation.

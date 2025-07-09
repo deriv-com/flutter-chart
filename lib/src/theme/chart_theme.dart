@@ -90,6 +90,26 @@ abstract class ChartTheme {
 
   TextStyle get crosshairAxisLabelStyle;
 
+  Color get floatingMenuContainerGlassColor;
+
+  Color get floatingMenuDragIconColor;
+
+  Color get lineThicknessDropdownButtonTextColor;
+
+  TextStyle get lineThicknessDropdownButtonTextStyle;
+
+  Color get lineThicknessDropdownItemSelectedBackgroundColor;
+
+  Color get lineThicknessDropdownItemSelectedTextColor;
+
+  Color get lineThicknessDropdownItemUnselectedTextColor;
+
+  Color get lineThicknessDropdownItemSelectedLineColor;
+
+  Color get lineThicknessDropdownItemUnselectedLineColor;
+
+  TextStyle get lineThicknessDropdownItemTextStyle;
+
   /// The style of the current tick indicator.
   HorizontalBarrierStyle get currentSpotStyle;
 
@@ -189,4 +209,18 @@ abstract class ChartTheme {
   /// It should not be used in new code, as it'll be removed soon.
   // TODO(Jim): Remove this method when an alternative is available.
   Color get base07Color;
+
+  /// Toolbar color palette colors for the color picker grid
+  Color get toolbarColorPaletteIconRed;
+  Color get toolbarColorPaletteIconYellow;
+  Color get toolbarColorPaletteIconMustard;
+  Color get toolbarColorPaletteIconGreen;
+  Color get toolbarColorPaletteIconSeaWater;
+  Color get toolbarColorPaletteIconBlue;
+  Color get toolbarColorPaletteIconSapphire;
+  Color get toolbarColorPaletteIconBlueBerry;
+  Color get toolbarColorPaletteIconGrape;
+  Color get toolbarColorPaletteIconMagenta;
+  Color get toolbarColorPaletteIconBorderColor;
+  Color get toolbarColorPaletteIconSelectedBorderColor;
 }

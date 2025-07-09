@@ -1,9 +1,11 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer.dart';
 import 'package:flutter/foundation.dart';
 
-import 'interactable_drawings/interactable_drawing.dart';
+import 'interactive_layer_states/interactive_adding_tool_state.dart';
+import 'interactive_layer_states/interactive_selected_tool_state.dart';
 import 'interactive_layer_states/interactive_state.dart';
 
 /// A controller similar to [ListView.scrollController] to control interactive
@@ -35,32 +37,44 @@ class InteractiveLayerController extends ChangeNotifier {
   /// The size of the floating menu.
   Size floatingMenuSize = Size.zero;
 
-  /// The current state of the interactive layer.
+  /// The callback to be called when the user cancels adding a drawing tool.
+  VoidCallback? onCancelAdding;
+
+  /// The callback to be called when a new drawing tool going to be added.
+  Function(DrawingToolConfig)? onAddNewTool;
+
+  /// Sets the current state of the interactive layer and notifies listeners.
   set currentState(InteractiveState state) {
     _currentState = state;
     notifyListeners();
   }
 
-  InteractableDrawing<DrawingToolConfig>? _selectedDrawing;
-
-  /// The current selected drawing of the [InteractiveLayer].
-  InteractableDrawing<DrawingToolConfig>? get selectedDrawing =>
-      _selectedDrawing;
-
-  /// Sets the selected drawing of the [InteractiveLayer].
-  set selectedDrawing(
-    InteractableDrawing<DrawingToolConfig>? drawing,
-  ) {
-    _selectedDrawing = drawing;
-    notifyListeners();
+  /// Cancels the adding of a drawing tool if we're in
+  /// [InteractiveAddingToolState].
+  ///
+  /// Otherwise will throw ...
+  void cancelAdding() {
+    if (_currentState is InteractiveAddingToolState) {
+      onCancelAdding?.call();
+    } else {
+      throw StateError(
+        'Cannot cancel adding tool when not in InteractiveAddingToolState',
+      );
+    }
   }
+
+  /// Updates the [InteractiveLayer]'s internal state to start adding the
+  /// [config] to the chart.
+  void startAddingNewTool(DrawingToolConfig config) =>
+      onAddNewTool?.call(config);
 
   /// Checks if a given local position is within the floating menu bounds.
   ///
   /// Returns `true` if the position is within the floating menu area,
   /// `false` otherwise.
   bool isPointInFloatingMenu(Offset localPosition) {
-    if (floatingMenuSize == Size.zero || _selectedDrawing == null) {
+    if (floatingMenuSize == Size.zero ||
+        !(_currentState is InteractiveSelectedToolState)) {
       return false;
     }
 

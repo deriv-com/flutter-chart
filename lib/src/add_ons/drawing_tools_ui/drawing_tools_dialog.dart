@@ -9,6 +9,7 @@ import 'package:deriv_chart/src/add_ons/drawing_tools_ui/ray/ray_drawing_tool_co
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/trend/trend_drawing_tool_config.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/vertical/vertical_drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_controller.dart';
 import 'package:deriv_chart/src/widgets/animated_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,12 +21,16 @@ class DrawingToolsDialog extends StatefulWidget {
   /// Creates drawing tools dialog.
   const DrawingToolsDialog({
     required this.drawingTools,
+    required this.interactiveLayerController,
     Key? key,
   }) : super(key: key);
 
   /// Keep the reference to the drawing tools class for
   /// sharing data between the DerivChart and the DrawingToolsDialog
   final DrawingTools drawingTools;
+
+  /// Controller for the interactive layer.
+  final InteractiveLayerController interactiveLayerController;
 
   @override
   _DrawingToolsDialogState createState() => _DrawingToolsDialogState();
@@ -97,8 +102,8 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
                 child: const Text('Add'),
                 onPressed: _selectedDrawingTool != null
                     ? () {
-                        widget.drawingTools
-                            .onDrawingToolSelection(_selectedDrawingTool!);
+                        widget.interactiveLayerController
+                            .startAddingNewTool(_selectedDrawingTool!);
                         repo.update();
                         Navigator.of(context).pop();
                       }

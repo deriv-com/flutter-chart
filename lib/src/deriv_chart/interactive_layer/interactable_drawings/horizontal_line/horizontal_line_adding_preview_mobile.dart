@@ -4,11 +4,13 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/paint_helpers.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/drawing_v2.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
 import '../../helpers/types.dart';
+import '../../interactive_layer_states/interactive_adding_tool_state.dart';
 import '../drawing_adding_preview.dart';
 import 'horizontal_line_interactable_drawing.dart';
 
@@ -21,6 +23,7 @@ class HorizontalLineAddingPreviewMobile
   HorizontalLineAddingPreviewMobile({
     required super.interactiveLayerBehaviour,
     required super.interactableDrawing,
+    required super.onAddingStateChange,
   }) {
     if (interactableDrawing.startPoint == null) {
       final interactiveLayer = interactiveLayerBehaviour.interactiveLayer;
@@ -33,12 +36,27 @@ class HorizontalLineAddingPreviewMobile
         epoch: interactiveLayer.epochFromX(centerX),
         quote: interactiveLayer.quoteFromY(centerY),
       );
+
+      onAddingStateChange(AddingStateInfo(0, 1));
     }
   }
 
   @override
   bool hitTest(Offset offset, EpochToX epochToX, QuoteToY quoteToY) {
-    return interactableDrawing.hitTest(offset, epochToX, quoteToY);
+    if (interactableDrawing.startPoint == null) {
+      return false;
+    }
+    // Convert start and end points from epoch/quote to screen coordinates
+    final Offset startOffset = Offset(
+      epochToX(interactableDrawing.startPoint!.epoch),
+      quoteToY(interactableDrawing.startPoint!.quote),
+    );
+
+    // For horizontal line when we're adding it, we only need to check if the
+    // point is near the line's y-coordinate, because it shows the label during
+    // the whole process of adding the tool.
+    final double distance = (offset.dy - startOffset.dy).abs();
+    return distance <= hitTestMargin;
   }
 
   @override
@@ -123,13 +141,12 @@ class HorizontalLineAddingPreviewMobile
     QuoteFromY quoteFromY,
     EpochToX epochToX,
     QuoteToY quoteToY,
-    VoidCallback onDone,
   ) {
     interactableDrawing.startPoint ??= EdgePoint(
       epoch: epochFromX(details.localPosition.dx),
       quote: quoteFromY(details.localPosition.dy),
     );
 
-    onDone();
+    onAddingStateChange(AddingStateInfo(1, 1));
   }
 }

@@ -1,14 +1,17 @@
+import 'dart:ui';
+
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/paint_helpers.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/trend_line/trend_line_adding_preview.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 
-import '../../helpers/paint_helpers.dart';
 import '../../helpers/types.dart';
-import 'trend_line_adding_preview.dart';
+import '../../interactive_layer_states/interactive_adding_tool_state.dart';
+import 'trend_line_interactable_drawing.dart';
 
 /// Desktop-specific implementation for trend line adding preview.
 ///
@@ -54,7 +57,10 @@ class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
   TrendLineAddingPreviewDesktop({
     required super.interactiveLayerBehaviour,
     required super.interactableDrawing,
-  });
+    required super.onAddingStateChange,
+  }) {
+    onAddingStateChange(AddingStateInfo(0, 2));
+  }
 
   Offset? _hoverPosition;
 
@@ -163,9 +169,8 @@ class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
     QuoteFromY quoteFromY,
     EpochToX epochToX,
     QuoteToY quoteToY,
-    VoidCallback onDone,
   ) {
-    createPoint(details.localPosition, epochFromX, quoteFromY, onDone);
+    createPoint(details, epochFromX, quoteFromY);
   }
 
   @override
