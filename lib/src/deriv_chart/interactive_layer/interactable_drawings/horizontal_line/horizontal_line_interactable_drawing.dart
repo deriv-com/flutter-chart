@@ -8,12 +8,12 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_too
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/drawing_adding_preview.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/horizontal_line/horizontal_line_adding_preview_desktop.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/widgets/color_picker.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/theme/design_tokens/core_design_tokens.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_chart/src/widgets/color_picker/color_picker_dropdown_button.dart';
+import 'package:deriv_chart/src/widgets/dropdown/line_thickness/line_thickness_dropdown_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +22,7 @@ import '../../helpers/paint_helpers.dart';
 import '../../helpers/types.dart';
 import '../../interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import '../../interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
+import '../../interactive_layer_states/interactive_adding_tool_state.dart';
 import '../drawing_v2.dart';
 import '../interactable_drawing.dart';
 import 'horizontal_line_adding_preview_mobile.dart';
@@ -80,6 +81,7 @@ class HorizontalLineInteractableDrawing
     }
 
     final isNotSelected = !state.contains(DrawingToolState.selected);
+
     final isOutsideContent = offset.dx > drawingContext.contentSize.width;
 
     if (isNotSelected && isOutsideContent) {
@@ -158,6 +160,8 @@ class HorizontalLineInteractableDrawing
     ui.Size size,
     EpochToX epochToX,
     QuoteToY quoteToY,
+    EpochFromX? epochFromX,
+    QuoteFromY? quoteFromY,
     AnimationInfo animationInfo,
     ChartConfig chartConfig,
     ChartTheme chartTheme,
@@ -239,26 +243,30 @@ class HorizontalLineInteractableDrawing
   DrawingAddingPreview<InteractableDrawing<DrawingToolConfig>>
       getAddingPreviewForDesktopBehaviour(
     InteractiveLayerDesktopBehaviour layerBehaviour,
+    Function(AddingStateInfo) onAddingStateChange,
   ) =>
           HorizontalLineAddingPreviewDesktop(
             interactiveLayerBehaviour: layerBehaviour,
             interactableDrawing: this,
+            onAddingStateChange: onAddingStateChange,
           );
 
   @override
   DrawingAddingPreview<InteractableDrawing<DrawingToolConfig>>
       getAddingPreviewForMobileBehaviour(
     InteractiveLayerMobileBehaviour layerBehaviour,
+    Function(AddingStateInfo) onAddingStateChange,
   ) =>
           HorizontalLineAddingPreviewMobile(
             interactiveLayerBehaviour: layerBehaviour,
             interactableDrawing: this,
+            onAddingStateChange: onAddingStateChange,
           );
 
   @override
   Widget buildDrawingToolBarMenu(UpdateDrawingTool onUpdate) => Row(
         children: <Widget>[
-          _buildLineThicknessIcon(),
+          _buildLineThicknessIcon(onUpdate),
           const SizedBox(width: 4),
           _buildColorPickerIcon(onUpdate)
         ],
@@ -267,7 +275,7 @@ class HorizontalLineInteractableDrawing
   Widget _buildColorPickerIcon(UpdateDrawingTool onUpdate) => SizedBox(
         width: 32,
         height: 32,
-        child: ColorPicker(
+        child: ColorPickerDropdownButton(
           currentColor: config.lineStyle.color,
           onColorChanged: (newColor) => onUpdate(config.copyWith(
             lineStyle: config.lineStyle.copyWith(color: newColor),
@@ -276,31 +284,13 @@ class HorizontalLineInteractableDrawing
         ),
       );
 
-  Widget _buildLineThicknessIcon() => SizedBox(
-        width: 32,
-        height: 32,
-        child: TextButton(
-          style: TextButton.styleFrom(
-            foregroundColor: Colors.white38,
-            alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(4),
-            ),
-          ),
-          onPressed: () {
-            // update line thickness
-          },
-          child: Text(
-            '${config.lineStyle.thickness.toInt()}px',
-            style: const TextStyle(
-              fontSize: 14,
-              color: CoreDesignTokens.coreColorSolidSlate50,
-              fontWeight: FontWeight.normal,
-              height: 2,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ),
+  Widget _buildLineThicknessIcon(UpdateDrawingTool onUpdate) =>
+      LineThicknessDropdownButton(
+        thickness: config.lineStyle.thickness,
+        onValueChanged: (double newValue) {
+          onUpdate(config.copyWith(
+            lineStyle: config.lineStyle.copyWith(thickness: newValue),
+          ));
+        },
       );
 }

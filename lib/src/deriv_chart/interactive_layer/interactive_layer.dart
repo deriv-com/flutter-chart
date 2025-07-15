@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:async';
 
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
@@ -413,7 +415,8 @@ class _InteractiveLayerGestureHandlerState
   void _checkIsAToolAdded() {
     for (final drawing in widget.drawings) {
       if (drawing.id == _addedDrawing) {
-        widget.interactiveLayerBehaviour.aNewToolsIsAdded(drawing);
+        WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback(
+            (_) => widget.interactiveLayerBehaviour.aNewToolsIsAdded(drawing));
         break;
       }
     }
@@ -662,6 +665,11 @@ class _InteractiveLayerGestureHandlerState
   @override
   DrawingContext get drawingContext => _drawingContext;
 
+  @override
+  void hideCrosshair() {
+    _cancelCrosshair();
+  }
+
   // Update the interaction mode and notify listeners if needed
   void _updateInteractionMode(InteractionMode mode) {
     if (_currentInteractionMode != mode) {
@@ -673,8 +681,14 @@ class _InteractiveLayerGestureHandlerState
 
   // Method to cancel any active crosshair
   void _cancelCrosshair() {
-    if (_currentInteractionMode == InteractionMode.crosshair) {
+    // Always hide the crosshair if it's visible, regardless of interaction mode
+    // This handles cases where crosshair is visible from hover but interaction mode isn't crosshair
+    if (widget.crosshairController.value.isVisible) {
       widget.crosshairController.onExit(const PointerExitEvent());
+    }
+
+    // Only update interaction mode if we were actually in crosshair mode
+    if (_currentInteractionMode == InteractionMode.crosshair) {
       _updateInteractionMode(InteractionMode.none);
     }
   }

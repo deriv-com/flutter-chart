@@ -120,6 +120,14 @@ abstract class ChartDefaultTheme implements ChartTheme {
   TextStyle get crosshairAxisLabelStyle => TextStyles.crosshairAxisLabelStyle;
 
   @override
+  TextStyle get lineThicknessDropdownButtonTextStyle =>
+      TextStyles.lineThicknessDropdownButtonTextStyle;
+
+  @override
+  TextStyle get lineThicknessDropdownItemTextStyle =>
+      TextStyles.lineThicknessDropdownItemTextStyle;
+
+  @override
   double get areaLineThickness => Dimens.areaLineDefaultThickness;
 
   @override

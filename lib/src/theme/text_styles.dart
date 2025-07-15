@@ -195,4 +195,28 @@ class TextStyles {
 
     height: 1.67, // lineHeight (20px) / fontSize (12px) = ~1.67
   );
+
+  static const TextStyle lineThicknessDropdownButtonTextStyle = TextStyle(
+    fontFeatures: <FontFeature>[
+      FontFeature.liningFigures(),
+      FontFeature.tabularFigures(),
+    ],
+    fontFamily: fontFamilyDeriv,
+    fontSize: 14,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w400,
+    height: 1.43, // lineHeight (20px) / fontSize (14px) = ~1.43
+  );
+
+  static const TextStyle lineThicknessDropdownItemTextStyle = TextStyle(
+    fontFeatures: <FontFeature>[
+      FontFeature.liningFigures(),
+      FontFeature.tabularFigures(),
+    ],
+    fontFamily: fontFamilyDeriv,
+    fontSize: 14,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w400,
+    height: 1.43, // lineHeight (20px) / fontSize (14px) = ~1.43
+  );
 }

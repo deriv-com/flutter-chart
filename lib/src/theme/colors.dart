@@ -104,6 +104,54 @@ class LightThemeColors {
   static final Color crosshairInformationBoxContainerGlassColor =
       LightThemeDesignTokens
           .semanticColorMonochromeSurfaceNormalLowest; // Hex: #000000 with 4% opacity
+
+  static final Color floatingMenuContainerGlassColor = LightThemeDesignTokens
+      .semanticColorMonochromeSurfaceNormalLowest; // Hex: #000000 with 4% opacity
+  static final Color floatingMenuDragIconColor = LightThemeDesignTokens
+      .semanticColorMonochromeTextIconNormalMid; // Hex: #000000 with appropriate opacity
+
+  static const Color lineThicknessDropdownButtonTextColor =
+      ComponentDesignTokens
+          .componentTextIconNormalProminentLight; // Hex: #000000
+  static const Color lineThicknessDropdownItemSelectedBackgroundColor =
+      ComponentDesignTokens
+          .componentDropdownItemBgSelectedLight; // Hex: #FFFFFF
+  static const Color lineThicknessDropdownItemSelectedTextColor =
+      ComponentDesignTokens
+          .componentTextIconInverseProminentLight; // Hex: #000000
+  static final Color lineThicknessDropdownItemUnselectedTextColor =
+      ComponentDesignTokens.componentTextIconNormalDefaultLight; // Hex: #FFFFFF
+  static const Color lineThicknessDropdownItemSelectedLineColor =
+      ComponentDesignTokens
+          .componentTextIconInverseProminentLight; // Hex: #000000
+  static final Color lineThicknessDropdownItemUnselectedLineColor =
+      ComponentDesignTokens.componentTextIconNormalDefaultLight; // Hex: #FFFFFF
+
+  // Toolbar color palette colors
+  static const Color toolbarColorPaletteIconRed =
+      LightThemeDesignTokens.semanticColorRedSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconYellow =
+      LightThemeDesignTokens.semanticColorYellowSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconMustard =
+      LightThemeDesignTokens.semanticColorMustardSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconGreen =
+      LightThemeDesignTokens.semanticColorGreenSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconSeaWater =
+      LightThemeDesignTokens.semanticColorSeawaterSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconBlue =
+      LightThemeDesignTokens.semanticColorBlueSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconSapphire =
+      LightThemeDesignTokens.semanticColorSapphireSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconBlueBerry =
+      LightThemeDesignTokens.semanticColorBlueberrySolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconGrape =
+      LightThemeDesignTokens.semanticColorGrapeSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconMagenta =
+      LightThemeDesignTokens.semanticColorMagentaSolidSurfaceInverseMid;
+  static final Color toolbarColorPaletteIconBorderColor =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
+  static const Color toolbarColorPaletteIconSelectedBorderColor =
+      LightThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
 }
 
 /// Default colors for dark theme.
@@ -162,6 +210,60 @@ class DarkThemeColors {
   static final Color crosshairInformationBoxContainerGlassColor =
       DarkThemeDesignTokens
           .semanticColorMonochromeSurfaceNormalLowest; // Hex: #000000 with 4% opacity
+
+  // Floating menu container glass background color
+  static final Color floatingMenuContainerGlassColor = DarkThemeDesignTokens
+      .semanticColorMonochromeSurfaceNormalLowest; // Hex: #000000 with 4% opacity
+
+  // Floating menu drag icon color
+  static final Color floatingMenuDragIconColor = DarkThemeDesignTokens
+      .semanticColorMonochromeTextIconNormalMid; // Hex: #000000 with appropriate opacity
+
+  // Line thickness dropdown colors
+  static const Color lineThicknessDropdownButtonTextColor =
+      ComponentDesignTokens
+          .componentTextIconNormalProminentDark; // Hex: #FFFFFF
+
+  static const Color lineThicknessDropdownItemSelectedBackgroundColor =
+      ComponentDesignTokens.componentDropdownItemBgSelectedDark; // Hex: #FFFFFF
+  static const Color lineThicknessDropdownItemSelectedTextColor =
+      ComponentDesignTokens
+          .componentTextIconInverseProminentDark; // Hex: #000000
+  static const Color lineThicknessDropdownItemUnselectedTextColor =
+      ComponentDesignTokens
+          .componentTextIconNormalProminentDark; // Hex: #FFFFFF
+  static const Color lineThicknessDropdownItemSelectedLineColor =
+      ComponentDesignTokens
+          .componentTextIconInverseProminentDark; // Hex: #000000
+  static const Color lineThicknessDropdownItemUnselectedLineColor =
+      ComponentDesignTokens
+          .componentTextIconNormalProminentDark; // Hex: #FFFFFF
+
+  // Toolbar color palette colors
+  static const Color toolbarColorPaletteIconRed =
+      DarkThemeDesignTokens.semanticColorRedSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconYellow =
+      DarkThemeDesignTokens.semanticColorYellowSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconMustard =
+      DarkThemeDesignTokens.semanticColorMustardSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconGreen =
+      DarkThemeDesignTokens.semanticColorGreenSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconSeaWater =
+      DarkThemeDesignTokens.semanticColorSeawaterSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconBlue =
+      DarkThemeDesignTokens.semanticColorBlueSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconSapphire =
+      DarkThemeDesignTokens.semanticColorSapphireSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconBlueBerry =
+      DarkThemeDesignTokens.semanticColorBlueberrySolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconGrape =
+      DarkThemeDesignTokens.semanticColorGrapeSolidSurfaceInverseMid;
+  static const Color toolbarColorPaletteIconMagenta =
+      DarkThemeDesignTokens.semanticColorMagentaSolidSurfaceInverseMid;
+  static final Color toolbarColorPaletteIconBorderColor =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
+  static const Color toolbarColorPaletteIconSelectedBorderColor =
+      DarkThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
 }
 
 /// Candle Bullish colors for light, dark

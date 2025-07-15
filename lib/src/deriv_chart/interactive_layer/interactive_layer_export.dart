@@ -1,6 +1,7 @@
 export 'interactive_layer_behaviours/interactive_layer_behaviour.dart';
 export 'interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 export 'interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
+export 'interactive_layer_controller.dart';
 export 'interactive_layer_states/interactive_adding_tool_state.dart';
 export 'interactive_layer_states/interactive_adding_tool_state_mobile.dart';
 export 'interactive_layer_states/interactive_hover_state.dart';
@@ -16,4 +17,3 @@ export 'interactable_drawings/horizontal_line/horizontal_line_interactable_drawi
 export 'interactable_drawings/trend_line/trend_line_adding_preview_desktop.dart';
 export 'interactable_drawings/trend_line/trend_line_adding_preview_mobile.dart';
 export 'interactable_drawings/trend_line/trend_line_interactable_drawing.dart';
-export 'interactable_drawings/trend_line/adding_tool_alignment_cross_hair.dart';

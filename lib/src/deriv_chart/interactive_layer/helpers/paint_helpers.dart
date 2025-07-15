@@ -3,14 +3,16 @@ import 'dart:ui';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/chart_date_utils.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
 
 /// Draws alignment guides (horizontal and vertical lines) for a single point
-void drawPointAlignmentGuides(Canvas canvas, Size size, Offset pointOffset) {
+void drawPointAlignmentGuides(Canvas canvas, Size size, Offset pointOffset,
+    {Color lineColor = const Color(0x80FFFFFF)}) {
   // Create a dashed paint style for the alignment guides
   final Paint guidesPaint = Paint()
-    ..color = const Color(0x80FFFFFF) // Semi-transparent white
+    ..color = lineColor
     ..strokeWidth = 1.0
     ..style = PaintingStyle.stroke;
 
@@ -192,10 +194,12 @@ void drawValueLabel({
   )..layout();
 
   // Create rectangle with padding around the text
-  final double rectWidth = textPainter.width + 24;
+  final double rectWidth =
+      textPainter.width + 16; // Add padding of 8px on each side
   const double rectHeight = 24; // Fixed height to match the image
 
-  final double rectRight = size.width;
+  // Add 8px gap between the chart content and the label
+  final double rectRight = size.width - 4;
   final double rectLeft = rectRight - rectWidth;
 
   final Rect rect = Rect.fromLTRB(
@@ -230,6 +234,72 @@ void drawValueLabel({
     ..strokeWidth = 1.0;
 
   // Draw the background and border
+  canvas
+    ..drawRRect(roundedRect, rectPaint)
+    ..drawRRect(roundedRect, borderPaint);
+
+  // Draw the text centered in the rectangle
+  textPainter.paint(
+    canvas,
+    Offset(
+      rect.left + (rectWidth - textPainter.width) / 2,
+      rect.top + (rectHeight - textPainter.height) / 2,
+    ),
+  );
+}
+
+/// Draws an epoch label rectangle on the x-axis with formatted time
+///
+/// This draws a rounded rectangle with the formatted epoch time inside it.
+/// The epoch is formatted as a readable time string.
+void drawEpochLabel({
+  required Canvas canvas,
+  required EpochToX epochToX,
+  required int epoch,
+  required Size size,
+  required TextStyle textStyle,
+  double animationProgress = 1,
+  Color color = Colors.white,
+  Color backgroundColor = Colors.transparent,
+}) {
+  // Calculate X position based on the epoch
+  final double xPosition = epochToX(epoch);
+  final String formattedTime = ChartDateUtils.formatCompactDateTime(epoch);
+
+  // Create text painter to measure text dimensions
+  final TextPainter textPainter = _getTextPainter(
+    formattedTime,
+    textStyle: textStyle.copyWith(
+      color: textStyle.color?.withOpacity(animationProgress),
+    ),
+  )..layout();
+
+  // Create rectangle with padding around the text
+  final double rectWidth = textPainter.width + 16;
+  const double rectHeight = 24;
+  final double rectBottom = size.height + rectHeight;
+  final double rectTop = rectBottom - rectHeight;
+
+  final Rect rect = Rect.fromLTRB(
+    xPosition - rectWidth / 2,
+    rectTop,
+    xPosition + rectWidth / 2,
+    rectBottom,
+  );
+
+  // Draw rounded rectangle
+  final Paint rectPaint = Paint()
+    ..color = backgroundColor.withOpacity(animationProgress)
+    ..style = PaintingStyle.fill;
+
+  final Paint borderPaint = Paint()
+    ..color = color.withOpacity(animationProgress)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1.0;
+
+  // Draw the background and border
+  final RRect roundedRect =
+      RRect.fromRectAndRadius(rect, const Radius.circular(4));
   canvas
     ..drawRRect(roundedRect, rectPaint)
     ..drawRRect(roundedRect, borderPaint);

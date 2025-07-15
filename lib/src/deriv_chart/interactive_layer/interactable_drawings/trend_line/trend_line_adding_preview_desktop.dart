@@ -1,44 +1,73 @@
 import 'dart:ui';
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/paint_helpers.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/trend_line/trend_line_adding_preview.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/gestures.dart';
 
 import '../../helpers/types.dart';
-import '../drawing_adding_preview.dart';
-import 'adding_tool_alignment_cross_hair.dart';
+import '../../interactive_layer_states/interactive_adding_tool_state.dart';
 import 'trend_line_interactable_drawing.dart';
 
-/// Can be used to show a preview line for a [TrendLineInteractableDrawing] when
-/// adding it to the chart. It's for when we're on
-/// [InteractiveLayerDesktopBehaviour]
-class TrendLineAddingPreviewDesktop
-    extends DrawingAddingPreview<TrendLineInteractableDrawing> {
+/// Desktop-specific implementation for trend line adding preview.
+///
+/// This class handles trend line creation and preview specifically for desktop
+/// environments where users interact via mouse hover and click events. It extends
+/// [TrendLineAddingPreview] to inherit shared functionality while implementing
+/// desktop-specific interaction patterns.
+///
+/// ## Desktop Interaction Flow:
+/// 1. **Hover Phase**: User moves mouse over chart, alignment guides appear
+/// 2. **First Click**: Sets the start point of the trend line
+/// 3. **Preview Phase**: Shows preview line from start point to mouse position
+/// 4. **Second Click**: Sets the end point and completes the trend line
+///
+/// ## Key Features:
+/// - Real-time hover feedback with alignment guides and labels
+/// - Preview line that follows mouse cursor after first point is set
+/// - Immediate visual feedback for point placement
+/// - Consistent styling with shared base class methods
+///
+/// ## Usage:
+/// This class is typically instantiated by the drawing system when a user
+/// selects the trend line tool on a desktop platform:
+///
+/// ```dart
+/// final preview = TrendLineAddingPreviewDesktop(
+///   interactiveLayerBehaviour: desktopBehaviour,
+///   interactableDrawing: trendLineDrawing,
+/// );
+/// ```
+///
+/// ## State Management:
+/// - Tracks hover position for real-time preview updates
+/// - Manages point creation sequence (start → end)
+/// - Handles completion callback when both points are set
+///
+/// ## Performance Considerations:
+/// - Hover events are processed efficiently without heavy computations
+/// - Alignment guides are only drawn when hovering
+/// - Preview line updates smoothly with mouse movement
+class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
   /// Initializes [TrendLineInteractableDrawing].
   TrendLineAddingPreviewDesktop({
     required super.interactiveLayerBehaviour,
     required super.interactableDrawing,
-  });
+    required super.onAddingStateChange,
+  }) {
+    onAddingStateChange(AddingStateInfo(0, 2));
+  }
 
   Offset? _hoverPosition;
-
-  /// The cross-hair that is following mouse cursor and is used for alignment.
-  final AddingToolAlignmentCrossHair _crossHair =
-      AddingToolAlignmentCrossHair();
 
   @override
   void onHover(PointerHoverEvent event, EpochFromX epochFromX,
       QuoteFromY quoteFromY, EpochToX epochToX, QuoteToY quoteToY) {
     _hoverPosition = event.localPosition;
-
-    _crossHair.onHover(event, epochFromX, quoteFromY, epochToX, quoteToY);
   }
 
   @override
@@ -52,32 +81,62 @@ class TrendLineAddingPreviewDesktop
     ChartTheme chartTheme,
     GetDrawingState getDrawingState,
   ) {
-    final LineStyle lineStyle = interactableDrawing.config.lineStyle;
-    final DrawingPaintStyle paintStyle = DrawingPaintStyle();
-
+    final (paintStyle, lineStyle) = getStyles();
     final EdgePoint? startPoint = interactableDrawing.startPoint;
 
     if (startPoint != null) {
-      drawPoint(startPoint, epochToX, quoteToY, canvas, paintStyle, lineStyle);
+      drawStyledPoint(
+          startPoint, epochToX, quoteToY, canvas, paintStyle, lineStyle);
 
       if (_hoverPosition != null) {
         // endPoint doesn't exist yet and it means we're creating this line.
         // Drawing preview line from startPoint to hoverPosition.
         final Offset startPosition =
-            Offset(epochToX(startPoint.epoch), quoteToY(startPoint.quote));
+            edgePointToOffset(startPoint, epochToX, quoteToY);
+        drawPreviewLine(
+            canvas, startPosition, _hoverPosition!, paintStyle, lineStyle);
 
-        canvas.drawLine(startPosition, _hoverPosition!,
-            paintStyle.linePaintStyle(lineStyle.color, lineStyle.thickness));
+        drawPointAlignmentGuides(
+          canvas,
+          size,
+          _hoverPosition!,
+          lineColor: interactableDrawing.config.lineStyle.color,
+        );
       }
+    } else if (_hoverPosition != null) {
+      // Show alignment guides when hovering before first point is set
+      drawPointAlignmentGuides(
+        canvas,
+        size,
+        _hoverPosition!,
+        lineColor: interactableDrawing.config.lineStyle.color,
+      );
     }
 
     if (interactableDrawing.endPoint != null) {
-      drawPoint(interactableDrawing.endPoint!, epochToX, quoteToY, canvas,
+      drawStyledPoint(interactableDrawing.endPoint!, epochToX, quoteToY, canvas,
           paintStyle, lineStyle);
     }
+  }
 
-    _crossHair.paint(canvas, size, epochToX, quoteToY, animationInfo,
-        chartConfig, chartTheme, getDrawingState);
+  @override
+  void paintOverYAxis(
+      Canvas canvas,
+      Size size,
+      EpochToX epochToX,
+      QuoteToY quoteToY,
+      EpochFromX? epochFromX,
+      QuoteFromY? quoteFromY,
+      AnimationInfo animationInfo,
+      ChartConfig chartConfig,
+      ChartTheme chartTheme,
+      GetDrawingState getDrawingState) {
+    // Only draw labels when hover position exists and coordinate conversion functions are available
+    if (_hoverPosition != null && epochFromX != null && quoteFromY != null) {
+      drawPointGuidesAndLabels(canvas, size, _hoverPosition!, epochToX,
+          quoteToY, epochFromX, quoteFromY, chartConfig, chartTheme,
+          showGuides: false);
+    }
   }
 
   @override
@@ -87,20 +146,8 @@ class TrendLineAddingPreviewDesktop
     QuoteFromY quoteFromY,
     EpochToX epochToX,
     QuoteToY quoteToY,
-    VoidCallback onDone,
   ) {
-    if (interactableDrawing.startPoint == null) {
-      interactableDrawing.startPoint = EdgePoint(
-        epoch: epochFromX(details.localPosition.dx),
-        quote: quoteFromY(details.localPosition.dy),
-      );
-    } else {
-      interactableDrawing.endPoint ??= EdgePoint(
-        epoch: epochFromX(details.localPosition.dx),
-        quote: quoteFromY(details.localPosition.dy),
-      );
-      onDone();
-    }
+    createPoint(details, epochFromX, quoteFromY);
   }
 
   @override
