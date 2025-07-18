@@ -90,7 +90,6 @@ class InteractiveSelectedToolState extends InteractiveState
   @override
   bool onPanStart(DragStartDetails details) {
     if (selected.hitTest(details.localPosition, epochToX, quoteToY)) {
-      _draggingStartedOnTool = true;
       selected.onDragStart(details, epochFromX, quoteFromY, epochToX, quoteToY);
       return true; // Started dragging on the selected tool
     } else {
@@ -117,17 +116,18 @@ class InteractiveSelectedToolState extends InteractiveState
 
   @override
   bool onPanUpdate(DragUpdateDetails details) {
-    if (_draggingStartedOnTool) {
-      selected.onDragUpdate(
-        details,
-        epochFromX,
-        quoteFromY,
-        epochToX,
-        quoteToY,
-      );
-      return true; // Dragging a tool
+    if (!_draggingStartedOnTool) {
+      _draggingStartedOnTool = true;
     }
-    return false; // Not dragging a tool
+
+    selected.onDragUpdate(
+      details,
+      epochFromX,
+      quoteFromY,
+      epochToX,
+      quoteToY,
+    );
+    return true; // Dragging a tool
   }
 
   @override
