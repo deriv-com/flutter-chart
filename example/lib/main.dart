@@ -24,7 +24,6 @@ import 'package:flutter_deriv_api/state/connection/connection_cubit.dart'
     as connection_bloc;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pref/pref.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'utils/misc.dart';
 
@@ -120,6 +119,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   late PrefServiceCache _prefService;
 
+  TradeType _currentTradeType = TradeType.multipliers;
+
   @override
   void initState() {
     super.initState();
@@ -139,7 +140,24 @@ class _FullscreenChartState extends State<FullscreenChart> {
     await _prefService.setDefaultValues(<String, dynamic>{
       'appID': defaultAppID,
       'endpoint': defaultEndpoint,
+      'tradeType': TradeType.multipliers.value,
     });
+
+    // Load current trade type from preferences
+    await _loadTradeType();
+  }
+
+  Future<void> _loadTradeType() async {
+    // Get the trade type directly from PrefService instead of SharedPreferences
+    // to ensure we get the latest value immediately
+    final String? tradeTypeValue = _prefService.get<String>('tradeType');
+    if (tradeTypeValue != null) {
+      final TradeType newTradeType =
+          TradeTypeExtension.fromValue(tradeTypeValue);
+      setState(() {
+        _currentTradeType = newTradeType;
+      });
+    }
   }
 
   @override
@@ -151,7 +169,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _connectToAPI() async {
-    _connectionBloc = connection_bloc.ConnectionCubit(ConnectionInformation(
+    _connectionBloc = connection_bloc.ConnectionCubit(
+        const ConnectionInformation(
       endpoint: defaultEndpoint,
       appId: defaultAppID,
       brand: 'deriv',
@@ -500,6 +519,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
                                   )),
                         );
 
+                        // Always reload trade type when returning from settings
+                        await _loadTradeType();
+
                         if (settingChanged ?? false) {
                           _requestCompleter = Completer<dynamic>();
                           await _tickStreamSubscription?.cancel();
@@ -513,18 +535,22 @@ class _FullscreenChartState extends State<FullscreenChart> {
                       }),
                   ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) => Colors.green),
+                      backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                          (Set<WidgetState> states) => const Color(0xFF00A79E)),
+                      foregroundColor: WidgetStateProperty.resolveWith<Color>(
+                          (Set<WidgetState> states) => Colors.white),
                     ),
-                    child: const Text('Up'),
+                    child: Text(_getUpButtonText()),
                     onPressed: () => _addMarker(MarkerDirection.up),
                   ),
                   ElevatedButton(
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) => Colors.red),
+                      backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                          (Set<WidgetState> states) => const Color(0xFFCC2E3D)),
+                      foregroundColor: WidgetStateProperty.resolveWith<Color>(
+                          (Set<WidgetState> states) => Colors.white),
                     ),
-                    child: const Text('Down'),
+                    child: Text(_getDownButtonText()),
                     onPressed: () => _addMarker(MarkerDirection.down),
                   ),
                   IconButton(
@@ -869,16 +895,35 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<ConnectionInformation> _getConnectionInfoFromPrefs() async {
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-    final String? endpoint = preferences.getString('endpoint');
+    // Get values directly from PrefService instead of SharedPreferences
+    final String? endpoint = _prefService.get<String>('endpoint');
+    final String? appId = _prefService.get<String>('appID');
 
     return ConnectionInformation(
-      appId: preferences.getString('appID') ?? defaultAppID,
+      appId: appId ?? defaultAppID,
       brand: 'deriv',
       endpoint: endpoint != null
           ? generateEndpointUrl(endpoint: endpoint)
           : defaultEndpoint,
       authEndpoint: '',
     );
+  }
+
+  String _getUpButtonText() {
+    switch (_currentTradeType) {
+      case TradeType.multipliers:
+        return 'Up';
+      case TradeType.riseFall:
+        return 'Rise';
+    }
+  }
+
+  String _getDownButtonText() {
+    switch (_currentTradeType) {
+      case TradeType.multipliers:
+        return 'Down';
+      case TradeType.riseFall:
+        return 'Fall';
+    }
   }
 }
