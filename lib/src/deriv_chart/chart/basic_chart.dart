@@ -20,6 +20,7 @@ import 'helpers/functions/conversion.dart';
 import 'helpers/functions/helper_functions.dart';
 import 'multiple_animated_builder.dart';
 import 'y_axis/quote_grid.dart';
+import 'package:deriv_chart/src/widgets/maybe_animated_switcher.dart';
 
 const Duration _defaultDuration = Duration(milliseconds: 300);
 
@@ -451,21 +452,33 @@ class BasicChartState<T extends BasicChart> extends State<T>
         builder: (BuildContext context, _) => RepaintBoundary(
           child: Opacity(
             opacity: widget.opacity,
-            child: CustomPaint(
-              painter: ChartDataPainter(
-                animationInfo: AnimationInfo(
-                  currentTickPercent: currentTickAnimation.value,
+            child: MaybeAnimatedSwitcher(
+              enabled: context
+                  .watch<ChartConfig>()
+                  .chartAxisConfig
+                  .autoIntervalEnabled,
+              duration: context
+                  .watch<ChartConfig>()
+                  .chartAxisConfig
+                  .autoIntervalTransitionDuration,
+              child: CustomPaint(
+                key: ValueKey(context.watch<ChartConfig>().granularity),
+                size: canvasSize!,
+                painter: ChartDataPainter(
+                  animationInfo: AnimationInfo(
+                    currentTickPercent: currentTickAnimation.value,
+                  ),
+                  mainSeries: widget.mainSeries,
+                  chartConfig: context.watch<ChartConfig>(),
+                  theme: context.watch<ChartTheme>(),
+                  epochToCanvasX: xAxis.xFromEpoch,
+                  quoteToCanvasY: chartQuoteToCanvasY,
+                  rightBoundEpoch: xAxis.rightBoundEpoch,
+                  leftBoundEpoch: xAxis.leftBoundEpoch,
+                  topY: chartQuoteToCanvasY(widget.mainSeries.maxValue),
+                  bottomY: chartQuoteToCanvasY(widget.mainSeries.minValue),
+                  chartScaleModel: context.watch<ChartScaleModel>(),
                 ),
-                mainSeries: widget.mainSeries,
-                chartConfig: context.watch<ChartConfig>(),
-                theme: context.watch<ChartTheme>(),
-                epochToCanvasX: xAxis.xFromEpoch,
-                quoteToCanvasY: chartQuoteToCanvasY,
-                rightBoundEpoch: xAxis.rightBoundEpoch,
-                leftBoundEpoch: xAxis.leftBoundEpoch,
-                topY: chartQuoteToCanvasY(widget.mainSeries.maxValue),
-                bottomY: chartQuoteToCanvasY(widget.mainSeries.minValue),
-                chartScaleModel: context.watch<ChartScaleModel>(),
               ),
             ),
           ),
