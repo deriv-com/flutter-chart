@@ -7,6 +7,14 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 /// which determines how the marker is rendered and positioned on the chart, as well
 /// as how it interacts with other chart elements.
 enum MarkerType {
+  /// Represents a contract marker with circular duration display.
+  ///
+  /// This marker is used to indicate the trade type and duration of the contract
+  /// (such as Rise/Fall contracts). It typically displays a circular representation
+  /// of the contract duration and serves as a visual anchor for other contract-related
+  /// markers like entry points, exit points, and barrier levels.
+  contractMarker,
+
   /// Represents an active starting point marker.
   ///
   /// This is typically used to highlight the beginning of an active trade or contract.
