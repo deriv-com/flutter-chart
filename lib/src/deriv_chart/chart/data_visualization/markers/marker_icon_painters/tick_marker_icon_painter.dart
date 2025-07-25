@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_group_icon_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/painter_props.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_end_marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
@@ -66,10 +67,20 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     final Map<MarkerType, Offset> points = <MarkerType, Offset>{};
 
     for (final ChartMarker marker in markerGroup.markers) {
-      final Offset center = Offset(
-        epochToX(marker.epoch),
-        quoteToY(marker.quote),
-      );
+      final Offset center;
+
+      // Special handling for contractMarker - always position on left side
+      if (marker.markerType == MarkerType.contractMarker) {
+        center = Offset(
+          20, // Fixed left position (20 pixels from left edge)
+          quoteToY(marker.quote),
+        );
+      } else {
+        center = Offset(
+          epochToX(marker.epoch),
+          quoteToY(marker.quote),
+        );
+      }
 
       if (marker.markerType != null && marker.markerType != MarkerType.tick) {
         points[marker.markerType!] = center;
@@ -94,10 +105,12 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
 
     for (final ChartMarker marker in markerGroup.markers) {
       final Offset center = points[marker.markerType!] ??
-          Offset(
-            epochToX(marker.epoch),
-            quoteToY(marker.quote),
-          );
+          (marker.markerType == MarkerType.contractMarker
+              ? Offset(
+                  20,
+                  quoteToY(
+                      marker.quote)) // Fixed left position for contractMarker
+              : Offset(epochToX(marker.epoch), quoteToY(marker.quote)));
 
       if (marker.markerType == MarkerType.entry &&
           points[MarkerType.entryTick] != null) {
@@ -216,6 +229,10 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       Paint paint) {
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
       switch (marker.markerType) {
+        case MarkerType.contractMarker:
+          _drawContractMarker(
+              canvas, theme, marker, anchor, style, zoom, opacity);
+          break;
         case MarkerType.activeStart:
           paintStartLine(canvas, size, marker, anchor, style, zoom);
           break;
@@ -249,6 +266,136 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           break;
       }
     });
+  }
+
+  /// Renders a contract marker with circular duration display.
+  ///
+  /// This method draws a circular marker that shows the contract progress
+  /// with a circular progress indicator representing the remaining duration.
+  /// The marker includes a background circle, progress arc, and a directional
+  /// arrow icon in the center.
+  ///
+  /// @param canvas The canvas on which to paint.
+  /// @param theme The chart's theme, which provides colors and styles.
+  /// @param marker The marker object containing direction and progress.
+  /// @param anchor The position on the canvas where the marker should be rendered.
+  /// @param style The style to apply to the marker.
+  /// @param zoom The current zoom level of the chart.
+  /// @param opacity The opacity to apply to the marker.
+  void _drawContractMarker(
+    Canvas canvas,
+    ChartTheme theme,
+    ChartMarker marker,
+    Offset anchor,
+    MarkerStyle style,
+    double zoom,
+    double opacity,
+  ) {
+    final double radius = 12 * zoom;
+    final double borderRadius = radius + (1 * zoom); // Add 1 pixel padding
+
+    // Determine colors based on marker direction
+    final Color markerColor = marker.direction == MarkerDirection.up
+        ? style.upColor
+        : style.downColor;
+
+    // Draw background circle
+    final Paint backgroundPaint = Paint()
+      ..color = markerColor.withOpacity(opacity)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawCircle(anchor, radius, backgroundPaint);
+
+    // Draw border circle with padding
+    final Paint borderPaint = Paint()
+      ..color = markerColor.withOpacity(opacity)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2 * zoom;
+
+    canvas.drawCircle(anchor, borderRadius, borderPaint);
+
+    // Draw background progress circle (unfilled portion)
+    final Color progressBackgroundColor = marker.direction == MarkerDirection.up
+        ? Colors.black.withOpacity(0.35 * opacity)
+        : Colors.black.withOpacity(0.35 * opacity);
+
+    final Paint progressBackgroundPaint = Paint()
+      ..color = progressBackgroundColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2 * zoom;
+
+    canvas.drawCircle(anchor, radius, progressBackgroundPaint);
+
+    // Draw progress arc (assuming 75% completion for now - this should be dynamic)
+    final Paint progressPaint = Paint()
+      ..color = style.backgroundColor.withOpacity(opacity)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2 * zoom
+      ..strokeCap = StrokeCap.round;
+
+    const double progressPercentage =
+        0.75; // This should be passed as parameter
+    const double sweepAngle = -2 * 3.14159 * progressPercentage;
+
+    canvas.drawArc(
+      Rect.fromCircle(center: anchor, radius: radius),
+      -3.14159 / 2, // Start from top
+      sweepAngle,
+      false,
+      progressPaint,
+    );
+
+    // Draw arrow icon in the center
+    _drawArrowIcon(
+        canvas, anchor, marker, Colors.white.withOpacity(opacity), zoom);
+  }
+
+  /// Draws a diagonal arrow icon inside the contract marker.
+  ///
+  /// @param canvas The canvas on which to paint.
+  /// @param center The center position of the arrow.
+  /// @param marker The marker object containing direction information.
+  /// @param color The color of the arrow.
+  /// @param zoom The current zoom level of the chart.
+  void _drawArrowIcon(Canvas canvas, Offset center, ChartMarker marker,
+      Color color, double zoom) {
+    final Paint arrowPaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2 * zoom
+      ..strokeCap = StrokeCap.round;
+
+    final double arrowSize = 5 * zoom;
+
+    if (marker.direction == MarkerDirection.up) {
+      // Draw diagonal up-right arrow for Rise contracts
+      final Path arrowPath = Path()
+        // Main diagonal line from bottom-left to top-right
+        ..moveTo(center.dx - arrowSize / 2, center.dy + arrowSize / 2)
+        ..lineTo(center.dx + arrowSize / 2, center.dy - arrowSize / 2)
+        // Arrow head - top part
+        ..moveTo(center.dx + arrowSize / 2, center.dy - arrowSize / 2)
+        ..lineTo(center.dx + arrowSize / 4, center.dy - arrowSize / 2)
+        // Arrow head - right part
+        ..moveTo(center.dx + arrowSize / 2, center.dy - arrowSize / 2)
+        ..lineTo(center.dx + arrowSize / 2, center.dy - arrowSize / 4);
+
+      canvas.drawPath(arrowPath, arrowPaint);
+    } else {
+      // Draw diagonal down-right arrow for Fall contracts
+      final Path arrowPath = Path()
+        // Main diagonal line from top-left to bottom-right
+        ..moveTo(center.dx - arrowSize / 2, center.dy - arrowSize / 2)
+        ..lineTo(center.dx + arrowSize / 2, center.dy + arrowSize / 2)
+        // Arrow head - bottom part
+        ..moveTo(center.dx + arrowSize / 2, center.dy + arrowSize / 2)
+        ..lineTo(center.dx + arrowSize / 4, center.dy + arrowSize / 2)
+        // Arrow head - right part
+        ..moveTo(center.dx + arrowSize / 2, center.dy + arrowSize / 2)
+        ..lineTo(center.dx + arrowSize / 2, center.dy + arrowSize / 4);
+
+      canvas.drawPath(arrowPath, arrowPaint);
+    }
   }
 
   /// Renders a tick point marker.
