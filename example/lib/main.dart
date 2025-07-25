@@ -413,11 +413,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                       useDrawingToolsV2: true,
                       interactiveLayerBehaviour: _interactiveLayerBehaviour,
                       mainSeries: _getDataSeries(style),
-                      markerSeries: MarkerSeries(
-                        _markers,
-                        activeMarker: _activeMarker,
-                        markerIconPainter: MultipliersMarkerIconPainter(),
-                      ),
+                      markerSeries: _getMarkerSeries(),
                       activeSymbol: _symbol.name,
                       annotations: ticks.length > 4
                           ? <ChartAnnotation<ChartObject>>[
@@ -536,7 +532,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.resolveWith<Color>(
-                          (Set<WidgetState> states) => const Color(0xFF00A79E)),
+                          (Set<WidgetState> states) => const Color(0xFF00C390)),
                       foregroundColor: WidgetStateProperty.resolveWith<Color>(
                           (Set<WidgetState> states) => Colors.white),
                     ),
@@ -546,7 +542,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.resolveWith<Color>(
-                          (Set<WidgetState> states) => const Color(0xFFCC2E3D)),
+                          (Set<WidgetState> states) => const Color(0xFFDE0040)),
                       foregroundColor: WidgetStateProperty.resolveWith<Color>(
                           (Set<WidgetState> states) => Colors.white),
                     ),
@@ -924,6 +920,41 @@ class _FullscreenChartState extends State<FullscreenChart> {
         return 'Down';
       case TradeType.riseFall:
         return 'Fall';
+    }
+  }
+
+  /// Converts markers to marker groups for rise/fall trade type
+  List<MarkerGroup> _convertMarkersToGroups() {
+    return _markers.map((marker) {
+      return MarkerGroup(
+        [
+          ChartMarker(
+            epoch: marker.epoch,
+            quote: marker.quote,
+            direction: marker.direction,
+            markerType: MarkerType.contractMarker,
+          ),
+        ],
+        type: 'tick',
+        id: 'marker_${marker.epoch}',
+      );
+    }).toList();
+  }
+
+  /// Gets the appropriate marker series based on trade type
+  dynamic _getMarkerSeries() {
+    if (_currentTradeType == TradeType.riseFall) {
+      return MarkerGroupSeries(
+        _markers,
+        markerGroupIconPainter: TickMarkerIconPainter(),
+        markerGroupList: _convertMarkersToGroups(),
+      );
+    } else {
+      return MarkerSeries(
+        _markers,
+        activeMarker: _activeMarker,
+        markerIconPainter: MultipliersMarkerIconPainter(),
+      );
     }
   }
 }
