@@ -8,8 +8,8 @@ import 'entry_exit_marker_style.dart';
 class MarkerStyle extends ChartPaintingStyle {
   /// Creates marker style.
   const MarkerStyle({
-    this.upColor = const Color(0xFF00A79E),
-    this.downColor = const Color(0xFFCC2E3D),
+    this.upColor = const Color(0xFF00C390),
+    this.downColor = const Color(0xFFDE0040),
     this.backgroundColor = const Color(0xFFFFFFFF),
     this.radius = 12.0,
     this.activeMarkerText = const TextStyle(
