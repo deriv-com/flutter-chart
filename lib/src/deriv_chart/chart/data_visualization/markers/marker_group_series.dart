@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/series_painter.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group_painter.dart';
@@ -76,22 +77,36 @@ class MarkerGroupSeries extends MarkerSeries {
   ///    ([group.markers.last.epoch >= leftEpoch])
   /// 3. Its first (earliest) marker is not completely to the right of the viewport
   ///    ([group.markers.first.epoch <= rightEpoch])
+  /// 4. OR it contains a contractMarker (which should always be visible)
   ///
   /// This ensures that marker groups are only visible if they have at least one
   /// marker within the viewport or spanning across the viewport boundaries.
+  /// Special handling is provided for contractMarkers which are always visible.
   ///
   /// @param leftEpoch The epoch (timestamp) at the left edge of the visible chart area
   /// @param rightEpoch The epoch (timestamp) at the right edge of the visible chart area
   void onUpdate(int leftEpoch, int rightEpoch) {
     if (markerGroupList != null) {
-      visibleMarkerGroupList = markerGroupList!
-          .where(
-            (MarkerGroup group) =>
-                group.markers.isNotEmpty &&
-                group.markers.last.epoch >= leftEpoch &&
-                group.markers.first.epoch <= rightEpoch,
-          )
-          .toList();
+      visibleMarkerGroupList = markerGroupList!.where(
+        (MarkerGroup group) {
+          if (group.markers.isEmpty) {
+            return false;
+          }
+
+          // Always keep groups with contractMarker visible
+          final bool hasContractMarker = group.markers.any(
+            (marker) => marker.markerType == MarkerType.contractMarker,
+          );
+
+          if (hasContractMarker) {
+            return true;
+          }
+
+          // Apply normal epoch-based filtering for other groups
+          return group.markers.last.epoch >= leftEpoch &&
+              group.markers.first.epoch <= rightEpoch;
+        },
+      ).toList();
     } else {
       visibleMarkerGroupList = <MarkerGroup>[];
     }
