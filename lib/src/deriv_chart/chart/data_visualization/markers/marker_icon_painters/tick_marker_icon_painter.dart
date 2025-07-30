@@ -5,12 +5,10 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_end_marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_start_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_start_marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_vertical_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
@@ -100,8 +98,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     final Paint paint = Paint()
       ..color = markerGroup.style.backgroundColor.withOpacity(opacity);
 
-    _drawBarriers(
-        canvas, size, points, markerGroup.style, opacity, painterProps, paint);
+    _drawBarriers(canvas, size, points, markerGroup, markerGroup.style, opacity,
+        painterProps, paint);
 
     for (final ChartMarker marker in markerGroup.markers) {
       final Offset center = points[marker.markerType!] ??
@@ -125,18 +123,18 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// Draws barrier lines connecting significant points in the contract.
   ///
   /// This private method renders various lines that connect important points in the
-  /// contract, such as the start point, entry point, latest tick, and end point.
+  /// contract, such as the contract marker, entry tick, and end point.
   /// These lines help visualize the contract's progression and price movement.
   ///
   /// The method draws different types of lines:
-  /// - A dashed horizontal line from the start point to the entry point
-  /// - A solid line from the entry point to the latest tick or end point
-  /// - A dashed vertical line from the entry point to the entry tick
-  /// - A dashed vertical line from the exit point to the end point
+  /// - A dashed horizontal line from the contract marker to the entry tick
+  /// - A solid line from the entry tick to the end marker
+  /// - A dashed horizontal line from the end marker to the chart's right edge
   ///
   /// @param canvas The canvas on which to paint.
   /// @param size The size of the drawing area.
   /// @param points A map of marker types to their positions on the canvas.
+  /// @param markerGroup The group of markers to render.
   /// @param style The style to apply to the barriers.
   /// @param opacity The opacity to apply to the barriers.
   /// @param painterProps Properties that affect how barriers are rendered.
@@ -144,57 +142,61 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       Canvas canvas,
       Size size,
       Map<MarkerType, Offset> points,
+      MarkerGroup markerGroup,
       MarkerStyle style,
       double opacity,
       PainterProps painterProps,
       Paint paint) {
-    final Offset? _entryOffset = points[MarkerType.entry];
+    final Offset? _contractMarkerOffset = points[MarkerType.contractMarker];
     final Offset? _entryTickOffset = points[MarkerType.entryTick];
-    final Offset? _startOffset = points[MarkerType.start];
-    final Offset? _latestOffset = points[MarkerType.latestTickBarrier];
     final Offset? _endOffset = points[MarkerType.end];
-    final Offset? _exitOffset = points[MarkerType.exit];
+
+    // Determine marker direction color from the contractMarker
+    Color lineColor = style.backgroundColor;
+    for (final ChartMarker marker in markerGroup.markers) {
+      if (marker.markerType == MarkerType.contractMarker) {
+        lineColor = marker.direction == MarkerDirection.up
+            ? style.upColor
+            : style.downColor;
+        break;
+      }
+    }
+
+    final Color finalLineColor = lineColor.withOpacity(opacity);
 
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
-      if (_entryOffset != null && _startOffset != null) {
+      // Horizontal dashed line from contractMarker to entryTick
+      if (_contractMarkerOffset != null && _entryTickOffset != null) {
         paintHorizontalDashedLine(
           canvas,
-          _startOffset.dx,
-          _entryOffset.dx,
-          _startOffset.dy,
-          paint.color,
-          1,
-          dashWidth: 1,
-          dashSpace: 1,
-        );
-      }
-
-      if (_entryOffset != null &&
-          (_latestOffset != null || _endOffset != null)) {
-        final double dx = (_latestOffset?.dx ?? _endOffset?.dx)!;
-        final double dy = (_latestOffset?.dy ?? _endOffset?.dy)!;
-
-        canvas.drawLine(_entryOffset, Offset(dx, dy), paint);
-      }
-
-      if (_entryOffset != null && _entryTickOffset != null) {
-        paintVerticalLine(
-          canvas,
-          _entryOffset,
-          _entryTickOffset,
-          paint.color,
+          _entryTickOffset.dx,
+          _contractMarkerOffset.dx,
+          _contractMarkerOffset.dy,
+          finalLineColor,
           1,
           dashWidth: 2,
           dashSpace: 2,
         );
       }
 
-      if (_exitOffset != null && _endOffset != null) {
-        paintVerticalLine(
+      // Solid line from entryTick to end marker
+      if (_entryTickOffset != null && _endOffset != null) {
+        final Paint solidLinePaint = Paint()
+          ..color = finalLineColor
+          ..strokeWidth = 1;
+        canvas.drawLine(_entryTickOffset, _endOffset, solidLinePaint);
+      }
+
+      // Horizontal dashed line from end marker to the chart's right edge (before yAxis)
+      if (_endOffset != null) {
+        final double rightEdgeX = size.width;
+
+        paintHorizontalDashedLine(
           canvas,
-          _exitOffset,
-          _endOffset,
-          paint.color,
+          _endOffset.dx,
+          rightEdgeX,
+          _endOffset.dy,
+          finalLineColor,
           1,
           dashWidth: 2,
           dashSpace: 2,
@@ -242,11 +244,10 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           break;
         case MarkerType.entry:
         case MarkerType.entryTick:
-          _drawEntryPoint(canvas, theme, anchor, paint.color, zoom, opacity);
+          _drawEntryPoint(canvas, marker, anchor, style, zoom, opacity);
           break;
         case MarkerType.end:
-          paintEndMarker(canvas, theme, anchor - Offset(1, 20 * zoom),
-              style.backgroundColor, zoom);
+          _drawEndPoint(canvas, marker, anchor, style, zoom, opacity);
           break;
         case MarkerType.exit:
           canvas.drawCircle(
@@ -316,8 +317,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
 
     // Draw background progress circle (unfilled portion)
     final Color progressBackgroundColor = marker.direction == MarkerDirection.up
-        ? Colors.black.withOpacity(0.35 * opacity)
-        : Colors.black.withOpacity(0.35 * opacity);
+        ? Colors.black.withOpacity(0.2 * opacity)
+        : Colors.black.withOpacity(0.2 * opacity);
 
     final Paint progressBackgroundPaint = Paint()
       ..color = progressBackgroundColor
@@ -359,43 +360,44 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// @param zoom The current zoom level of the chart.
   void _drawArrowIcon(Canvas canvas, Offset center, ChartMarker marker,
       Color color, double zoom) {
-    final Paint arrowPaint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2 * zoom
-      ..strokeCap = StrokeCap.round;
+    final double dir = marker.direction == MarkerDirection.up ? 1 : -1;
+    final double iconSize = 22 * zoom;
 
-    final double arrowSize = 5 * zoom;
+    final Path path = Path();
 
-    if (marker.direction == MarkerDirection.up) {
-      // Draw diagonal up-right arrow for Rise contracts
-      final Path arrowPath = Path()
-        // Main diagonal line from bottom-left to top-right
-        ..moveTo(center.dx - arrowSize / 2, center.dy + arrowSize / 2)
-        ..lineTo(center.dx + arrowSize / 2, center.dy - arrowSize / 2)
-        // Arrow head - top part
-        ..moveTo(center.dx + arrowSize / 2, center.dy - arrowSize / 2)
-        ..lineTo(center.dx + arrowSize / 4, center.dy - arrowSize / 2)
-        // Arrow head - right part
-        ..moveTo(center.dx + arrowSize / 2, center.dy - arrowSize / 2)
-        ..lineTo(center.dx + arrowSize / 2, center.dy - arrowSize / 4);
+    canvas
+      ..save()
+      ..translate(
+        center.dx - iconSize / 2,
+        center.dy - (iconSize / 2) * dir,
+      )
+      // Scale from 24x24 original SVG size to desired icon size
+      ..scale(
+        iconSize / 24,
+        (iconSize / 24) * dir,
+      );
 
-      canvas.drawPath(arrowPath, arrowPaint);
-    } else {
-      // Draw diagonal down-right arrow for Fall contracts
-      final Path arrowPath = Path()
-        // Main diagonal line from top-left to bottom-right
-        ..moveTo(center.dx - arrowSize / 2, center.dy - arrowSize / 2)
-        ..lineTo(center.dx + arrowSize / 2, center.dy + arrowSize / 2)
-        // Arrow head - bottom part
-        ..moveTo(center.dx + arrowSize / 2, center.dy + arrowSize / 2)
-        ..lineTo(center.dx + arrowSize / 4, center.dy + arrowSize / 2)
-        // Arrow head - right part
-        ..moveTo(center.dx + arrowSize / 2, center.dy + arrowSize / 2)
-        ..lineTo(center.dx + arrowSize / 2, center.dy + arrowSize / 4);
+    // Arrow-up path (will be flipped for down direction)
+    path
+      ..moveTo(17, 8)
+      ..lineTo(17, 15)
+      ..cubicTo(17, 15.5625, 16.5312, 16, 16, 16)
+      ..cubicTo(15.4375, 16, 15, 15.5625, 15, 15)
+      ..lineTo(15, 10.4375)
+      ..lineTo(8.6875, 16.7188)
+      ..cubicTo(8.3125, 17.125, 7.65625, 17.125, 7.28125, 16.7188)
+      ..cubicTo(6.875, 16.3438, 6.875, 15.6875, 7.28125, 15.3125)
+      ..lineTo(13.5625, 9)
+      ..lineTo(9, 9)
+      ..cubicTo(8.4375, 9, 8, 8.5625, 8, 8)
+      ..cubicTo(8, 7.46875, 8.4375, 7, 9, 7)
+      ..lineTo(16, 7)
+      ..cubicTo(16.5312, 7, 17, 7.46875, 17, 8)
+      ..close();
 
-      canvas.drawPath(arrowPath, arrowPaint);
-    }
+    canvas
+      ..drawPath(path, Paint()..color = color)
+      ..restore();
   }
 
   /// Renders a tick point marker.
@@ -417,35 +419,36 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
 
   /// Renders an entry point marker.
   ///
-  /// This private method draws a circular marker with a distinctive border
+  /// This private method draws a circular marker with a distinctive design
   /// representing the entry point of the contract. The entry point marks
-  /// the price and time at which the contract started.
+  /// the price and time at which the contract started. It consists of an
+  /// outer circle with marker direction color and an inner white circle.
   ///
   /// @param canvas The canvas on which to paint.
-  /// @param theme The chart's theme, which provides colors and styles.
+  /// @param marker The marker object containing direction information.
   /// @param anchor The position on the canvas where the entry point should be rendered.
-  /// @param color The color to use for the entry point's border.
+  /// @param style The style to apply to the marker.
   /// @param zoom The current zoom level of the chart.
   /// @param opacity The opacity to apply to the entry point.
-  void _drawEntryPoint(Canvas canvas, ChartTheme theme, Offset anchor,
-      Color color, double zoom, double opacity) {
-    final Paint paint = Paint()
-      ..color = theme.backgroundColor.withOpacity(opacity)
+  void _drawEntryPoint(Canvas canvas, ChartMarker marker, Offset anchor,
+      MarkerStyle style, double zoom, double opacity) {
+    // Draw white filled circle
+    final Paint fillPaint = Paint()
+      ..color = Colors.white.withOpacity(opacity)
       ..style = PaintingStyle.fill;
-    final double radius = 3 * zoom;
-    canvas.drawCircle(
-      anchor,
-      radius,
-      paint,
-    );
+
+    canvas.drawCircle(anchor, 3 * zoom, fillPaint);
+
+    // Draw colored stroke to create outer ring effect
     final Paint strokePaint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke;
-    canvas.drawCircle(
-      anchor,
-      radius,
-      strokePaint,
-    );
+      ..color = (marker.direction == MarkerDirection.up
+              ? style.upColor
+              : style.downColor)
+          .withOpacity(opacity)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5 * zoom;
+
+    canvas.drawCircle(anchor, 3 * zoom, strokePaint);
   }
 
   /// Renders the starting point of a tick contract.
@@ -501,5 +504,26 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
         anchorAlignment: Alignment.centerLeft,
       );
     }
+  }
+
+  /// Renders an end point marker.
+  ///
+  /// This private method draws a circular marker representing the end point
+  /// of the contract. The color is determined by the marker direction.
+  ///
+  /// @param canvas The canvas on which to paint.
+  /// @param marker The marker object containing direction information.
+  /// @param anchor The position on the canvas where the end point should be rendered.
+  /// @param style The style to apply to the marker.
+  /// @param zoom The current zoom level of the chart.
+  /// @param opacity The opacity to apply to the end point.
+  void _drawEndPoint(Canvas canvas, ChartMarker marker, Offset anchor,
+      MarkerStyle style, double zoom, double opacity) {
+    final Paint paint = Paint()
+      ..color = (marker.direction == MarkerDirection.up
+              ? style.upColor
+              : style.downColor)
+          .withOpacity(opacity);
+    canvas.drawCircle(anchor, 2 * zoom, paint);
   }
 }
