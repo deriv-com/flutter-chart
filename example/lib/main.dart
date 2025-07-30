@@ -121,6 +121,9 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   TradeType _currentTradeType = TradeType.multipliers;
 
+  // Dynamic marker duration in milliseconds
+  int _markerDurationMs = 10000;
+
   @override
   void initState() {
     super.initState();
@@ -358,10 +361,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _onNewTick(Tick newTick) {
+    _removeExpiredMarkers(newTick.epoch);
     setState(() => ticks = ticks + <Tick>[newTick]);
   }
 
   void _onNewCandle(Candle newCandle) {
+    _removeExpiredMarkers(newCandle.currentEpoch);
     final List<Candle> previousCandles =
         ticks.isNotEmpty && ticks.last.epoch == newCandle.epoch
             ? ticks.sublist(0, ticks.length - 1) as List<Candle>
@@ -371,6 +376,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
       // Don't modify candles in place, otherwise Chart's didUpdateWidget won't
       // see the difference.
       ticks = previousCandles + <Candle>[newCandle];
+    });
+  }
+
+  /// Removes markers that have exceeded their duration
+  void _removeExpiredMarkers(int currentEpoch) {
+    _markers.removeWhere((marker) {
+      final bool isExpired =
+          (currentEpoch - marker.epoch) >= _markerDurationMs + 500;
+      if (isExpired && _activeMarker?.epoch == marker.epoch) {
+        _activeMarker = null;
+      }
+      return isExpired;
     });
   }
 
@@ -928,6 +945,18 @@ class _FullscreenChartState extends State<FullscreenChart> {
     return _markers.map((marker) {
       return MarkerGroup(
         [
+          ChartMarker(
+            epoch: marker.epoch,
+            quote: marker.quote,
+            direction: marker.direction,
+            markerType: MarkerType.entryTick,
+          ),
+          ChartMarker(
+            epoch: marker.epoch + _markerDurationMs,
+            quote: marker.quote,
+            direction: marker.direction,
+            markerType: MarkerType.end,
+          ),
           ChartMarker(
             epoch: marker.epoch,
             quote: marker.quote,
