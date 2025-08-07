@@ -941,7 +941,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   /// Converts markers to marker groups for rise/fall trade type
-  List<MarkerGroup> _convertMarkersToGroups() {
+  List<MarkerGroup> _convertMarkersToGroups(int currentEpoch) {
     return _markers.map((marker) {
       return MarkerGroup(
         [
@@ -966,6 +966,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         ],
         type: 'tick',
         id: 'marker_${marker.epoch}',
+        currentEpoch: currentEpoch,
       );
     }).toList();
   }
@@ -973,10 +974,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
   /// Gets the appropriate marker series based on trade type
   dynamic _getMarkerSeries() {
     if (_currentTradeType == TradeType.riseFall) {
+      // Get the current epoch from the latest tick
+      final int currentEpoch = ticks.isNotEmpty
+          ? ticks.last.epoch
+          : DateTime.now().millisecondsSinceEpoch;
+
       return MarkerGroupSeries(
-        _markers,
+        SplayTreeSet<Marker>(),
         markerGroupIconPainter: TickMarkerIconPainter(),
-        markerGroupList: _convertMarkersToGroups(),
+        markerGroupList: _convertMarkersToGroups(currentEpoch),
       );
     } else {
       return MarkerSeries(

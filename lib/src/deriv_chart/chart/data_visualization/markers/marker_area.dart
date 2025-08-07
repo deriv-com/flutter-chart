@@ -17,6 +17,7 @@ class MarkerArea extends StatefulWidget {
   const MarkerArea({
     required this.markerSeries,
     required this.quoteToCanvasY,
+    required this.animationInfo,
     Key? key,
   }) : super(key: key);
 
@@ -25,6 +26,9 @@ class MarkerArea extends StatefulWidget {
 
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
+
+  /// Animation information for smooth transitions.
+  final AnimationInfo animationInfo;
 
   @override
   _MarkerAreaState createState() => _MarkerAreaState();
@@ -88,6 +92,7 @@ class _MarkerAreaState extends State<MarkerArea> {
                 quoteToY: widget.quoteToCanvasY,
                 theme: context.watch<ChartTheme>(),
                 chartScaleModel: context.watch<ChartScaleModel>(),
+                animationInfo: widget.animationInfo,
               ),
             ),
           ),
@@ -108,6 +113,7 @@ class _MarkerPainter extends CustomPainter {
     required this.quoteToY,
     required this.theme,
     required this.chartScaleModel,
+    required this.animationInfo,
   });
 
   final MarkerSeries series;
@@ -115,6 +121,7 @@ class _MarkerPainter extends CustomPainter {
   final QuoteToY quoteToY;
   final ChartTheme theme;
   final ChartScaleModel chartScaleModel;
+  final AnimationInfo animationInfo;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -123,7 +130,7 @@ class _MarkerPainter extends CustomPainter {
       size,
       epochToX,
       quoteToY,
-      const AnimationInfo(),
+      animationInfo,
       const ChartConfig(granularity: 1000),
       theme,
       chartScaleModel,

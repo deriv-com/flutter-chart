@@ -83,6 +83,7 @@ class MarkerGroupPainter extends SeriesPainter<MarkerGroupSeries> {
         epochToX,
         quoteToY,
         props,
+        animationInfo,
       );
     }
   }

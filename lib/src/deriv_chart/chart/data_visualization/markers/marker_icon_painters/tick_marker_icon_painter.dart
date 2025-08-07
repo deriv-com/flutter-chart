@@ -4,6 +4,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/painter_props.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_start_line.dart';
@@ -13,6 +14,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
+import 'dart:math' as math;
 
 /// A specialized painter for rendering tick-based contract markers on financial charts.
 ///
@@ -52,6 +55,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// @param epochToX A function that converts epoch timestamps to X coordinates.
   /// @param quoteToY A function that converts price quotes to Y coordinates.
   /// @param painterProps Properties that affect how markers are rendered.
+  /// @param animationInfo Information about any ongoing animations.
   @override
   void paintMarkerGroup(
     Canvas canvas,
@@ -61,6 +65,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     EpochToX epochToX,
     QuoteToY quoteToY,
     PainterProps painterProps,
+    AnimationInfo animationInfo,
   ) {
     final Map<MarkerType, Offset> points = <MarkerType, Offset>{};
 
@@ -115,8 +120,20 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
         continue;
       }
 
-      _drawMarker(canvas, size, theme, marker, center, markerGroup.style,
-          painterProps.zoom, opacity, paint);
+      _drawMarker(
+          canvas,
+          size,
+          theme,
+          marker,
+          center,
+          markerGroup.style,
+          painterProps.zoom,
+          painterProps.granularity,
+          opacity,
+          paint,
+          animationInfo,
+          markerGroup.id,
+          markerGroup);
     }
   }
 
@@ -219,6 +236,9 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// @param style The style to apply to the marker.
   /// @param zoom The current zoom level of the chart.
   /// @param opacity The opacity to apply to the marker.
+  /// @param animationInfo Information about any ongoing animations.
+  /// @param markerGroupId The ID of the marker group for animation tracking.
+  /// @param markerGroup The marker group containing all related markers for this contract.
   void _drawMarker(
       Canvas canvas,
       Size size,
@@ -227,13 +247,17 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       Offset anchor,
       MarkerStyle style,
       double zoom,
+      int granularity,
       double opacity,
-      Paint paint) {
+      Paint paint,
+      AnimationInfo animationInfo,
+      String? markerGroupId,
+      MarkerGroup markerGroup) {
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
       switch (marker.markerType) {
         case MarkerType.contractMarker:
-          _drawContractMarker(
-              canvas, theme, marker, anchor, style, zoom, opacity);
+          _drawContractMarker(canvas, theme, marker, anchor, style, zoom,
+              granularity, opacity, animationInfo, markerGroupId, markerGroup);
           break;
         case MarkerType.activeStart:
           paintStartLine(canvas, size, marker, anchor, style, zoom);
@@ -269,6 +293,69 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     });
   }
 
+  /// Calculate remaining duration with smooth animation transitions.
+  ///
+  /// This method calculates the remaining duration for the contract progress arc
+  /// with smooth interpolation between updates using currentTickPercent from AnimationInfo.
+  /// It takes granularity into account for accurate timing calculations.
+  ///
+  /// @param markerGroup The marker group containing contract information.
+  /// @param animationInfo Animation information containing currentTickPercent.
+  /// @param granularity The time interval between data points in milliseconds.
+  /// @return The animated remaining duration as a value between 0.0 and 1.0.
+  double _calculateAnimatedRemainingDuration(
+    MarkerGroup markerGroup,
+    AnimationInfo animationInfo,
+    int granularity,
+  ) {
+    // Default to full arc duration
+    double baseRemainingDuration = 1;
+
+    if (markerGroup.currentEpoch != null) {
+      // Find entryTick and end marker epochs
+      int? entryTickEpoch;
+      int? endEpoch;
+
+      for (final ChartMarker groupMarker in markerGroup.markers) {
+        if (groupMarker.markerType == MarkerType.entryTick) {
+          entryTickEpoch = groupMarker.epoch;
+        } else if (groupMarker.markerType == MarkerType.end) {
+          endEpoch = groupMarker.epoch;
+        }
+      }
+
+      // Calculate base remaining duration
+      if (entryTickEpoch != null && endEpoch != null) {
+        final int totalDuration = endEpoch - entryTickEpoch;
+        final int baseElapsed = markerGroup.currentEpoch! - entryTickEpoch;
+        final double baseProgress = baseElapsed / totalDuration;
+        baseRemainingDuration = (1.0 - baseProgress).clamp(0.0, 1.0);
+
+        // Apply smooth animation transition using currentTickPercent
+        // This creates smooth interpolation between tick updates
+        if (animationInfo.currentTickPercent < 1.0) {
+          // Calculate the progress that would occur in one granularity period
+          final double progressPerGranularity =
+              granularity / totalDuration.toDouble();
+
+          // Calculate the previous remaining duration (before current tick)
+          final double previousRemainingDuration =
+              (baseRemainingDuration + progressPerGranularity).clamp(0.0, 1.0);
+
+          // Interpolate between previous and current duration using currentTickPercent
+          baseRemainingDuration = ui.lerpDouble(
+                previousRemainingDuration,
+                baseRemainingDuration,
+                animationInfo.currentTickPercent,
+              ) ??
+              baseRemainingDuration;
+        }
+      }
+    }
+
+    return baseRemainingDuration;
+  }
+
   /// Renders a contract marker with circular duration display.
   ///
   /// This method draws a circular marker that shows the contract progress
@@ -283,6 +370,9 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// @param style The style to apply to the marker.
   /// @param zoom The current zoom level of the chart.
   /// @param opacity The opacity to apply to the marker.
+  /// @param animationInfo Information about any ongoing animations.
+  /// @param markerGroupId The ID of the marker group for animation tracking.
+  /// @param markerGroup The marker group containing all related markers for this contract.
   void _drawContractMarker(
     Canvas canvas,
     ChartTheme theme,
@@ -290,7 +380,11 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     Offset anchor,
     MarkerStyle style,
     double zoom,
+    int granularity,
     double opacity,
+    AnimationInfo animationInfo,
+    String? markerGroupId,
+    MarkerGroup markerGroup,
   ) {
     final double radius = 12 * zoom;
     final double borderRadius = radius + (1 * zoom); // Add 1 pixel padding
@@ -327,20 +421,25 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
 
     canvas.drawCircle(anchor, radius, progressBackgroundPaint);
 
-    // Draw progress arc (assuming 75% completion for now - this should be dynamic)
+    // Calculate animated remaining duration with smooth transitions
+    final double remainingDuration = _calculateAnimatedRemainingDuration(
+      markerGroup,
+      animationInfo,
+      granularity,
+    );
+
+    // Animate the progress arc based on remaining duration
     final Paint progressPaint = Paint()
       ..color = style.backgroundColor.withOpacity(opacity)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2 * zoom
       ..strokeCap = StrokeCap.round;
 
-    const double progressPercentage =
-        0.75; // This should be passed as parameter
-    const double sweepAngle = -2 * 3.14159 * progressPercentage;
+    final double sweepAngle = -2 * math.pi * remainingDuration;
 
     canvas.drawArc(
       Rect.fromCircle(center: anchor, radius: radius),
-      -3.14159 / 2, // Start from top
+      -math.pi / 2, // Start from top
       sweepAngle,
       false,
       progressPaint,

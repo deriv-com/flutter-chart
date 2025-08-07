@@ -582,6 +582,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         builder: (BuildContext context, _) => MarkerArea(
           markerSeries: widget.markerSeries!,
           quoteToCanvasY: chartQuoteToCanvasY,
+          animationInfo: AnimationInfo(
+            currentTickPercent: currentTickAnimation.value,
+          ),
         ),
       );
 
