@@ -217,4 +217,28 @@ class ChartDefaultDarkTheme extends ChartDefaultTheme {
   @override
   Color get toolbarColorPaletteIconSelectedBorderColor =>
       DarkThemeColors.toolbarColorPaletteIconSelectedBorderColor;
+
+  @override
+  Color get closedMarkerSurfaceColorGreen =>
+      DarkThemeColors.closedMarkerSurfaceColorGreen;
+
+  @override
+  Color get closedMarkerBorderColorGreen =>
+      DarkThemeColors.closedMarkerBorderColorGreen;
+
+  @override
+  Color get closedMarkerTextIconColorGreen =>
+      DarkThemeColors.closedMarkerTextIconColorGreen;
+
+  @override
+  Color get closedMarkerSurfaceColorRed =>
+      DarkThemeColors.closedMarkerSurfaceColorRed;
+
+  @override
+  Color get closedMarkerBorderColorRed =>
+      DarkThemeColors.closedMarkerBorderColorRed;
+
+  @override
+  Color get closedMarkerTextIconColorRed =>
+      DarkThemeColors.closedMarkerTextIconColorRed;
 }

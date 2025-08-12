@@ -223,4 +223,13 @@ abstract class ChartTheme {
   Color get toolbarColorPaletteIconMagenta;
   Color get toolbarColorPaletteIconBorderColor;
   Color get toolbarColorPaletteIconSelectedBorderColor;
+
+  Color get closedMarkerSurfaceColorGreen;
+  Color get closedMarkerBorderColorGreen;
+  Color get closedMarkerTextIconColorGreen;
+  Color get closedMarkerSurfaceColorRed;
+  Color get closedMarkerBorderColorRed;
+  Color get closedMarkerTextIconColorRed;
+
+  TextStyle get profitAndLossLabelTextStyle;
 }

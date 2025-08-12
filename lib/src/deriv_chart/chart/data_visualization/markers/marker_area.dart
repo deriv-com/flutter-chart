@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'animated_active_marker.dart';
 import 'marker.dart';
+import 'marker_group_widget_overlay.dart';
 
 /// Layer with markers.
 class MarkerArea extends StatefulWidget {
@@ -80,6 +81,10 @@ class _MarkerAreaState extends State<MarkerArea> {
 
     return Stack(
       children: <Widget>[
+        MarkerGroupWidgetOverlay(
+          markerSeries: widget.markerSeries,
+          quoteToCanvasY: widget.quoteToCanvasY,
+        ),
         AnimatedOpacity(
           duration: animationDuration,
           opacity: widget.markerSeries.activeMarker != null ? 0.5 : 1,

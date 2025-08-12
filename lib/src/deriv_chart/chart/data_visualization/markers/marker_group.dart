@@ -43,6 +43,8 @@ class MarkerGroup implements Comparable<MarkerGroup> {
       ),
     ),
     this.currentEpoch,
+    this.profitAndLossText,
+    this.isProfit = true,
   });
 
   /// The list of ChartMarker objects that belong to this group.
@@ -73,6 +75,14 @@ class MarkerGroup implements Comparable<MarkerGroup> {
   /// visual effects. For example, contract markers can use this to show
   /// the remaining duration as an animated progress arc.
   final int? currentEpoch;
+
+  /// The text to display in the profit and loss label.
+  final String? profitAndLossText;
+
+  /// Whether the contract for the marker group is in profit or loss.
+  ///
+  /// This is used to determine the color of the profit and loss label.
+  final bool isProfit;
 
   /// Compares this marker group with another based on the epoch of their first markers.
   /// This is useful for sorting marker groups chronologically.

@@ -152,6 +152,19 @@ class LightThemeColors {
       LightThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
   static const Color toolbarColorPaletteIconSelectedBorderColor =
       LightThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
+
+  static const Color closedMarkerSurfaceColorGreen =
+      LightThemeDesignTokens.semanticColorGreenSolidSurfaceNormalLowest;
+  static const Color closedMarkerBorderColorGreen =
+      LightThemeDesignTokens.semanticColorGreenSolidBorderInverseHigh;
+  static const Color closedMarkerTextIconColorGreen =
+      LightThemeDesignTokens.semanticColorGreenSolidTextIconInverseLow;
+  static const Color closedMarkerSurfaceColorRed =
+      LightThemeDesignTokens.semanticColorRedSolidSurfaceNormalLowest;
+  static const Color closedMarkerBorderColorRed =
+      LightThemeDesignTokens.semanticColorRedSolidBorderInverseHigh;
+  static const Color closedMarkerTextIconColorRed =
+      LightThemeDesignTokens.semanticColorRedSolidTextIconInverseLow;
 }
 
 /// Default colors for dark theme.
@@ -264,6 +277,19 @@ class DarkThemeColors {
       DarkThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
   static const Color toolbarColorPaletteIconSelectedBorderColor =
       DarkThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
+
+  static const Color closedMarkerSurfaceColorGreen =
+      DarkThemeDesignTokens.semanticColorGreenSolidSurfaceNormalLowest;
+  static const Color closedMarkerBorderColorGreen =
+      DarkThemeDesignTokens.semanticColorGreenSolidBorderInverseHigh;
+  static const Color closedMarkerTextIconColorGreen =
+      DarkThemeDesignTokens.semanticColorGreenSolidTextIconInverseLow;
+  static const Color closedMarkerSurfaceColorRed =
+      DarkThemeDesignTokens.semanticColorRedSolidSurfaceNormalLowest;
+  static const Color closedMarkerBorderColorRed =
+      DarkThemeDesignTokens.semanticColorRedSolidBorderInverseHigh;
+  static const Color closedMarkerTextIconColorRed =
+      DarkThemeDesignTokens.semanticColorRedSolidTextIconInverseLow;
 }
 
 /// Candle Bullish colors for light, dark

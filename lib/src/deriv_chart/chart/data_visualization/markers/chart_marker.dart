@@ -86,6 +86,13 @@ enum MarkerType {
   /// In barrier-based contracts, this indicates the lower price threshold. If the price
   /// crosses below this barrier, it may trigger specific contract outcomes.
   lowBarrier,
+
+  /// Represents a profit and loss label marker.
+  ///
+  /// This marker is used to display profit and loss information when a trading contract ends.
+  /// It appears as a pill-shaped label with rounded corners containing an icon and the profit/loss
+  /// amount.
+  profitAndLossLabel,
 }
 
 /// A specialized marker class for displaying various types of markers on a financial chart.
