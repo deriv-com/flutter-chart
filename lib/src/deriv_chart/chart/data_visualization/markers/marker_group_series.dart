@@ -7,6 +7,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_group_icon_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/active_marker_group.dart';
+import 'active_marker.dart';
 
 /// Marker Group series
 ///
@@ -26,7 +28,13 @@ class MarkerGroupSeries extends MarkerSeries {
     SplayTreeSet<Marker> entries, {
     required this.markerGroupIconPainter,
     this.markerGroupList,
-  }) : super(entries, markerIconPainter: markerGroupIconPainter);
+    this.activeMarkerGroup,
+    ActiveMarker? activeMarker,
+  }) : super(
+          entries,
+          markerIconPainter: markerGroupIconPainter,
+          activeMarker: activeMarker,
+        );
 
   /// Painter that draws corresponding marker icons.
   ///
@@ -39,6 +47,9 @@ class MarkerGroupSeries extends MarkerSeries {
   /// This list contains all the marker groups that this series manages.
   /// Each MarkerGroup contains a collection of related ChartMarker objects.
   final List<MarkerGroup>? markerGroupList;
+
+  /// Active marker group that is currently selected on the chart.
+  final ActiveMarkerGroup? activeMarkerGroup;
 
   /// List of marker groups that are currently visible in the chart viewport.
   ///

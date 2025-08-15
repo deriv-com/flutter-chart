@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
@@ -9,8 +10,11 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'animated_active_marker.dart';
+import 'animated_active_marker_group.dart';
 import 'marker.dart';
 import 'marker_group_widget_overlay.dart';
+import 'chart_marker.dart';
+import 'marker_group.dart';
 
 /// Layer with markers.
 class MarkerArea extends StatefulWidget {
@@ -65,6 +69,39 @@ class _MarkerAreaState extends State<MarkerArea> {
       return;
     }
 
+    // Handle taps for active grouped markers (pill + contract marker)
+    if (series is MarkerGroupSeries && series.activeMarkerGroup != null) {
+      // Find the contract marker within the active group to use its tap area
+      ChartMarker? contractMarker;
+      for (final ChartMarker marker in series.activeMarkerGroup!.markers) {
+        if (marker.markerType == MarkerType.contractMarker) {
+          contractMarker = marker;
+          break;
+        }
+      }
+      if (contractMarker != null) {
+        if (contractMarker.tapArea.contains(details.localPosition)) {
+          series.activeMarkerGroup!.onTap?.call();
+        } else {
+          series.activeMarkerGroup!.onTapOutside?.call();
+        }
+        return;
+      }
+    }
+
+    // Handle taps for grouped markers (e.g., contractMarker)
+    if (series is MarkerGroupSeries) {
+      for (final MarkerGroup group in series.visibleMarkerGroupList.reversed) {
+        for (final ChartMarker marker in group.markers.reversed) {
+          if (marker.markerType == MarkerType.contractMarker &&
+              marker.tapArea.contains(details.localPosition)) {
+            marker.onTap?.call();
+            return;
+          }
+        }
+      }
+    }
+
     for (final Marker marker in series.visibleEntries.reversed) {
       if (marker.tapArea.contains(details.localPosition)) {
         marker.onTap?.call();
@@ -87,7 +124,13 @@ class _MarkerAreaState extends State<MarkerArea> {
         ),
         AnimatedOpacity(
           duration: animationDuration,
-          opacity: widget.markerSeries.activeMarker != null ? 0.5 : 1,
+          opacity: widget.markerSeries.activeMarker != null ||
+                  (widget.markerSeries is MarkerGroupSeries &&
+                      (widget.markerSeries as MarkerGroupSeries)
+                              .activeMarkerGroup !=
+                          null)
+              ? 1
+              : 1,
           child: RepaintBoundary(
             child: CustomPaint(
               child: Container(),
@@ -106,6 +149,11 @@ class _MarkerAreaState extends State<MarkerArea> {
           markerSeries: widget.markerSeries,
           quoteToCanvasY: widget.quoteToCanvasY,
         ),
+        if (widget.markerSeries is MarkerGroupSeries)
+          AnimatedActiveMarkerGroup(
+            markerSeries: widget.markerSeries as MarkerGroupSeries,
+            quoteToCanvasY: widget.quoteToCanvasY,
+          ),
       ],
     );
   }
