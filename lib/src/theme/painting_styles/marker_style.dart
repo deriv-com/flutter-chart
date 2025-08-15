@@ -14,11 +14,11 @@ class MarkerStyle extends ChartPaintingStyle {
     this.radius = 12.0,
     this.activeMarkerText = const TextStyle(
       color: Colors.black,
-      fontSize: 10,
-      height: 1.4,
+      fontSize: 12,
+      fontWeight: FontWeight.w700,
     ),
-    this.textLeftPadding = 2.0,
-    this.textRightPadding = 4.0,
+    this.textLeftPadding = 8.0,
+    this.textRightPadding = 16.0,
     this.entryMarkerStyle = const EntryExitMarkerStyle(),
     this.exitMarkerStyle = const EntryExitMarkerStyle(
       color: Color(0xFF00A79E),
