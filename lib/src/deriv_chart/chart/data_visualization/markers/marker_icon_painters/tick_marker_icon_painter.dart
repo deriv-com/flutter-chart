@@ -256,8 +256,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
       switch (marker.markerType) {
         case MarkerType.contractMarker:
-          _drawContractMarker(canvas, theme, marker, anchor, style, zoom,
-              granularity, opacity, animationInfo, markerGroupId, markerGroup);
+          _drawContractMarker(canvas, marker, anchor, style, zoom, granularity,
+              opacity, animationInfo, markerGroupId, markerGroup);
           break;
         case MarkerType.activeStart:
           paintStartLine(canvas, size, marker, anchor, style, zoom);
@@ -375,7 +375,6 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// @param markerGroup The marker group containing all related markers for this contract.
   void _drawContractMarker(
     Canvas canvas,
-    ChartTheme theme,
     ChartMarker marker,
     Offset anchor,
     MarkerStyle style,
@@ -408,6 +407,9 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       ..strokeWidth = 2 * zoom;
 
     canvas.drawCircle(anchor, borderRadius, borderPaint);
+
+    // Update tap area to match the visual marker size (use outer border radius)
+    marker.tapArea = Rect.fromCircle(center: anchor, radius: borderRadius);
 
     // Draw background progress circle (unfilled portion)
     final Color progressBackgroundColor = marker.direction == MarkerDirection.up
