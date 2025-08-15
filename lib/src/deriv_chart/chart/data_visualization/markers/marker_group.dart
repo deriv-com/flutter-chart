@@ -45,6 +45,7 @@ class MarkerGroup implements Comparable<MarkerGroup> {
     this.currentEpoch,
     this.profitAndLossText,
     this.isProfit = true,
+    this.onTap,
   });
 
   /// The list of ChartMarker objects that belong to this group.
@@ -83,6 +84,9 @@ class MarkerGroup implements Comparable<MarkerGroup> {
   ///
   /// This is used to determine the color of the profit and loss label.
   final bool isProfit;
+
+  /// Callback when the circular contract marker of the marker group is tapped.
+  final VoidCallback? onTap;
 
   /// Compares this marker group with another based on the epoch of their first markers.
   /// This is useful for sorting marker groups chronologically.

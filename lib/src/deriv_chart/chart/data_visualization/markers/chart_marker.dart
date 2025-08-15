@@ -136,10 +136,11 @@ class ChartMarker extends Marker {
     required int epoch,
     required double quote,
     required MarkerDirection direction,
+    VoidCallback? onTap,
     this.markerType,
     this.text,
     this.color,
-  }) : super(epoch: epoch, quote: quote, direction: direction);
+  }) : super(epoch: epoch, quote: quote, direction: direction, onTap: onTap);
 
   /// The type of marker, which determines its role and how it's rendered on the chart.
   ///
