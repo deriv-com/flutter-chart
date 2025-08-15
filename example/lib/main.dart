@@ -104,6 +104,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   final SplayTreeSet<Marker> _markers = SplayTreeSet<Marker>();
 
   ActiveMarker? _activeMarker;
+  ActiveMarkerGroup? _activeMarkerGroup;
 
   late List<ActiveSymbolsItem> _activeSymbols;
 
@@ -123,6 +124,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   // Dynamic marker duration in milliseconds
   int _markerDurationMs = 10000;
+  // PnL label lifetime after marker end in milliseconds
+  static const int _pnlLabelLifetimeMs = 4000;
 
   @override
   void initState() {
@@ -381,14 +384,30 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   /// Removes markers that have exceeded their duration
   void _removeExpiredMarkers(int currentEpoch) {
-    _markers.removeWhere((marker) {
+    bool clearedActiveGroup = false;
+    _markers.removeWhere((Marker marker) {
+      final int endEpoch = marker.epoch + _markerDurationMs;
+      // Keep the marker around long enough to display PnL label window:
+      // 1s delay before showing + 4s visibility = 5s after end.
       final bool isExpired =
-          (currentEpoch - marker.epoch) >= _markerDurationMs + 500;
+          currentEpoch >= endEpoch + 1000 + _pnlLabelLifetimeMs;
+      // Contract end moment
+      final bool hasContractEnded = currentEpoch >= endEpoch + 1000;
       if (isExpired && _activeMarker?.epoch == marker.epoch) {
         _activeMarker = null;
       }
+      // Clear active group as soon as contract ends, and also if fully expired
+      if ((hasContractEnded || isExpired) &&
+          _activeMarkerGroup?.id == 'marker_${marker.epoch}') {
+        clearedActiveGroup = true;
+      }
       return isExpired;
     });
+    if (clearedActiveGroup) {
+      setState(() {
+        _activeMarkerGroup = null;
+      });
+    }
   }
 
   DataSeries<Tick> _getDataSeries(ChartStyle style) {
@@ -694,6 +713,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   void _clearMarkers() {
     _markers.clear();
     _activeMarker = null;
+    _activeMarkerGroup = null;
   }
 
   void _clearBarriers() {
@@ -942,9 +962,15 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   /// Converts markers to marker groups for rise/fall trade type
   List<MarkerGroup> _convertMarkersToGroups(int currentEpoch) {
-    return _markers.map((marker) {
-      return MarkerGroup(
-        [
+    return _markers.map((Marker marker) {
+      final int endEpoch = marker.epoch + _markerDurationMs;
+
+      final List<ChartMarker> chartMarkers = <ChartMarker>[];
+
+      // Show the standard markers until a short time after end
+      final bool showStandardMarkers = currentEpoch < endEpoch + 500;
+      if (showStandardMarkers) {
+        chartMarkers.addAll(<ChartMarker>[
           ChartMarker(
             epoch: marker.epoch,
             quote: marker.quote,
@@ -952,7 +978,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             markerType: MarkerType.entryTick,
           ),
           ChartMarker(
-            epoch: marker.epoch + _markerDurationMs,
+            epoch: endEpoch,
             quote: marker.quote,
             direction: marker.direction,
             markerType: MarkerType.end,
@@ -962,11 +988,47 @@ class _FullscreenChartState extends State<FullscreenChart> {
             quote: marker.quote,
             direction: marker.direction,
             markerType: MarkerType.contractMarker,
+            onTap: () {
+              setState(() {
+                _activeMarker = null;
+                _activeMarkerGroup = ActiveMarkerGroup(
+                  markers: chartMarkers,
+                  type: 'tick',
+                  id: 'marker_${marker.epoch}',
+                  currentEpoch: currentEpoch,
+                  profitAndLossText: '+9.55 USD',
+                  isProfit: true,
+                  onTap: marker.onTap,
+                  onTapOutside: () {
+                    setState(() => _activeMarkerGroup = null);
+                  },
+                );
+              });
+            },
           ),
-        ],
+        ]);
+      }
+
+      // Show PnL label starting 1s after end, and hide after 4s have passed.
+      if (currentEpoch >= endEpoch + 1000 &&
+          currentEpoch < endEpoch + 1000 + _pnlLabelLifetimeMs) {
+        chartMarkers.add(
+          ChartMarker(
+            epoch: endEpoch,
+            quote: marker.quote,
+            direction: marker.direction,
+            markerType: MarkerType.profitAndLossLabel,
+          ),
+        );
+      }
+
+      return MarkerGroup(
+        chartMarkers,
         type: 'tick',
         id: 'marker_${marker.epoch}',
         currentEpoch: currentEpoch,
+        profitAndLossText: '+9.55 USD',
+        isProfit: true,
       );
     }).toList();
   }
@@ -983,6 +1045,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
         SplayTreeSet<Marker>(),
         markerGroupIconPainter: TickMarkerIconPainter(),
         markerGroupList: _convertMarkersToGroups(currentEpoch),
+        activeMarkerGroup: _activeMarkerGroup,
       );
     } else {
       return MarkerSeries(
