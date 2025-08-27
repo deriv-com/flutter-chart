@@ -1,9 +1,13 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/painter_props.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 
 import 'active_marker_group.dart';
 import 'marker_icon_painters/marker_group_icon_painter.dart';
@@ -17,6 +21,9 @@ class ActiveMarkerGroupPainter extends CustomPainter {
     required this.epochToX,
     required this.quoteToY,
     required this.markerGroupIconPainter,
+    required this.theme,
+    required this.painterProps,
+    this.animationInfo = const AnimationInfo(),
     this.style = const MarkerStyle(),
     this.animationProgress = 1,
   });
@@ -28,16 +35,25 @@ class ActiveMarkerGroupPainter extends CustomPainter {
   final MarkerStyle style;
 
   /// The function that calculates an epoch's X value.
-  final Function epochToX;
+  final EpochToX epochToX;
 
   /// The function that calculates a quote's Y value.
-  final Function quoteToY;
+  final QuoteToY quoteToY;
 
   /// The progress value of the animation of active marker painter.
   final double animationProgress;
 
   /// Painter used to draw the icon for the active marker.
   final MarkerGroupIconPainter markerGroupIconPainter;
+
+  /// Chart theme used for painting marker group icons.
+  final ChartTheme theme;
+
+  /// Properties for painters (zoom, granularity, msPerPx).
+  final PainterProps painterProps;
+
+  /// Animation info passed to marker group painter (defaults to static state).
+  final AnimationInfo animationInfo;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -57,6 +73,18 @@ class ActiveMarkerGroupPainter extends CustomPainter {
     if (contractMarker == null) {
       return;
     }
+
+    // First, paint the active marker group(icons/lines etc.)
+    markerGroupIconPainter.paintMarkerGroup(
+      canvas,
+      size,
+      theme,
+      activeMarkerGroup,
+      epochToX,
+      quoteToY,
+      painterProps,
+      animationInfo,
+    );
 
     // Positioning rules:
     // - Contract icon is painted by TickMarkerIconPainter at x=20 with an outer border radius of (style.radius + 1)

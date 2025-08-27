@@ -74,7 +74,14 @@ class MarkerGroupPainter extends SeriesPainter<MarkerGroupSeries> {
     // Get PainterProps directly from the model
     final props = chartScaleModel.toPainterProps();
 
+    // Skip painting the active marker group's corresponding base group.
+    final String? activeGroupId =
+        (series as MarkerGroupSeries?)?.activeMarkerGroup?.id;
+
     for (final MarkerGroup markerGroup in series.visibleMarkerGroupList) {
+      if (activeGroupId != null && markerGroup.id == activeGroupId) {
+        continue;
+      }
       markerGroupIconPainter.paintMarkerGroup(
         canvas,
         size,

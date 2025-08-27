@@ -4,6 +4,8 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 
 import 'active_marker_group.dart';
 import 'active_marker_group_painter.dart';
@@ -16,6 +18,7 @@ class AnimatedActiveMarkerGroup extends StatefulWidget {
   const AnimatedActiveMarkerGroup({
     required this.markerSeries,
     required this.quoteToCanvasY,
+    required this.animationInfo,
     Key? key,
   }) : super(key: key);
 
@@ -24,6 +27,9 @@ class AnimatedActiveMarkerGroup extends StatefulWidget {
 
   /// Conversion function for converting quote to chart's canvas' Y position.
   final double Function(double) quoteToCanvasY;
+
+  /// Animation information to drive smooth transitions in marker group painter.
+  final AnimationInfo animationInfo;
 
   @override
   State<AnimatedActiveMarkerGroup> createState() =>
@@ -97,6 +103,7 @@ class _AnimatedActiveMarkerGroupState extends State<AnimatedActiveMarkerGroup>
     return AnimatedBuilder(
       animation: _activeMarkerAnimation,
       builder: (BuildContext context, _) => CustomPaint(
+        child: Container(),
         painter: ActiveMarkerGroupPainter(
           activeMarkerGroup: markerGroupToShow,
           style: widget.markerSeries.style as MarkerStyle? ??
@@ -105,6 +112,9 @@ class _AnimatedActiveMarkerGroupState extends State<AnimatedActiveMarkerGroup>
           quoteToY: widget.quoteToCanvasY,
           animationProgress: _activeMarkerAnimation.value,
           markerGroupIconPainter: widget.markerSeries.markerGroupIconPainter,
+          theme: context.watch<ChartTheme>(),
+          painterProps: context.watch<ChartScaleModel>().toPainterProps(),
+          animationInfo: widget.animationInfo,
         ),
       ),
     );

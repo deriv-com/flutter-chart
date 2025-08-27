@@ -129,7 +129,7 @@ class _MarkerAreaState extends State<MarkerArea> {
                       (widget.markerSeries as MarkerGroupSeries)
                               .activeMarkerGroup !=
                           null)
-              ? 1
+              ? 0.5
               : 1,
           child: RepaintBoundary(
             child: CustomPaint(
@@ -153,6 +153,7 @@ class _MarkerAreaState extends State<MarkerArea> {
           AnimatedActiveMarkerGroup(
             markerSeries: widget.markerSeries as MarkerGroupSeries,
             quoteToCanvasY: widget.quoteToCanvasY,
+            animationInfo: widget.animationInfo,
           ),
       ],
     );
