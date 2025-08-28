@@ -12,7 +12,6 @@ import 'package:provider/provider.dart';
 import 'animated_active_marker.dart';
 import 'animated_active_marker_group.dart';
 import 'marker.dart';
-import 'marker_group_widget_overlay.dart';
 import 'chart_marker.dart';
 import 'marker_group.dart';
 
@@ -118,10 +117,6 @@ class _MarkerAreaState extends State<MarkerArea> {
 
     return Stack(
       children: <Widget>[
-        MarkerGroupWidgetOverlay(
-          markerSeries: widget.markerSeries,
-          quoteToCanvasY: widget.quoteToCanvasY,
-        ),
         AnimatedOpacity(
           duration: animationDuration,
           opacity: widget.markerSeries.activeMarker != null ||

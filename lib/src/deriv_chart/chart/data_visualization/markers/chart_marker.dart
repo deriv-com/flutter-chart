@@ -93,6 +93,13 @@ enum MarkerType {
   /// It appears as a pill-shaped label with rounded corners containing an icon and the profit/loss
   /// amount.
   profitAndLossLabel,
+
+  /// Represents a profit and loss label marker with a fixed position anchored to the contract marker.
+  ///
+  /// This marker is used to display profit and loss information when a trading contract ends.
+  /// It appears as a pill-shaped label with rounded corners containing an icon and the profit/loss
+  /// amount.
+  profitAndLossLabelFixed,
 }
 
 /// A specialized marker class for displaying various types of markers on a financial chart.

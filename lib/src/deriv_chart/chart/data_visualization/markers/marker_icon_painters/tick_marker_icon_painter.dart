@@ -12,6 +12,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/quill_icons.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
@@ -287,10 +288,138 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
         case MarkerType.latestTick:
           _drawTickPoint(canvas, anchor, paint, zoom);
           break;
+        case MarkerType.profitAndLossLabel:
+          _drawProfitAndLossLabel(
+            canvas,
+            theme,
+            markerGroup,
+            marker,
+            anchor,
+            style,
+            1,
+            opacity,
+            fixedLeftAligned: false,
+          );
+          break;
+        case MarkerType.profitAndLossLabelFixed:
+          _drawProfitAndLossLabel(
+            canvas,
+            theme,
+            markerGroup,
+            marker,
+            anchor,
+            style,
+            1,
+            opacity,
+            fixedLeftAligned: true,
+          );
+          break;
         default:
           break;
       }
     });
+  }
+
+  void _drawProfitAndLossLabel(
+    Canvas canvas,
+    ChartTheme theme,
+    MarkerGroup markerGroup,
+    ChartMarker marker,
+    Offset anchor,
+    MarkerStyle style,
+    double zoom,
+    double opacity, {
+    required bool fixedLeftAligned,
+  }) {
+    final bool isProfit = markerGroup.isProfit;
+    final Color borderColor = isProfit
+        ? theme.closedMarkerBorderColorGreen
+        : theme.closedMarkerBorderColorRed;
+    final Color backgroundColor = isProfit
+        ? theme.closedMarkerSurfaceColorGreen
+        : theme.closedMarkerSurfaceColorRed;
+    final Color textIconColor = isProfit
+        ? theme.closedMarkerTextIconColorGreen
+        : theme.closedMarkerTextIconColorRed;
+
+    final double pillHeight = 32 * zoom;
+    final double radius = pillHeight / 2;
+    final double iconSize = 24 * zoom;
+    const double leftPadding = 8;
+    const double spacing = 4;
+    const double rightPadding = 16;
+
+    final TextStyle textStyle = theme
+        .textStyle(
+          textStyle: theme.profitAndLossLabelTextStyle,
+          color: textIconColor,
+        )
+        .copyWith(
+          fontSize: theme.profitAndLossLabelTextStyle.fontSize! * zoom,
+          height: 1,
+        );
+
+    final String text = markerGroup.profitAndLossText ?? '';
+    final TextPainter textPainter = makeTextPainter(text, textStyle);
+
+    final double contentWidth =
+        leftPadding + iconSize + spacing + textPainter.width + rightPadding;
+
+    Rect pillRect;
+    if (fixedLeftAligned) {
+      const double leftX = 5;
+      pillRect = Rect.fromLTWH(
+        leftX,
+        anchor.dy - pillHeight / 2,
+        contentWidth,
+        pillHeight,
+      );
+    } else {
+      pillRect = Rect.fromCenter(
+        center: Offset(anchor.dx, anchor.dy),
+        width: contentWidth,
+        height: pillHeight,
+      );
+    }
+
+    final Paint fillPaint = Paint()
+      ..color = backgroundColor.withOpacity(0.88 * opacity)
+      ..style = PaintingStyle.fill;
+    final RRect rrect =
+        RRect.fromRectAndRadius(pillRect, Radius.circular(radius));
+    canvas.drawRRect(rrect, fillPaint);
+
+    final Paint strokePaint = Paint()
+      ..color = borderColor.withOpacity(opacity)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+    canvas.drawRRect(rrect, strokePaint);
+
+    final TextPainter iconPainter = TextPainter(
+      text: TextSpan(
+        text: String.fromCharCode(QuillIcons.flag_checkered.codePoint),
+        style: TextStyle(
+          fontFamily: QuillIcons.kFontFam,
+          fontSize: iconSize,
+          package: QuillIcons.kFontPkg,
+          color: textIconColor.withOpacity(opacity),
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    final double iconX = pillRect.left + leftPadding;
+    final double iconY = anchor.dy - iconPainter.height / 2;
+    iconPainter.paint(canvas, Offset(iconX, iconY));
+
+    paintWithTextPainter(
+      canvas,
+      painter: textPainter,
+      anchor: Offset(iconX + iconSize + spacing, anchor.dy),
+      anchorAlignment: Alignment.centerLeft,
+    );
+
+    marker.tapArea = pillRect;
   }
 
   /// Calculate remaining duration with smooth animation transitions.
