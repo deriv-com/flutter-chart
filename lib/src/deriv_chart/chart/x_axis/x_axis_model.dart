@@ -8,6 +8,7 @@ import 'package:deriv_chart/src/models/time_range.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../helpers/functions/snap_epoch.dart';
 import 'functions/calc_no_overlay_time_gaps.dart';
 import 'gaps/gap_manager.dart';
 import 'gaps/helpers.dart';
@@ -54,6 +55,7 @@ class XAxisModel extends ChangeNotifier {
     required int granularity,
     required AnimationController animationController,
     required bool isLive,
+    required bool snapMarkersToIntervals,
     required double maxCurrentTickOffset,
     this.defaultIntervalWidth = 20,
     bool startWithDataFitMode = false,
@@ -67,6 +69,7 @@ class XAxisModel extends ChangeNotifier {
     this.onScroll,
   }) {
     _maxCurrentTickOffset = maxCurrentTickOffset;
+    _snapMarkersToIntervals = snapMarkersToIntervals;
 
     _nowEpoch = entries.isNotEmpty
         ? entries.last.epoch
@@ -155,6 +158,7 @@ class XAxisModel extends ChangeNotifier {
   double _msPerPx = 1000;
   double? _prevMsPerPx;
   late int _granularity;
+  late bool _snapMarkersToIntervals;
   late bool _isScrollBlocked = false;
   late int _nowEpoch;
   late int _rightBoundEpoch;
@@ -436,6 +440,17 @@ class XAxisModel extends ChangeNotifier {
     }
   }
 
+  /// Returns the x position for the given [epoch], snapped to the center of its granularity bucket.
+  ///
+  /// This ensures markers are aligned with the center of each candle (granularity bucket),
+  /// preventing markers from being drawn between candles.
+  double xFromEpochSnapped(int epoch) {
+    if (_snapMarkersToIntervals) {
+      return xFromEpoch(snapEpochToGranularity(epoch, granularity));
+    }
+    return xFromEpoch(epoch);
+  }
+
   /// Get epoch of x position.
   int epochFromX(double x) => _shiftEpoch(rightBoundEpoch, -width! + x);
 
@@ -561,6 +576,7 @@ class XAxisModel extends ChangeNotifier {
     int? maxEpoch,
     EdgeInsets? dataFitPadding,
     double? maxCurrentTickOffset,
+    bool? snapMarkersToIntervals,
   }) {
     _updateIsLive(isLive);
     _updateGranularity(granularity);
@@ -570,6 +586,7 @@ class XAxisModel extends ChangeNotifier {
     _maxEpoch = maxEpoch ?? _maxEpoch;
     _dataFitPadding = dataFitPadding ?? _dataFitPadding;
     _maxCurrentTickOffset = maxCurrentTickOffset ?? _maxCurrentTickOffset;
+    _snapMarkersToIntervals = snapMarkersToIntervals ?? _snapMarkersToIntervals;
   }
 
   /// Returns a list of timestamps in the grid without any overlaps.

@@ -108,7 +108,7 @@ class _AnimatedActiveMarkerGroupState extends State<AnimatedActiveMarkerGroup>
           activeMarkerGroup: markerGroupToShow,
           style: widget.markerSeries.style as MarkerStyle? ??
               context.watch<ChartTheme>().markerStyle,
-          epochToX: xAxis.xFromEpoch,
+          epochToX: xAxis.xFromEpochSnapped,
           quoteToY: widget.quoteToCanvasY,
           animationProgress: _activeMarkerAnimation.value,
           markerGroupIconPainter: widget.markerSeries.markerGroupIconPainter,
