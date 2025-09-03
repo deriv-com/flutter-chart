@@ -215,9 +215,7 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   void _playNewTickAnimation() {
     if (!_isTickAnimationPlaying) {
-      _currentTickAnimationController
-        ..reset()
-        ..forward();
+      _currentTickAnimationController.forward();
     }
   }
 
