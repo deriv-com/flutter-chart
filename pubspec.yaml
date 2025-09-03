@@ -14,7 +14,7 @@ dependencies:
   collection: ^1.15.0-nullsafety.4
   deriv_technical_analysis:
     git:
-      url: git@github.com:regentmarkets/flutter-deriv-packages.git
+      url: https://github.com/deriv-com/flutter-deriv-packages.git
       path: packages/deriv_technical_analysis
       ref: dev
 
@@ -29,7 +29,7 @@ dev_dependencies:
     sdk: flutter
   deriv_lint:
     git:
-      url: git@github.com:regentmarkets/flutter-deriv-packages.git
+      url: https://github.com/deriv-com/flutter-deriv-packages.git
       path: packages/deriv_lint
       ref: dev
 
