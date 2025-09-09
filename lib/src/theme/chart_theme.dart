@@ -232,4 +232,6 @@ abstract class ChartTheme {
   Color get closedMarkerTextIconColorRed;
 
   TextStyle get profitAndLossLabelTextStyle;
+  Color get markerPaletteTextIconColor;
+  Color get markerPaletteBorderColor;
 }

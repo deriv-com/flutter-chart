@@ -165,6 +165,11 @@ class LightThemeColors {
       LightThemeDesignTokens.semanticColorRedSolidBorderInverseHigh;
   static const Color closedMarkerTextIconColorRed =
       LightThemeDesignTokens.semanticColorRedSolidTextIconInverseLow;
+
+  static const Color markerPaletteTextIconColor =
+      LightThemeDesignTokens.semanticColorSlateSolidTextIconInverseLowest;
+  static const Color markerPaletteBorderColor =
+      LightThemeDesignTokens.semanticColorSlateSolidBorderInverseMid;
 }
 
 /// Default colors for dark theme.
@@ -290,6 +295,11 @@ class DarkThemeColors {
       DarkThemeDesignTokens.semanticColorRedSolidBorderInverseHigh;
   static const Color closedMarkerTextIconColorRed =
       DarkThemeDesignTokens.semanticColorRedSolidTextIconInverseLow;
+
+  static const Color markerPaletteTextIconColor =
+      DarkThemeDesignTokens.semanticColorSlateSolidTextIconInverseLowest;
+  static const Color markerPaletteBorderColor =
+      DarkThemeDesignTokens.semanticColorSlateSolidBorderInverseMid;
 }
 
 /// Candle Bullish colors for light, dark
