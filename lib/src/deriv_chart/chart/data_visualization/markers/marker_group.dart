@@ -44,7 +44,6 @@ class MarkerGroup implements Comparable<MarkerGroup> {
     ),
     this.currentEpoch,
     this.profitAndLossText,
-    this.isProfit = true,
     this.onTap,
   });
 
@@ -79,11 +78,6 @@ class MarkerGroup implements Comparable<MarkerGroup> {
 
   /// The text to display in the profit and loss label.
   final String? profitAndLossText;
-
-  /// Whether the contract for the marker group is in profit or loss.
-  ///
-  /// This is used to determine the color of the profit and loss label.
-  final bool isProfit;
 
   /// Callback when the circular contract marker of the marker group is tapped.
   final VoidCallback? onTap;

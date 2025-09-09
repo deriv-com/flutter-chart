@@ -21,6 +21,8 @@ class MarkerProps {
   ///        Default is false, meaning barriers are only drawn when visible.
   const MarkerProps({
     this.hasPersistentBorders = false,
+    this.isProfit = true,
+    this.isRunning = true,
   });
 
   /// Whether barriers associated with this marker should be drawn even when
@@ -35,4 +37,14 @@ class MarkerProps {
   /// within the visible area of the chart, which can improve performance by
   /// reducing the number of elements that need to be rendered.
   final bool hasPersistentBorders;
+
+  /// Whether the contract for the marker group is in profit or loss.
+  ///
+  /// This is to use the appropriate color and shape for markers.
+  final bool isProfit;
+
+  /// Whether the contract for the marker group is running or not.
+  ///
+  /// This is used to determine the color and shape of markers.
+  final bool isRunning;
 }

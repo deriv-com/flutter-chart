@@ -23,7 +23,6 @@ class ActiveMarkerGroup extends MarkerGroup {
     ),
     int? currentEpoch,
     String? profitAndLossText,
-    bool isProfit = true,
     VoidCallback? onTap,
     this.onTapOutside,
   }) : super(
@@ -34,7 +33,6 @@ class ActiveMarkerGroup extends MarkerGroup {
           style: style,
           currentEpoch: currentEpoch,
           profitAndLossText: profitAndLossText,
-          isProfit: isProfit,
           onTap: onTap,
         );
 
