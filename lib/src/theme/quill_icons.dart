@@ -10,4 +10,7 @@ class QuillIcons {
 
   static const IconData flag_checkered =
       IconData(0xe800, fontFamily: kFontFam, fontPackage: kFontPkg);
+
+  static const IconData stopwatch =
+      IconData(0xe801, fontFamily: kFontFam, fontPackage: kFontPkg);
 }
