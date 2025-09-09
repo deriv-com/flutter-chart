@@ -104,6 +104,7 @@ class HorizontalLineAddingPreviewMobile
             dashArray: CircularIntervalList<double>(<double>[2, 2])),
         Paint()
           ..color = interactableDrawing.config.lineStyle.color
+          ..strokeWidth = interactableDrawing.config.lineStyle.thickness
           ..style = PaintingStyle.stroke,
       );
     }

@@ -33,12 +33,12 @@ void drawPointAlignmentGuides(Canvas canvas, Size size, Offset pointOffset,
   canvas
     ..drawPath(
       dashPath(horizontalPath,
-          dashArray: CircularIntervalList<double>(<double>[5, 5])),
+          dashArray: CircularIntervalList<double>(<double>[2, 2])),
       guidesPaint,
     )
     ..drawPath(
       dashPath(verticalPath,
-          dashArray: CircularIntervalList<double>(<double>[5, 5])),
+          dashArray: CircularIntervalList<double>(<double>[2, 2])),
       guidesPaint,
     );
 }
