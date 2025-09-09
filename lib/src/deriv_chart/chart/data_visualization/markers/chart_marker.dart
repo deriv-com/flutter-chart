@@ -15,11 +15,12 @@ enum MarkerType {
   /// markers like entry points, exit points, and barrier levels.
   contractMarker,
 
-  /// Represents an active starting point marker.
+  /// Represents the start time of a contract with a vertical dashed line and a clock icon at the bottom.
   ///
-  /// This is typically used to highlight the beginning of an active trade or contract.
-  /// It may be rendered differently from a standard start marker to indicate its active status.
-  activeStart,
+  /// This marker visually indicates the contract's start time on the chart using a vertical dashed line
+  /// extending from near the top to near the bottom of the chart, with a clock icon
+  /// centered at the bottom of the line.
+  startTime,
 
   /// Represents a standard starting point marker.
   ///
@@ -68,6 +69,13 @@ enum MarkerType {
   /// This indicates where a trade or position was exited. It marks the price and time
   /// at which a trader closed a position in the market.
   exit,
+
+  /// Represents the exit time of a contract with a vertical dashed/solid line and a flag icon at the bottom.
+  ///
+  /// This marker visually indicates the exit time of a contract or trade on the chart.
+  /// It is rendered as a vertical dashed or solid line extending from near the top to near the bottom
+  /// of the chart, with a flag icon centered at the bottom of the line.
+  exitTime,
 
   /// Represents the latest tick point specifically in relation to a barrier.
   ///

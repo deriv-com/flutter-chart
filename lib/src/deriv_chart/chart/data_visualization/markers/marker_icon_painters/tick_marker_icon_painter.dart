@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/cha
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_end_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_start_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_start_marker.dart';
@@ -260,8 +261,9 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           _drawContractMarker(canvas, marker, anchor, style, zoom, granularity,
               opacity, animationInfo, markerGroupId, markerGroup);
           break;
-        case MarkerType.activeStart:
-          paintStartLine(canvas, size, marker, anchor, style, zoom);
+        case MarkerType.startTime:
+          paintStartLine(
+              canvas, size, marker, anchor, style, zoom, markerGroup.props);
           break;
         case MarkerType.start:
           _drawStartPoint(
@@ -287,6 +289,10 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           break;
         case MarkerType.latestTick:
           _drawTickPoint(canvas, anchor, paint, zoom);
+          break;
+        case MarkerType.exitTime:
+          paintEndLine(
+              canvas, size, marker, anchor, style, zoom, markerGroup.props);
           break;
         case MarkerType.profitAndLossLabel:
           _drawProfitAndLossLabel(
@@ -331,7 +337,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     double opacity, {
     required bool fixedLeftAligned,
   }) {
-    final bool isProfit = markerGroup.isProfit;
+    final bool isProfit = markerGroup.props.isProfit;
     final Color borderColor = isProfit
         ? theme.closedMarkerBorderColorGreen
         : theme.closedMarkerBorderColorRed;
