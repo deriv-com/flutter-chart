@@ -65,7 +65,8 @@ class HorizontalLineAddingPreviewDesktop
             dashArray: CircularIntervalList<double>(<double>[2, 2])),
         Paint()
           ..color = interactableDrawing.config.lineStyle.color
-          ..strokeWidth = interactableDrawing.config.lineStyle.thickness
+          ..strokeWidth = interactableDrawing
+              .config.lineStyle.thickness // Explicitly set for consistency
           ..style = PaintingStyle.stroke,
       );
     }
