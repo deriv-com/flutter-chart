@@ -23,6 +23,7 @@ class MarkerProps {
     this.hasPersistentBorders = false,
     this.isProfit = true,
     this.isRunning = true,
+    this.markerLabel,
   });
 
   /// Whether barriers associated with this marker should be drawn even when
@@ -47,4 +48,10 @@ class MarkerProps {
   ///
   /// This is used to determine the color and shape of markers.
   final bool isRunning;
+
+  /// Optional label to display inside the contract marker circle.
+  ///
+  /// If provided, this text will be shown in contract marker.
+  /// If null, a directional arrow (up or down) will be displayed instead, based on the marker's direction.
+  final String? markerLabel;
 }

@@ -28,6 +28,11 @@ class MarkerStyle extends ChartPaintingStyle {
       color: Color(0xFF00A79E),
       borderColor: Color(0xFFFFFFFF),
     ),
+    this.markerLabelTextStyle = const TextStyle(
+      color: Colors.white,
+      fontSize: 12,
+      fontWeight: FontWeight.w700,
+    ),
     this.startTimeIcon = QuillIcons.stopwatch,
     this.endTimeIcon = QuillIcons.flag_checkered,
   });
@@ -73,4 +78,7 @@ class MarkerStyle extends ChartPaintingStyle {
 
   /// Icon of the end time vertical line.
   final IconData endTimeIcon;
+
+  /// Style of the marker label.
+  final TextStyle markerLabelTextStyle;
 }

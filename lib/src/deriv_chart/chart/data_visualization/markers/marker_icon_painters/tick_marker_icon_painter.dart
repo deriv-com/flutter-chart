@@ -582,9 +582,42 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       progressPaint,
     );
 
-    // Draw arrow icon in the center
-    _drawArrowIcon(
-        canvas, anchor, marker, Colors.white.withOpacity(opacity), zoom);
+    if (markerGroup.props.markerLabel != null) {
+      _drawMarkerLabel(
+          canvas, anchor, markerGroup.props.markerLabel!, opacity, zoom, style);
+    } else {
+      // Draw arrow icon in the center
+      _drawArrowIcon(
+          canvas, anchor, marker, Colors.white.withOpacity(opacity), zoom);
+    }
+  }
+
+  void _drawMarkerLabel(Canvas canvas, Offset anchor, String label,
+      double opacity, double zoom, MarkerStyle style) {
+    // Base radius used in _drawContractMarker
+    final double radius = 12 * zoom;
+    final double padding = 5 * zoom; // small padding from circle border
+    final double maxWidth = (radius - padding) * 2;
+    final double maxHeight = (radius - padding) * 2;
+
+    final TextStyle baseTextStyle = style.markerLabelTextStyle.copyWith(
+      fontSize: style.markerLabelTextStyle.fontSize! * zoom,
+      color: style.markerLabelTextStyle.color!.withOpacity(opacity),
+      height: 1,
+    );
+
+    final TextPainter painter = makeFittedTextPainter(
+      label,
+      baseTextStyle,
+      maxWidth: maxWidth,
+      maxHeight: maxHeight,
+    );
+
+    paintWithTextPainter(
+      canvas,
+      painter: painter,
+      anchor: anchor,
+    );
   }
 
   /// Draws a diagonal arrow icon inside the contract marker.
