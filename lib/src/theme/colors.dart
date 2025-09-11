@@ -139,7 +139,7 @@ class LightThemeColors {
   static const Color toolbarColorPaletteIconSeaWater =
       LightThemeDesignTokens.semanticColorSeawaterSolidSurfaceInverseMid;
   static const Color toolbarColorPaletteIconBlue =
-      LightThemeDesignTokens.semanticColorBlueSolidSurfaceInverseMid;
+      LightThemeDesignTokens.semanticColorBlueSolidBorderStaticMid;
   static const Color toolbarColorPaletteIconSapphire =
       LightThemeDesignTokens.semanticColorSapphireSolidSurfaceInverseMid;
   static const Color toolbarColorPaletteIconBlueBerry =
@@ -269,7 +269,7 @@ class DarkThemeColors {
   static const Color toolbarColorPaletteIconSeaWater =
       DarkThemeDesignTokens.semanticColorSeawaterSolidSurfaceInverseMid;
   static const Color toolbarColorPaletteIconBlue =
-      DarkThemeDesignTokens.semanticColorBlueSolidSurfaceInverseMid;
+      DarkThemeDesignTokens.semanticColorBlueSolidBorderStaticMid;
   static const Color toolbarColorPaletteIconSapphire =
       DarkThemeDesignTokens.semanticColorSapphireSolidSurfaceInverseMid;
   static const Color toolbarColorPaletteIconBlueBerry =
