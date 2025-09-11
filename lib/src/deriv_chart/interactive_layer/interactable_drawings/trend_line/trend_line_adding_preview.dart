@@ -158,7 +158,8 @@ abstract class TrendLineAddingPreview
         ..lineTo(endPosition.dx, endPosition.dy);
 
       canvas.drawPath(
-        dashPath(linePath, dashArray: CircularIntervalList([4, 4])),
+        dashPath(linePath,
+            dashArray: CircularIntervalList<double>(<double>[2, 2])),
         Paint()
           ..color = paint.color
           ..style = PaintingStyle.stroke
