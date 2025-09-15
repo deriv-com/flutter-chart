@@ -5,8 +5,8 @@ import 'package:deriv_chart/src/deriv_chart/interactive_layer/enums/drawing_tool
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-import '../../helpers/paint_helpers.dart';
 import '../../helpers/types.dart';
 import '../../interactive_layer_states/interactive_adding_tool_state.dart';
 import '../drawing_v2.dart';
@@ -19,29 +19,29 @@ import 'trend_line_adding_preview.dart';
 /// [TrendLineAddingPreview] to inherit shared functionality while implementing
 /// mobile-specific interaction patterns optimized for touch interfaces.
 ///
+/// This mobile preview provides immediate focus mode by:
+/// - Automatically placing the trend line in the center of the chart
+/// - Immediately completing the adding process for instant focus mode
+/// - Delegating visual rendering to the main drawing for consistency
+/// - Providing full functionality (drag points, neon effects, proper labeling)
+///
 /// ## Mobile Interaction Flow:
-/// 1. **Auto-Initialization**: Automatically creates default start and end points
-/// 2. **Visual Preview**: Shows dashed preview line with draggable endpoints
+/// 1. **Auto-Initialization**: Automatically creates centered start and end points
+/// 2. **Immediate Focus**: Instantly transitions to selected state with full functionality
 /// 3. **Drag Interaction**: Users can drag individual points or the entire line
-/// 4. **Tap to Confirm**: Tapping outside the preview confirms the trend line
+/// 4. **Full Visual Feedback**: Shows neon effects, focused circles, and alignment guides
 ///
 /// ## Key Features:
-/// - **Touch-Optimized**: Larger hit areas and visual feedback for touch interaction
-/// - **Drag Support**: Full drag functionality for repositioning points and lines
-/// - **Visual Feedback**: Focused circles and alignment guides during interactions
-/// - **Auto-Positioning**: Intelligent default placement of trend line points
+/// - **Immediate Focus Mode**: No preview phase, instant selected state
+/// - **Touch-Optimized**: Full drag functionality for repositioning points and lines
+/// - **Visual Consistency**: Identical appearance to the main drawing
+/// - **Centered Positioning**: Intelligent default placement in chart center
 ///
 /// ## Default Positioning:
 /// When initialized, the trend line is automatically positioned with:
-/// - Start point at bottom-left quarter of the chart (25% width, 75% height)
-/// - End point at top-right quarter of the chart (75% width, 25% height)
-/// - This provides a diagonal trend line that users can easily adjust
-///
-/// ## Drag States:
-/// The class tracks different drag states for optimal user experience:
-/// - **Individual Point Dragging**: When dragging start or end points specifically
-/// - **Whole Line Dragging**: When dragging the line itself to move both points
-/// - **Visual Feedback**: Different visual effects based on what's being dragged
+/// - Start point at bottom-left area (20% from left, 80% from top)
+/// - End point at upper-right area (70% from left, 25% from top)
+/// - This provides a diagonal trend line spanning nicely across the chart
 ///
 /// ## Usage:
 /// This class is typically instantiated by the drawing system when a user
@@ -53,12 +53,6 @@ import 'trend_line_adding_preview.dart';
 ///   interactableDrawing: trendLineDrawing,
 /// );
 /// ```
-///
-/// ## Performance Considerations:
-/// - Efficient hit testing for touch interactions
-/// - Smooth drag animations with proper state management
-/// - Optimized rendering during drag operations
-/// - Minimal redraws during interaction states
 class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
   /// Initializes [TrendLineInteractableDrawing].
   TrendLineAddingPreviewMobile({
@@ -70,20 +64,32 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
       final interactiveLayer = interactiveLayerBehaviour.interactiveLayer;
       final Size size = interactiveLayer.drawingContext.fullSize;
 
-      final bottomLeftCenter = Offset(size.width / 4, size.height * 3 / 4);
-      final topRightCenter = Offset(size.width * 3 / 4, size.height / 4);
+      // Position trend line to span chart area with better spacing from Y-axis
+      // Start point at center-left area (about 20% from left, 80% from top)
+      final startX = size.width * 0.20;
+      final startY = size.height * 0.8;
+
+      // End point at center-right area (about 70% from left, 25% from top)
+      final endX = size.width * 0.70;
+      final endY = size.height * 0.25;
+
+      final startCenter = Offset(startX, startY);
+      final endCenter = Offset(endX, endY);
 
       interactableDrawing
         ..startPoint = EdgePoint(
-          epoch: interactiveLayer.epochFromX(bottomLeftCenter.dx),
-          quote: interactiveLayer.quoteFromY(bottomLeftCenter.dy),
+          epoch: interactiveLayer.epochFromX(startCenter.dx),
+          quote: interactiveLayer.quoteFromY(startCenter.dy),
         )
         ..endPoint = EdgePoint(
-          epoch: interactiveLayer.epochFromX(topRightCenter.dx),
-          quote: interactiveLayer.quoteFromY(topRightCenter.dy),
+          epoch: interactiveLayer.epochFromX(endCenter.dx),
+          quote: interactiveLayer.quoteFromY(endCenter.dy),
         );
 
-      onAddingStateChange(AddingStateInfo(0, 1));
+      // Use a post-frame callback to ensure points are fully set before transitioning
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        onAddingStateChange(AddingStateInfo(1, 1));
+      });
     }
   }
 
@@ -102,69 +108,23 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
     ChartTheme chartTheme,
     GetDrawingState getDrawingState,
   ) {
-    final (paintStyle, lineStyle) = getStyles();
-    final EdgePoint? startPoint = interactableDrawing.startPoint;
-    final EdgePoint? endPoint = interactableDrawing.endPoint;
+    // Only paint if we have valid start and end points
+    if (interactableDrawing.startPoint != null &&
+        interactableDrawing.endPoint != null) {
+      // Delegate to main drawing with selected state simulation for full visual appearance
+      Set<DrawingToolState> mockGetDrawingState(DrawingV2 drawing) =>
+          {DrawingToolState.selected};
 
-    if (startPoint != null && endPoint != null) {
-      final startOffset = edgePointToOffset(startPoint, epochToX, quoteToY);
-      final endOffset = edgePointToOffset(endPoint, epochToX, quoteToY);
-
-      // Draw start point
-      drawStyledPointOffset(
-          startOffset, epochToX, quoteToY, canvas, paintStyle, lineStyle);
-
-      // Draw focused effect and alignment guides for start point if dragging
-      if (interactableDrawing.isDraggingStartPoint != null &&
-          interactableDrawing.isDraggingStartPoint!) {
-        drawStyledFocusedCircle(paintStyle, lineStyle, canvas, startOffset,
-            animationInfo.stateChangePercent);
-        drawPointAlignmentGuides(
-          canvas,
-          size,
-          startOffset,
-          lineColor: interactableDrawing.config.lineStyle.color,
-        );
-      }
-
-      // Draw end point
-      drawStyledPointOffset(
-          endOffset, epochToX, quoteToY, canvas, paintStyle, lineStyle);
-
-      // Draw focused effect and alignment guides for end point if dragging
-      if (interactableDrawing.isDraggingStartPoint != null &&
-          !interactableDrawing.isDraggingStartPoint!) {
-        drawStyledFocusedCircle(paintStyle, lineStyle, canvas, endOffset,
-            animationInfo.stateChangePercent);
-        drawPointAlignmentGuides(
-          canvas,
-          size,
-          endOffset,
-          lineColor: interactableDrawing.config.lineStyle.color,
-        );
-      }
-
-      // Draw alignment guides for both points when dragging the entire line
-      if (interactableDrawing.isDraggingStartPoint == null &&
-          getDrawingState(interactableDrawing)
-              .contains(DrawingToolState.dragging)) {
-        drawPointAlignmentGuides(
-          canvas,
-          size,
-          startOffset,
-          lineColor: interactableDrawing.config.lineStyle.color,
-        );
-        drawPointAlignmentGuides(
-          canvas,
-          size,
-          endOffset,
-          lineColor: interactableDrawing.config.lineStyle.color,
-        );
-      }
-
-      // Draw the preview line with dashed style
-      drawPreviewLine(canvas, startOffset, endOffset, paintStyle, lineStyle,
-          isDashed: true);
+      interactableDrawing.paint(
+        canvas,
+        size,
+        epochToX,
+        quoteToY,
+        animationInfo,
+        chartConfig,
+        chartTheme,
+        mockGetDrawingState,
+      );
     }
   }
 
@@ -180,43 +140,25 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
       ChartConfig chartConfig,
       ChartTheme chartTheme,
       GetDrawingState getDrawingState) {
-    final EdgePoint? startPoint = interactableDrawing.startPoint;
-    final EdgePoint? endPoint = interactableDrawing.endPoint;
+    // Only paint if we have valid start and end points
+    if (interactableDrawing.startPoint != null &&
+        interactableDrawing.endPoint != null) {
+      // Delegate to main drawing for consistent Y-axis labeling with neon effects
+      Set<DrawingToolState> mockGetDrawingState(DrawingV2 drawing) =>
+          {DrawingToolState.selected};
 
-    if (startPoint != null &&
-        endPoint != null &&
-        epochFromX != null &&
-        quoteFromY != null) {
-      final startOffset = edgePointToOffset(startPoint, epochToX, quoteToY);
-      final endOffset = edgePointToOffset(endPoint, epochToX, quoteToY);
-
-      // Draw labels for start point if dragging
-      if (interactableDrawing.isDraggingStartPoint != null &&
-          interactableDrawing.isDraggingStartPoint!) {
-        drawPointGuidesAndLabels(canvas, size, startOffset, epochToX, quoteToY,
-            epochFromX, quoteFromY, chartConfig, chartTheme,
-            showGuides: false);
-      }
-
-      // Draw labels for end point if dragging
-      if (interactableDrawing.isDraggingStartPoint != null &&
-          !interactableDrawing.isDraggingStartPoint!) {
-        drawPointGuidesAndLabels(canvas, size, endOffset, epochToX, quoteToY,
-            epochFromX, quoteFromY, chartConfig, chartTheme,
-            showGuides: false);
-      }
-
-      // Draw labels for both points when dragging the entire line
-      if (interactableDrawing.isDraggingStartPoint == null &&
-          getDrawingState(interactableDrawing)
-              .contains(DrawingToolState.dragging)) {
-        drawPointGuidesAndLabels(canvas, size, startOffset, epochToX, quoteToY,
-            epochFromX, quoteFromY, chartConfig, chartTheme,
-            showGuides: false);
-        drawPointGuidesAndLabels(canvas, size, endOffset, epochToX, quoteToY,
-            epochFromX, quoteFromY, chartConfig, chartTheme,
-            showGuides: false);
-      }
+      interactableDrawing.paintOverYAxis(
+        canvas,
+        size,
+        epochToX,
+        quoteToY,
+        epochFromX,
+        quoteFromY,
+        animationInfo,
+        chartConfig,
+        chartTheme,
+        mockGetDrawingState,
+      );
     }
   }
 
@@ -228,14 +170,38 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
     EpochToX epochToX,
     QuoteToY quoteToY,
   ) {
-    if (!interactableDrawing.hitTest(
-      details.localPosition,
-      epochToX,
-      quoteToY,
-    )) {
-      // Tap is outside the drawing preview. means adding is confirmed.
-      onAddingStateChange(AddingStateInfo(1, 1));
+    // Since we immediately complete the adding process in the constructor,
+    // this method is primarily for consistency with the interface.
+    // The trend line is already positioned and in focus mode.
+
+    // If for some reason the points are not set, set them to default positions
+    if (interactableDrawing.startPoint == null ||
+        interactableDrawing.endPoint == null) {
+      final interactiveLayer = interactiveLayerBehaviour.interactiveLayer;
+      final Size size = interactiveLayer.drawingContext.fullSize;
+
+      // Use the same positioning as in the constructor
+      final startX = size.width * 0.20;
+      final startY = size.height * 0.8;
+      final endX = size.width * 0.70;
+      final endY = size.height * 0.25;
+
+      final startCenter = Offset(startX, startY);
+      final endCenter = Offset(endX, endY);
+
+      interactableDrawing
+        ..startPoint = EdgePoint(
+          epoch: epochFromX(startCenter.dx),
+          quote: quoteFromY(startCenter.dy),
+        )
+        ..endPoint = EdgePoint(
+          epoch: epochFromX(endCenter.dx),
+          quote: quoteFromY(endCenter.dy),
+        );
     }
+
+    // Ensure we're in completed state
+    onAddingStateChange(AddingStateInfo(1, 1));
   }
 
   @override

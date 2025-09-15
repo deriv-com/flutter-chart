@@ -33,4 +33,10 @@ enum DrawingToolState {
   /// of selecting or deselecting the drawing tool and the selection animation
   /// is playing.
   animating,
+
+  /// The drawing tool is being long pressed by the user.
+  /// This state is active when the user performs a long press gesture on
+  /// the drawing tool, which can trigger additional visual feedback like
+  /// alignment guides without requiring drag operations.
+  longPressed,
 }

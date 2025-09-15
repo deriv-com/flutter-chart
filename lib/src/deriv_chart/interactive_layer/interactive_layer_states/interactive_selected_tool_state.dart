@@ -44,6 +44,8 @@ class InteractiveSelectedToolState extends InteractiveState
 
   bool _draggingStartedOnTool = false;
 
+  bool _longPressActive = false;
+
   @override
   Set<DrawingToolState> getToolState(DrawingV2 drawing) {
     final Set<DrawingToolState> hoveredState = super.getToolState(drawing);
@@ -53,6 +55,10 @@ class InteractiveSelectedToolState extends InteractiveState
       // Return dragging state if we're currently dragging the tool
       if (_draggingStartedOnTool) {
         hoveredState.add(DrawingToolState.dragging);
+      }
+      // Add long pressed state if long press is active
+      if (_longPressActive) {
+        hoveredState.add(DrawingToolState.longPressed);
       }
       // Otherwise add selected state
       hoveredState.add(DrawingToolState.selected);
@@ -167,6 +173,29 @@ class InteractiveSelectedToolState extends InteractiveState
   @override
   bool onHover(PointerHoverEvent event) {
     return getToolState(selected).contains(DrawingToolState.dragging);
+  }
+
+  @override
+  bool onLongPress(Offset localPosition) {
+    // Check if the long press is on the selected drawing
+    if (selected.hitTest(localPosition, epochToX, quoteToY)) {
+      _longPressActive = true;
+      // Trigger UI update by calling the behaviour's onUpdate callback
+      interactiveLayerBehaviour.onUpdate();
+      return true; // Long press was handled
+    }
+    return false; // Long press was not on the selected drawing tool
+  }
+
+  @override
+  bool onLongPressEnd() {
+    if (_longPressActive) {
+      _longPressActive = false;
+      // Trigger UI update by calling the behaviour's onUpdate callback
+      interactiveLayerBehaviour.onUpdate();
+      return true; // Long press end was handled
+    }
+    return false; // No active long press to end
   }
 
   @override

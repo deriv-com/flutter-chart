@@ -228,7 +228,7 @@ class TrendLineInteractableDrawing
         // Then add glowy effect on top based on state
         if (drawingState.contains(DrawingToolState.dragging) &&
             isDraggingStartPoint != null) {
-          // When dragging, only show glow on the point being dragged
+          // When dragging individual point, only show glow on the point being dragged
           final Offset draggedPointOffset =
               isDraggingStartPoint! ? startOffset : endOffset;
           drawFocusedCircle(
@@ -239,20 +239,9 @@ class TrendLineInteractableDrawing
             10 * animationInfo.stateChangePercent,
             3 * animationInfo.stateChangePercent,
           );
-        } else if (drawingState.contains(DrawingToolState.dragging) &&
-            isDraggingStartPoint == null) {
-          // When dragging the whole line, show glow on both points
-          drawPointsFocusedCircle(
-            paintStyle,
-            lineStyle,
-            canvas,
-            startOffset,
-            10 * animationInfo.stateChangePercent,
-            3 * animationInfo.stateChangePercent,
-            endOffset,
-          );
-        } else if (drawingState.contains(DrawingToolState.selected) ||
-            drawingState.contains(DrawingToolState.hovered)) {
+        } else if ((drawingState.contains(DrawingToolState.selected) ||
+                drawingState.contains(DrawingToolState.hovered)) &&
+            !drawingState.contains(DrawingToolState.dragging)) {
           // When not dragging, show glow on both points
           drawPointsFocusedCircle(
             paintStyle,
@@ -268,9 +257,11 @@ class TrendLineInteractableDrawing
             endOffset,
           );
         }
+        // Note: When dragging the whole line (isDraggingStartPoint == null),
+        // no glow effect is shown on endpoints as per requirements
       }
 
-      // Draw alignment guides when dragging
+      // Draw alignment guides when dragging or long pressing
       if (drawingState.contains(DrawingToolState.dragging) &&
           isDraggingStartPoint != null) {
         if (isDraggingStartPoint!) {
@@ -280,8 +271,9 @@ class TrendLineInteractableDrawing
           drawPointAlignmentGuides(canvas, size, endOffset,
               lineColor: config.lineStyle.color);
         }
-      } else if (drawingState.contains(DrawingToolState.dragging) &&
-          isDraggingStartPoint == null) {
+      } else if ((drawingState.contains(DrawingToolState.dragging) &&
+              isDraggingStartPoint == null) ||
+          drawingState.contains(DrawingToolState.longPressed)) {
         drawPointAlignmentGuides(canvas, size, startOffset,
             lineColor: config.lineStyle.color);
         drawPointAlignmentGuides(canvas, size, endOffset,

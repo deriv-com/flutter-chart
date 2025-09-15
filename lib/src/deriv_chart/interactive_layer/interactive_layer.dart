@@ -383,6 +383,8 @@ class _InteractiveLayerGestureHandlerState
       onDrawingToolPanUpdate: _handleDrawingToolPanUpdate,
       onDrawingToolPanEnd: _handleDrawingToolPanEnd,
       onDrawingToolPanCancel: _handleDrawingToolPanCancel,
+      onDrawingToolLongPress: _handleDrawingToolLongPress,
+      onDrawingToolLongPressEnd: _handleDrawingToolLongPressEnd,
       hitTest: widget.interactiveLayerBehaviour.hitTestDrawings,
       onCrosshairCancel: _cancelCrosshair,
       debugOwner: this,
@@ -471,6 +473,8 @@ class _InteractiveLayerGestureHandlerState
         onDrawingToolPanUpdate: _handleDrawingToolPanUpdate,
         onDrawingToolPanEnd: _handleDrawingToolPanEnd,
         onDrawingToolPanCancel: _handleDrawingToolPanCancel,
+        onDrawingToolLongPress: _handleDrawingToolLongPress,
+        onDrawingToolLongPressEnd: _handleDrawingToolLongPressEnd,
         hitTest: widget.interactiveLayerBehaviour.hitTestDrawings,
         onCrosshairCancel: _cancelCrosshair,
       );
@@ -733,6 +737,17 @@ class _InteractiveLayerGestureHandlerState
   // Handle drawing tool pan cancel
   void _handleDrawingToolPanCancel() {
     _updateInteractionMode(InteractionMode.none);
+  }
+
+  // Handle drawing tool long press
+  void _handleDrawingToolLongPress(Offset localPosition) {
+    widget.interactiveLayerBehaviour.onLongPress(localPosition);
+    _updateInteractionMode(InteractionMode.drawingTool);
+  }
+
+  // Handle drawing tool long press end
+  void _handleDrawingToolLongPressEnd() {
+    widget.interactiveLayerBehaviour.onLongPressEnd();
   }
 
   void _handleHover(PointerHoverEvent event, XAxisModel xAxis) {
