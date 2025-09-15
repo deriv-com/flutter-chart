@@ -1,14 +1,12 @@
-import 'dart:ui';
-
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
-import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/paint_helpers.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/drawing_v2.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:flutter/gestures.dart';
+import 'package:flutter/widgets.dart';
+import '../../enums/drawing_tool_state.dart';
 import '../../helpers/types.dart';
 import '../../interactive_layer_states/interactive_adding_tool_state.dart';
 import '../drawing_adding_preview.dart';
@@ -17,6 +15,12 @@ import 'horizontal_line_interactable_drawing.dart';
 /// A class to show a preview and handle adding a
 /// [HorizontalLineInteractableDrawing] to the chart. It's for when we're on
 /// [InteractiveLayerMobileBehaviour].
+///
+/// This mobile preview provides immediate focus mode by:
+/// - Automatically placing the line at the center of the chart
+/// - Immediately completing the adding process for instant focus mode
+/// - Delegating visual rendering to the main drawing for consistency
+/// - Providing full functionality (drag, neon effects, proper labeling)
 class HorizontalLineAddingPreviewMobile
     extends DrawingAddingPreview<HorizontalLineInteractableDrawing> {
   /// Initializes [HorizontalLineInteractableDrawing].
@@ -37,7 +41,10 @@ class HorizontalLineAddingPreviewMobile
         quote: interactiveLayer.quoteFromY(centerY),
       );
 
-      onAddingStateChange(AddingStateInfo(0, 1));
+      // Use a post-frame callback to ensure the startPoint is fully set before transitioning
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        onAddingStateChange(AddingStateInfo(1, 1));
+      });
     }
   }
 
@@ -92,21 +99,20 @@ class HorizontalLineAddingPreviewMobile
     ChartTheme chartTheme,
     GetDrawingState drawingState,
   ) {
+    // Only paint if we have a valid start point
     if (interactableDrawing.startPoint != null) {
-      final double lineY = quoteToY(interactableDrawing.startPoint!.quote);
+      // Delegate to main drawing with selected state simulation for full visual appearance
+      Set<DrawingToolState> mockGetDrawingState(DrawingV2 drawing) => {DrawingToolState.selected};
 
-      final Path horizontalPath = Path()
-        ..moveTo(0, lineY)
-        ..lineTo(size.width, lineY);
-
-      canvas.drawPath(
-        dashPath(horizontalPath,
-            dashArray: CircularIntervalList<double>(<double>[2, 2])),
-        Paint()
-          ..color = interactableDrawing.config.lineStyle.color
-          ..strokeWidth = interactableDrawing
-              .config.lineStyle.thickness // Explicitly set for consistency
-          ..style = PaintingStyle.stroke,
+      interactableDrawing.paint(
+        canvas,
+        size,
+        epochToX,
+        quoteToY,
+        animationInfo,
+        chartConfig,
+        chartTheme,
+        mockGetDrawingState,
       );
     }
   }
@@ -124,16 +130,24 @@ class HorizontalLineAddingPreviewMobile
     ChartTheme chartTheme,
     GetDrawingState getDrawingState,
   ) {
-    drawValueLabel(
-      canvas: canvas,
-      quoteToY: quoteToY,
-      value: interactableDrawing.startPoint!.quote,
-      pipSize: chartConfig.pipSize,
-      size: size,
-      textStyle: interactableDrawing.config.labelStyle,
-      color: interactableDrawing.config.lineStyle.color,
-      backgroundColor: chartTheme.backgroundColor,
-    );
+    // Only paint if we have a valid start point
+    if (interactableDrawing.startPoint != null) {
+      // Delegate to main drawing for consistent Y-axis labeling with neon effects
+      Set<DrawingToolState> mockGetDrawingState(DrawingV2 drawing) => {DrawingToolState.selected};
+
+      interactableDrawing.paintOverYAxis(
+        canvas,
+        size,
+        epochToX,
+        quoteToY,
+        epochFromX,
+        quoteFromY,
+        animationInfo,
+        chartConfig,
+        chartTheme,
+        mockGetDrawingState,
+      );
+    }
   }
 
   @override
@@ -144,11 +158,17 @@ class HorizontalLineAddingPreviewMobile
     EpochToX epochToX,
     QuoteToY quoteToY,
   ) {
+    // Since we immediately complete the adding process in the constructor,
+    // this method is primarily for consistency with the interface.
+    // The line is already positioned and in focus mode.
+
+    // If for some reason the start point is not set, set it to the tap position
     interactableDrawing.startPoint ??= EdgePoint(
       epoch: epochFromX(details.localPosition.dx),
       quote: quoteFromY(details.localPosition.dy),
     );
 
+    // Ensure we're in completed state
     onAddingStateChange(AddingStateInfo(1, 1));
   }
 }
