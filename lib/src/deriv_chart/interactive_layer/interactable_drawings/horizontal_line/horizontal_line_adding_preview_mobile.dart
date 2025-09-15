@@ -102,7 +102,8 @@ class HorizontalLineAddingPreviewMobile
     // Only paint if we have a valid start point
     if (interactableDrawing.startPoint != null) {
       // Delegate to main drawing with selected state simulation for full visual appearance
-      Set<DrawingToolState> mockGetDrawingState(DrawingV2 drawing) => {DrawingToolState.selected};
+      Set<DrawingToolState> mockGetDrawingState(DrawingV2 drawing) =>
+          {DrawingToolState.selected};
 
       interactableDrawing.paint(
         canvas,
@@ -133,7 +134,8 @@ class HorizontalLineAddingPreviewMobile
     // Only paint if we have a valid start point
     if (interactableDrawing.startPoint != null) {
       // Delegate to main drawing for consistent Y-axis labeling with neon effects
-      Set<DrawingToolState> mockGetDrawingState(DrawingV2 drawing) => {DrawingToolState.selected};
+      Set<DrawingToolState> mockGetDrawingState(DrawingV2 drawing) =>
+          {DrawingToolState.selected};
 
       interactableDrawing.paintOverYAxis(
         canvas,
