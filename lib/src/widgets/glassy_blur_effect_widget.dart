@@ -28,7 +28,11 @@ class GlassyBlurEffectWidget extends StatelessWidget {
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: theme.floatingMenuContainerGlassColor),
-          child: child,
+          child: MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: const TextScaler.linear(1),
+              ),
+              child: child),
         ),
       ),
     );
