@@ -148,6 +148,28 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
   }
 
   void syncDrawingsWithConfigs() {
+    // Safety check: Ensure drawing context is available before creating drawings
+    try {
+      final drawingContext = widget.interactiveLayerBehaviour.interactiveLayer.drawingContext;
+      if (drawingContext.fullSize == Size.zero) {
+        // Drawing context not ready yet, schedule retry after next frame
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            syncDrawingsWithConfigs();
+          }
+        });
+        return;
+      }
+    } catch (e) {
+      // Interactive layer not ready yet, schedule retry after next frame
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          syncDrawingsWithConfigs();
+        }
+      });
+      return;
+    }
+
     final configListIds =
         widget.drawingToolsRepo.items.map((c) => c.configId).toSet();
 
