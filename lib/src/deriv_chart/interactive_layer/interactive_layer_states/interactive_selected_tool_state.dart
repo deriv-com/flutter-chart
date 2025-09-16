@@ -180,6 +180,11 @@ class InteractiveSelectedToolState extends InteractiveState
     // Check if the long press is on the selected drawing
     if (selected.hitTest(localPosition, epochToX, quoteToY)) {
       _longPressActive = true;
+
+      // Call the selected drawing tool's long press start method
+      selected.onLongPressStart(
+          localPosition, epochFromX, quoteFromY, epochToX, quoteToY);
+
       // Trigger UI update by calling the behaviour's onUpdate callback
       interactiveLayerBehaviour.onUpdate();
       return true; // Long press was handled
@@ -191,6 +196,10 @@ class InteractiveSelectedToolState extends InteractiveState
   bool onLongPressEnd() {
     if (_longPressActive) {
       _longPressActive = false;
+
+      // Call the selected drawing tool's long press end method
+      selected.onLongPressEnd(epochFromX, quoteFromY, epochToX, quoteToY);
+
       // Trigger UI update by calling the behaviour's onUpdate callback
       interactiveLayerBehaviour.onUpdate();
       return true; // Long press end was handled
