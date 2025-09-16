@@ -93,8 +93,6 @@ class DrawingToolGestureRecognizer extends OneSequenceGestureRecognizer {
   /// Whether the pointer has moved significantly (indicating drag, not long press).
   bool _hasMovedSignificantly = false;
 
-  /// Threshold for determining if the pointer has moved significantly.
-  static const double _kTouchSlop = 18;
 
   @override
   void addPointer(PointerDownEvent event) {
@@ -152,7 +150,7 @@ class DrawingToolGestureRecognizer extends OneSequenceGestureRecognizer {
       // Check if the pointer has moved significantly
       if (_globalStartPosition != null) {
         final distance = (event.position - _globalStartPosition!).distance;
-        if (distance > _kTouchSlop && !_hasMovedSignificantly) {
+        if (distance > kTouchSlop && !_hasMovedSignificantly) {
           _hasMovedSignificantly = true;
           _cancelLongPressTimer();
 
