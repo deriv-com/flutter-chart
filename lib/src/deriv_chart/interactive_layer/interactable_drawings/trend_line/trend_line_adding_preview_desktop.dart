@@ -124,6 +124,10 @@ class _DesktopAnimationController {
   void startAnimation() {
     if (_controller != null) {
       _isActive = true;
+      // Stop any running animation before starting new one
+      if (_controller!.isAnimating) {
+        _controller!.stop();
+      }
       _controller!.forward().then((_) {
         _isActive = false;
       });
