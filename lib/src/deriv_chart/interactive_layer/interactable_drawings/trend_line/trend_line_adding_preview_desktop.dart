@@ -42,111 +42,107 @@ class _AnimationConfig {
   static const double maxGlowRadius = 12;
 }
 
-/// Manages animation state and values for desktop trend line preview
+/// Manages animation state and values for desktop trend line preview using Flutter's AnimationController
 class _DesktopAnimationController {
-  DesktopAnimationState _state = DesktopAnimationState.idle;
-  DateTime? _startTime;
+  AnimationController? _controller;
+  late Animation<double> _guideOpacityAnimation;
+  late Animation<double> _pulseIntensityAnimation;
+
   bool _isActive = false;
-
-  double _guideOpacity = 1;
-  double _pulseIntensity = 0;
-
-  /// Current animation state
-  DesktopAnimationState get state => _state;
 
   /// Whether animation is currently active
   bool get isActive => _isActive;
 
   /// Current opacity for alignment guides
-  double get guideOpacity => _guideOpacity;
+  double get guideOpacity => _guideOpacityAnimation.value;
 
   /// Current pulse intensity for start point glow
-  double get pulseIntensity => _pulseIntensity;
+  double get pulseIntensity => _pulseIntensityAnimation.value;
+
+  /// Initializes the animation controller with the provided ticker and update callback
+  void init(AnimationController controller, VoidCallback onUpdate) {
+    _controller = controller;
+
+    // Create guide opacity animation sequence:
+    // 0-250ms: fade out (1.0 -> 0.0)
+    // 250-350ms: delay (stay at 0.0)
+    // 350-600ms: fade in (0.0 -> 1.0)
+    _guideOpacityAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: Tween(begin: 1, end: 0),
+        weight: _AnimationConfig.guideFadeOutDurationMs.toDouble(),
+      ),
+      TweenSequenceItem(
+        tween: ConstantTween(0),
+        weight: _AnimationConfig.guideDelayDurationMs.toDouble(),
+      ),
+      TweenSequenceItem(
+        tween: Tween(begin: 0, end: 1),
+        weight: _AnimationConfig.guideFadeInDurationMs.toDouble(),
+      ),
+      TweenSequenceItem(
+        tween: ConstantTween(1),
+        weight: (_AnimationConfig.pulseDurationMs -
+                _AnimationConfig.guideFadeInDurationMs)
+            .toDouble(),
+      ),
+    ]).animate(_controller!);
+
+    // Create pulse animation sequence:
+    // 0-350ms: no pulse (0.0)
+    // 350-850ms: pulse effect (0.0 -> 1.0 -> 0.0)
+    _pulseIntensityAnimation = TweenSequence<double>([
+      TweenSequenceItem(
+        tween: ConstantTween(0),
+        weight: (_AnimationConfig.guideFadeOutDurationMs +
+                _AnimationConfig.guideDelayDurationMs)
+            .toDouble(),
+      ),
+      TweenSequenceItem(
+        tween: TweenSequence<double>([
+          TweenSequenceItem(
+            tween: Tween(begin: 0, end: 1),
+            weight: 50,
+          ),
+          TweenSequenceItem(
+            tween: Tween(begin: 1, end: 0),
+            weight: 50,
+          ),
+        ]),
+        weight: _AnimationConfig.pulseDurationMs.toDouble(),
+      ),
+    ]).animate(CurvedAnimation(
+      parent: _controller!,
+      curve: Curves.easeInOut,
+    ));
+
+    // Add listener to trigger updates
+    _controller!.addListener(onUpdate);
+  }
 
   /// Starts the animation sequence
   void startAnimation() {
-    _state = DesktopAnimationState.guideFadeOut;
-    _startTime = DateTime.now();
-    _isActive = true;
+    if (_controller != null) {
+      _isActive = true;
+      _controller!.forward().then((_) {
+        _isActive = false;
+      });
+    }
   }
 
   /// Stops and resets the animation
   void stopAnimation() {
-    _state = DesktopAnimationState.idle;
-    _startTime = null;
-    _isActive = false;
-    _guideOpacity = 1;
-    _pulseIntensity = 0;
-  }
-
-  /// Updates animation values based on elapsed time
-  void update() {
-    if (_startTime == null || _state == DesktopAnimationState.idle) {
-      return;
-    }
-
-    final elapsed = DateTime.now().difference(_startTime!).inMilliseconds;
-
-    switch (_state) {
-      case DesktopAnimationState.guideFadeOut:
-        _updateFadeOut(elapsed);
-        break;
-      case DesktopAnimationState.guideDelay:
-        _updateDelay(elapsed);
-        break;
-      case DesktopAnimationState.guideFadeIn:
-        _updateFadeInWithPulse(elapsed);
-        break;
-      case DesktopAnimationState.startPointPulse:
-      case DesktopAnimationState.idle:
-        break;
-    }
-  }
-
-  void _updateFadeOut(int elapsed) {
-    final progress =
-        (elapsed / _AnimationConfig.guideFadeOutDurationMs).clamp(0.0, 1.0);
-    _guideOpacity = 1.0 - progress;
-
-    if (progress >= 1.0) {
-      _state = DesktopAnimationState.guideDelay;
-    }
-  }
-
-  void _updateDelay(int elapsed) {
-    if (elapsed >= _AnimationConfig.guideDelayDurationMs) {
-      _state = DesktopAnimationState.guideFadeIn;
-    }
-  }
-
-  void _updateFadeInWithPulse(int elapsed) {
-    const fadeInStart = _AnimationConfig.guideDelayDurationMs;
-    final fadeInElapsed = elapsed - fadeInStart;
-    final fadeProgress =
-        (fadeInElapsed / _AnimationConfig.guideFadeInDurationMs)
-            .clamp(0.0, 1.0);
-
-    // Update guide opacity
-    _guideOpacity = fadeProgress;
-
-    // Update pulse animation simultaneously
-    final pulseElapsed = elapsed - fadeInStart;
-    final pulseProgress =
-        (pulseElapsed / _AnimationConfig.pulseDurationMs).clamp(0.0, 1.0);
-
-    // Create pulse effect: 0 -> 1 -> 0
-    if (pulseProgress <= 0.5) {
-      _pulseIntensity = pulseProgress * 2.0;
-    } else {
-      _pulseIntensity = (1.0 - pulseProgress) * 2.0;
-    }
-
-    // Animation completes when both fade-in and pulse are done
-    if (fadeProgress >= 1.0 && pulseProgress >= 1.0) {
-      _pulseIntensity = 0.0;
-      _state = DesktopAnimationState.idle;
+    if (_controller != null) {
+      _controller!.stop();
+      _controller!.reset();
       _isActive = false;
     }
+  }
+
+  /// Disposes of the animation controller
+  void dispose() {
+    _controller = null;
+    _isActive = false;
   }
 }
 
@@ -254,10 +250,35 @@ class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
   }) {
     onAddingStateChange(AddingStateInfo(0, 2));
     _renderer = _DesktopRenderer(this);
+    _initializeAnimation();
   }
+
   Offset? _hoverPosition;
-  final _animationController = _DesktopAnimationController();
+  _DesktopAnimationController? _animationController;
   late final _DesktopRenderer _renderer;
+
+  /// Initialize the animation controller using the interactive layer's vsync
+  void _initializeAnimation() {
+    // Use the interactive layer as the TickerProvider (now has TickerProviderStateMixin)
+    final interactiveLayerState = interactiveLayerBehaviour.interactiveLayer;
+
+    // Cast to TickerProvider since we know the implementation has TickerProviderStateMixin
+    if (interactiveLayerState is TickerProvider) {
+      final tickerProvider = interactiveLayerState as TickerProvider;
+
+      // Create a dedicated AnimationController for our desktop animation
+      final controller = AnimationController(
+        vsync: tickerProvider,
+        duration: const Duration(milliseconds: 850), // Total animation duration
+      );
+
+      _animationController = _DesktopAnimationController();
+      _animationController!.init(controller, () {
+        // Trigger repaint when animation updates
+        interactiveLayerBehaviour.onUpdate();
+      });
+    }
+  }
 
   @override
   void onHover(PointerHoverEvent event, EpochFromX epochFromX,
@@ -276,8 +297,6 @@ class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
     ChartTheme chartTheme,
     GetDrawingState getDrawingState,
   ) {
-    _updateAnimation();
-
     final (paintStyle, lineStyle) = getStyles();
     final startPoint = interactableDrawing.startPoint;
     final endPoint = interactableDrawing.endPoint;
@@ -345,25 +364,8 @@ class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
     createPoint(details, epochFromX, quoteFromY);
 
     if (isFirstPoint) {
-      _animationController.startAnimation();
-      _scheduleNextFrame();
+      _animationController?.startAnimation();
     }
-  }
-
-  void _updateAnimation() {
-    _animationController.update();
-
-    if (_animationController.isActive) {
-      _scheduleNextFrame();
-    }
-  }
-
-  void _scheduleNextFrame() {
-    Future.microtask(() {
-      if (_animationController.isActive) {
-        interactiveLayerBehaviour.onUpdate();
-      }
-    });
   }
 
   void _renderWithStartPoint({
@@ -385,7 +387,7 @@ class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
       quoteToY: quoteToY,
       paintStyle: paintStyle,
       lineStyle: lineStyle,
-      pulseIntensity: _animationController.pulseIntensity,
+      pulseIntensity: _animationController?.pulseIntensity ?? 0,
     );
 
     // Render preview line and alignment guides if hovering
@@ -405,7 +407,7 @@ class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
           size: size,
           position: _hoverPosition!,
           lineColor: lineColor,
-          opacity: _animationController.guideOpacity,
+          opacity: _animationController?.guideOpacity ?? 1,
         );
     }
 
@@ -431,7 +433,7 @@ class TrendLineAddingPreviewDesktop extends TrendLineAddingPreview {
         size: size,
         position: _hoverPosition!,
         lineColor: lineColor,
-        opacity: _animationController.guideOpacity,
+        opacity: _animationController?.guideOpacity ?? 1,
       );
     }
   }

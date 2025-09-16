@@ -340,7 +340,7 @@ class _InteractiveLayerGestureHandler extends StatefulWidget {
 
 class _InteractiveLayerGestureHandlerState
     extends State<_InteractiveLayerGestureHandler>
-    with SingleTickerProviderStateMixin
+    with TickerProviderStateMixin
     implements InteractiveLayerBase {
   late AnimationController _stateChangeController;
   static const Curve _stateChangeCurve = Curves.easeOut;
