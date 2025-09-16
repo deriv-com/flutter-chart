@@ -93,7 +93,6 @@ class DrawingToolGestureRecognizer extends OneSequenceGestureRecognizer {
   /// Whether the pointer has moved significantly (indicating drag, not long press).
   bool _hasMovedSignificantly = false;
 
-
   @override
   void addPointer(PointerDownEvent event) {
     _globalStartPosition = event.position;
