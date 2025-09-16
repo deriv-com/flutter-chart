@@ -18,8 +18,8 @@ void drawPointAlignmentGuides(Canvas canvas, Size size, Offset pointOffset,
 void drawPointAlignmentGuidesWithOpacity(
     Canvas canvas, Size size, Offset pointOffset,
     {Color lineColor = const Color(0x80FFFFFF), double opacity = 1.0}) {
-  // Skip drawing if opacity is zero
-  if (opacity <= 0.0) {
+  // Skip drawing if opacity is effectively zero (performance optimization)
+  if (opacity < 0.01) {
     return;
   }
 
