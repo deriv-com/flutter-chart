@@ -87,8 +87,14 @@ class TrendLineAddingPreviewMobile extends TrendLineAddingPreview {
         );
 
       // Use a post-frame callback to ensure points are fully set before transitioning
+      // Check if the widget is still mounted to prevent race conditions
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        onAddingStateChange(AddingStateInfo(1, 1));
+        // Check if the interactive layer is still mounted and points are valid
+        if (interactiveLayerBehaviour.interactiveLayer.isStillMounted &&
+            interactableDrawing.startPoint != null &&
+            interactableDrawing.endPoint != null) {
+          onAddingStateChange(AddingStateInfo(1, 1));
+        }
       });
     }
   }

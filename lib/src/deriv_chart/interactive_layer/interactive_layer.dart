@@ -228,6 +228,8 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
     super.dispose();
   }
 
+  bool get isStillMounted => mounted;
+
   @override
   Widget build(BuildContext context) {
     return _InteractiveLayerGestureHandler(
@@ -345,6 +347,9 @@ class _InteractiveLayerGestureHandlerState
   final InteractionNotifier _interactionNotifier = InteractionNotifier();
 
   String? _addedDrawing;
+
+  @override
+  bool get isStillMounted => mounted;
 
   @override
   AnimationController? get stateChangeAnimationController =>

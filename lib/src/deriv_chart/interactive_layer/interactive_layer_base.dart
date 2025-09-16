@@ -65,4 +65,11 @@ abstract class InteractiveLayerBase {
   /// This method provides a clean way to hide the crosshair when other
   /// UI elements need to take precedence over crosshair interactions.
   void hideCrosshair();
+
+  /// Returns true if the interactive layer widget is still mounted and safe to use.
+  ///
+  /// This property should be checked before executing asynchronous operations
+  /// like post-frame callbacks to prevent race conditions and crashes when
+  /// the widget has been disposed.
+  bool get isStillMounted;
 }

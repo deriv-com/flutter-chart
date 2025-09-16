@@ -42,8 +42,13 @@ class HorizontalLineAddingPreviewMobile
       );
 
       // Use a post-frame callback to ensure the startPoint is fully set before transitioning
+      // Check if the widget is still mounted to prevent race conditions
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        onAddingStateChange(AddingStateInfo(1, 1));
+        // Check if the interactive layer is still mounted and startPoint is valid
+        if (interactiveLayerBehaviour.interactiveLayer.isStillMounted &&
+            interactableDrawing.startPoint != null) {
+          onAddingStateChange(AddingStateInfo(1, 1));
+        }
       });
     }
   }
