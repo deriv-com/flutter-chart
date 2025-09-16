@@ -253,14 +253,6 @@ class TrendLineInteractableDrawing
     final DrawingPaintStyle paintStyle = DrawingPaintStyle();
     final drawingState = getDrawingState(this);
 
-    // Detect which point is being long-pressed when long press state is active
-    if (drawingState.contains(DrawingToolState.longPressed) &&
-        isLongPressingStartPoint == null) {
-      // We need to determine which point was long-pressed
-      // Since we don't have the original long press position here,
-      // we'll need to handle this in the interactive layer
-      // For now, we'll assume it's a whole-line long press
-    }
 
     if (startPoint != null && endPoint != null) {
       final Offset startOffset =
