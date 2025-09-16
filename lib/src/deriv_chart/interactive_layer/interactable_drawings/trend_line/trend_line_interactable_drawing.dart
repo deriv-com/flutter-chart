@@ -253,7 +253,6 @@ class TrendLineInteractableDrawing
     final DrawingPaintStyle paintStyle = DrawingPaintStyle();
     final drawingState = getDrawingState(this);
 
-
     if (startPoint != null && endPoint != null) {
       final Offset startOffset =
           Offset(epochToX(startPoint!.epoch), quoteToY(startPoint!.quote));
