@@ -180,6 +180,13 @@ abstract class InteractiveLayerBehaviour {
   /// Handles hover event.
   bool onHover(PointerHoverEvent event) => currentState.onHover(event);
 
+  /// Handles long press event.
+  bool onLongPress(Offset localPosition) =>
+      currentState.onLongPress(localPosition);
+
+  /// Handles long press end event.
+  bool onLongPressEnd() => currentState.onLongPressEnd();
+
   /// Checks if a point hits any drawing (both regular drawings and preview drawings).
   ///
   /// This method is used for hit testing to determine if a given local position

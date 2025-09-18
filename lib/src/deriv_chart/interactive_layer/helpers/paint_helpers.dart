@@ -10,9 +10,22 @@ import 'package:flutter/material.dart';
 /// Draws alignment guides (horizontal and vertical lines) for a single point
 void drawPointAlignmentGuides(Canvas canvas, Size size, Offset pointOffset,
     {Color lineColor = const Color(0x80FFFFFF)}) {
-  // Create a dashed paint style for the alignment guides
+  drawPointAlignmentGuidesWithOpacity(canvas, size, pointOffset,
+      lineColor: lineColor);
+}
+
+/// Draws alignment guides with configurable opacity for animations
+void drawPointAlignmentGuidesWithOpacity(
+    Canvas canvas, Size size, Offset pointOffset,
+    {Color lineColor = const Color(0x80FFFFFF), double opacity = 1.0}) {
+  // Skip drawing if opacity is effectively zero (performance optimization)
+  if (opacity <= 0.0) {
+    return;
+  }
+
+  // Create a dashed paint style for the alignment guides with opacity
   final Paint guidesPaint = Paint()
-    ..color = lineColor
+    ..color = lineColor.withOpacity(lineColor.opacity * opacity)
     ..strokeWidth = 1.0
     ..style = PaintingStyle.stroke;
 

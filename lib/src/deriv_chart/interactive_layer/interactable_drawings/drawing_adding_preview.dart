@@ -145,6 +145,25 @@ abstract class DrawingAddingPreview<
     QuoteToY quoteToY,
   ) {}
 
+  /// Called when a long press starts on the drawing tool.
+  @override
+  void onLongPressStart(
+    Offset localPosition,
+    EpochFromX epochFromX,
+    QuoteFromY quoteFromY,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+  ) {}
+
+  /// Called when a long press ends on the drawing tool.
+  @override
+  void onLongPressEnd(
+    EpochFromX epochFromX,
+    QuoteFromY quoteFromY,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+  ) {}
+
   @override
   void paintOverYAxis(
     Canvas canvas,
