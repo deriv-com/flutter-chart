@@ -127,6 +127,22 @@ abstract class InteractiveState {
     // Subclasses can override this to provide specific hover handling logic
     return false;
   }
+
+  /// Handles long press event.
+  /// Returns true if the long press was handled by a drawing tool, false otherwise.
+  bool onLongPress(Offset localPosition) {
+    // Default implementation returns false
+    // Subclasses can override this to provide specific long press handling logic
+    return false;
+  }
+
+  /// Handles long press end event.
+  /// Returns true if the long press end was handled by a drawing tool, false otherwise.
+  bool onLongPressEnd() {
+    // Default implementation returns false
+    // Subclasses can override this to provide specific long press end handling logic
+    return false;
+  }
 }
 
 /// Extension that provides utility methods for interactive states.
