@@ -431,253 +431,149 @@ class _FullscreenChartState extends State<FullscreenChart> {
         color: DarkThemeColors.backgroundDynamicHighest,
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                children: <Widget>[
-                  Expanded(child: _buildMarketSelectorButton()),
-                  _buildChartTypeButton(),
-                  _buildIntervalSelector(),
-                ],
-              ),
+            _TopControls(
+              marketButton: _buildMarketSelectorButton(),
+              chartTypeButton: _buildChartTypeButton(),
+              intervalSelector: _buildIntervalSelector(),
             ),
             Expanded(
-              child: Stack(
-                children: <Widget>[
-                  ClipRect(
-                    child: DerivChart(
-                      useDrawingToolsV2: true,
-                      interactiveLayerBehaviour: _interactiveLayerBehaviour,
-                      mainSeries: _getDataSeries(style),
-                      markerSeries: _getMarkerSeries(),
-                      activeSymbol: _symbol.name,
-                      annotations: ticks.length > 4
-                          ? <ChartAnnotation<ChartObject>>[
-                              ..._sampleBarriers,
-                              if (_sl && _slBarrier != null)
-                                _slBarrier as ChartAnnotation<ChartObject>,
-                              if (_tp && _tpBarrier != null)
-                                _tpBarrier as ChartAnnotation<ChartObject>,
-                              TickIndicator(
-                                ticks.last,
-                                style: const HorizontalBarrierStyle(
-                                  color: DarkThemeColors.currentSpotDotColor,
-                                  labelShape: LabelShape.pentagon,
-                                  hasBlinkingDot: true,
-                                  hasArrow: false,
-                                  lineColor:
-                                      DarkThemeColors.currentSpotLineColor,
-                                  isDashed: false,
-                                  labelShapeBackgroundColor:
-                                      DarkThemeColors.currentSpotContainerColor,
-                                  textStyle: TextStyle(
-                                    color: DarkThemeColors.currentSpotTextColor,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                                visibility: HorizontalBarrierVisibility
-                                    .keepBarrierLabelVisible,
-                              ),
-                            ]
-                          : null,
-                      pipSize:
-                          (_tickHistorySubscription?.tickHistory?.pipSize ?? 4)
-                              .toInt(),
-                      granularity: granularity == 0
-                          ? 1000 // average ms difference between ticks
-                          : granularity * 1000,
-                      controller: _controller,
-                      isLive: (_symbol.isOpen) &&
-                          (_connectionBloc.state
-                              is connection_bloc.ConnectionConnectedState),
-                      opacity: _symbol.isOpen ? 1.0 : 0.5,
-                      onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
-                        if (!_waitingForHistory &&
-                            ticks.isNotEmpty &&
-                            leftEpoch < ticks.first.epoch) {
-                          _loadHistory(500);
-                        }
-                      },
-                    ),
-                  ),
-                  // ignore: unnecessary_null_comparison
-                  if (_connectionBloc != null &&
-                      _connectionBloc.state
-                          is! connection_bloc.ConnectionConnectedState)
-                    Align(
-                      child: _buildConnectionStatus(),
-                    ),
-                  Container(
-                    alignment: Alignment.topRight,
-                    padding: const EdgeInsets.all(16),
-                    child: ListenableBuilder(
-                      listenable: _interactiveLayerController,
-                      builder: (_, __) {
-                        if (_interactiveLayerController.currentState
-                            is InteractiveAddingToolState) {
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text('Cancel adding'),
-                              IconButton(
-                                onPressed:
-                                    _interactiveLayerController.cancelAdding,
-                                icon: const Icon(Icons.cancel),
-                              ),
-                            ],
-                          );
-                        }
-                        return const SizedBox();
-                      },
-                    ),
-                  ),
-                ],
+              child: _ChartSection(
+                interactiveLayerBehaviour: _interactiveLayerBehaviour,
+                mainSeries: _getDataSeries(style),
+                markerSeries: _getMarkerSeries(),
+                activeSymbol: _symbol.name,
+                annotations: _buildAnnotations(),
+                pipSize: (_tickHistorySubscription?.tickHistory?.pipSize ?? 4)
+                    .toInt(),
+                granularityMs: granularity == 0 ? 1000 : granularity * 1000,
+                controller: _controller,
+                isLive: (_symbol.isOpen) &&
+                    (_connectionBloc.state
+                        is connection_bloc.ConnectionConnectedState),
+                opacity: _symbol.isOpen ? 1.0 : 0.5,
+                onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+                  if (!_waitingForHistory &&
+                      ticks.isNotEmpty &&
+                      leftEpoch < ticks.first.epoch) {
+                    _loadHistory(500);
+                  }
+                },
+                isConnected: _connectionBloc.state
+                    is connection_bloc.ConnectionConnectedState,
+                connectionStatus: _buildConnectionStatus(),
+                interactiveLayerController: _interactiveLayerController,
               ),
             ),
-            SizedBox(
-              height: 64,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  IconButton(
-                      icon: const Icon(Icons.settings),
-                      onPressed: () async {
-                        final bool? settingChanged =
-                            await Navigator.of(context).push(
-                          MaterialPageRoute<bool>(
-                              builder: (_) => PrefService(
-                                    child: SettingsPage(),
-                                    service: _prefService,
-                                  )),
-                        );
-
-                        // Always reload trade type when returning from settings
-                        await _loadTradeType();
-
-                        if (settingChanged ?? false) {
-                          _requestCompleter = Completer<dynamic>();
-                          await _tickStreamSubscription?.cancel();
-                          ticks.clear();
-                          // reconnect to new config
-                          await _connectionBloc.reconnect(
-                            connectionInformation:
-                                await _getConnectionInfoFromPrefs(),
-                          );
-                        }
-                      }),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.resolveWith<Color>(
-                          (Set<WidgetState> states) => const Color(0xFF00C390)),
-                      foregroundColor: WidgetStateProperty.resolveWith<Color>(
-                          (Set<WidgetState> states) => Colors.white),
-                    ),
-                    child: Text(_getUpButtonText()),
-                    onPressed: () => _addMarker(MarkerDirection.up),
-                  ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.resolveWith<Color>(
-                          (Set<WidgetState> states) => const Color(0xFFDE0040)),
-                      foregroundColor: WidgetStateProperty.resolveWith<Color>(
-                          (Set<WidgetState> states) => Colors.white),
-                    ),
-                    child: Text(_getDownButtonText()),
-                    onPressed: () => _addMarker(MarkerDirection.down),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => setState(_clearMarkers),
-                  ),
-                ],
-              ),
+            _ActionButtonsRow(
+              onSettingsPressed: () => _onSettingsPressed(context),
+              upLabel: _getUpButtonText(),
+              downLabel: _getDownButtonText(),
+              onUp: () => _addMarker(MarkerDirection.up),
+              onDown: () => _addMarker(MarkerDirection.down),
+              onClearMarkers: () => setState(_clearMarkers),
             ),
-            SizedBox(
-              height: 64,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  TextButton(
-                    child: const Text('V barrier'),
-                    onPressed: () => setState(
-                      () => _sampleBarriers.add(
-                        VerticalBarrier.onTick(ticks.last,
-                            title: 'V Barrier',
-                            id: 'VBarrier${_sampleBarriers.length}',
-                            longLine: math.Random().nextBool(),
-                            style: VerticalBarrierStyle(
-                              isDashed: math.Random().nextBool(),
-                            )),
-                      ),
+            _BarriersControlsRow(
+              onAddVerticalBarrier: () => setState(
+                () => _sampleBarriers.add(
+                  VerticalBarrier.onTick(
+                    ticks.last,
+                    title: 'V Barrier',
+                    id: 'VBarrier${_sampleBarriers.length}',
+                    longLine: math.Random().nextBool(),
+                    style: VerticalBarrierStyle(
+                      isDashed: math.Random().nextBool(),
                     ),
                   ),
-                  TextButton(
-                    child: const Text('H barrier'),
-                    onPressed: () => setState(
-                      () => _sampleBarriers.add(
-                        HorizontalBarrier(
-                          ticks.last.quote,
-                          epoch: math.Random().nextBool()
-                              ? ticks.last.epoch
-                              : null,
-                          id: 'HBarrier${_sampleBarriers.length}',
-                          longLine: math.Random().nextBool(),
-                          visibility: HorizontalBarrierVisibility.normal,
-                          style: HorizontalBarrierStyle(
-                            color: Colors.grey,
-                            isDashed: math.Random().nextBool(),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                    child: const Text('+ Both'),
-                    onPressed: () => setState(() => _sampleBarriers.add(
-                          CombinedBarrier(
-                            ticks.last,
-                            title: 'B Barrier',
-                            id: 'CBarrier${_sampleBarriers.length}',
-                            horizontalBarrierStyle:
-                                const HorizontalBarrierStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        )),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => setState(() {
-                      _clearBarriers();
-                    }),
-                  ),
-                ],
+                ),
               ),
+              onAddHorizontalBarrier: () => setState(
+                () => _sampleBarriers.add(
+                  HorizontalBarrier(
+                    ticks.last.quote,
+                    epoch: math.Random().nextBool() ? ticks.last.epoch : null,
+                    id: 'HBarrier${_sampleBarriers.length}',
+                    longLine: math.Random().nextBool(),
+                    visibility: HorizontalBarrierVisibility.normal,
+                    style: HorizontalBarrierStyle(
+                      color: Colors.grey,
+                      isDashed: math.Random().nextBool(),
+                    ),
+                  ),
+                ),
+              ),
+              onAddCombinedBarrier: () => setState(
+                () => _sampleBarriers.add(
+                  CombinedBarrier(
+                    ticks.last,
+                    title: 'B Barrier',
+                    id: 'CBarrier${_sampleBarriers.length}',
+                    horizontalBarrierStyle: const HorizontalBarrierStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              ),
+              onClearBarriers: () => setState(_clearBarriers),
             ),
-            SizedBox(
-              height: 64,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: CheckboxListTile(
-                      value: _sl,
-                      onChanged: (bool? sl) => setState(() => _sl = sl!),
-                      title: const Text('Stop loss'),
-                    ),
-                  ),
-                  Expanded(
-                    child: CheckboxListTile(
-                      value: _tp,
-                      onChanged: (bool? tp) => setState(() => _tp = tp!),
-                      title: const Text('Take profit'),
-                    ),
-                  ),
-                ],
-              ),
-            )
+            _SlTpCheckboxesRow(
+              sl: _sl,
+              tp: _tp,
+              onSlChanged: (bool? value) => setState(() => _sl = value!),
+              onTpChanged: (bool? value) => setState(() => _tp = value!),
+            ),
           ],
         ),
       );
+
+  List<ChartAnnotation<ChartObject>>? _buildAnnotations() {
+    if (ticks.length <= 4) {
+      return null;
+    }
+    return <ChartAnnotation<ChartObject>>[
+      ..._sampleBarriers,
+      if (_sl && _slBarrier != null) _slBarrier as ChartAnnotation<ChartObject>,
+      if (_tp && _tpBarrier != null) _tpBarrier as ChartAnnotation<ChartObject>,
+      TickIndicator(
+        ticks.last,
+        style: const HorizontalBarrierStyle(
+          color: DarkThemeColors.currentSpotDotColor,
+          labelShape: LabelShape.pentagon,
+          hasBlinkingDot: true,
+          hasArrow: false,
+          lineColor: DarkThemeColors.currentSpotLineColor,
+          isDashed: false,
+          labelShapeBackgroundColor: DarkThemeColors.currentSpotContainerColor,
+          textStyle: TextStyle(
+            color: DarkThemeColors.currentSpotTextColor,
+            fontSize: 10,
+          ),
+        ),
+        visibility: HorizontalBarrierVisibility.keepBarrierLabelVisible,
+      ),
+    ];
+  }
+
+  Future<void> _onSettingsPressed(BuildContext context) async {
+    final bool? settingChanged = await Navigator.of(context).push(
+      MaterialPageRoute<bool>(
+        builder: (_) => PrefService(
+          child: SettingsPage(),
+          service: _prefService,
+        ),
+      ),
+    );
+
+    await _loadTradeType();
+
+    if (settingChanged ?? false) {
+      _requestCompleter = Completer<dynamic>();
+      await _tickStreamSubscription?.cancel();
+      ticks.clear();
+      await _connectionBloc.reconnect(
+        connectionInformation: await _getConnectionInfoFromPrefs(),
+      );
+    }
+  }
 
   void _addMarker(MarkerDirection direction) {
     final Tick lastTick = ticks.last;
@@ -997,7 +893,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
                   id: 'marker_${marker.epoch}',
                   currentEpoch: currentEpoch,
                   profitAndLossText: '+9.55 USD',
-                  isProfit: true,
                   onTap: marker.onTap,
                   onTapOutside: () {
                     setState(() => _activeMarkerGroup = null);
@@ -1028,7 +923,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
         id: 'marker_${marker.epoch}',
         currentEpoch: currentEpoch,
         profitAndLossText: '+9.55 USD',
-        isProfit: true,
       );
     }).toList();
   }
@@ -1054,5 +948,259 @@ class _FullscreenChartState extends State<FullscreenChart> {
         markerIconPainter: MultipliersMarkerIconPainter(),
       );
     }
+  }
+}
+
+class _TopControls extends StatelessWidget {
+  const _TopControls({
+    required this.marketButton,
+    required this.chartTypeButton,
+    required this.intervalSelector,
+  });
+
+  final Widget marketButton;
+  final Widget chartTypeButton;
+  final Widget intervalSelector;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        children: <Widget>[
+          Expanded(child: marketButton),
+          chartTypeButton,
+          intervalSelector,
+        ],
+      ),
+    );
+  }
+}
+
+class _ChartSection extends StatelessWidget {
+  const _ChartSection({
+    required this.interactiveLayerBehaviour,
+    required this.mainSeries,
+    required this.markerSeries,
+    required this.activeSymbol,
+    required this.annotations,
+    required this.pipSize,
+    required this.granularityMs,
+    required this.controller,
+    required this.isLive,
+    required this.opacity,
+    required this.onVisibleAreaChanged,
+    required this.isConnected,
+    required this.connectionStatus,
+    required this.interactiveLayerController,
+  });
+
+  final InteractiveLayerBehaviour interactiveLayerBehaviour;
+  final DataSeries<Tick> mainSeries;
+  final dynamic markerSeries;
+  final String activeSymbol;
+  final List<ChartAnnotation<ChartObject>>? annotations;
+  final int pipSize;
+  final int granularityMs;
+  final ChartController controller;
+  final bool isLive;
+  final double opacity;
+  final void Function(int leftEpoch, int rightEpoch) onVisibleAreaChanged;
+  final bool isConnected;
+  final Widget connectionStatus;
+  final InteractiveLayerController interactiveLayerController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        ClipRect(
+          child: DerivChart(
+            useDrawingToolsV2: true,
+            interactiveLayerBehaviour: interactiveLayerBehaviour,
+            mainSeries: mainSeries,
+            markerSeries: markerSeries,
+            activeSymbol: activeSymbol,
+            annotations: annotations,
+            pipSize: pipSize,
+            granularity: granularityMs,
+            controller: controller,
+            isLive: isLive,
+            opacity: opacity,
+            onVisibleAreaChanged: onVisibleAreaChanged,
+          ),
+        ),
+        if (!isConnected)
+          Align(
+            child: connectionStatus,
+          ),
+        Container(
+          alignment: Alignment.topRight,
+          padding: const EdgeInsets.all(16),
+          child: ListenableBuilder(
+            listenable: interactiveLayerController,
+            builder: (_, __) {
+              if (interactiveLayerController.currentState
+                  is InteractiveAddingToolState) {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const Text('Cancel adding'),
+                    IconButton(
+                      onPressed: interactiveLayerController.cancelAdding,
+                      icon: const Icon(Icons.cancel),
+                    ),
+                  ],
+                );
+              }
+              return const SizedBox();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ActionButtonsRow extends StatelessWidget {
+  const _ActionButtonsRow({
+    required this.onSettingsPressed,
+    required this.upLabel,
+    required this.downLabel,
+    required this.onUp,
+    required this.onDown,
+    required this.onClearMarkers,
+  });
+
+  final VoidCallback onSettingsPressed;
+  final String upLabel;
+  final String downLabel;
+  final VoidCallback onUp;
+  final VoidCallback onDown;
+  final VoidCallback onClearMarkers;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 64,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: onSettingsPressed,
+          ),
+          ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                (Set<WidgetState> states) => const Color(0xFF00C390),
+              ),
+              foregroundColor: WidgetStateProperty.resolveWith<Color>(
+                (Set<WidgetState> states) => Colors.white,
+              ),
+            ),
+            child: Text(upLabel),
+            onPressed: onUp,
+          ),
+          ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                (Set<WidgetState> states) => const Color(0xFFDE0040),
+              ),
+              foregroundColor: WidgetStateProperty.resolveWith<Color>(
+                (Set<WidgetState> states) => Colors.white,
+              ),
+            ),
+            child: Text(downLabel),
+            onPressed: onDown,
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: onClearMarkers,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BarriersControlsRow extends StatelessWidget {
+  const _BarriersControlsRow({
+    required this.onAddVerticalBarrier,
+    required this.onAddHorizontalBarrier,
+    required this.onAddCombinedBarrier,
+    required this.onClearBarriers,
+  });
+
+  final VoidCallback onAddVerticalBarrier;
+  final VoidCallback onAddHorizontalBarrier;
+  final VoidCallback onAddCombinedBarrier;
+  final VoidCallback onClearBarriers;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 64,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          TextButton(
+            child: const Text('V barrier'),
+            onPressed: onAddVerticalBarrier,
+          ),
+          TextButton(
+            child: const Text('H barrier'),
+            onPressed: onAddHorizontalBarrier,
+          ),
+          TextButton(
+            child: const Text('+ Both'),
+            onPressed: onAddCombinedBarrier,
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: onClearBarriers,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SlTpCheckboxesRow extends StatelessWidget {
+  const _SlTpCheckboxesRow({
+    required this.sl,
+    required this.tp,
+    required this.onSlChanged,
+    required this.onTpChanged,
+  });
+
+  final bool sl;
+  final bool tp;
+  final ValueChanged<bool?> onSlChanged;
+  final ValueChanged<bool?> onTpChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 64,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: CheckboxListTile(
+              value: sl,
+              onChanged: onSlChanged,
+              title: const Text('Stop loss'),
+            ),
+          ),
+          Expanded(
+            child: CheckboxListTile(
+              value: tp,
+              onChanged: onTpChanged,
+              title: const Text('Take profit'),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
