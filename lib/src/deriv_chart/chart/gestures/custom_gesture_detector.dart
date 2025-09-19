@@ -106,6 +106,9 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
 
   Offset _localStartPoint = Offset.zero;
   Offset _localLastPoint = Offset.zero;
+  Offset _globalStartPoint = Offset.zero;
+  Offset _globalLastPoint = Offset.zero;
+  PointerDeviceKind? _lastPointerKind;
 
   bool _tap = false;
   bool _longPressed = false;
@@ -113,11 +116,20 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
 
   @override
   Widget build(BuildContext context) => Listener(
-        onPointerDown: (PointerDownEvent event) => pointersDown += 1,
+        onPointerDown: (PointerDownEvent event) {
+          _lastPointerKind = event.kind;
+          _localStartPoint = event.localPosition;
+          _localLastPoint = event.localPosition;
+          _globalStartPoint = event.position;
+          _globalLastPoint = event.position;
+          pointersDown += 1;
+        },
         onPointerCancel: (PointerCancelEvent event) => pointersDown -= 1,
         onPointerUp: (PointerUpEvent event) {
           // Update the last point with the current position when pointer is lifted
           _localLastPoint = event.localPosition;
+          _globalLastPoint = event.position;
+          _lastPointerKind = event.kind;
           pointersDown -= 1;
         },
         child: GestureDetector(
@@ -158,9 +170,9 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
         // Only trigger tap if the distance is within the threshold
         if (distance <= tapRadius) {
           widget.onTapUp?.call(TapUpDetails(
-            globalPosition: _localStartPoint,
+            globalPosition: _globalLastPoint,
             localPosition: _localLastPoint,
-            kind: PointerDeviceKind.touch,
+            kind: _lastPointerKind ?? PointerDeviceKind.touch,
           ));
         }
       }
@@ -209,7 +221,7 @@ class _CustomGestureDetectorState extends State<CustomGestureDetector> {
   void _onLongPressStart() {
     _longPressed = true;
     widget.onLongPressStart?.call(LongPressStartDetails(
-      globalPosition: _localStartPoint,
+      globalPosition: _globalStartPoint,
       localPosition: _localStartPoint,
     ));
   }

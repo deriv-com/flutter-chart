@@ -7,11 +7,20 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 /// which determines how the marker is rendered and positioned on the chart, as well
 /// as how it interacts with other chart elements.
 enum MarkerType {
-  /// Represents an active starting point marker.
+  /// Represents a contract marker with circular duration display.
   ///
-  /// This is typically used to highlight the beginning of an active trade or contract.
-  /// It may be rendered differently from a standard start marker to indicate its active status.
-  activeStart,
+  /// This marker is used to indicate the trade type and duration of the contract
+  /// (such as Rise/Fall contracts). It typically displays a circular representation
+  /// of the contract duration and serves as a visual anchor for other contract-related
+  /// markers like entry points, exit points, and barrier levels.
+  contractMarker,
+
+  /// Represents the start time of a contract with a vertical dashed line and a clock icon at the bottom.
+  ///
+  /// This marker visually indicates the contract's start time on the chart using a vertical dashed line
+  /// extending from near the top to near the bottom of the chart, with a clock icon
+  /// centered at the bottom of the line.
+  startTime,
 
   /// Represents a standard starting point marker.
   ///
@@ -61,6 +70,13 @@ enum MarkerType {
   /// at which a trader closed a position in the market.
   exit,
 
+  /// Represents the exit time of a contract with a vertical dashed/solid line and a flag icon at the bottom.
+  ///
+  /// This marker visually indicates the exit time of a contract or trade on the chart.
+  /// It is rendered as a vertical dashed or solid line extending from near the top to near the bottom
+  /// of the chart, with a flag icon centered at the bottom of the line.
+  exitTime,
+
   /// Represents the latest tick point specifically in relation to a barrier.
   ///
   /// This is used in barrier-based contracts to show the current price relative to the barrier.
@@ -78,6 +94,20 @@ enum MarkerType {
   /// In barrier-based contracts, this indicates the lower price threshold. If the price
   /// crosses below this barrier, it may trigger specific contract outcomes.
   lowBarrier,
+
+  /// Represents a profit and loss label marker.
+  ///
+  /// This marker is used to display profit and loss information when a trading contract ends.
+  /// It appears as a pill-shaped label with rounded corners containing an icon and the profit/loss
+  /// amount.
+  profitAndLossLabel,
+
+  /// Represents a profit and loss label marker with a fixed position anchored to the contract marker.
+  ///
+  /// This marker is used to display profit and loss information when a trading contract ends.
+  /// It appears as a pill-shaped label with rounded corners containing an icon and the profit/loss
+  /// amount.
+  profitAndLossLabelFixed,
 }
 
 /// A specialized marker class for displaying various types of markers on a financial chart.
@@ -121,10 +151,11 @@ class ChartMarker extends Marker {
     required int epoch,
     required double quote,
     required MarkerDirection direction,
+    VoidCallback? onTap,
     this.markerType,
     this.text,
     this.color,
-  }) : super(epoch: epoch, quote: quote, direction: direction);
+  }) : super(epoch: epoch, quote: quote, direction: direction, onTap: onTap);
 
   /// The type of marker, which determines its role and how it's rendered on the chart.
   ///

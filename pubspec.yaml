@@ -35,6 +35,10 @@ flutter:
   assets:
     - assets/icons/
     - assets/icons/symbols/
+  fonts:
+    - family: QuillIcons
+      fonts:
+        - asset: assets/fonts/quill_icons.ttf
 
 flutter_intl:
   main_locale: en

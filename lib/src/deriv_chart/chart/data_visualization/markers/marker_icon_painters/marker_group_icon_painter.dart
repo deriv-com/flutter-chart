@@ -5,6 +5,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_icon_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/painter_props.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 
@@ -74,6 +75,7 @@ abstract class MarkerGroupIconPainter extends MarkerIconPainter {
   /// @param epochToX A function that converts epoch timestamps to X coordinates.
   /// @param quoteToY A function that converts price quotes to Y coordinates.
   /// @param painterProps Properties that affect how markers are rendered, such as zoom level.
+  /// @param animationInfo Information about any ongoing animations.
   void paintMarkerGroup(
     Canvas canvas,
     Size size,
@@ -82,5 +84,6 @@ abstract class MarkerGroupIconPainter extends MarkerIconPainter {
     EpochToX epochToX,
     QuoteToY quoteToY,
     PainterProps painterProps,
+    AnimationInfo animationInfo,
   );
 }

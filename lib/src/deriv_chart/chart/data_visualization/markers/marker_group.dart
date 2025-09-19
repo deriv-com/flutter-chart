@@ -29,6 +29,7 @@ class MarkerGroup implements Comparable<MarkerGroup> {
   /// @param id An optional identifier for the marker group.
   /// @param props Additional properties that can affect rendering behavior.
   /// @param style The visual style to apply to markers in this group.
+  /// @param currentEpoch The current epoch timestamp, used for dynamic progress calculations.
   MarkerGroup(
     this.markers, {
     required this.type,
@@ -41,6 +42,9 @@ class MarkerGroup implements Comparable<MarkerGroup> {
         height: 1.4,
       ),
     ),
+    this.currentEpoch,
+    this.profitAndLossText,
+    this.onTap,
   });
 
   /// The list of ChartMarker objects that belong to this group.
@@ -64,6 +68,19 @@ class MarkerGroup implements Comparable<MarkerGroup> {
   /// For example, the hasPersistentBorders property determines whether
   /// barriers should be drawn even when they're outside the visible area.
   final MarkerProps props;
+
+  /// The current epoch timestamp, used for dynamic progress calculations.
+  /// This value represents the last tick epoch and is used by marker painters
+  /// to calculate progress animations, expiration states, and other time-dependent
+  /// visual effects. For example, contract markers can use this to show
+  /// the remaining duration as an animated progress arc.
+  final int? currentEpoch;
+
+  /// The text to display in the profit and loss label.
+  final String? profitAndLossText;
+
+  /// Callback when the circular contract marker of the marker group is tapped.
+  final VoidCallback? onTap;
 
   /// Compares this marker group with another based on the epoch of their first markers.
   /// This is useful for sorting marker groups chronologically.

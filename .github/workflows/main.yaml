@@ -48,4 +48,4 @@ jobs:
 
       - name: Build Example app
         working-directory: ./example
-        run: flutter build apk --target-platform android-arm,android-arm64,android-x64
+        run: flutter build apk --target-platform android-arm,android-arm64,android-x64 --no-tree-shake-icons

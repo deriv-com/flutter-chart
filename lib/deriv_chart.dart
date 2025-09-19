@@ -116,6 +116,7 @@ export 'src/deriv_chart/chart/data_visualization/markers/marker_group_series.dar
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_group_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/painter_props.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
+export 'src/deriv_chart/chart/data_visualization/markers/active_marker_group.dart';
 export 'src/deriv_chart/chart/helpers/functions/convert_range.dart';
 export 'src/models/candle.dart';
 export 'src/models/chart_axis_config.dart';

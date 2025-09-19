@@ -187,4 +187,8 @@ abstract class ChartDefaultTheme implements ChartTheme {
 
     return _getStyle(textStyle: textStyle, color: color);
   }
+
+  @override
+  TextStyle get profitAndLossLabelTextStyle =>
+      TextStyles.profitAndLossLabelTextStyle;
 }

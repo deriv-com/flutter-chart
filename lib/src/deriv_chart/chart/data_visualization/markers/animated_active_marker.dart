@@ -86,7 +86,7 @@ class _AnimatedActiveMarkerState extends State<AnimatedActiveMarker>
           activeMarker: widget.markerSeries.activeMarker ?? _prevActiveMarker!,
           style: widget.markerSeries.style as MarkerStyle? ??
               context.watch<ChartTheme>().markerStyle,
-          epochToX: xAxis.xFromEpoch,
+          epochToX: xAxis.xFromEpochSnapped,
           quoteToY: widget.quoteToCanvasY,
           animationProgress: _activeMarkerAnimation.value,
           markerIconPainter: widget.markerSeries.markerIconPainter,

@@ -1,6 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_props.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_time_marker_utils.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
@@ -26,44 +26,25 @@ import 'package:flutter/material.dart';
 /// @param style The marker style, which provides colors and text styling information.
 /// @param zoom The zoom factor to apply to text size and other dimensions.
 void paintStartLine(Canvas canvas, Size size, ChartMarker marker, Offset anchor,
-    MarkerStyle style, double zoom) {
-  // Draw a vertical dashed line from near the top of the chart to near the bottom
-  // The line is positioned at the x-coordinate of the anchor point
-  // It starts 10 pixels from the top and ends 10 pixels from the bottom
-  paintVerticalDashedLine(
+    MarkerStyle style, double zoom, MarkerProps props) {
+  final Color markerColor = style.lineDefaultColor;
+
+  // Draw a vertical dashed line from near the top of the chart to near the bottom.
+  TimeMarkerPainters.paintVerticalTimeLine(
     canvas,
+    size,
     anchor.dx,
-    10,
-    size.height - 10,
-    style.backgroundColor,
-    1,
-    dashWidth: 6,
+    color: markerColor,
+    dashed: true,
   );
 
-  // If the marker has text, render it near the bottom of the chart
-  if (marker.text != null) {
-    // Create a text style based on the marker style, with appropriate scaling
-    final TextStyle textStyle = TextStyle(
-      color: style.backgroundColor,
-      fontSize: style.activeMarkerText.fontSize! * zoom,
-      fontWeight: FontWeight.normal,
-    );
-
-    // Create a text painter for the marker text
-    final TextPainter textPainter = makeTextPainter(marker.text!, textStyle);
-
-    // Position the text to the left of the line, near the bottom of the chart
-    // The text is shifted left by its width plus 5 pixels of padding
-    // It's positioned 20 pixels from the bottom of the chart
-    final Offset iconShift =
-        Offset(anchor.dx - textPainter.width - 5, size.height - 20);
-
-    // Paint the text at the calculated position
-    paintWithTextPainter(
-      canvas,
-      painter: textPainter,
-      anchor: iconShift,
-      anchorAlignment: Alignment.centerLeft,
-    );
-  }
+  // Render the start icon at the bottom of the line following MarkerStyle.
+  TimeMarkerPainters.paintBottomIcon(
+    canvas,
+    size,
+    anchor.dx,
+    style.startTimeIcon,
+    zoom,
+    markerColor,
+  );
 }

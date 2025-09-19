@@ -19,6 +19,43 @@ String getNumFromString(String str) {
       .toString();
 }
 
+/// Available trade types
+enum TradeType {
+  multipliers,
+  riseFall,
+}
+
+extension TradeTypeExtension on TradeType {
+  String get displayName {
+    switch (this) {
+      case TradeType.multipliers:
+        return 'Multipliers';
+      case TradeType.riseFall:
+        return 'Rise/Fall';
+    }
+  }
+
+  String get value {
+    switch (this) {
+      case TradeType.multipliers:
+        return 'multipliers';
+      case TradeType.riseFall:
+        return 'rise_fall';
+    }
+  }
+
+  static TradeType fromValue(String value) {
+    switch (value) {
+      case 'multipliers':
+        return TradeType.multipliers;
+      case 'rise_fall':
+        return TradeType.riseFall;
+      default:
+        return TradeType.multipliers;
+    }
+  }
+}
+
 /// This page is used to apply necessary QA configurations for the WS connection
 /// Two fields can be set in this page 'endpoint' and 'app_id'
 /// The applied values stored for future usage
@@ -33,17 +70,17 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) => PopScope(
       canPop: false,
-      onPopInvoked: (bool didPop) {
+      onPopInvokedWithResult: (bool didPop, dynamic result) {
         if (didPop) {
           return;
         }
         Navigator.of(context).pop<bool>(_hasChanged);
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Setting')),
+        appBar: AppBar(title: const Text('Settings')),
         body: PrefPage(
           children: <Widget>[
-            const PrefTitle(title: Text('Endpoint')),
+            const PrefTitle(title: Text('Connection')),
             PrefText(
               label: 'Endpoint',
               pref: 'endpoint',
@@ -63,6 +100,23 @@ class _SettingsPageState extends State<SettingsPage> {
                       ? null
                       : 'Invalid AppID';
                 }),
+            const PrefTitle(title: Text('Trade Type')),
+            PrefRadio<String>(
+              title: const Text('Multipliers'),
+              value: TradeType.multipliers.value,
+              pref: 'tradeType',
+              onSelect: () {
+                _hasChanged = true;
+              },
+            ),
+            PrefRadio<String>(
+              title: const Text('Rise/Fall'),
+              value: TradeType.riseFall.value,
+              pref: 'tradeType',
+              onSelect: () {
+                _hasChanged = true;
+              },
+            ),
           ],
         ),
       ));

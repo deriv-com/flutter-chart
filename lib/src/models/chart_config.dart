@@ -13,6 +13,7 @@ class ChartConfig {
     required this.granularity,
     this.chartAxisConfig = const ChartAxisConfig(),
     this.pipSize = 4,
+    this.snapMarkersToIntervals = true,
   });
 
   /// Initializes from JSON.
@@ -28,13 +29,21 @@ class ChartConfig {
   /// Granularity.
   final int granularity;
 
+  /// Whether markers' x-positions should snap to interval buckets (e.g., candle).
+  ///
+  /// When true, marker epochs are snapped to the current granularity bucket
+  /// for rendering, aligning markers to candle centerlines on chart.
+  final bool snapMarkersToIntervals;
+
   /// Chart Axis configuration.
   final ChartAxisConfig chartAxisConfig;
 
   @override
   bool operator ==(covariant ChartConfig other) =>
-      pipSize == other.pipSize && granularity == other.granularity;
+      pipSize == other.pipSize &&
+      granularity == other.granularity &&
+      snapMarkersToIntervals == other.snapMarkersToIntervals;
 
   @override
-  int get hashCode => Object.hash(pipSize, granularity);
+  int get hashCode => Object.hash(pipSize, granularity, snapMarkersToIntervals);
 }
