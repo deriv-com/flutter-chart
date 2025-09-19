@@ -236,7 +236,12 @@ class _DerivChartState extends State<DerivChart> {
 
     if (widget.drawingToolsRepo == null &&
         widget.activeSymbol != oldWidget.activeSymbol) {
-      loadSavedIndicatorsAndDrawingTools();
+      // Delay loading until after the widget tree is fully built
+      // This ensures InteractiveLayer and drawingContext are initialized
+      // before syncDrawingsWithConfigs() tries to create InteractableDrawing objects
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        loadSavedIndicatorsAndDrawingTools();
+      });
     }
   }
 
@@ -254,7 +259,12 @@ class _DerivChartState extends State<DerivChart> {
       sharedPrefKey: widget.activeSymbol,
     );
     if (widget.drawingToolsRepo == null) {
-      loadSavedIndicatorsAndDrawingTools();
+      // Delay loading until after the widget tree is fully built
+      // This ensures InteractiveLayer and drawingContext are initialized
+      // before syncDrawingsWithConfigs() tries to create InteractableDrawing objects
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        loadSavedIndicatorsAndDrawingTools();
+      });
     }
   }
 
