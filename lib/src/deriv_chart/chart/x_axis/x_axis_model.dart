@@ -12,6 +12,7 @@ import 'functions/calc_no_overlay_time_gaps.dart';
 import 'gaps/gap_manager.dart';
 import 'gaps/helpers.dart';
 import 'grid/calc_time_grid.dart';
+import '../auto_interval/zoom_level_observer.dart';
 
 /// Will stop auto-panning when the last tick has reached to this offset from
 /// the [XAxisModel.leftBoundEpoch].
@@ -49,23 +50,23 @@ enum ViewingMode {
 /// State and methods of chart's x-axis.
 class XAxisModel extends ChangeNotifier {
   /// Creates x-axis model for live chart.
-  XAxisModel({
-    required List<Tick> entries,
-    required int granularity,
-    required AnimationController animationController,
-    required bool isLive,
-    required double maxCurrentTickOffset,
-    this.defaultIntervalWidth = 20,
-    bool startWithDataFitMode = false,
-    int? minEpoch,
-    int? maxEpoch,
-    double? msPerPx,
-    double? minIntervalWidth,
-    double? maxIntervalWidth,
-    EdgeInsets? dataFitPadding,
-    this.onScale,
-    this.onScroll,
-  }) {
+  XAxisModel(
+      {required List<Tick> entries,
+      required int granularity,
+      required AnimationController animationController,
+      required bool isLive,
+      required double maxCurrentTickOffset,
+      this.defaultIntervalWidth = 20,
+      bool startWithDataFitMode = false,
+      int? minEpoch,
+      int? maxEpoch,
+      double? msPerPx,
+      double? minIntervalWidth,
+      double? maxIntervalWidth,
+      EdgeInsets? dataFitPadding,
+      this.onScale,
+      this.onScroll,
+      bool autoIntervalEnabled = false}) {
     _maxCurrentTickOffset = maxCurrentTickOffset;
 
     _nowEpoch = entries.isNotEmpty
@@ -89,6 +90,8 @@ class XAxisModel extends ChangeNotifier {
 
     _dataFitPadding = dataFitPadding ?? defaultDataFitPadding;
 
+    _autoIntervalEnabled = autoIntervalEnabled;
+
     _updateEntries(entries);
 
     _scrollAnimationController = animationController
@@ -103,6 +106,8 @@ class XAxisModel extends ChangeNotifier {
         _prevScrollAnimationValue = _scrollAnimationController.value;
       });
   }
+
+  late bool _autoIntervalEnabled;
 
   late double _minIntervalWidth;
 
@@ -329,8 +334,10 @@ class XAxisModel extends ChangeNotifier {
       return;
     }
     _granularity = newGranularity;
-    _msPerPx = _defaultMsPerPx;
-    _scrollTo(_maxRightBoundEpoch);
+    if (!_autoIntervalEnabled) {
+      _msPerPx = _defaultMsPerPx;
+      _scrollTo(_maxRightBoundEpoch);
+    }
   }
 
   /// Updates chart's isLive property.
@@ -470,12 +477,28 @@ class XAxisModel extends ChangeNotifier {
     if (!_isScrollBlocked) {
       _triggerScrollMomentum(details.velocity);
     }
+
+    zoomLevelObserver?.onZoomLevelChanged(_msPerPx, _granularity);
   }
 
-  /// Called to scale the chart
+  /// Optional zoom level observer for auto-interval feature
+  ZoomLevelObserver? _zoomLevelObserver;
+
+  /// Sets the zoom level observer (for auto-interval feature)
+  set zoomLevelObserver(ZoomLevelObserver? observer) {
+    _zoomLevelObserver = observer;
+  }
+
+  /// Gets the zoom level observer (for auto-interval feature)
+  ZoomLevelObserver? get zoomLevelObserver => _zoomLevelObserver;
+
+  /// Enhanced scale method
   void scale(double scale) {
     _msPerPx = (_prevMsPerPx! / scale).clamp(_minMsPerPx, _maxMsPerPx);
     onScale?.call();
+    if (kIsWeb) {
+      zoomLevelObserver?.onZoomLevelChanged(_msPerPx, _granularity);
+    }
     notifyListeners();
   }
 
@@ -561,6 +584,7 @@ class XAxisModel extends ChangeNotifier {
     int? maxEpoch,
     EdgeInsets? dataFitPadding,
     double? maxCurrentTickOffset,
+    bool? autoIntervalEnabled,
   }) {
     _updateIsLive(isLive);
     _updateGranularity(granularity);
@@ -570,6 +594,7 @@ class XAxisModel extends ChangeNotifier {
     _maxEpoch = maxEpoch ?? _maxEpoch;
     _dataFitPadding = dataFitPadding ?? _dataFitPadding;
     _maxCurrentTickOffset = maxCurrentTickOffset ?? _maxCurrentTickOffset;
+    _autoIntervalEnabled = autoIntervalEnabled ?? _autoIntervalEnabled;
   }
 
   /// Returns a list of timestamps in the grid without any overlaps.

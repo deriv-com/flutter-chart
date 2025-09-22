@@ -43,6 +43,7 @@ export 'src/add_ons/indicators_ui/zigzag_indicator/zigzag_indicator_config.dart'
 export 'src/add_ons/repository.dart';
 export 'src/deriv_chart/interactive_layer/interactive_layer_export.dart';
 export 'src/deriv_chart/chart/chart.dart';
+export 'src/deriv_chart/chart/auto_interval/auto_interval_wrapper.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_active_contract.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_closed_indicator.dart';
 export 'src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulators_entry_spot_barrier.dart';
