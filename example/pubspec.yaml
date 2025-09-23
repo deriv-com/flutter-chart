@@ -5,21 +5,22 @@ publish_to: none
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.24.1"
 
 dependencies:
   flutter:
     sdk: flutter
   deriv_chart:
     path: ../
-  vibration: ^1.7.6
-  intl: ^0.18.0
+  intl: ^0.19.0
+  vibration: ^1.8.4
   flutter_localizations:
     sdk: flutter
-  pref: ^2.7.1
+  pref: ^2.8.0
   flutter_deriv_api:
     git:
       url: git@github.com:regentmarkets/flutter-deriv-api.git
-      ref: flutter-version-3
+      ref: v1.3.0
 
 dev_dependencies:
   deriv_lint:
@@ -29,7 +30,7 @@ dev_dependencies:
       ref: dev
   flutter_test:
     sdk: flutter
-  intl_utils: ^2.8.2
+  intl_utils: ^2.8.7
 
 flutter:
   uses-material-design: true
