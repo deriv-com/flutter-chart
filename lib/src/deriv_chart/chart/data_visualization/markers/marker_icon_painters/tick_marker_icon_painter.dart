@@ -77,6 +77,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       // Special handling for contractMarker - always position on left side
       if (marker.markerType == MarkerType.contractMarker) {
         center = Offset(
+          // TODO(behnam): Consider allowing this padding to be configurable by the consuming application.
           20, // Fixed left position (20 pixels from left edge)
           quoteToY(marker.quote),
         );

@@ -89,6 +89,7 @@ class ActiveMarkerGroupPainter extends CustomPainter {
     // Positioning rules:
     // - Contract icon is painted by TickMarkerIconPainter at x=20 with an outer border radius of (style.radius + 1)
     // - The profit/loss pill starts as the right semicircle (arc) of that icon and expands rightward to form a pill
+    // TODO(behnam): Consider moving style related constants to marker style class.
     final double iconCenterX = 20.0;
     final double iconOuterRadius =
         style.radius + 4; // Matches contract marker outer circle

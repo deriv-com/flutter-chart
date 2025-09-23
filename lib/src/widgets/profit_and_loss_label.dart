@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/theme/quill_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// TODO(behnam): remove this widget and use the custom painter implementation instead.
 /// {@template profit_and_loss_label}
 /// A pill-style label that displays profit or loss with an icon and text.
 ///
