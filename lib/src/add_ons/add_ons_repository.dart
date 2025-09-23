@@ -13,7 +13,10 @@ typedef CreateAddOn<T extends AddOnConfig> = T Function(
 typedef OnEditAddOn = Function(int index);
 
 /// Called when an add-on is deleted from the repository.
-typedef OnDeleteAddOn<T extends AddOnConfig> = Function(T item);
+typedef OnDeleteAddOn<T extends AddOnConfig> = Function(T item, int index);
+
+/// Swaps two elements of a list.
+typedef OnSwapCallback = void Function(int index1, int index2);
 
 /// Holds indicators/drawing tools that were added to the Chart during runtime.
 class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
@@ -24,6 +27,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     required this.sharedPrefKey,
     this.onEditCallback,
     this.onDeleteCallback,
+    this.onSwapCallback,
   }) : _addOns = <T>[];
 
   /// Key String acts as a key for the set of indicators that are saved.
@@ -55,6 +59,9 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
 
   /// Called when an add-on is deleted.
   OnDeleteAddOn? onDeleteCallback;
+
+  /// Callback to swap two elements of a list.
+  OnSwapCallback? onSwapCallback;
 
   /// Loads user selected indicators or drawing tools from shared preferences.
   void loadFromPrefs(SharedPreferences prefs, String symbol) {
@@ -122,7 +129,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     _hiddenStatus.removeAt(index);
     _writeToPrefs();
     // Notify about the deletion
-    onDeleteCallback?.call(removedItem);
+    onDeleteCallback?.call(removedItem, index);
     notifyListeners();
   }
 
@@ -150,6 +157,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     items.swap(index1, index2);
     _hiddenStatus.swap(index1, index2);
     _writeToPrefs();
+    onSwapCallback?.call(index1, index2);
     notifyListeners();
   }
 
