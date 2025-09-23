@@ -23,11 +23,6 @@ dependencies:
   win32: ^5.9.0
 
 dev_dependencies:
-  deriv_lint:
-    git:
-      url: https://github.com/deriv-com/flutter-deriv-packages.git
-      path: packages/deriv_lint
-      ref: dev
   flutter_test:
     sdk: flutter
   intl_utils: ^2.8.2
