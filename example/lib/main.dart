@@ -219,7 +219,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   Future<void> _getActiveSymbols() async {
     _activeSymbols = (await ActiveSymbolsResponse.fetchActiveSymbols(
-      const ActiveSymbolsRequest(activeSymbols: 'brief', productType: 'basic', landingCompany: 'svg'),
+      const ActiveSymbolsRequest(
+          activeSymbols: 'brief', productType: 'basic', landingCompany: null),
     ))
         .activeSymbols!;
 

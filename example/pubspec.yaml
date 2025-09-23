@@ -25,7 +25,7 @@ dependencies:
 dev_dependencies:
   deriv_lint:
     git:
-      url: git@github.com:regentmarkets/flutter-deriv-packages.git
+      url: https://github.com/deriv-com/flutter-deriv-packages.git
       path: packages/deriv_lint
       ref: dev
   flutter_test:
