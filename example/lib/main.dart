@@ -935,11 +935,27 @@ class _FullscreenChartState extends State<FullscreenChart> {
           ? ticks.last.epoch
           : DateTime.now().millisecondsSinceEpoch;
 
+      // Create an updated active group instance with the latest currentEpoch
+      // to ensure painters receive the fresh value without restarting animation.
+      final ActiveMarkerGroup? activeGroupForBuild = _activeMarkerGroup == null
+          ? null
+          : ActiveMarkerGroup(
+              markers: _activeMarkerGroup!.markers,
+              type: _activeMarkerGroup!.type,
+              id: _activeMarkerGroup!.id,
+              props: _activeMarkerGroup!.props,
+              style: _activeMarkerGroup!.style,
+              currentEpoch: currentEpoch,
+              profitAndLossText: _activeMarkerGroup!.profitAndLossText,
+              onTap: _activeMarkerGroup!.onTap,
+              onTapOutside: _activeMarkerGroup!.onTapOutside,
+            );
+
       return MarkerGroupSeries(
         SplayTreeSet<Marker>(),
         markerGroupIconPainter: TickMarkerIconPainter(),
         markerGroupList: _convertMarkersToGroups(currentEpoch),
-        activeMarkerGroup: _activeMarkerGroup,
+        activeMarkerGroup: activeGroupForBuild,
       );
     } else {
       return MarkerSeries(

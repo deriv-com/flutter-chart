@@ -70,15 +70,19 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     AnimationInfo animationInfo,
   ) {
     final Map<MarkerType, Offset> points = <MarkerType, Offset>{};
+    // Ensure left padding refers to the left edge of the contract circle.
+    // Use the outer border radius drawn in _drawContractMarker: radius (12*zoom)
+    // plus 1*zoom for the stroke radius.
+    final double _contractOuterRadius =
+        (12 * painterProps.zoom) + (1 * painterProps.zoom);
 
     for (final ChartMarker marker in markerGroup.markers) {
       final Offset center;
 
-      // Special handling for contractMarker - always position on left side
+      // Special handling for contractMarker - position with left padding
       if (marker.markerType == MarkerType.contractMarker) {
         center = Offset(
-          // TODO(behnam): Consider allowing this padding to be configurable by the consuming application.
-          20, // Fixed left position (20 pixels from left edge)
+          markerGroup.props.contractMarkerLeftPadding + _contractOuterRadius,
           quoteToY(marker.quote),
         );
       } else {
@@ -113,9 +117,10 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       final Offset center = points[marker.markerType!] ??
           (marker.markerType == MarkerType.contractMarker
               ? Offset(
-                  20,
-                  quoteToY(
-                      marker.quote)) // Fixed left position for contractMarker
+                  markerGroup.props.contractMarkerLeftPadding +
+                      _contractOuterRadius,
+                  quoteToY(marker.quote),
+                )
               : Offset(epochToX(marker.epoch), quoteToY(marker.quote)));
 
       if (marker.markerType == MarkerType.entry &&
