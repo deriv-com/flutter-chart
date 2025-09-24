@@ -24,6 +24,7 @@ class MarkerProps {
     this.isProfit = true,
     this.isRunning = true,
     this.markerLabel,
+    this.contractMarkerLeftPadding = 8,
   });
 
   /// Whether barriers associated with this marker should be drawn even when
@@ -54,4 +55,10 @@ class MarkerProps {
   /// If provided, this text will be shown in contract marker.
   /// If null, a directional arrow (up or down) will be displayed instead, based on the marker's direction.
   final String? markerLabel;
+
+  /// Absolute left padding (in pixels) for the `contractMarker` from the chart's left edge.
+  ///
+  /// Ensures the `contractMarker` maintains a consistent distance from the left side of the chart.
+  /// Default value is 8 pixels.
+  final double contractMarkerLeftPadding;
 }

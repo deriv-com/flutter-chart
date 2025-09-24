@@ -60,8 +60,10 @@ ChartMarker(
 ```
 
 ### 3) MarkerProps additions
-- **What changed**: `MarkerProps` adds `isProfit`, `isRunning`, and `markerLabel`.
-- **Why it matters**: Painters use these to style lines, circle fill/border, and optional label inside contract circle.
+- **What changed**: `MarkerProps` adds `isProfit`, `isRunning`, `markerLabel`, and `contractMarkerLeftPadding`.
+- **Why it matters**:
+  - Painters use these to style lines, circle fill/border, and optional label inside contract circle.
+  - `contractMarkerLeftPadding` controls the horizontal padding from the left chart edge to the LEFT EDGE of the circular `contractMarker`. This is respected by both the base marker painter and the active marker group painter. Default is 8 pixels.
 - **What to do**: Populate `MarkerGroup.props` appropriately.
 
 ```dart
@@ -69,9 +71,10 @@ MarkerGroup(
   markers,
   type: 'tick',
   props: MarkerProps(
-    isProfit: true,          // or false
-    isRunning: false,        // false when contract is closed
-    markerLabel: 'NT',      // optional; otherwise arrow is shown
+    isProfit: true,                 // or false
+    isRunning: false,               // false when contract is closed
+    markerLabel: 'NT',              // optional; otherwise arrow is shown
+    contractMarkerLeftPadding: 16,  // horizontal padding from left edge
   ),
 );
 ```
@@ -191,7 +194,11 @@ List<MarkerGroup> buildGroups(List<Marker> markers, int nowEpoch) {
       id: 'group_${m.epoch}',
       currentEpoch: nowEpoch,
       profitAndLossText: '+9.55 USD',
-      props: const MarkerProps(isProfit: true, isRunning: false),
+      props: const MarkerProps(
+        isProfit: true,
+        isRunning: false,
+        contractMarkerLeftPadding: 16,
+      ),
       onTap: () { /* open details */ },
     );
   }).toList();
