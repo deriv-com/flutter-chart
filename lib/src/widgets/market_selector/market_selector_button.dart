@@ -51,14 +51,14 @@ class MarketSelectorButton extends StatelessWidget {
         value: theme ?? ChartDefaultDarkTheme(),
         child: TextButton(
           style: ButtonStyle(
-            padding: MaterialStateProperty.resolveWith<EdgeInsetsGeometry>(
-              (Set<MaterialState> states) => const EdgeInsets.all(8),
+            padding: WidgetStateProperty.resolveWith<EdgeInsetsGeometry>(
+              (Set<WidgetState> states) => const EdgeInsets.all(8),
             ),
-            backgroundColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState> states) => backgroundColor,
+            backgroundColor: WidgetStateProperty.resolveWith<Color>(
+              (Set<WidgetState> states) => backgroundColor,
             ),
-            shape: MaterialStateProperty.resolveWith<RoundedRectangleBorder>(
-              (Set<MaterialState> states) => RoundedRectangleBorder(
+            shape: WidgetStateProperty.resolveWith<RoundedRectangleBorder>(
+              (Set<WidgetState> states) => RoundedRectangleBorder(
                 borderRadius: borderRadius,
               ),
             ),
