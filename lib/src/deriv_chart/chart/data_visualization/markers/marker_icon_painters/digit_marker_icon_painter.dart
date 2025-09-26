@@ -4,6 +4,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_group_icon_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/painter_props.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_props.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_end_marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_start_line.dart';
@@ -70,6 +72,7 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
   /// @param epochToX A function that converts epoch timestamps to X coordinates.
   /// @param quoteToY A function that converts price quotes to Y coordinates.
   /// @param painterProps Properties that affect how markers are rendered.
+  /// @param animationInfo Information about any ongoing animations.
   @override
   void paintMarkerGroup(
     Canvas canvas,
@@ -79,6 +82,7 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
     EpochToX epochToX,
     QuoteToY quoteToY,
     PainterProps painterProps,
+    AnimationInfo animationInfo,
   ) {
     final Map<MarkerType, Offset> points = <MarkerType, Offset>{};
 
@@ -107,7 +111,7 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
       final Offset center = points[marker.markerType!]!;
       YAxisConfig.instance.yAxisClipping(canvas, size, () {
         _drawMarker(canvas, size, theme, marker, center, markerGroup.style,
-            painterProps.zoom, opacity);
+            painterProps.zoom, opacity, markerGroup.props);
       });
     }
   }
@@ -134,10 +138,11 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
       Offset anchor,
       MarkerStyle style,
       double zoom,
-      double opacity) {
+      double opacity,
+      MarkerProps props) {
     switch (marker.markerType) {
-      case MarkerType.activeStart:
-        paintStartLine(canvas, size, marker, anchor, style, zoom);
+      case MarkerType.startTime:
+        paintStartLine(canvas, size, marker, anchor, style, zoom, props);
         break;
 
       case MarkerType.start:

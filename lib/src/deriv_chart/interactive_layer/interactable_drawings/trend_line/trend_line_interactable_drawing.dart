@@ -59,6 +59,15 @@ class TrendLineInteractableDrawing
   /// [false]: dragging the end point.
   bool? isDraggingStartPoint;
 
+  /// Tracks which point is being long-pressed, if any
+  ///
+  /// [null]: long pressing the whole line.
+  ///
+  /// [true]: long pressing the start point.
+  ///
+  /// [false]: long pressing the end point.
+  bool? isLongPressingStartPoint;
+
   @override
   void onDragStart(
     DragStartDetails details,
@@ -108,6 +117,61 @@ class TrendLineInteractableDrawing
 
     // If we reach here, the drag is on the line itself, not on a specific point
     // _isDraggingStartPoint remains null, indicating we're dragging the whole line
+  }
+
+  @override
+  void onLongPressStart(
+    Offset localPosition,
+    EpochFromX epochFromX,
+    QuoteFromY quoteFromY,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+  ) {
+    _detectLongPressPoint(localPosition, epochToX, quoteToY);
+  }
+
+  @override
+  void onLongPressEnd(
+    EpochFromX epochFromX,
+    QuoteFromY quoteFromY,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+  ) {
+    isLongPressingStartPoint = null;
+  }
+
+  /// Determines which point is being long-pressed based on the position
+  void _detectLongPressPoint(
+    Offset localPosition,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+  ) {
+    if (startPoint == null || endPoint == null) {
+      isLongPressingStartPoint = null;
+      return;
+    }
+
+    final Offset startOffset = Offset(
+      epochToX(startPoint!.epoch),
+      quoteToY(startPoint!.quote),
+    );
+    final Offset endOffset = Offset(
+      epochToX(endPoint!.epoch),
+      quoteToY(endPoint!.quote),
+    );
+
+    // Check if the long press is on the start point
+    final double startDistance = (localPosition - startOffset).distance;
+    final double endDistance = (localPosition - endOffset).distance;
+
+    if (startDistance <= hitTestMargin) {
+      isLongPressingStartPoint = true;
+    } else if (endDistance <= hitTestMargin) {
+      isLongPressingStartPoint = false;
+    } else {
+      // Long press is on the line itself, not on a specific point
+      isLongPressingStartPoint = null;
+    }
   }
 
   @override
@@ -195,10 +259,12 @@ class TrendLineInteractableDrawing
       final Offset endOffset =
           Offset(epochToX(endPoint!.epoch), quoteToY(endPoint!.quote));
 
-      // Draw neon glow effect first if selected but not dragging individual points
+      // Draw neon glow effect first if selected but not dragging individual points or long pressing individual points
       if (drawingState.contains(DrawingToolState.selected) &&
           !(drawingState.contains(DrawingToolState.dragging) &&
-              isDraggingStartPoint != null)) {
+              isDraggingStartPoint != null) &&
+          !(drawingState.contains(DrawingToolState.longPressed) &&
+              isLongPressingStartPoint != null)) {
         final neonPaint = Paint()
           ..color = config.lineStyle.color.withOpacity(0.4)
           ..strokeWidth = 8 * animationInfo.stateChangePercent
@@ -228,7 +294,7 @@ class TrendLineInteractableDrawing
         // Then add glowy effect on top based on state
         if (drawingState.contains(DrawingToolState.dragging) &&
             isDraggingStartPoint != null) {
-          // When dragging, only show glow on the point being dragged
+          // When dragging individual point, only show glow on the point being dragged
           final Offset draggedPointOffset =
               isDraggingStartPoint! ? startOffset : endOffset;
           drawFocusedCircle(
@@ -239,21 +305,26 @@ class TrendLineInteractableDrawing
             10 * animationInfo.stateChangePercent,
             3 * animationInfo.stateChangePercent,
           );
-        } else if (drawingState.contains(DrawingToolState.dragging) &&
-            isDraggingStartPoint == null) {
-          // When dragging the whole line, show glow on both points
-          drawPointsFocusedCircle(
+        } else if (drawingState.contains(DrawingToolState.longPressed) &&
+            isLongPressingStartPoint != null) {
+          // When long pressing a specific point, show glow only on that point
+          final Offset longPressedPointOffset =
+              isLongPressingStartPoint! ? startOffset : endOffset;
+          drawFocusedCircle(
             paintStyle,
             lineStyle,
             canvas,
-            startOffset,
-            10 * animationInfo.stateChangePercent,
+            longPressedPointOffset,
+            10 *
+                animationInfo
+                    .stateChangePercent, // Same glow size as other states
             3 * animationInfo.stateChangePercent,
-            endOffset,
           );
-        } else if (drawingState.contains(DrawingToolState.selected) ||
-            drawingState.contains(DrawingToolState.hovered)) {
-          // When not dragging, show glow on both points
+        } else if ((drawingState.contains(DrawingToolState.selected) ||
+                drawingState.contains(DrawingToolState.hovered)) &&
+            !drawingState.contains(DrawingToolState.dragging) &&
+            !drawingState.contains(DrawingToolState.longPressed)) {
+          // When not dragging and not long pressing, show glow on both points
           drawPointsFocusedCircle(
             paintStyle,
             lineStyle,
@@ -268,9 +339,11 @@ class TrendLineInteractableDrawing
             endOffset,
           );
         }
+        // Note: When dragging the whole line (isDraggingStartPoint == null),
+        // no glow effect is shown on endpoints as per requirements
       }
 
-      // Draw alignment guides when dragging
+      // Draw alignment guides when dragging or long pressing
       if (drawingState.contains(DrawingToolState.dragging) &&
           isDraggingStartPoint != null) {
         if (isDraggingStartPoint!) {
@@ -280,8 +353,18 @@ class TrendLineInteractableDrawing
           drawPointAlignmentGuides(canvas, size, endOffset,
               lineColor: config.lineStyle.color);
         }
-      } else if (drawingState.contains(DrawingToolState.dragging) &&
-          isDraggingStartPoint == null) {
+      } else if (drawingState.contains(DrawingToolState.longPressed) &&
+          isLongPressingStartPoint != null) {
+        // When long pressing a specific point, show alignment guides only for that point
+        final Offset longPressedPointOffset =
+            isLongPressingStartPoint! ? startOffset : endOffset;
+        drawPointAlignmentGuides(canvas, size, longPressedPointOffset,
+            lineColor: config.lineStyle.color);
+      } else if ((drawingState.contains(DrawingToolState.dragging) &&
+              isDraggingStartPoint == null) ||
+          (drawingState.contains(DrawingToolState.longPressed) &&
+              isLongPressingStartPoint == null)) {
+        // When dragging whole line or long pressing whole line, show alignment guides for both points
         drawPointAlignmentGuides(canvas, size, startOffset,
             lineColor: config.lineStyle.color);
         drawPointAlignmentGuides(canvas, size, endOffset,

@@ -75,6 +75,23 @@ abstract class DrawingV2 {
     QuoteToY quoteToY,
   );
 
+  /// Called when a long press starts on the drawing tool.
+  void onLongPressStart(
+    Offset localPosition,
+    EpochFromX epochFromX,
+    QuoteFromY quoteFromY,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+  );
+
+  /// Called when a long press ends on the drawing tool.
+  void onLongPressEnd(
+    EpochFromX epochFromX,
+    QuoteFromY quoteFromY,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+  );
+
   /// Paints the drawing tool on the chart.
   ///
   /// Whatever that is painted here it will be in the chart's excluding Y-axis
