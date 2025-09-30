@@ -199,7 +199,6 @@ class XAxisModel extends ChangeNotifier {
       (_entries?.isNotEmpty ?? false) &&
       rightBoundEpoch <
           _shiftEpoch(_entries!.last.epoch, _maxCurrentTickOffset);
-  // [/AI] 
 
   /// Current scale value.
   double get msPerPx => _msPerPx;
@@ -232,7 +231,6 @@ class XAxisModel extends ChangeNotifier {
     }
     return ViewingMode.stationary;
   }
-  // [/AI] 
 
   /// Called on each tick's curve animation
   /// Updates scroll position if the [_currentViewingMode] in follow mode.
@@ -280,7 +278,6 @@ class XAxisModel extends ChangeNotifier {
 
     _lastEpoch = newNowTime;
   }
-  // [/AI] 
 
   /// Updates scrolling bounds and time gaps based on the main chart's entries.
   ///
