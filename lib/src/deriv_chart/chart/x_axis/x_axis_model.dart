@@ -179,15 +179,27 @@ class XAxisModel extends ChangeNotifier {
       rightBoundEpoch == _maxRightBoundEpoch ||
       rightBoundEpoch == _minRightBoundEpoch;
 
+  // [AI]
   bool get _followCurrentTick =>
       _autoPanEnabled &&
       isLive &&
-      rightBoundEpoch > _nowEpoch &&
+      (rightBoundEpoch > _nowEpoch ||
+          _shouldFollowLastTickForInconsistentFeed) &&
       _currentTickFarEnoughFromLeftBound;
 
   bool get _currentTickFarEnoughFromLeftBound =>
       _entries!.isEmpty ||
       _entries!.last.epoch > _shiftEpoch(leftBoundEpoch, autoPanOffset);
+
+  /// For inconsistent feeds, we should follow the last tick instead of current time
+  /// since there can be long gaps between ticks and current time
+  bool get _shouldFollowLastTickForInconsistentFeed =>
+      _autoPanEnabled &&
+      isLive &&
+      (_entries?.isNotEmpty ?? false) &&
+      rightBoundEpoch <
+          _shiftEpoch(_entries!.last.epoch, _maxCurrentTickOffset);
+  // [/AI]
 
   /// Current scale value.
   double get msPerPx => _msPerPx;
@@ -206,6 +218,7 @@ class XAxisModel extends ChangeNotifier {
   /// Check [_currentViewingMode].
   bool get dataFitEnabled => _dataFitMode;
 
+  // [AI]
   /// Current mode that controls chart's zooming and scrolling behaviour.
   ViewingMode get _currentViewingMode {
     if (_panSpeed != 0) {
@@ -219,6 +232,7 @@ class XAxisModel extends ChangeNotifier {
     }
     return ViewingMode.stationary;
   }
+  // [/AI]
 
   /// Called on each tick's curve animation
   /// Updates scroll position if the [_currentViewingMode] in follow mode.
@@ -232,6 +246,7 @@ class XAxisModel extends ChangeNotifier {
     }
   }
 
+  // [AI]
   /// Called on each frame.
   /// Updates zoom and scroll position based on current [_currentViewingMode].
   void onNewFrame(Duration _) {
@@ -243,7 +258,15 @@ class XAxisModel extends ChangeNotifier {
     // TODO(NA): Consider refactoring the switch with OOP pattern. https://refactoring.com/catalog/replaceConditionalWithPolymorphism.html
     switch (_currentViewingMode) {
       case ViewingMode.followCurrentTick:
-        _scrollTo(_rightBoundEpoch + elapsedMs);
+        // For inconsistent feeds, scroll to the last tick position instead of current time
+        if (_shouldFollowLastTickForInconsistentFeed &&
+            (_entries?.isNotEmpty ?? false)) {
+          final int targetEpoch =
+              _shiftEpoch(_entries!.last.epoch, _maxCurrentTickOffset);
+          _scrollTo(targetEpoch);
+        } else {
+          _scrollTo(_rightBoundEpoch + elapsedMs);
+        }
         break;
       case ViewingMode.fitData:
         fitAvailableData();
@@ -257,6 +280,7 @@ class XAxisModel extends ChangeNotifier {
 
     _lastEpoch = newNowTime;
   }
+  // [/AI]
 
   /// Updates scrolling bounds and time gaps based on the main chart's entries.
   ///
