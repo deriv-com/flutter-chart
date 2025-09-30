@@ -179,7 +179,6 @@ class XAxisModel extends ChangeNotifier {
       rightBoundEpoch == _maxRightBoundEpoch ||
       rightBoundEpoch == _minRightBoundEpoch;
 
-  // [AI] 
   bool get _followCurrentTick =>
       _autoPanEnabled &&
       isLive &&
@@ -217,7 +216,6 @@ class XAxisModel extends ChangeNotifier {
   /// Check [_currentViewingMode].
   bool get dataFitEnabled => _dataFitMode;
 
-  // [AI] 
   /// Current mode that controls chart's zooming and scrolling behaviour.
   ViewingMode get _currentViewingMode {
     if (_panSpeed != 0) {
@@ -244,7 +242,6 @@ class XAxisModel extends ChangeNotifier {
     }
   }
 
-  // [AI] 
   /// Called on each frame.
   /// Updates zoom and scroll position based on current [_currentViewingMode].
   void onNewFrame(Duration _) {
