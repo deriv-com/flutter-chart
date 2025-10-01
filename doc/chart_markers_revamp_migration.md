@@ -80,9 +80,35 @@ MarkerGroup(
 ```
 
 ### 4) New/updated MarkerType values
-- **What changed**: The enum adds/renames key values for the revamp, including: `contractMarker`, `startTime`, `exitTime`, `profitAndLossLabel`, `profitAndLossLabelFixed`.
-- **Why it matters**: Painters rely on specific types to render the correct visuals (vertical line + icon, Profti/Loss, etc.).
-- **What to do**: Use the new values where applicable. For start/exit vertical lines, prefer `startTime` and `exitTime` markers; for P/L labels use `profitAndLossLabel` or `profitAndLossLabelFixed`.
+- **What changed**: The enum adds/renames key values for the revamp, including: `contractMarker`, `startTime`, `exitTime`, `startTimeCollapsed`, `exitTimeCollapsed`, `profitAndLossLabel` and `profitAndLossLabelFixed`.
+- **Why it matters**: Painters rely on specific types to render the correct visuals (vertical line + icon, Profit/Loss, etc.). The collapsed time markers draw short solid vertical connectors for condensed view and are connected by a solid line when both are present.
+- **What to do**: Use the standard `startTime` and `exitTime` markers for full vertical lines with bottom icons. In compact contexts (e.g., chart page), use `startTimeCollapsed` and `exitTimeCollapsed` to render minimal time markers.
+
+Usage of collapsed time markers:
+
+```dart
+// Add compact start/end connectors around your entry/exit when space is tight
+chartMarkers.addAll(<ChartMarker>[
+  ChartMarker(
+    epoch: startTimeEpoch, // slight lead for visual clarity
+    quote: startQuote,
+    direction: direction,
+    markerType: MarkerType.startTimeCollapsed,
+  ),
+  ChartMarker(
+    epoch: entryTickEpoch,
+    quote: startQuote,
+    direction: direction,
+    markerType: MarkerType.entryTick,
+  ),
+  ChartMarker(
+    epoch: exitTimeEpoch,
+    quote: startQuote,
+    direction: direction,
+    markerType: MarkerType.exitTimeCollapsed,
+  ),
+]);
+```
 
 ### 5) Snapping markers to granularity intervals
 - **What changed**:
@@ -210,7 +236,7 @@ List<MarkerGroup> buildGroups(List<Marker> markers, int nowEpoch) {
 - [ ] Provide `currentEpoch` and, if applicable, `profitAndLossText`, `onTap` in `MarkerGroup`
 - [ ] Use `ActiveMarkerGroup` and wire `onTapOutside` to clear active state
 - [ ] Update `MarkerProps` with `isProfit`, `isRunning`, and optional `markerLabel`
-- [ ] Use new `MarkerType` values: `contractMarker`, `startTime`, `exitTime`, `profitAndLossLabel`
+- [ ] Use new `MarkerType` values: `contractMarker`, `startTime`, `exitTime`, `profitAndLossLabel`, and use `startTimeCollapsed`/`exitTimeCollapsed` for condensed layouts when needed
 - [ ] Ensure `ChartConfig.snapMarkersToIntervals` is set appropriately (default true)
 - [ ] If you instantiate `XAxisModel`, pass `snapMarkersToIntervals`
 - [ ] Pass `animationInfo` to `MarkerArea` if you embed it directly
