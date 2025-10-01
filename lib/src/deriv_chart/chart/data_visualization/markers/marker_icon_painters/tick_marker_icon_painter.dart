@@ -175,6 +175,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     final Offset? _contractMarkerOffset = points[MarkerType.contractMarker];
     final Offset? _entryTickOffset = points[MarkerType.entryTick];
     final Offset? _endOffset = points[MarkerType.end];
+    final Offset? _startCollapsedOffset = points[MarkerType.startTimeCollapsed];
+    final Offset? _exitCollapsedOffset = points[MarkerType.exitTimeCollapsed];
 
     // Determine marker direction color from the contractMarker
     Color lineColor = style.backgroundColor;
@@ -204,12 +206,13 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
         );
       }
 
-      // Solid line from entryTick to end marker
-      if (_entryTickOffset != null && _endOffset != null) {
+      // Solid line between collapsed start and exit markers
+      if (_startCollapsedOffset != null && _exitCollapsedOffset != null) {
         final Paint solidLinePaint = Paint()
           ..color = finalLineColor
           ..strokeWidth = 1;
-        canvas.drawLine(_entryTickOffset, _endOffset, solidLinePaint);
+        canvas.drawLine(
+            _startCollapsedOffset, _exitCollapsedOffset, solidLinePaint);
       }
 
       // Horizontal dashed line from end marker to the chart's right edge (before yAxis)
@@ -299,6 +302,26 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
         case MarkerType.exitTime:
           paintEndLine(
               canvas, size, marker, anchor, style, zoom, markerGroup.props);
+          break;
+        case MarkerType.startTimeCollapsed:
+          _drawCollapsedTimeLine(
+            canvas,
+            marker,
+            anchor,
+            style,
+            zoom,
+            opacity,
+          );
+          break;
+        case MarkerType.exitTimeCollapsed:
+          _drawCollapsedTimeLine(
+            canvas,
+            marker,
+            anchor,
+            style,
+            zoom,
+            opacity,
+          );
           break;
         case MarkerType.profitAndLossLabel:
           _drawProfitAndLossLabel(
@@ -800,5 +823,33 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
               : style.downColor)
           .withOpacity(opacity);
     canvas.drawCircle(anchor, 2 * zoom, paint);
+  }
+
+  /// Draws a short solid vertical line centered on [anchor.dy].
+  ///
+  /// Used for the collapsed time markers (start/end) that show only a
+  /// compact connector, matching the design for condensed layouts in chart view.
+  void _drawCollapsedTimeLine(
+    Canvas canvas,
+    ChartMarker marker,
+    Offset anchor,
+    MarkerStyle style,
+    double zoom,
+    double opacity,
+  ) {
+    // Length tuned to be subtle yet visible; scales with zoom.
+    final double halfLength = 4 * zoom;
+    final Color color = marker.direction == MarkerDirection.up
+        ? style.upColor
+        : style.downColor;
+    final Paint paint = Paint()
+      ..color = color.withOpacity(opacity)
+      ..strokeWidth = 1;
+
+    canvas.drawLine(
+      Offset(anchor.dx, anchor.dy - halfLength),
+      Offset(anchor.dx, anchor.dy + halfLength),
+      paint,
+    );
   }
 }

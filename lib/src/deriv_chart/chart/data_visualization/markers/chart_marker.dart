@@ -77,6 +77,18 @@ enum MarkerType {
   /// of the chart, with a flag icon centered at the bottom of the line.
   exitTime,
 
+  /// Represents a compact solid start-time connector line.
+  ///
+  /// Draws a short, solid vertical line segment near the price to indicate
+  /// the start time in a condensed layout.
+  startTimeCollapsed,
+
+  /// Represents a compact solid end-time connector line.
+  ///
+  /// Draws a short, solid vertical line segment near the price to indicate
+  /// the end time in a condensed layout.
+  exitTimeCollapsed,
+
   /// Represents the latest tick point specifically in relation to a barrier.
   ///
   /// This is used in barrier-based contracts to show the current price relative to the barrier.

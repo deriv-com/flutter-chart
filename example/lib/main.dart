@@ -868,6 +868,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
       if (showStandardMarkers) {
         chartMarkers.addAll(<ChartMarker>[
           ChartMarker(
+            epoch: marker.epoch - 1000,
+            quote: marker.quote,
+            direction: marker.direction,
+            markerType: MarkerType.startTimeCollapsed,
+          ),
+          ChartMarker(
             epoch: marker.epoch,
             quote: marker.quote,
             direction: marker.direction,
@@ -877,7 +883,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             epoch: endEpoch,
             quote: marker.quote,
             direction: marker.direction,
-            markerType: MarkerType.end,
+            markerType: MarkerType.exitTimeCollapsed,
           ),
           ChartMarker(
             epoch: marker.epoch,
