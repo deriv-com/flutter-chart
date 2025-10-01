@@ -21,6 +21,10 @@ class MarkerProps {
   ///        Default is false, meaning barriers are only drawn when visible.
   const MarkerProps({
     this.hasPersistentBorders = false,
+    this.isProfit = true,
+    this.isRunning = true,
+    this.markerLabel,
+    this.contractMarkerLeftPadding = 8,
   });
 
   /// Whether barriers associated with this marker should be drawn even when
@@ -35,4 +39,26 @@ class MarkerProps {
   /// within the visible area of the chart, which can improve performance by
   /// reducing the number of elements that need to be rendered.
   final bool hasPersistentBorders;
+
+  /// Whether the contract for the marker group is in profit or loss.
+  ///
+  /// This is to use the appropriate color and shape for markers.
+  final bool isProfit;
+
+  /// Whether the contract for the marker group is running or not.
+  ///
+  /// This is used to determine the color and shape of markers.
+  final bool isRunning;
+
+  /// Optional label to display inside the contract marker circle.
+  ///
+  /// If provided, this text will be shown in contract marker.
+  /// If null, a directional arrow (up or down) will be displayed instead, based on the marker's direction.
+  final String? markerLabel;
+
+  /// Absolute left padding (in pixels) for the `contractMarker` from the chart's left edge.
+  ///
+  /// Ensures the `contractMarker` maintains a consistent distance from the left side of the chart.
+  /// Default value is 8 pixels.
+  final double contractMarkerLeftPadding;
 }

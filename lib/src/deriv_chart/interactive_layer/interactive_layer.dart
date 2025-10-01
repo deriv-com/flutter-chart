@@ -148,6 +148,21 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
   }
 
   void syncDrawingsWithConfigs() {
+    final interactiveLayerBehaviour = widget.interactiveLayerBehaviour;
+    final interactiveLayer = interactiveLayerBehaviour.interactiveLayer;
+    final drawingContext = interactiveLayer.drawingContext;
+
+    // Ensure drawing context is available before creating drawings
+    if (drawingContext.fullSize == Size.zero) {
+      // Drawing context not ready yet, schedule retry after next frame
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          syncDrawingsWithConfigs();
+        }
+      });
+      return;
+    }
+
     final configListIds =
         widget.drawingToolsRepo.items.map((c) => c.configId).toSet();
 
@@ -155,8 +170,8 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
       if (!_interactableDrawings.containsKey(config.configId)) {
         // Add new drawing if it doesn't exist
         final drawing = config.getInteractableDrawing(
-          widget.interactiveLayerBehaviour.interactiveLayer.drawingContext,
-          widget.interactiveLayerBehaviour.getToolState,
+          drawingContext,
+          interactiveLayerBehaviour.getToolState,
         );
         _interactableDrawings[config.configId!] = drawing;
       }
@@ -227,6 +242,8 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
     widget.drawingToolsRepo.removeListener(syncDrawingsWithConfigs);
     super.dispose();
   }
+
+  bool get isStillMounted => mounted;
 
   @override
   Widget build(BuildContext context) {
@@ -338,13 +355,16 @@ class _InteractiveLayerGestureHandler extends StatefulWidget {
 
 class _InteractiveLayerGestureHandlerState
     extends State<_InteractiveLayerGestureHandler>
-    with SingleTickerProviderStateMixin
+    with TickerProviderStateMixin
     implements InteractiveLayerBase {
   late AnimationController _stateChangeController;
   static const Curve _stateChangeCurve = Curves.easeOut;
   final InteractionNotifier _interactionNotifier = InteractionNotifier();
 
   String? _addedDrawing;
+
+  @override
+  bool get isStillMounted => mounted;
 
   @override
   AnimationController? get stateChangeAnimationController =>
@@ -383,6 +403,8 @@ class _InteractiveLayerGestureHandlerState
       onDrawingToolPanUpdate: _handleDrawingToolPanUpdate,
       onDrawingToolPanEnd: _handleDrawingToolPanEnd,
       onDrawingToolPanCancel: _handleDrawingToolPanCancel,
+      onDrawingToolLongPress: _handleDrawingToolLongPress,
+      onDrawingToolLongPressEnd: _handleDrawingToolLongPressEnd,
       hitTest: widget.interactiveLayerBehaviour.hitTestDrawings,
       onCrosshairCancel: _cancelCrosshair,
       debugOwner: this,
@@ -471,6 +493,8 @@ class _InteractiveLayerGestureHandlerState
         onDrawingToolPanUpdate: _handleDrawingToolPanUpdate,
         onDrawingToolPanEnd: _handleDrawingToolPanEnd,
         onDrawingToolPanCancel: _handleDrawingToolPanCancel,
+        onDrawingToolLongPress: _handleDrawingToolLongPress,
+        onDrawingToolLongPressEnd: _handleDrawingToolLongPressEnd,
         hitTest: widget.interactiveLayerBehaviour.hitTestDrawings,
         onCrosshairCancel: _cancelCrosshair,
       );
@@ -733,6 +757,17 @@ class _InteractiveLayerGestureHandlerState
   // Handle drawing tool pan cancel
   void _handleDrawingToolPanCancel() {
     _updateInteractionMode(InteractionMode.none);
+  }
+
+  // Handle drawing tool long press
+  void _handleDrawingToolLongPress(Offset localPosition) {
+    widget.interactiveLayerBehaviour.onLongPress(localPosition);
+    _updateInteractionMode(InteractionMode.drawingTool);
+  }
+
+  // Handle drawing tool long press end
+  void _handleDrawingToolLongPressEnd() {
+    widget.interactiveLayerBehaviour.onLongPressEnd();
   }
 
   void _handleHover(PointerHoverEvent event, XAxisModel xAxis) {

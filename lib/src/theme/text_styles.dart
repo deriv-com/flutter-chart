@@ -219,4 +219,16 @@ class TextStyles {
     fontWeight: FontWeight.w400,
     height: 1.43, // lineHeight (20px) / fontSize (14px) = ~1.43
   );
+
+  static const TextStyle profitAndLossLabelTextStyle = TextStyle(
+    fontFeatures: <FontFeature>[
+      FontFeature.liningFigures(),
+      FontFeature.tabularFigures(),
+    ],
+    fontFamily: fontFamilyDeriv,
+    fontSize: 12,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w700,
+    height: 1.67,
+  );
 }

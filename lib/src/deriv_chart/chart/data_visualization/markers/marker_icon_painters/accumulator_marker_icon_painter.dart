@@ -3,6 +3,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/painter_props.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/tick_marker_icon_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
@@ -76,6 +77,7 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     EpochToX epochToX,
     QuoteToY quoteToY,
     PainterProps painterProps,
+    AnimationInfo animationInfo,
   ) {
     super.paintMarkerGroup(
       canvas,
@@ -85,6 +87,7 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
       epochToX,
       quoteToY,
       painterProps,
+      animationInfo,
     );
 
     final Map<MarkerType, ChartMarker> markers = <MarkerType, ChartMarker>{};
