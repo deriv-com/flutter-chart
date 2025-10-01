@@ -20,6 +20,10 @@ const double autoPanOffset = 30;
 /// Padding around data used in data-fit mode.
 const EdgeInsets defaultDataFitPadding = EdgeInsets.only(left: 16, right: 120);
 
+/// Minimum pixel threshold for scroll movements to be considered significant
+/// user interaction (not just tiny automatic adjustments).
+const double significantScrollThreshold = 1;
+
 /// Modes that control chart's zoom and scroll behaviour without user
 /// interaction.
 enum ViewingMode {
@@ -143,6 +147,7 @@ class XAxisModel extends ChangeNotifier {
   late AnimationController _scrollAnimationController;
   double? _prevScrollAnimationValue;
   bool _autoPanEnabled = true;
+  bool _userInteracting = false;
   late bool _dataFitMode;
   double _msPerPx = 1000;
   double? _prevMsPerPx;
@@ -182,12 +187,24 @@ class XAxisModel extends ChangeNotifier {
   bool get _followCurrentTick =>
       _autoPanEnabled &&
       isLive &&
-      rightBoundEpoch > _nowEpoch &&
+      (rightBoundEpoch > _nowEpoch ||
+          _shouldFollowLastTickForInconsistentFeed) &&
       _currentTickFarEnoughFromLeftBound;
 
   bool get _currentTickFarEnoughFromLeftBound =>
       _entries!.isEmpty ||
       _entries!.last.epoch > _shiftEpoch(leftBoundEpoch, autoPanOffset);
+
+  /// For inconsistent feeds, we should follow the last tick instead of current time
+  /// since there can be long gaps between ticks and current time
+  /// But only if the user is not manually interacting with the chart
+  bool get _shouldFollowLastTickForInconsistentFeed =>
+      _autoPanEnabled &&
+      !_userInteracting &&
+      isLive &&
+      (_entries?.isNotEmpty ?? false) &&
+      rightBoundEpoch <
+          _shiftEpoch(_entries!.last.epoch, _maxCurrentTickOffset);
 
   /// Current scale value.
   double get msPerPx => _msPerPx;
@@ -205,6 +222,10 @@ class XAxisModel extends ChangeNotifier {
   /// Doesn't mean it is currently active viewing mode.
   /// Check [_currentViewingMode].
   bool get dataFitEnabled => _dataFitMode;
+
+  /// Whether auto-panning is enabled.
+  /// Used to determine if ticker should be running for auto-scrolling.
+  bool get isAutoPanEnabled => _autoPanEnabled;
 
   /// Current mode that controls chart's zooming and scrolling behaviour.
   ViewingMode get _currentViewingMode {
@@ -243,7 +264,15 @@ class XAxisModel extends ChangeNotifier {
     // TODO(NA): Consider refactoring the switch with OOP pattern. https://refactoring.com/catalog/replaceConditionalWithPolymorphism.html
     switch (_currentViewingMode) {
       case ViewingMode.followCurrentTick:
-        _scrollTo(_rightBoundEpoch + elapsedMs);
+        // For inconsistent feeds, scroll to the last tick position instead of current time
+        if (_shouldFollowLastTickForInconsistentFeed &&
+            (_entries?.isNotEmpty ?? false)) {
+          final int targetEpoch =
+              _shiftEpoch(_entries!.last.epoch, _maxCurrentTickOffset);
+          _scrollTo(targetEpoch);
+        } else {
+          _scrollTo(_rightBoundEpoch + elapsedMs);
+        }
         break;
       case ViewingMode.fitData:
         fitAvailableData();
@@ -364,18 +393,23 @@ class XAxisModel extends ChangeNotifier {
 
   /// Enables data fit viewing mode.
   void enableDataFit() {
-    _dataFitMode = true;
-    if (kIsWeb) {
-      fitAvailableData();
+    if (_dataFitMode != true) {
+      _dataFitMode = true;
+      // Reset user interaction when entering data fit mode
+      _userInteracting = false;
+      if (kIsWeb) {
+        fitAvailableData();
+      }
+      notifyListeners();
     }
-
-    notifyListeners();
   }
 
   /// Disables data fit viewing mode.
   void disableDataFit() {
-    _dataFitMode = false;
-    notifyListeners();
+    if (_dataFitMode != false) {
+      _dataFitMode = false;
+      notifyListeners();
+    }
   }
 
   /// Sets [panSpeed] if input not null, otherwise sets to `0`.
@@ -384,15 +418,47 @@ class XAxisModel extends ChangeNotifier {
 
   /// Enables autopanning when current tick is visible.
   void enableAutoPan() {
-    _autoPanEnabled = true;
-    notifyListeners();
+    if (_autoPanEnabled != true) {
+      _autoPanEnabled = true;
+      notifyListeners();
+    }
   }
 
   /// Disables autopanning when current tick is visible.
   /// E.g. crosshair disables autopan while it is visible.
   void disableAutoPan() {
-    _autoPanEnabled = false;
+    if (_autoPanEnabled != false) {
+      _autoPanEnabled = false;
+      notifyListeners();
+    }
+  }
+
+  /// Resets the user interaction flag to allow auto-pan to resume.
+  /// This can be called when you want to programmatically re-enable auto-following.
+  void resetUserInteraction() {
+    _userInteracting = false;
     notifyListeners();
+  }
+
+  /// Checks if the user has scrolled back to the latest tick area
+  /// and re-enables auto-scrolling if they have
+  void _checkIfUserScrolledToLatestTick() {
+    if (_userInteracting && isLive && (_entries?.isNotEmpty ?? false)) {
+      // Calculate the target position where auto-scroll should resume
+      final int latestTickWithOffset =
+          _shiftEpoch(_entries!.last.epoch, _maxCurrentTickOffset);
+
+      // If the user has scrolled to within a reasonable distance of the latest tick,
+      // re-enable auto-scrolling
+      final int distanceFromLatest =
+          (rightBoundEpoch - latestTickWithOffset).abs();
+      final int threshold =
+          (_maxCurrentTickOffset * 0.5).round(); // 50% of max offset
+
+      if (distanceFromLatest <= threshold) {
+        _userInteracting = false;
+      }
+    }
   }
 
   /// Convert ms to px using current scale.
@@ -436,6 +502,9 @@ class XAxisModel extends ChangeNotifier {
     _scrollAnimationController.stop();
     _prevMsPerPx = _msPerPx;
 
+    // Mark that user is interacting to prevent auto-scroll interference
+    _userInteracting = true;
+
     // Exit data fit mode.
     disableDataFit();
   }
@@ -452,6 +521,8 @@ class XAxisModel extends ChangeNotifier {
   /// Called when user is panning the chart.
   void onPanUpdate(DragUpdateDetails details) {
     if (!_isScrollBlocked) {
+      // Mark that user is interacting to prevent auto-scroll interference
+      _userInteracting = true;
       scrollBy(-details.delta.dx);
     }
   }
@@ -472,8 +543,19 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called to scroll the chart
   void scrollBy(double pxShift) {
+    // If this is a significant manual scroll (not just tiny adjustments),
+    // mark as user interaction to prevent auto-scroll interference
+    if (pxShift.abs() > significantScrollThreshold) {
+      _userInteracting = true;
+    }
+
     _rightBoundEpoch = _shiftEpoch(_rightBoundEpoch, pxShift);
     _clampRightBoundEpoch();
+
+    // Check if user has scrolled back to the latest tick area
+    // If so, re-enable auto-scrolling
+    _checkIfUserScrolledToLatestTick();
+
     onScroll?.call();
     notifyListeners();
   }
@@ -504,6 +586,9 @@ class XAxisModel extends ChangeNotifier {
 
   /// Animate scrolling to current tick.
   void scrollToLastTick({bool animate = true}) {
+    // Re-enable auto-pan when user explicitly scrolls to last tick
+    _userInteracting = false;
+
     final Duration duration =
         animate ? const Duration(milliseconds: 600) : Duration.zero;
     final int target = _shiftEpoch(

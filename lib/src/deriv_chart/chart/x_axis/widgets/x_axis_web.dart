@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/widgets/x_axis_base.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 /// A class representing the X-axis for a web-based chart.
@@ -32,6 +33,7 @@ class XAxisWeb extends XAxisBase {
 
 class _XAxisStateWeb extends XAxisState {
   AnimationController? _scrollAnimationController;
+  Ticker? _ticker;
 
   @override
   void initState() {
@@ -64,7 +66,39 @@ class _XAxisStateWeb extends XAxisState {
       },
     );
 
+    // Add listener for auto-scrolling state changes
+    model.addListener(_onModelChanged);
+
+    // Start ticker only if auto-scrolling is needed
+    _startAutoScrollTicker();
+
     fitData();
+  }
+
+  void _onModelChanged() {
+    // Check if we need to start/stop the ticker based on auto-scrolling state
+    final bool shouldRunTicker = _shouldRunTicker();
+
+    if (shouldRunTicker && _ticker == null) {
+      _startAutoScrollTicker();
+    } else if (!shouldRunTicker && _ticker != null) {
+      _stopAutoScrollTicker();
+    }
+  }
+
+  bool _shouldRunTicker() {
+    // Ticker should run when auto-scrolling is active
+    return model.isLive && (model.dataFitEnabled || model.isAutoPanEnabled);
+  }
+
+  void _startAutoScrollTicker() {
+    _ticker ??= createTicker(model.onNewFrame)..start();
+  }
+
+  void _stopAutoScrollTicker() {
+    _ticker?.stop();
+    _ticker?.dispose();
+    _ticker = null;
   }
 
   @override
@@ -85,6 +119,8 @@ class _XAxisStateWeb extends XAxisState {
 
   @override
   void dispose() {
+    model.removeListener(_onModelChanged);
+    _stopAutoScrollTicker();
     _scrollAnimationController?.dispose();
 
     super.dispose();
