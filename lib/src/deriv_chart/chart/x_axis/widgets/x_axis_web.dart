@@ -39,9 +39,6 @@ class _XAxisStateWeb extends XAxisState {
   void initState() {
     super.initState();
 
-    // Add continuous frame updates for proper auto-scrolling
-    _ticker = createTicker(model.onNewFrame)..start();
-
     _scrollAnimationController = AnimationController(
       vsync: this,
       duration: widget.scrollAnimationDuration,
@@ -69,7 +66,39 @@ class _XAxisStateWeb extends XAxisState {
       },
     );
 
+    // Add listener for auto-scrolling state changes
+    model.addListener(_onModelChanged);
+
+    // Start ticker only if auto-scrolling is needed
+    _startAutoScrollTicker();
+
     fitData();
+  }
+
+  void _onModelChanged() {
+    // Check if we need to start/stop the ticker based on auto-scrolling state
+    final bool shouldRunTicker = _shouldRunTicker();
+
+    if (shouldRunTicker && _ticker == null) {
+      _startAutoScrollTicker();
+    } else if (!shouldRunTicker && _ticker != null) {
+      _stopAutoScrollTicker();
+    }
+  }
+
+  bool _shouldRunTicker() {
+    // Ticker should run when auto-scrolling is active
+    return model.isLive && (model.dataFitEnabled || model.isAutoPanEnabled);
+  }
+
+  void _startAutoScrollTicker() {
+    _ticker ??= createTicker(model.onNewFrame)..start();
+  }
+
+  void _stopAutoScrollTicker() {
+    _ticker?.stop();
+    _ticker?.dispose();
+    _ticker = null;
   }
 
   @override
@@ -90,7 +119,8 @@ class _XAxisStateWeb extends XAxisState {
 
   @override
   void dispose() {
-    _ticker?.dispose();
+    model.removeListener(_onModelChanged);
+    _stopAutoScrollTicker();
     _scrollAnimationController?.dispose();
 
     super.dispose();
