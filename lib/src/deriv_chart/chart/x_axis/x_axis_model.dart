@@ -437,6 +437,7 @@ class XAxisModel extends ChangeNotifier {
   /// This can be called when you want to programmatically re-enable auto-following.
   void resetUserInteraction() {
     _userInteracting = false;
+    notifyListeners();
   }
 
   /// Checks if the user has scrolled back to the latest tick area
