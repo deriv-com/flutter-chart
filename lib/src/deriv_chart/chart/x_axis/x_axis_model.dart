@@ -20,6 +20,10 @@ const double autoPanOffset = 30;
 /// Padding around data used in data-fit mode.
 const EdgeInsets defaultDataFitPadding = EdgeInsets.only(left: 16, right: 120);
 
+/// Minimum pixel threshold for scroll movements to be considered significant
+/// user interaction (not just tiny automatic adjustments).
+const double significantScrollThreshold = 1;
+
 /// Modes that control chart's zoom and scroll behaviour without user
 /// interaction.
 enum ViewingMode {
@@ -540,7 +544,7 @@ class XAxisModel extends ChangeNotifier {
   void scrollBy(double pxShift) {
     // If this is a significant manual scroll (not just tiny adjustments),
     // mark as user interaction to prevent auto-scroll interference
-    if (pxShift.abs() > 1.0) {
+    if (pxShift.abs() > significantScrollThreshold) {
       _userInteracting = true;
     }
 
