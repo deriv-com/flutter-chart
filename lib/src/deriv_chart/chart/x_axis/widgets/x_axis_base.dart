@@ -102,6 +102,7 @@ class XAxisState extends State<XAxisBase> with TickerProviderStateMixin {
       granularity: chartConfig.granularity,
       animationController: _rightEpochAnimationController,
       isLive: widget.isLive,
+      snapMarkersToIntervals: chartConfig.snapMarkersToIntervals,
       startWithDataFitMode: widget.startWithDataFitMode,
       onScale: _onVisibleAreaChanged,
       onScroll: _onVisibleAreaChanged,
@@ -140,6 +141,8 @@ class XAxisState extends State<XAxisBase> with TickerProviderStateMixin {
       dataFitPadding: widget.dataFitPadding,
       maxCurrentTickOffset:
           context.read<ChartConfig>().chartAxisConfig.maxCurrentTickOffset,
+      snapMarkersToIntervals:
+          context.read<ChartConfig>().snapMarkersToIntervals,
     );
   }
 

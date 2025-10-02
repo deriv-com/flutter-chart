@@ -116,3 +116,12 @@ String formatEpochToGMTDateTime(int epochMillis) {
       DateTime.fromMillisecondsSinceEpoch(epochMillis, isUtc: true);
   return '${DateFormat('yy-MM-dd HH:mm:ss').format(dateTime)} GMT';
 }
+
+/// Returns the appropriate color of the marker based on its running state
+/// and profit/loss status.
+Color getMarkerColor(MarkerProps props, MarkerStyle style) {
+  if (props.isRunning) {
+    return style.lineDefaultColor;
+  }
+  return props.isProfit ? style.lineProfitColor : style.lineLossColor;
+}

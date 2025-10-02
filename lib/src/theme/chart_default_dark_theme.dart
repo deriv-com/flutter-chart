@@ -1,6 +1,7 @@
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
+import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:deriv_chart/src/theme/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -217,4 +218,41 @@ class ChartDefaultDarkTheme extends ChartDefaultTheme {
   @override
   Color get toolbarColorPaletteIconSelectedBorderColor =>
       DarkThemeColors.toolbarColorPaletteIconSelectedBorderColor;
+
+  @override
+  Color get closedMarkerSurfaceColorGreen =>
+      DarkThemeColors.closedMarkerSurfaceColorGreen;
+
+  @override
+  Color get closedMarkerBorderColorGreen =>
+      DarkThemeColors.closedMarkerBorderColorGreen;
+
+  @override
+  Color get closedMarkerTextIconColorGreen =>
+      DarkThemeColors.closedMarkerTextIconColorGreen;
+
+  @override
+  Color get closedMarkerSurfaceColorRed =>
+      DarkThemeColors.closedMarkerSurfaceColorRed;
+
+  @override
+  Color get closedMarkerBorderColorRed =>
+      DarkThemeColors.closedMarkerBorderColorRed;
+
+  @override
+  Color get closedMarkerTextIconColorRed =>
+      DarkThemeColors.closedMarkerTextIconColorRed;
+
+  @override
+  Color get markerPaletteTextIconColor =>
+      DarkThemeColors.markerPaletteTextIconColor;
+
+  @override
+  Color get markerPaletteBorderColor =>
+      DarkThemeColors.markerPaletteBorderColor;
+
+  @override
+  MarkerStyle get markerStyle => const MarkerStyle(
+        lineDefaultColor: DarkThemeColors.markerPaletteBorderColor,
+      );
 }

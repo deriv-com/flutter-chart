@@ -24,7 +24,6 @@ import 'package:flutter_deriv_api/state/connection/connection_cubit.dart'
     as connection_bloc;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:pref/pref.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'utils/misc.dart';
 
@@ -105,6 +104,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   final SplayTreeSet<Marker> _markers = SplayTreeSet<Marker>();
 
   ActiveMarker? _activeMarker;
+  ActiveMarkerGroup? _activeMarkerGroup;
 
   late List<ActiveSymbolsItem> _activeSymbols;
 
@@ -119,6 +119,13 @@ class _FullscreenChartState extends State<FullscreenChart> {
       InteractiveLayerController();
 
   late PrefServiceCache _prefService;
+
+  TradeType _currentTradeType = TradeType.multipliers;
+
+  // Dynamic marker duration in milliseconds
+  int _markerDurationMs = 10000;
+  // PnL label lifetime after marker end in milliseconds
+  static const int _pnlLabelLifetimeMs = 4000;
 
   @override
   void initState() {
@@ -139,7 +146,24 @@ class _FullscreenChartState extends State<FullscreenChart> {
     await _prefService.setDefaultValues(<String, dynamic>{
       'appID': defaultAppID,
       'endpoint': defaultEndpoint,
+      'tradeType': TradeType.multipliers.value,
     });
+
+    // Load current trade type from preferences
+    await _loadTradeType();
+  }
+
+  Future<void> _loadTradeType() async {
+    // Get the trade type directly from PrefService instead of SharedPreferences
+    // to ensure we get the latest value immediately
+    final String? tradeTypeValue = _prefService.get<String>('tradeType');
+    if (tradeTypeValue != null) {
+      final TradeType newTradeType =
+          TradeTypeExtension.fromValue(tradeTypeValue);
+      setState(() {
+        _currentTradeType = newTradeType;
+      });
+    }
   }
 
   @override
@@ -151,7 +175,8 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<void> _connectToAPI() async {
-    _connectionBloc = connection_bloc.ConnectionCubit(ConnectionInformation(
+    _connectionBloc = connection_bloc.ConnectionCubit(
+        const ConnectionInformation(
       endpoint: defaultEndpoint,
       appId: defaultAppID,
       brand: 'deriv',
@@ -339,10 +364,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   void _onNewTick(Tick newTick) {
+    _removeExpiredMarkers(newTick.epoch);
     setState(() => ticks = ticks + <Tick>[newTick]);
   }
 
   void _onNewCandle(Candle newCandle) {
+    _removeExpiredMarkers(newCandle.currentEpoch);
     final List<Candle> previousCandles =
         ticks.isNotEmpty && ticks.last.epoch == newCandle.epoch
             ? ticks.sublist(0, ticks.length - 1) as List<Candle>
@@ -353,6 +380,34 @@ class _FullscreenChartState extends State<FullscreenChart> {
       // see the difference.
       ticks = previousCandles + <Candle>[newCandle];
     });
+  }
+
+  /// Removes markers that have exceeded their duration
+  void _removeExpiredMarkers(int currentEpoch) {
+    bool clearedActiveGroup = false;
+    _markers.removeWhere((Marker marker) {
+      final int endEpoch = marker.epoch + _markerDurationMs;
+      // Keep the marker around long enough to display PnL label window:
+      // 1s delay before showing + 4s visibility = 5s after end.
+      final bool isExpired =
+          currentEpoch >= endEpoch + 1000 + _pnlLabelLifetimeMs;
+      // Contract end moment
+      final bool hasContractEnded = currentEpoch >= endEpoch + 1000;
+      if (isExpired && _activeMarker?.epoch == marker.epoch) {
+        _activeMarker = null;
+      }
+      // Clear active group as soon as contract ends, and also if fully expired
+      if ((hasContractEnded || isExpired) &&
+          _activeMarkerGroup?.id == 'marker_${marker.epoch}') {
+        clearedActiveGroup = true;
+      }
+      return isExpired;
+    });
+    if (clearedActiveGroup) {
+      setState(() {
+        _activeMarkerGroup = null;
+      });
+    }
   }
 
   DataSeries<Tick> _getDataSeries(ChartStyle style) {
@@ -376,250 +431,149 @@ class _FullscreenChartState extends State<FullscreenChart> {
         color: DarkThemeColors.backgroundDynamicHighest,
         child: Column(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                children: <Widget>[
-                  Expanded(child: _buildMarketSelectorButton()),
-                  _buildChartTypeButton(),
-                  _buildIntervalSelector(),
-                ],
-              ),
+            _TopControls(
+              marketButton: _buildMarketSelectorButton(),
+              chartTypeButton: _buildChartTypeButton(),
+              intervalSelector: _buildIntervalSelector(),
             ),
             Expanded(
-              child: Stack(
-                children: <Widget>[
-                  ClipRect(
-                    child: DerivChart(
-                      useDrawingToolsV2: true,
-                      interactiveLayerBehaviour: _interactiveLayerBehaviour,
-                      mainSeries: _getDataSeries(style),
-                      markerSeries: MarkerSeries(
-                        _markers,
-                        activeMarker: _activeMarker,
-                        markerIconPainter: MultipliersMarkerIconPainter(),
-                      ),
-                      activeSymbol: _symbol.name,
-                      annotations: ticks.length > 4
-                          ? <ChartAnnotation<ChartObject>>[
-                              ..._sampleBarriers,
-                              if (_sl && _slBarrier != null)
-                                _slBarrier as ChartAnnotation<ChartObject>,
-                              if (_tp && _tpBarrier != null)
-                                _tpBarrier as ChartAnnotation<ChartObject>,
-                              TickIndicator(
-                                ticks.last,
-                                style: const HorizontalBarrierStyle(
-                                  color: DarkThemeColors.currentSpotDotColor,
-                                  labelShape: LabelShape.pentagon,
-                                  hasBlinkingDot: true,
-                                  hasArrow: false,
-                                  lineColor:
-                                      DarkThemeColors.currentSpotLineColor,
-                                  isDashed: false,
-                                  labelShapeBackgroundColor:
-                                      DarkThemeColors.currentSpotContainerColor,
-                                  textStyle: TextStyle(
-                                    color: DarkThemeColors.currentSpotTextColor,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                                visibility: HorizontalBarrierVisibility
-                                    .keepBarrierLabelVisible,
-                              ),
-                            ]
-                          : null,
-                      pipSize:
-                          (_tickHistorySubscription?.tickHistory?.pipSize ?? 4)
-                              .toInt(),
-                      granularity: granularity == 0
-                          ? 1000 // average ms difference between ticks
-                          : granularity * 1000,
-                      controller: _controller,
-                      isLive: (_symbol.isOpen) &&
-                          (_connectionBloc.state
-                              is connection_bloc.ConnectionConnectedState),
-                      opacity: _symbol.isOpen ? 1.0 : 0.5,
-                      onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
-                        if (!_waitingForHistory &&
-                            ticks.isNotEmpty &&
-                            leftEpoch < ticks.first.epoch) {
-                          _loadHistory(500);
-                        }
-                      },
-                    ),
-                  ),
-                  // ignore: unnecessary_null_comparison
-                  if (_connectionBloc != null &&
-                      _connectionBloc.state
-                          is! connection_bloc.ConnectionConnectedState)
-                    Align(
-                      child: _buildConnectionStatus(),
-                    ),
-                  Container(
-                    alignment: Alignment.topRight,
-                    padding: const EdgeInsets.all(16),
-                    child: ListenableBuilder(
-                      listenable: _interactiveLayerController,
-                      builder: (_, __) {
-                        if (_interactiveLayerController.currentState
-                            is InteractiveAddingToolState) {
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text('Cancel adding'),
-                              IconButton(
-                                onPressed:
-                                    _interactiveLayerController.cancelAdding,
-                                icon: const Icon(Icons.cancel),
-                              ),
-                            ],
-                          );
-                        }
-                        return const SizedBox();
-                      },
-                    ),
-                  ),
-                ],
+              child: _ChartSection(
+                interactiveLayerBehaviour: _interactiveLayerBehaviour,
+                mainSeries: _getDataSeries(style),
+                markerSeries: _getMarkerSeries(),
+                activeSymbol: _symbol.name,
+                annotations: _buildAnnotations(),
+                pipSize: (_tickHistorySubscription?.tickHistory?.pipSize ?? 4)
+                    .toInt(),
+                granularityMs: granularity == 0 ? 1000 : granularity * 1000,
+                controller: _controller,
+                isLive: (_symbol.isOpen) &&
+                    (_connectionBloc.state
+                        is connection_bloc.ConnectionConnectedState),
+                opacity: _symbol.isOpen ? 1.0 : 0.5,
+                onVisibleAreaChanged: (int leftEpoch, int rightEpoch) {
+                  if (!_waitingForHistory &&
+                      ticks.isNotEmpty &&
+                      leftEpoch < ticks.first.epoch) {
+                    _loadHistory(500);
+                  }
+                },
+                isConnected: _connectionBloc.state
+                    is connection_bloc.ConnectionConnectedState,
+                connectionStatus: _buildConnectionStatus(),
+                interactiveLayerController: _interactiveLayerController,
               ),
             ),
-            SizedBox(
-              height: 64,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  IconButton(
-                      icon: const Icon(Icons.settings),
-                      onPressed: () async {
-                        final bool? settingChanged =
-                            await Navigator.of(context).push(
-                          MaterialPageRoute<bool>(
-                              builder: (_) => PrefService(
-                                    child: SettingsPage(),
-                                    service: _prefService,
-                                  )),
-                        );
-
-                        if (settingChanged ?? false) {
-                          _requestCompleter = Completer<dynamic>();
-                          await _tickStreamSubscription?.cancel();
-                          ticks.clear();
-                          // reconnect to new config
-                          await _connectionBloc.reconnect(
-                            connectionInformation:
-                                await _getConnectionInfoFromPrefs(),
-                          );
-                        }
-                      }),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) => Colors.green),
-                    ),
-                    child: const Text('Up'),
-                    onPressed: () => _addMarker(MarkerDirection.up),
-                  ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) => Colors.red),
-                    ),
-                    child: const Text('Down'),
-                    onPressed: () => _addMarker(MarkerDirection.down),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => setState(_clearMarkers),
-                  ),
-                ],
-              ),
+            _ActionButtonsRow(
+              onSettingsPressed: () => _onSettingsPressed(context),
+              upLabel: _getUpButtonText(),
+              downLabel: _getDownButtonText(),
+              onUp: () => _addMarker(MarkerDirection.up),
+              onDown: () => _addMarker(MarkerDirection.down),
+              onClearMarkers: () => setState(_clearMarkers),
             ),
-            SizedBox(
-              height: 64,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  TextButton(
-                    child: const Text('V barrier'),
-                    onPressed: () => setState(
-                      () => _sampleBarriers.add(
-                        VerticalBarrier.onTick(ticks.last,
-                            title: 'V Barrier',
-                            id: 'VBarrier${_sampleBarriers.length}',
-                            longLine: math.Random().nextBool(),
-                            style: VerticalBarrierStyle(
-                              isDashed: math.Random().nextBool(),
-                            )),
-                      ),
+            _BarriersControlsRow(
+              onAddVerticalBarrier: () => setState(
+                () => _sampleBarriers.add(
+                  VerticalBarrier.onTick(
+                    ticks.last,
+                    title: 'V Barrier',
+                    id: 'VBarrier${_sampleBarriers.length}',
+                    longLine: math.Random().nextBool(),
+                    style: VerticalBarrierStyle(
+                      isDashed: math.Random().nextBool(),
                     ),
                   ),
-                  TextButton(
-                    child: const Text('H barrier'),
-                    onPressed: () => setState(
-                      () => _sampleBarriers.add(
-                        HorizontalBarrier(
-                          ticks.last.quote,
-                          epoch: math.Random().nextBool()
-                              ? ticks.last.epoch
-                              : null,
-                          id: 'HBarrier${_sampleBarriers.length}',
-                          longLine: math.Random().nextBool(),
-                          visibility: HorizontalBarrierVisibility.normal,
-                          style: HorizontalBarrierStyle(
-                            color: Colors.grey,
-                            isDashed: math.Random().nextBool(),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                    child: const Text('+ Both'),
-                    onPressed: () => setState(() => _sampleBarriers.add(
-                          CombinedBarrier(
-                            ticks.last,
-                            title: 'B Barrier',
-                            id: 'CBarrier${_sampleBarriers.length}',
-                            horizontalBarrierStyle:
-                                const HorizontalBarrierStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        )),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => setState(() {
-                      _clearBarriers();
-                    }),
-                  ),
-                ],
+                ),
               ),
+              onAddHorizontalBarrier: () => setState(
+                () => _sampleBarriers.add(
+                  HorizontalBarrier(
+                    ticks.last.quote,
+                    epoch: math.Random().nextBool() ? ticks.last.epoch : null,
+                    id: 'HBarrier${_sampleBarriers.length}',
+                    longLine: math.Random().nextBool(),
+                    visibility: HorizontalBarrierVisibility.normal,
+                    style: HorizontalBarrierStyle(
+                      color: Colors.grey,
+                      isDashed: math.Random().nextBool(),
+                    ),
+                  ),
+                ),
+              ),
+              onAddCombinedBarrier: () => setState(
+                () => _sampleBarriers.add(
+                  CombinedBarrier(
+                    ticks.last,
+                    title: 'B Barrier',
+                    id: 'CBarrier${_sampleBarriers.length}',
+                    horizontalBarrierStyle: const HorizontalBarrierStyle(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              ),
+              onClearBarriers: () => setState(_clearBarriers),
             ),
-            SizedBox(
-              height: 64,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: CheckboxListTile(
-                      value: _sl,
-                      onChanged: (bool? sl) => setState(() => _sl = sl!),
-                      title: const Text('Stop loss'),
-                    ),
-                  ),
-                  Expanded(
-                    child: CheckboxListTile(
-                      value: _tp,
-                      onChanged: (bool? tp) => setState(() => _tp = tp!),
-                      title: const Text('Take profit'),
-                    ),
-                  ),
-                ],
-              ),
-            )
+            _SlTpCheckboxesRow(
+              sl: _sl,
+              tp: _tp,
+              onSlChanged: (bool? value) => setState(() => _sl = value!),
+              onTpChanged: (bool? value) => setState(() => _tp = value!),
+            ),
           ],
         ),
       );
+
+  List<ChartAnnotation<ChartObject>>? _buildAnnotations() {
+    if (ticks.length <= 4) {
+      return null;
+    }
+    return <ChartAnnotation<ChartObject>>[
+      ..._sampleBarriers,
+      if (_sl && _slBarrier != null) _slBarrier as ChartAnnotation<ChartObject>,
+      if (_tp && _tpBarrier != null) _tpBarrier as ChartAnnotation<ChartObject>,
+      TickIndicator(
+        ticks.last,
+        style: const HorizontalBarrierStyle(
+          color: DarkThemeColors.currentSpotDotColor,
+          labelShape: LabelShape.pentagon,
+          hasBlinkingDot: true,
+          hasArrow: false,
+          lineColor: DarkThemeColors.currentSpotLineColor,
+          isDashed: false,
+          labelShapeBackgroundColor: DarkThemeColors.currentSpotContainerColor,
+          textStyle: TextStyle(
+            color: DarkThemeColors.currentSpotTextColor,
+            fontSize: 10,
+          ),
+        ),
+        visibility: HorizontalBarrierVisibility.keepBarrierLabelVisible,
+      ),
+    ];
+  }
+
+  Future<void> _onSettingsPressed(BuildContext context) async {
+    final bool? settingChanged = await Navigator.of(context).push(
+      MaterialPageRoute<bool>(
+        builder: (_) => PrefService(
+          child: SettingsPage(),
+          service: _prefService,
+        ),
+      ),
+    );
+
+    await _loadTradeType();
+
+    if (settingChanged ?? false) {
+      _requestCompleter = Completer<dynamic>();
+      await _tickStreamSubscription?.cancel();
+      ticks.clear();
+      await _connectionBloc.reconnect(
+        connectionInformation: await _getConnectionInfoFromPrefs(),
+      );
+    }
+  }
 
   void _addMarker(MarkerDirection direction) {
     final Tick lastTick = ticks.last;
@@ -655,6 +609,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   void _clearMarkers() {
     _markers.clear();
     _activeMarker = null;
+    _activeMarkerGroup = null;
   }
 
   void _clearBarriers() {
@@ -869,16 +824,405 @@ class _FullscreenChartState extends State<FullscreenChart> {
   }
 
   Future<ConnectionInformation> _getConnectionInfoFromPrefs() async {
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-    final String? endpoint = preferences.getString('endpoint');
+    // Get values directly from PrefService instead of SharedPreferences
+    final String? endpoint = _prefService.get<String>('endpoint');
+    final String? appId = _prefService.get<String>('appID');
 
     return ConnectionInformation(
-      appId: preferences.getString('appID') ?? defaultAppID,
+      appId: appId ?? defaultAppID,
       brand: 'deriv',
       endpoint: endpoint != null
           ? generateEndpointUrl(endpoint: endpoint)
           : defaultEndpoint,
       authEndpoint: '',
+    );
+  }
+
+  String _getUpButtonText() {
+    switch (_currentTradeType) {
+      case TradeType.multipliers:
+        return 'Up';
+      case TradeType.riseFall:
+        return 'Rise';
+    }
+  }
+
+  String _getDownButtonText() {
+    switch (_currentTradeType) {
+      case TradeType.multipliers:
+        return 'Down';
+      case TradeType.riseFall:
+        return 'Fall';
+    }
+  }
+
+  /// Converts markers to marker groups for rise/fall trade type
+  List<MarkerGroup> _convertMarkersToGroups(int currentEpoch) {
+    return _markers.map((Marker marker) {
+      final int endEpoch = marker.epoch + _markerDurationMs;
+
+      final List<ChartMarker> chartMarkers = <ChartMarker>[];
+
+      // Show the standard markers until a short time after end
+      final bool showStandardMarkers = currentEpoch < endEpoch + 500;
+      if (showStandardMarkers) {
+        chartMarkers.addAll(<ChartMarker>[
+          ChartMarker(
+            epoch: marker.epoch - 1000,
+            quote: marker.quote,
+            direction: marker.direction,
+            markerType: MarkerType.startTimeCollapsed,
+          ),
+          ChartMarker(
+            epoch: marker.epoch,
+            quote: marker.quote,
+            direction: marker.direction,
+            markerType: MarkerType.entryTick,
+          ),
+          ChartMarker(
+            epoch: endEpoch,
+            quote: marker.quote,
+            direction: marker.direction,
+            markerType: MarkerType.exitTimeCollapsed,
+          ),
+          ChartMarker(
+            epoch: marker.epoch,
+            quote: marker.quote,
+            direction: marker.direction,
+            markerType: MarkerType.contractMarker,
+            onTap: () {
+              setState(() {
+                _activeMarker = null;
+                _activeMarkerGroup = ActiveMarkerGroup(
+                  markers: chartMarkers,
+                  type: 'tick',
+                  id: 'marker_${marker.epoch}',
+                  currentEpoch: currentEpoch,
+                  profitAndLossText: '+9.55 USD',
+                  onTap: marker.onTap,
+                  onTapOutside: () {
+                    setState(() => _activeMarkerGroup = null);
+                  },
+                );
+              });
+            },
+          ),
+        ]);
+      }
+
+      // Show PnL label starting 1s after end, and hide after 4s have passed.
+      if (currentEpoch >= endEpoch + 1000 &&
+          currentEpoch < endEpoch + 1000 + _pnlLabelLifetimeMs) {
+        chartMarkers.add(
+          ChartMarker(
+            epoch: endEpoch,
+            quote: marker.quote,
+            direction: marker.direction,
+            markerType: MarkerType.profitAndLossLabel,
+          ),
+        );
+      }
+
+      return MarkerGroup(
+        chartMarkers,
+        type: 'tick',
+        id: 'marker_${marker.epoch}',
+        currentEpoch: currentEpoch,
+        profitAndLossText: '+9.55 USD',
+      );
+    }).toList();
+  }
+
+  /// Gets the appropriate marker series based on trade type
+  dynamic _getMarkerSeries() {
+    if (_currentTradeType == TradeType.riseFall) {
+      // Get the current epoch from the latest tick
+      final int currentEpoch = ticks.isNotEmpty
+          ? ticks.last.epoch
+          : DateTime.now().millisecondsSinceEpoch;
+
+      // Create an updated active group instance with the latest currentEpoch
+      // to ensure painters receive the fresh value without restarting animation.
+      final ActiveMarkerGroup? activeGroupForBuild = _activeMarkerGroup == null
+          ? null
+          : ActiveMarkerGroup(
+              markers: _activeMarkerGroup!.markers,
+              type: _activeMarkerGroup!.type,
+              id: _activeMarkerGroup!.id,
+              props: _activeMarkerGroup!.props,
+              style: _activeMarkerGroup!.style,
+              currentEpoch: currentEpoch,
+              profitAndLossText: _activeMarkerGroup!.profitAndLossText,
+              onTap: _activeMarkerGroup!.onTap,
+              onTapOutside: _activeMarkerGroup!.onTapOutside,
+            );
+
+      return MarkerGroupSeries(
+        SplayTreeSet<Marker>(),
+        markerGroupIconPainter: TickMarkerIconPainter(),
+        markerGroupList: _convertMarkersToGroups(currentEpoch),
+        activeMarkerGroup: activeGroupForBuild,
+      );
+    } else {
+      return MarkerSeries(
+        _markers,
+        activeMarker: _activeMarker,
+        markerIconPainter: MultipliersMarkerIconPainter(),
+      );
+    }
+  }
+}
+
+class _TopControls extends StatelessWidget {
+  const _TopControls({
+    required this.marketButton,
+    required this.chartTypeButton,
+    required this.intervalSelector,
+  });
+
+  final Widget marketButton;
+  final Widget chartTypeButton;
+  final Widget intervalSelector;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        children: <Widget>[
+          Expanded(child: marketButton),
+          chartTypeButton,
+          intervalSelector,
+        ],
+      ),
+    );
+  }
+}
+
+class _ChartSection extends StatelessWidget {
+  const _ChartSection({
+    required this.interactiveLayerBehaviour,
+    required this.mainSeries,
+    required this.markerSeries,
+    required this.activeSymbol,
+    required this.annotations,
+    required this.pipSize,
+    required this.granularityMs,
+    required this.controller,
+    required this.isLive,
+    required this.opacity,
+    required this.onVisibleAreaChanged,
+    required this.isConnected,
+    required this.connectionStatus,
+    required this.interactiveLayerController,
+  });
+
+  final InteractiveLayerBehaviour interactiveLayerBehaviour;
+  final DataSeries<Tick> mainSeries;
+  final dynamic markerSeries;
+  final String activeSymbol;
+  final List<ChartAnnotation<ChartObject>>? annotations;
+  final int pipSize;
+  final int granularityMs;
+  final ChartController controller;
+  final bool isLive;
+  final double opacity;
+  final void Function(int leftEpoch, int rightEpoch) onVisibleAreaChanged;
+  final bool isConnected;
+  final Widget connectionStatus;
+  final InteractiveLayerController interactiveLayerController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        ClipRect(
+          child: DerivChart(
+            useDrawingToolsV2: true,
+            interactiveLayerBehaviour: interactiveLayerBehaviour,
+            mainSeries: mainSeries,
+            markerSeries: markerSeries,
+            activeSymbol: activeSymbol,
+            annotations: annotations,
+            pipSize: pipSize,
+            granularity: granularityMs,
+            controller: controller,
+            isLive: isLive,
+            opacity: opacity,
+            onVisibleAreaChanged: onVisibleAreaChanged,
+          ),
+        ),
+        if (!isConnected)
+          Align(
+            child: connectionStatus,
+          ),
+        Container(
+          alignment: Alignment.topRight,
+          padding: const EdgeInsets.all(16),
+          child: ListenableBuilder(
+            listenable: interactiveLayerController,
+            builder: (_, __) {
+              if (interactiveLayerController.currentState
+                  is InteractiveAddingToolState) {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const Text('Cancel adding'),
+                    IconButton(
+                      onPressed: interactiveLayerController.cancelAdding,
+                      icon: const Icon(Icons.cancel),
+                    ),
+                  ],
+                );
+              }
+              return const SizedBox();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ActionButtonsRow extends StatelessWidget {
+  const _ActionButtonsRow({
+    required this.onSettingsPressed,
+    required this.upLabel,
+    required this.downLabel,
+    required this.onUp,
+    required this.onDown,
+    required this.onClearMarkers,
+  });
+
+  final VoidCallback onSettingsPressed;
+  final String upLabel;
+  final String downLabel;
+  final VoidCallback onUp;
+  final VoidCallback onDown;
+  final VoidCallback onClearMarkers;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 64,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: onSettingsPressed,
+          ),
+          ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                (Set<WidgetState> states) => const Color(0xFF00C390),
+              ),
+              foregroundColor: WidgetStateProperty.resolveWith<Color>(
+                (Set<WidgetState> states) => Colors.white,
+              ),
+            ),
+            child: Text(upLabel),
+            onPressed: onUp,
+          ),
+          ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                (Set<WidgetState> states) => const Color(0xFFDE0040),
+              ),
+              foregroundColor: WidgetStateProperty.resolveWith<Color>(
+                (Set<WidgetState> states) => Colors.white,
+              ),
+            ),
+            child: Text(downLabel),
+            onPressed: onDown,
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: onClearMarkers,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BarriersControlsRow extends StatelessWidget {
+  const _BarriersControlsRow({
+    required this.onAddVerticalBarrier,
+    required this.onAddHorizontalBarrier,
+    required this.onAddCombinedBarrier,
+    required this.onClearBarriers,
+  });
+
+  final VoidCallback onAddVerticalBarrier;
+  final VoidCallback onAddHorizontalBarrier;
+  final VoidCallback onAddCombinedBarrier;
+  final VoidCallback onClearBarriers;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 64,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          TextButton(
+            child: const Text('V barrier'),
+            onPressed: onAddVerticalBarrier,
+          ),
+          TextButton(
+            child: const Text('H barrier'),
+            onPressed: onAddHorizontalBarrier,
+          ),
+          TextButton(
+            child: const Text('+ Both'),
+            onPressed: onAddCombinedBarrier,
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: onClearBarriers,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SlTpCheckboxesRow extends StatelessWidget {
+  const _SlTpCheckboxesRow({
+    required this.sl,
+    required this.tp,
+    required this.onSlChanged,
+    required this.onTpChanged,
+  });
+
+  final bool sl;
+  final bool tp;
+  final ValueChanged<bool?> onSlChanged;
+  final ValueChanged<bool?> onTpChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 64,
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: CheckboxListTile(
+              value: sl,
+              onChanged: onSlChanged,
+              title: const Text('Stop loss'),
+            ),
+          ),
+          Expanded(
+            child: CheckboxListTile(
+              value: tp,
+              onChanged: onTpChanged,
+              title: const Text('Take profit'),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
