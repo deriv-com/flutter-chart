@@ -51,7 +51,11 @@ abstract class InteractiveLayerBehaviour {
   late final InteractiveLayerController _controller;
 
   /// The controller for state changes in the interactive layer.
-  late final AnimationController stateChangeController;
+  ///
+  /// Note: This is not final to allow reassignment when the widget rebuilds
+  /// (e.g., during symbol switches). The old controller gets disposed by the
+  /// widget, and a new one is created and assigned here.
+  late AnimationController stateChangeController;
 
   /// The controller for the interactive layer.
   InteractiveLayerController get controller => _controller;
@@ -62,26 +66,39 @@ abstract class InteractiveLayerBehaviour {
   bool _initialized = false;
 
   /// The interactive layer that this manager is managing.
-  late final InteractiveLayerBase interactiveLayer;
+  ///
+  /// Note: This is not final to allow reassignment when the widget rebuilds.
+  late InteractiveLayerBase interactiveLayer;
 
   /// The callback that is called when the interactive layer needs to be updated.
-  late final VoidCallback onUpdate;
+  ///
+  /// Note: This is not final to allow reassignment when the widget rebuilds.
+  late VoidCallback onUpdate;
 
   /// Initializes the [InteractiveLayerBehaviour].
+  ///
+  /// This method can be called multiple times (e.g., when the widget rebuilds
+  /// during symbol switches). It will update the references to the new
+  /// controller, interactive layer, and callback even if already initialized.
   void init({
     required InteractiveLayerBase interactiveLayer,
     required VoidCallback onUpdate,
     required AnimationController stateChangeController,
   }) {
     if (_initialized) {
+      // Update the references to the new instances
+      this.stateChangeController = stateChangeController;
+      this.interactiveLayer = interactiveLayer;
+      this.onUpdate = onUpdate;
+
       return;
     }
 
+    // First-time initialization
     this.stateChangeController = stateChangeController;
-
-    _initialized = true;
     this.interactiveLayer = interactiveLayer;
     this.onUpdate = onUpdate;
+    _initialized = true;
   }
 
   /// Return the adding preview of the [drawing] we're currently adding for this
