@@ -73,6 +73,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
 
     if (!prefs.containsKey(addOnsKey)) {
       // No saved indicators or drawing tools.
+      notifyListeners();
       return;
     }
 
