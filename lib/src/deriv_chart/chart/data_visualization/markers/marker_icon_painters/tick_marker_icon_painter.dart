@@ -173,8 +173,6 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       PainterProps painterProps,
       Paint paint) {
     final Offset? _contractMarkerOffset = points[MarkerType.contractMarker];
-    final Offset? _entryTickOffset = points[MarkerType.entryTick];
-    final Offset? _endOffset = points[MarkerType.end];
     final Offset? _startCollapsedOffset = points[MarkerType.startTimeCollapsed];
     final Offset? _exitCollapsedOffset = points[MarkerType.exitTimeCollapsed];
 
