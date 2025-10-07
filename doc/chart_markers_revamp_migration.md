@@ -12,7 +12,7 @@ This document summarizes ONLY the breaking changes and consumer-facing communica
 
 ### 1) Marker grouping and active marker group
 - **What changed**:
-  - `MarkerGroup` now has new optional parameters: `currentEpoch`, `profitAndLossText`, and `onTap`.
+  - `MarkerGroup` now has a new required parameter `direction` and new optional parameters: `currentEpoch`, `profitAndLossText`, and `onTap`.
   - New class `ActiveMarkerGroup extends MarkerGroup` adds `onTapOutside` handler while inheriting the base params.
   - `MarkerGroupSeries` accepts an optional `activeMarkerGroup` and respects marker groups visibility with special handling for `contractMarker`.
 - **Why it matters**: Consumer code creating grouped markers or driving active states must pass these new parameters to enable animations, tap behaviors, and P/L label.
@@ -23,6 +23,7 @@ This document summarizes ONLY the breaking changes and consumer-facing communica
 final group = MarkerGroup(
   <ChartMarker>[ /* contractMarker, start/exit,... */ ],
   type: 'tick',
+  direction: MarkerDirection.up, // or MarkerDirection.down
   id: 'your_group_id',
   currentEpoch: latestTickEpoch, // required for dynamic progress/animations
   profitAndLossText: '+0.00 USD',
@@ -34,6 +35,7 @@ final group = MarkerGroup(
 final active = ActiveMarkerGroup(
   markers: group.markers,
   type: group.type,
+  direction: group.direction,
   id: group.id,
   currentEpoch: latestTickEpoch,
   profitAndLossText: group.profitAndLossText,
@@ -70,6 +72,7 @@ ChartMarker(
 MarkerGroup(
   markers,
   type: 'tick',
+  direction: MarkerDirection.up, // or MarkerDirection.down
   props: MarkerProps(
     isProfit: true,                 // or false
     isRunning: false,               // false when contract is closed
@@ -163,6 +166,7 @@ MarkerArea(
 _activeMarkerGroup = ActiveMarkerGroup(
   markers: markers,
   type: 'tick',
+  direction: MarkerDirection.up, // or MarkerDirection.down
   id: id,
   currentEpoch: nowEpoch,
   onTap: () => openContract(id),
@@ -217,6 +221,7 @@ List<MarkerGroup> buildGroups(List<Marker> markers, int nowEpoch) {
     return MarkerGroup(
       parts,
       type: 'tick',
+      direction: m.direction,
       id: 'group_${m.epoch}',
       currentEpoch: nowEpoch,
       profitAndLossText: '+9.55 USD',

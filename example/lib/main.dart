@@ -874,6 +874,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
             markerType: MarkerType.startTimeCollapsed,
           ),
           ChartMarker(
+            epoch: marker.epoch - 1000,
+            quote: marker.quote,
+            direction: marker.direction,
+            markerType: MarkerType.startTime,
+          ),
+          ChartMarker(
             epoch: marker.epoch,
             quote: marker.quote,
             direction: marker.direction,
@@ -886,6 +892,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
             markerType: MarkerType.exitTimeCollapsed,
           ),
           ChartMarker(
+            epoch: endEpoch,
+            quote: marker.quote,
+            direction: marker.direction,
+            markerType: MarkerType.exitTime,
+          ),
+          ChartMarker(
             epoch: marker.epoch,
             quote: marker.quote,
             direction: marker.direction,
@@ -896,6 +908,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 _activeMarkerGroup = ActiveMarkerGroup(
                   markers: chartMarkers,
                   type: 'tick',
+                  direction: marker.direction,
                   id: 'marker_${marker.epoch}',
                   currentEpoch: currentEpoch,
                   profitAndLossText: '+9.55 USD',
@@ -926,6 +939,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
       return MarkerGroup(
         chartMarkers,
         type: 'tick',
+        direction: marker.direction,
         id: 'marker_${marker.epoch}',
         currentEpoch: currentEpoch,
         profitAndLossText: '+9.55 USD',
@@ -948,6 +962,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
           : ActiveMarkerGroup(
               markers: _activeMarkerGroup!.markers,
               type: _activeMarkerGroup!.type,
+              direction: _activeMarkerGroup!.direction,
               id: _activeMarkerGroup!.id,
               props: _activeMarkerGroup!.props,
               style: _activeMarkerGroup!.style,

@@ -173,31 +173,23 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       PainterProps painterProps,
       Paint paint) {
     final Offset? _contractMarkerOffset = points[MarkerType.contractMarker];
-    final Offset? _entryTickOffset = points[MarkerType.entryTick];
-    final Offset? _endOffset = points[MarkerType.end];
     final Offset? _startCollapsedOffset = points[MarkerType.startTimeCollapsed];
     final Offset? _exitCollapsedOffset = points[MarkerType.exitTimeCollapsed];
 
-    // Determine marker direction color from the contractMarker
-    Color lineColor = style.backgroundColor;
-    for (final ChartMarker marker in markerGroup.markers) {
-      if (marker.markerType == MarkerType.contractMarker) {
-        lineColor = marker.direction == MarkerDirection.up
-            ? style.upColor
-            : style.downColor;
-        break;
-      }
-    }
+    // Determine marker direction color from the marker group direction
+    final Color lineColor = markerGroup.direction == MarkerDirection.up
+        ? style.upColor
+        : style.downColor;
 
     final Color finalLineColor = lineColor.withOpacity(opacity);
 
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
-      // Horizontal dashed line from contractMarker to entryTick
-      if (_contractMarkerOffset != null && _entryTickOffset != null) {
+      // Horizontal dashed line from contractMarker to start time
+      if (_contractMarkerOffset != null && _startCollapsedOffset != null) {
         paintHorizontalDashedLine(
           canvas,
-          _entryTickOffset.dx,
           _contractMarkerOffset.dx,
+          _startCollapsedOffset.dx,
           _contractMarkerOffset.dy,
           finalLineColor,
           1,
@@ -206,24 +198,36 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
         );
       }
 
-      // Solid line between collapsed start and exit markers
-      if (_startCollapsedOffset != null && _exitCollapsedOffset != null) {
-        final Paint solidLinePaint = Paint()
-          ..color = finalLineColor
-          ..strokeWidth = 1;
-        canvas.drawLine(
-            _startCollapsedOffset, _exitCollapsedOffset, solidLinePaint);
+      final Paint solidLinePaint = Paint()
+        ..color = finalLineColor
+        ..strokeWidth = 1;
+
+      // Solid line logic
+      if (_startCollapsedOffset != null) {
+        if (_exitCollapsedOffset != null) {
+          // Solid line between collapsed start and exit time markers
+          canvas.drawLine(
+              _startCollapsedOffset, _exitCollapsedOffset, solidLinePaint);
+        } else {
+          // No exit marker: draw solid line from start to chart's right edge
+          final double rightEdgeX = size.width;
+          canvas.drawLine(
+            _startCollapsedOffset,
+            Offset(rightEdgeX, _startCollapsedOffset.dy),
+            solidLinePaint,
+          );
+        }
       }
 
-      // Horizontal dashed line from end marker to the chart's right edge (before yAxis)
-      if (_endOffset != null) {
+      // Horizontal dashed line from exit time marker to the chart's right edge (before yAxis)
+      if (_contractMarkerOffset != null && _exitCollapsedOffset != null) {
         final double rightEdgeX = size.width;
 
         paintHorizontalDashedLine(
           canvas,
-          _endOffset.dx,
+          _exitCollapsedOffset.dx,
           rightEdgeX,
-          _endOffset.dy,
+          _exitCollapsedOffset.dy,
           finalLineColor,
           1,
           dashWidth: 2,

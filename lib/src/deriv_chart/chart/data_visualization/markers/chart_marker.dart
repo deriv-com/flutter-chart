@@ -192,10 +192,7 @@ class ChartMarker extends Marker {
 
   /// The color of the marker.
   ///
-  /// This can be used to visually distinguish different types of markers or to highlight
-  /// specific markers. The exact usage of the color depends on the marker type and the
-  /// painter implementation.
-  ///
-  /// If null, a default color is typically used based on the marker type and theme.
+  /// If provided, this color overrides the default direction-based coloring.
+  /// If null, uses [style.upColor] for [MarkerDirection.up] or [style.downColor] for [MarkerDirection.down].
   final Color? color;
 }
