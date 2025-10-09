@@ -38,7 +38,7 @@ enum MarkerType {
   ///
   /// This is more precise than a general entry marker and is tied to a specific price tick.
   /// It's often used in tick-based contracts to mark the exact tick where the contract started.
-  entryTick,
+  entrySpot,
 
   /// Represents the most recent tick marker.
   ///
@@ -62,7 +62,7 @@ enum MarkerType {
   ///
   /// This indicates the conclusion of a trade, contract, or other significant chart event.
   /// It serves as a reference point for the end of a trading activity.
-  end,
+  exitSpot,
 
   /// Represents an exit point marker.
   ///

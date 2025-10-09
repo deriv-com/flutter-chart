@@ -883,7 +883,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             epoch: marker.epoch,
             quote: marker.quote,
             direction: marker.direction,
-            markerType: MarkerType.entryTick,
+            markerType: MarkerType.entrySpot,
           ),
           ChartMarker(
             epoch: endEpoch,

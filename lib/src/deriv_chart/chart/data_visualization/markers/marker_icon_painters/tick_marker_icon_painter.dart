@@ -99,7 +99,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
 
     final Offset? startPoint = points[MarkerType.start];
     final Offset? exitPoint = points[MarkerType.exit];
-    final Offset? endPoint = points[MarkerType.end];
+    final Offset? endPoint = points[MarkerType.exitSpot];
 
     double opacity = 1;
 
@@ -124,7 +124,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
               : Offset(epochToX(marker.epoch), quoteToY(marker.quote)));
 
       if (marker.markerType == MarkerType.entry &&
-          points[MarkerType.entryTick] != null) {
+          points[MarkerType.entrySpot] != null) {
         continue;
       }
 
@@ -176,6 +176,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     final Offset? _contractMarkerOffset = points[MarkerType.contractMarker];
     final Offset? _startCollapsedOffset = points[MarkerType.startTimeCollapsed];
     final Offset? _exitCollapsedOffset = points[MarkerType.exitTimeCollapsed];
+    final Offset? _entrySpotOffset = points[MarkerType.entrySpot];
+    final Offset? _exitSpotOffset = points[MarkerType.exitSpot];
 
     // Determine marker direction color from the marker group direction
     final Color lineColor = markerGroup.direction == MarkerDirection.up
@@ -235,6 +237,38 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           dashSpace: 2,
         );
       }
+
+      // Vertical dashed line from entry spot to solid line
+      if (_entrySpotOffset != null &&
+          _startCollapsedOffset != null &&
+          _startCollapsedOffset.dy != _entrySpotOffset.dy) {
+        paintVerticalDashedLine(
+          canvas,
+          _entrySpotOffset.dx,
+          math.min(_startCollapsedOffset.dy, _entrySpotOffset.dy),
+          math.max(_startCollapsedOffset.dy, _entrySpotOffset.dy),
+          finalLineColor,
+          1,
+          dashWidth: 2,
+          dashSpace: 2,
+        );
+      }
+
+      // Vertical dashed line from exit spot to solid line
+      if (_exitSpotOffset != null &&
+          _exitCollapsedOffset != null &&
+          _exitCollapsedOffset.dy != _exitSpotOffset.dy) {
+        paintVerticalDashedLine(
+          canvas,
+          _exitSpotOffset.dx,
+          math.min(_exitCollapsedOffset.dy, _exitSpotOffset.dy),
+          math.max(_exitCollapsedOffset.dy, _exitSpotOffset.dy),
+          finalLineColor,
+          1,
+          dashWidth: 2,
+          dashSpace: 2,
+        );
+      }
     });
   }
 
@@ -284,11 +318,11 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
               canvas, size, theme, marker, anchor, style, zoom, opacity);
           break;
         case MarkerType.entry:
-        case MarkerType.entryTick:
-          _drawEntryPoint(canvas, marker, anchor, style, theme, zoom, opacity);
+        case MarkerType.entrySpot:
+          _drawSpotPoint(canvas, marker, anchor, style, theme, zoom, opacity);
           break;
-        case MarkerType.end:
-          _drawEndPoint(canvas, marker, anchor, style, zoom, opacity);
+        case MarkerType.exitSpot:
+          _drawSpotPoint(canvas, marker, anchor, style, theme, zoom, opacity);
           break;
         case MarkerType.exit:
           canvas.drawCircle(
@@ -488,9 +522,9 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       int? endEpoch;
 
       for (final ChartMarker groupMarker in markerGroup.markers) {
-        if (groupMarker.markerType == MarkerType.entryTick) {
+        if (groupMarker.markerType == MarkerType.entrySpot) {
           entryTickEpoch = groupMarker.epoch;
-        } else if (groupMarker.markerType == MarkerType.end) {
+        } else if (groupMarker.markerType == MarkerType.exitTimeCollapsed) {
           endEpoch = groupMarker.epoch;
         }
       }
@@ -735,7 +769,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// @param style The style to apply to the marker.
   /// @param zoom The current zoom level of the chart.
   /// @param opacity The opacity to apply to the entry point.
-  void _drawEntryPoint(Canvas canvas, ChartMarker marker, Offset anchor,
+  void _drawSpotPoint(Canvas canvas, ChartMarker marker, Offset anchor,
       MarkerStyle style, ChartTheme theme, double zoom, double opacity) {
     // Draw white filled circle
     final Paint fillPaint = Paint()
