@@ -11,6 +11,8 @@ class MarkerStyle extends ChartPaintingStyle {
   const MarkerStyle({
     this.upColor = const Color(0xFF00C390),
     this.downColor = const Color(0xFFDE0040),
+    this.upColorProminent = const Color(0xFF00AE7A),
+    this.downColorProminent = const Color(0xFFC40025),
     this.backgroundColor = const Color(0xFFFFFFFF),
     this.lineProfitColor = const Color(0xFF008832),
     this.lineLossColor = const Color(0xFFE6190E),
@@ -42,6 +44,12 @@ class MarkerStyle extends ChartPaintingStyle {
 
   /// Color of marker pointing down.
   final Color downColor;
+
+  /// More prominent version of up marker and connector line color.
+  final Color upColorProminent;
+
+  /// More prominent version of down marker and connector line color.
+  final Color downColorProminent;
 
   /// Background Color of marker.
   final Color backgroundColor;

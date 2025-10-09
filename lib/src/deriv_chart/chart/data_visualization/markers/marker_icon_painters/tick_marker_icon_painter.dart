@@ -110,8 +110,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     final Paint paint = Paint()
       ..color = markerGroup.style.backgroundColor.withOpacity(opacity);
 
-    _drawBarriers(canvas, size, points, markerGroup, markerGroup.style, opacity,
-        painterProps, paint);
+    _drawBarriers(canvas, size, points, markerGroup, markerGroup.style, theme,
+        opacity, painterProps, paint);
 
     for (final ChartMarker marker in markerGroup.markers) {
       final Offset center = points[marker.markerType!] ??
@@ -169,6 +169,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       Map<MarkerType, Offset> points,
       MarkerGroup markerGroup,
       MarkerStyle style,
+      ChartTheme theme,
       double opacity,
       PainterProps painterProps,
       Paint paint) {
@@ -178,8 +179,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
 
     // Determine marker direction color from the marker group direction
     final Color lineColor = markerGroup.direction == MarkerDirection.up
-        ? style.upColor
-        : style.downColor;
+        ? theme.markerStyle.upColorProminent
+        : theme.markerStyle.downColorProminent;
 
     final Color finalLineColor = lineColor.withOpacity(opacity);
 
@@ -275,8 +276,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
               opacity, animationInfo, markerGroupId, markerGroup);
           break;
         case MarkerType.startTime:
-          paintStartLine(
-              canvas, size, marker, anchor, style, zoom, markerGroup.props);
+          paintStartLine(canvas, size, marker, anchor, style, theme, zoom,
+              markerGroup.props);
           break;
         case MarkerType.start:
           _drawStartPoint(
@@ -284,7 +285,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           break;
         case MarkerType.entry:
         case MarkerType.entryTick:
-          _drawEntryPoint(canvas, marker, anchor, style, zoom, opacity);
+          _drawEntryPoint(canvas, marker, anchor, style, theme, zoom, opacity);
           break;
         case MarkerType.end:
           _drawEndPoint(canvas, marker, anchor, style, zoom, opacity);
@@ -304,8 +305,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           _drawTickPoint(canvas, anchor, paint, zoom);
           break;
         case MarkerType.exitTime:
-          paintEndLine(
-              canvas, size, marker, anchor, style, zoom, markerGroup.props);
+          paintEndLine(canvas, size, marker, anchor, style, theme, zoom,
+              markerGroup.props);
           break;
         case MarkerType.startTimeCollapsed:
           _drawCollapsedTimeLine(
@@ -313,6 +314,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
             marker,
             anchor,
             style,
+            theme,
             zoom,
             opacity,
           );
@@ -323,6 +325,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
             marker,
             anchor,
             style,
+            theme,
             zoom,
             opacity,
           );
@@ -733,7 +736,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// @param zoom The current zoom level of the chart.
   /// @param opacity The opacity to apply to the entry point.
   void _drawEntryPoint(Canvas canvas, ChartMarker marker, Offset anchor,
-      MarkerStyle style, double zoom, double opacity) {
+      MarkerStyle style, ChartTheme theme, double zoom, double opacity) {
     // Draw white filled circle
     final Paint fillPaint = Paint()
       ..color = Colors.white.withOpacity(opacity)
@@ -744,8 +747,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     // Draw colored stroke to create outer ring effect
     final Paint strokePaint = Paint()
       ..color = (marker.direction == MarkerDirection.up
-              ? style.upColor
-              : style.downColor)
+              ? theme.markerStyle.upColorProminent
+              : theme.markerStyle.downColorProminent)
           .withOpacity(opacity)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5 * zoom;
@@ -838,14 +841,15 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     ChartMarker marker,
     Offset anchor,
     MarkerStyle style,
+    ChartTheme theme,
     double zoom,
     double opacity,
   ) {
     // Length tuned to be subtle yet visible; scales with zoom.
     final double halfLength = 4 * zoom;
     final Color color = marker.direction == MarkerDirection.up
-        ? style.upColor
-        : style.downColor;
+        ? theme.markerStyle.upColorProminent
+        : theme.markerStyle.downColorProminent;
     final Paint paint = Paint()
       ..color = color.withOpacity(opacity)
       ..strokeWidth = 1;
