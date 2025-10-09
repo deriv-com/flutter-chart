@@ -254,5 +254,7 @@ class ChartDefaultDarkTheme extends ChartDefaultTheme {
   @override
   MarkerStyle get markerStyle => const MarkerStyle(
         lineDefaultColor: DarkThemeColors.markerPaletteBorderColor,
+        upColorProminent: DarkThemeColors.upColorProminent,
+        downColorProminent: DarkThemeColors.downColorProminent,
       );
 }

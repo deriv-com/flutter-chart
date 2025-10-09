@@ -170,6 +170,11 @@ class LightThemeColors {
       LightThemeDesignTokens.semanticColorSlateSolidTextIconInverseLowest;
   static const Color markerPaletteBorderColor =
       LightThemeDesignTokens.semanticColorSlateSolidBorderInverseMid;
+
+  static const Color upColorProminent =
+      LightThemeDesignTokens.semanticColorEmeraldSolidBorderInverseHigh;
+  static const Color downColorProminent =
+      LightThemeDesignTokens.semanticColorCherrySolidBorderInverseHigh;
 }
 
 /// Default colors for dark theme.
@@ -300,6 +305,11 @@ class DarkThemeColors {
       DarkThemeDesignTokens.semanticColorSlateSolidTextIconInverseLowest;
   static const Color markerPaletteBorderColor =
       DarkThemeDesignTokens.semanticColorSlateSolidBorderInverseMid;
+
+  static const Color upColorProminent =
+      DarkThemeDesignTokens.semanticColorEmeraldSolidBorderInverseHigh;
+  static const Color downColorProminent =
+      DarkThemeDesignTokens.semanticColorCherrySolidBorderInverseHigh;
 }
 
 /// Candle Bullish colors for light, dark
