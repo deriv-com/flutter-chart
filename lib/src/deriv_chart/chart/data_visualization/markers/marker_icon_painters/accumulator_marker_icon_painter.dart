@@ -100,7 +100,7 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
 
     final ChartMarker? lowMarker = markers[MarkerType.lowBarrier];
     final ChartMarker? highMarker = markers[MarkerType.highBarrier];
-    final ChartMarker? endMarker = markers[MarkerType.end];
+    final ChartMarker? endMarker = markers[MarkerType.exitSpot];
 
     final ChartMarker? previousTickMarker = markers[MarkerType.previousTick];
 

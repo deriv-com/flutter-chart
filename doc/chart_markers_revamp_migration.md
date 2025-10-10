@@ -83,8 +83,9 @@ MarkerGroup(
 ```
 
 ### 4) New/updated MarkerType values
-- **What changed**: The enum adds/renames key values for the revamp, including: `contractMarker`, `startTime`, `exitTime`, `startTimeCollapsed`, `exitTimeCollapsed`, `profitAndLossLabel` and `profitAndLossLabelFixed`.
+- **What changed**: The enum adds/renames key values for the revamp, including: `contractMarker`, `startTime`, `exitTime`, `startTimeCollapsed`, `exitTimeCollapsed`, `entrySpot`, `exitSpot`, `profitAndLossLabel` and `profitAndLossLabelFixed`.
 - **Why it matters**: Painters rely on specific types to render the correct visuals (vertical line + icon, Profit/Loss, etc.). The collapsed time markers draw short solid vertical connectors for condensed view and are connected by a solid line when both are present.
+  Additionally, when `entrySpot` or `exitSpot` are present together with `startTimeCollapsed`/`exitTimeCollapsed`, dashed vertical connectors are drawn between the spot circles and the collapsed solid line when their Y positions differ.
 - **What to do**: Use the standard `startTime` and `exitTime` markers for full vertical lines with bottom icons. In compact contexts (e.g., chart page), use `startTimeCollapsed` and `exitTimeCollapsed` to render minimal time markers.
 
 Usage of collapsed time markers:
@@ -99,10 +100,10 @@ chartMarkers.addAll(<ChartMarker>[
     markerType: MarkerType.startTimeCollapsed,
   ),
   ChartMarker(
-    epoch: entryTickEpoch,
+    epoch: entrySpotEpoch,
     quote: startQuote,
     direction: direction,
-    markerType: MarkerType.entryTick,
+    markerType: MarkerType.entrySpot,
   ),
   ChartMarker(
     epoch: exitTimeEpoch,
@@ -183,10 +184,18 @@ _activeMarkerGroup = ActiveMarkerGroup(
   - Ensure your CI/build does not tree-shake the icon font if you build examples yourself. The repo already adds `--no-tree-shake-icons` for APK builds.
   - If you copy styles, keep using `MarkerStyle.startTimeIcon` and `MarkerStyle.endTimeIcon`.
 
-### 9) Theme additions for P/L and closed markers
-- **What changed**: New text styles and colors for closed markers and profit/loss labels were added to the theme (light/dark) including `profitAndLossLabelTextStyle` and palette colors.
-- **Why it matters**: If you provide a custom `ChartTheme` or `MarkerStyle`, align your styles to include these fields.
-- **What to do**: Update your custom theme overrides to include the new text styles and palette fields used by marker painters.
+### 9) Theme additions for P/L, closed markers, and prominent colors
+- **What changed**: New text styles and colors for closed markers and profit/loss labels were added to the theme (light/dark) including `profitAndLossLabelTextStyle` and palette colors. In addition, `MarkerStyle` now exposes `upColorProminent` and `downColorProminent` which are used for entry/exit spot circles and connector lines to improve contrast.
+- **Why it matters**: If you provide a custom `ChartTheme` or `MarkerStyle`, align your styles to include these fields so painters can render the new visuals as intended.
+- **What to do**: Update your custom theme overrides to include the new text styles and the prominent colors. Defaults are provided by the library’s light/dark themes.
+
+```dart
+// Example: provide prominent colors in a custom theme's MarkerStyle
+const MarkerStyle(
+  upColorProminent: Color(0xFF00AE7A),
+  downColorProminent: Color(0xFFC40025),
+);
+```
 
 ## Minimal Example: Rise/Fall grouped markers
 
@@ -197,7 +206,7 @@ List<MarkerGroup> buildGroups(List<Marker> markers, int nowEpoch) {
     final endEpoch = m.epoch + 3000; // your duration
 
     final parts = <ChartMarker>[
-      ChartMarker(epoch: m.epoch, quote: m.quote, direction: m.direction, markerType: MarkerType.entryTick),
+      ChartMarker(epoch: m.epoch, quote: m.quote, direction: m.direction, markerType: MarkerType.entrySpot),
       ChartMarker(epoch: endEpoch, quote: m.quote, direction: m.direction, markerType: MarkerType.exitTime),
       ChartMarker(
         epoch: m.epoch,
@@ -241,7 +250,7 @@ List<MarkerGroup> buildGroups(List<Marker> markers, int nowEpoch) {
 - [ ] Provide `currentEpoch` and, if applicable, `profitAndLossText`, `onTap` in `MarkerGroup`
 - [ ] Use `ActiveMarkerGroup` and wire `onTapOutside` to clear active state
 - [ ] Update `MarkerProps` with `isProfit`, `isRunning`, and optional `markerLabel`
-- [ ] Use new `MarkerType` values: `contractMarker`, `startTime`, `exitTime`, `profitAndLossLabel`, and use `startTimeCollapsed`/`exitTimeCollapsed` for condensed layouts when needed
+- [ ] Use new `MarkerType` values: `contractMarker`, `startTime`, `exitTime`, `entrySpot`, `exitSpot`, `profitAndLossLabel`, and use `startTimeCollapsed`/`exitTimeCollapsed` for condensed layouts when needed
 - [ ] Ensure `ChartConfig.snapMarkersToIntervals` is set appropriately (default true)
 - [ ] If you instantiate `XAxisModel`, pass `snapMarkersToIntervals`
 - [ ] Pass `animationInfo` to `MarkerArea` if you embed it directly
