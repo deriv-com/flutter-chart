@@ -82,7 +82,7 @@ class VerticalLineInteractableDrawing
 
     final isNotSelected = !state.contains(DrawingToolState.selected);
 
-    final isOutsideContent = offset.dx > drawingContext.contentSize.width;
+    final isOutsideContent = offset.dx > drawingContext.contentSize.width || offset.dx < 0;
 
     if (isNotSelected && isOutsideContent) {
       return false;
