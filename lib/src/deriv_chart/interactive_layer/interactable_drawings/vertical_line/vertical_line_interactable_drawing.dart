@@ -179,6 +179,7 @@ class VerticalLineInteractableDrawing
         animationProgress: animationInfo.stateChangePercent,
         color: config.lineStyle.color,
         backgroundColor: chartTheme.backgroundColor,
+        addNeonEffect: true,
       );
     }
   }
