@@ -80,6 +80,11 @@ class InteractableDrawingCustomPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Only paint if the drawing is within the viewport
+    if (!drawing.isInViewPort(epochRange, quoteRange)) {
+      return;
+    }
+
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
       drawing.paint(
         canvas,
@@ -110,10 +115,17 @@ class InteractableDrawingCustomPainter extends CustomPainter {
   @override
   bool shouldRepaint(InteractableDrawingCustomPainter oldDelegate) {
     final drawingIsInRange = drawing.isInViewPort(epochRange, quoteRange);
+    final oldDrawingIsInRange = oldDelegate.drawing
+        .isInViewPort(oldDelegate.epochRange, oldDelegate.quoteRange);
 
     final bool isSeriesChanged = series.input.isEmpty ||
         oldDelegate.series.input.isEmpty ||
         series.input.first != oldDelegate.series.input.first;
+
+    // If the drawing's viewport status changed, we need to repaint
+    if (drawingIsInRange != oldDrawingIsInRange) {
+      return true;
+    }
 
     return isSeriesChanged ||
         (drawingIsInRange &&
