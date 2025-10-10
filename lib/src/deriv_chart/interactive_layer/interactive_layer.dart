@@ -13,6 +13,7 @@ import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshai
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/drawing_context.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/drawing_tool_gesture_recognizer.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/types.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_states/interactive_adding_tool_state.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_states/interactive_selected_tool_state.dart';
 import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
@@ -789,16 +790,78 @@ class _InteractiveLayerGestureHandlerState
       layerConsumingHover ? InteractionMode.drawingTool : InteractionMode.none,
     );
 
-    // For small screen variant, we don't show the crosshair on hover, as well as if we're in adding tool state
-    if (widget.crosshairVariant == CrosshairVariant.smallScreen ||
-        layerConsumingHover) {
-      // InteractiveLayer is consuming the hover, we should not let the
-      // crosshair controller handle it
+    // Check if we should show crosshair based on drawing tool selection and hover state
+    final bool shouldShowCrosshair =
+        _shouldShowCrosshairOnHover(event.localPosition, layerConsumingHover);
+
+    // For small screen variant, we don't show the crosshair on hover
+    if (widget.crosshairVariant == CrosshairVariant.smallScreen) {
       return;
     }
 
-    // Otherwise, let the crosshair controller handle the hover
-    widget.crosshairController.onHover(event);
+    // Show or hide crosshair based on the logic
+    if (shouldShowCrosshair) {
+      widget.crosshairController.onHover(event);
+    } else {
+      // Hide crosshair if it shouldn't be shown
+      widget.crosshairController.onExit(const PointerExitEvent());
+    }
+  }
+
+  /// Determines whether the crosshair should be shown based on drawing tool selection and hover state.
+  ///
+  /// The logic is:
+  /// - If a drawing tool is selected and the mouse is hovering over it, don't show crosshair
+  /// - If a drawing tool is not selected and the mouse hovers over it, show crosshair
+  /// - If no drawing tool is being hovered over, show crosshair (normal behavior)
+  bool _shouldShowCrosshairOnHover(
+      Offset localPosition, bool layerConsumingHover) {
+    final currentState = widget.interactiveLayerBehaviour.currentState;
+
+    // If we're in adding tool state, don't show crosshair
+    if (currentState is InteractiveAddingToolState) {
+      return false;
+    }
+
+    // If we're in selected tool state, only hide crosshair when hovering over the selected tool
+    if (currentState is InteractiveSelectedToolState) {
+      // Find which drawing we're hovering over
+      final InteractableDrawing<DrawingToolConfig>? hoveredDrawing =
+          _findHoveredDrawing(localPosition);
+
+      if (hoveredDrawing != null &&
+          hoveredDrawing.id == currentState.selected.id) {
+        // Only hide crosshair if we're hovering over the selected tool
+        return false;
+      }
+      // For all other cases (hovering over different tool or empty space), show crosshair
+      return true;
+    }
+
+    // For normal state, show crosshair
+    return true;
+  }
+
+  /// Finds the drawing that is currently being hovered over.
+  InteractableDrawing<DrawingToolConfig>? _findHoveredDrawing(
+      Offset localPosition) {
+    // Check regular drawings
+    for (final drawing in widget.drawings) {
+      if (drawing.hitTest(localPosition, epochToX, quoteToY)) {
+        return drawing;
+      }
+    }
+
+    // Check preview drawings
+    for (final drawing in widget.interactiveLayerBehaviour.previewDrawings) {
+      if (drawing.hitTest(localPosition, epochToX, quoteToY)) {
+        // Preview drawings don't have the same interface, so we return null
+        // This is fine since preview drawings are temporary and shouldn't affect crosshair logic
+        return null;
+      }
+    }
+
+    return null;
   }
 
   /// Determines the appropriate cursor based on the mouse position and interaction mode
