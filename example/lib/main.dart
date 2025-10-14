@@ -123,7 +123,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
   TradeType _currentTradeType = TradeType.multipliers;
 
   // Dynamic marker duration in milliseconds
-  int _markerDurationMs = 10000;
+  int _markerDurationMs = 1000 * 60 * 1 * 1;
   // PnL label lifetime after marker end in milliseconds
   static const int _pnlLabelLifetimeMs = 4000;
 
