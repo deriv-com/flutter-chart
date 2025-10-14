@@ -445,10 +445,14 @@ class XAxisModel extends ChangeNotifier {
   /// This ensures markers are aligned with the center of each candle (granularity bucket),
   /// preventing markers from being drawn between candles.
   double xFromEpochSnapped(int epoch) {
+    // Clamp epoch to prevent rendering markers far off-screen, which can impact performance.
+    final int clampedEpoch = epoch.clamp(
+        leftBoundEpoch - granularity, rightBoundEpoch + granularity);
+
     if (_snapMarkersToIntervals) {
-      return xFromEpoch(snapEpochToGranularity(epoch, granularity));
+      return xFromEpoch(snapEpochToGranularity(clampedEpoch, granularity));
     }
-    return xFromEpoch(epoch);
+    return xFromEpoch(clampedEpoch);
   }
 
   /// Get epoch of x position.
