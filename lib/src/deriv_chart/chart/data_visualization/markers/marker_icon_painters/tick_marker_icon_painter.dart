@@ -99,7 +99,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
 
     final Offset? startPoint = points[MarkerType.start];
     final Offset? exitPoint = points[MarkerType.exit];
-    final Offset? endPoint = points[MarkerType.end];
+    final Offset? endPoint = points[MarkerType.exitSpot];
 
     double opacity = 1;
 
@@ -110,8 +110,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     final Paint paint = Paint()
       ..color = markerGroup.style.backgroundColor.withOpacity(opacity);
 
-    _drawBarriers(canvas, size, points, markerGroup, markerGroup.style, opacity,
-        painterProps, paint);
+    _drawBarriers(canvas, size, points, markerGroup, markerGroup.style, theme,
+        opacity, painterProps, paint);
 
     for (final ChartMarker marker in markerGroup.markers) {
       final Offset center = points[marker.markerType!] ??
@@ -124,7 +124,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
               : Offset(epochToX(marker.epoch), quoteToY(marker.quote)));
 
       if (marker.markerType == MarkerType.entry &&
-          points[MarkerType.entryTick] != null) {
+          points[MarkerType.entrySpot] != null) {
         continue;
       }
 
@@ -169,35 +169,30 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       Map<MarkerType, Offset> points,
       MarkerGroup markerGroup,
       MarkerStyle style,
+      ChartTheme theme,
       double opacity,
       PainterProps painterProps,
       Paint paint) {
     final Offset? _contractMarkerOffset = points[MarkerType.contractMarker];
-    final Offset? _entryTickOffset = points[MarkerType.entryTick];
-    final Offset? _endOffset = points[MarkerType.end];
     final Offset? _startCollapsedOffset = points[MarkerType.startTimeCollapsed];
     final Offset? _exitCollapsedOffset = points[MarkerType.exitTimeCollapsed];
+    final Offset? _entrySpotOffset = points[MarkerType.entrySpot];
+    final Offset? _exitSpotOffset = points[MarkerType.exitSpot];
 
-    // Determine marker direction color from the contractMarker
-    Color lineColor = style.backgroundColor;
-    for (final ChartMarker marker in markerGroup.markers) {
-      if (marker.markerType == MarkerType.contractMarker) {
-        lineColor = marker.direction == MarkerDirection.up
-            ? style.upColor
-            : style.downColor;
-        break;
-      }
-    }
+    // Determine marker direction color from the marker group direction
+    final Color lineColor = markerGroup.direction == MarkerDirection.up
+        ? theme.markerStyle.upColorProminent
+        : theme.markerStyle.downColorProminent;
 
     final Color finalLineColor = lineColor.withOpacity(opacity);
 
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
-      // Horizontal dashed line from contractMarker to entryTick
-      if (_contractMarkerOffset != null && _entryTickOffset != null) {
+      // Horizontal dashed line from contractMarker to start time
+      if (_contractMarkerOffset != null && _startCollapsedOffset != null) {
         paintHorizontalDashedLine(
           canvas,
-          _entryTickOffset.dx,
           _contractMarkerOffset.dx,
+          _startCollapsedOffset.dx,
           _contractMarkerOffset.dy,
           finalLineColor,
           1,
@@ -206,24 +201,68 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
         );
       }
 
-      // Solid line between collapsed start and exit markers
-      if (_startCollapsedOffset != null && _exitCollapsedOffset != null) {
-        final Paint solidLinePaint = Paint()
-          ..color = finalLineColor
-          ..strokeWidth = 1;
-        canvas.drawLine(
-            _startCollapsedOffset, _exitCollapsedOffset, solidLinePaint);
+      final Paint solidLinePaint = Paint()
+        ..color = finalLineColor
+        ..strokeWidth = 1;
+
+      // Solid line logic
+      if (_startCollapsedOffset != null) {
+        if (_exitCollapsedOffset != null) {
+          // Solid line between collapsed start and exit time markers
+          canvas.drawLine(
+              _startCollapsedOffset, _exitCollapsedOffset, solidLinePaint);
+        } else {
+          // No exit marker: draw solid line from start to chart's right edge
+          final double rightEdgeX = size.width;
+          canvas.drawLine(
+            _startCollapsedOffset,
+            Offset(rightEdgeX, _startCollapsedOffset.dy),
+            solidLinePaint,
+          );
+        }
       }
 
-      // Horizontal dashed line from end marker to the chart's right edge (before yAxis)
-      if (_endOffset != null) {
+      // Horizontal dashed line from exit time marker to the chart's right edge (before yAxis)
+      if (_contractMarkerOffset != null && _exitCollapsedOffset != null) {
         final double rightEdgeX = size.width;
 
         paintHorizontalDashedLine(
           canvas,
-          _endOffset.dx,
+          _exitCollapsedOffset.dx,
           rightEdgeX,
-          _endOffset.dy,
+          _exitCollapsedOffset.dy,
+          finalLineColor,
+          1,
+          dashWidth: 2,
+          dashSpace: 2,
+        );
+      }
+
+      // Vertical dashed line from entry spot to solid line
+      if (_entrySpotOffset != null &&
+          _startCollapsedOffset != null &&
+          _startCollapsedOffset.dy != _entrySpotOffset.dy) {
+        paintVerticalDashedLine(
+          canvas,
+          _entrySpotOffset.dx,
+          math.min(_startCollapsedOffset.dy, _entrySpotOffset.dy),
+          math.max(_startCollapsedOffset.dy, _entrySpotOffset.dy),
+          finalLineColor,
+          1,
+          dashWidth: 2,
+          dashSpace: 2,
+        );
+      }
+
+      // Vertical dashed line from exit spot to solid line
+      if (_exitSpotOffset != null &&
+          _exitCollapsedOffset != null &&
+          _exitCollapsedOffset.dy != _exitSpotOffset.dy) {
+        paintVerticalDashedLine(
+          canvas,
+          _exitSpotOffset.dx,
+          math.min(_exitCollapsedOffset.dy, _exitSpotOffset.dy),
+          math.max(_exitCollapsedOffset.dy, _exitSpotOffset.dy),
           finalLineColor,
           1,
           dashWidth: 2,
@@ -271,19 +310,19 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
               opacity, animationInfo, markerGroupId, markerGroup);
           break;
         case MarkerType.startTime:
-          paintStartLine(
-              canvas, size, marker, anchor, style, zoom, markerGroup.props);
+          paintStartLine(canvas, size, marker, anchor, style, theme, zoom,
+              markerGroup.props);
           break;
         case MarkerType.start:
           _drawStartPoint(
               canvas, size, theme, marker, anchor, style, zoom, opacity);
           break;
         case MarkerType.entry:
-        case MarkerType.entryTick:
-          _drawEntryPoint(canvas, marker, anchor, style, zoom, opacity);
+        case MarkerType.entrySpot:
+          _drawSpotPoint(canvas, marker, anchor, style, theme, zoom, opacity);
           break;
-        case MarkerType.end:
-          _drawEndPoint(canvas, marker, anchor, style, zoom, opacity);
+        case MarkerType.exitSpot:
+          _drawSpotPoint(canvas, marker, anchor, style, theme, zoom, opacity);
           break;
         case MarkerType.exit:
           canvas.drawCircle(
@@ -300,8 +339,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           _drawTickPoint(canvas, anchor, paint, zoom);
           break;
         case MarkerType.exitTime:
-          paintEndLine(
-              canvas, size, marker, anchor, style, zoom, markerGroup.props);
+          paintEndLine(canvas, size, marker, anchor, style, theme, zoom,
+              markerGroup.props);
           break;
         case MarkerType.startTimeCollapsed:
           _drawCollapsedTimeLine(
@@ -309,6 +348,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
             marker,
             anchor,
             style,
+            theme,
             zoom,
             opacity,
           );
@@ -319,6 +359,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
             marker,
             anchor,
             style,
+            theme,
             zoom,
             opacity,
           );
@@ -481,9 +522,9 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       int? endEpoch;
 
       for (final ChartMarker groupMarker in markerGroup.markers) {
-        if (groupMarker.markerType == MarkerType.entryTick) {
+        if (groupMarker.markerType == MarkerType.entrySpot) {
           entryTickEpoch = groupMarker.epoch;
-        } else if (groupMarker.markerType == MarkerType.end) {
+        } else if (groupMarker.markerType == MarkerType.exitTimeCollapsed) {
           endEpoch = groupMarker.epoch;
         }
       }
@@ -728,8 +769,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// @param style The style to apply to the marker.
   /// @param zoom The current zoom level of the chart.
   /// @param opacity The opacity to apply to the entry point.
-  void _drawEntryPoint(Canvas canvas, ChartMarker marker, Offset anchor,
-      MarkerStyle style, double zoom, double opacity) {
+  void _drawSpotPoint(Canvas canvas, ChartMarker marker, Offset anchor,
+      MarkerStyle style, ChartTheme theme, double zoom, double opacity) {
     // Draw white filled circle
     final Paint fillPaint = Paint()
       ..color = Colors.white.withOpacity(opacity)
@@ -740,8 +781,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     // Draw colored stroke to create outer ring effect
     final Paint strokePaint = Paint()
       ..color = (marker.direction == MarkerDirection.up
-              ? style.upColor
-              : style.downColor)
+              ? theme.markerStyle.upColorProminent
+              : theme.markerStyle.downColorProminent)
           .withOpacity(opacity)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5 * zoom;
@@ -834,14 +875,15 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     ChartMarker marker,
     Offset anchor,
     MarkerStyle style,
+    ChartTheme theme,
     double zoom,
     double opacity,
   ) {
     // Length tuned to be subtle yet visible; scales with zoom.
     final double halfLength = 4 * zoom;
     final Color color = marker.direction == MarkerDirection.up
-        ? style.upColor
-        : style.downColor;
+        ? theme.markerStyle.upColorProminent
+        : theme.markerStyle.downColorProminent;
     final Paint paint = Paint()
       ..color = color.withOpacity(opacity)
       ..strokeWidth = 1;

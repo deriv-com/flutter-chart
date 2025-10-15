@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_props.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +27,7 @@ class MarkerGroup implements Comparable<MarkerGroup> {
   ///
   /// @param markers A list of ChartMarker objects that belong to this group.
   /// @param type The type of marker group, which determines how it's rendered.
+  /// @param direction The direction in which the marker group is pointing (up or down).
   /// @param id An optional identifier for the marker group.
   /// @param props Additional properties that can affect rendering behavior.
   /// @param style The visual style to apply to markers in this group.
@@ -33,6 +35,7 @@ class MarkerGroup implements Comparable<MarkerGroup> {
   MarkerGroup(
     this.markers, {
     required this.type,
+    required this.direction,
     this.id,
     this.props = const MarkerProps(),
     this.style = const MarkerStyle(
@@ -63,6 +66,9 @@ class MarkerGroup implements Comparable<MarkerGroup> {
   /// Different types of marker groups are handled by specialized MarkerGroupIconPainter
   /// implementations, such as TickMarkerIconPainter, DigitMarkerIconPainter, etc.
   final String type;
+
+  /// Indicates marker group direction (up or down).
+  final MarkerDirection direction;
 
   /// Additional properties that can affect rendering behavior.
   /// For example, the hasPersistentBorders property determines whether

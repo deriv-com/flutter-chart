@@ -254,5 +254,7 @@ class ChartDefaultLightTheme extends ChartDefaultTheme {
   @override
   MarkerStyle get markerStyle => const MarkerStyle(
         lineDefaultColor: LightThemeColors.markerPaletteBorderColor,
+        upColorProminent: LightThemeColors.upColorProminent,
+        downColorProminent: LightThemeColors.downColorProminent,
       );
 }

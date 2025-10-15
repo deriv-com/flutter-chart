@@ -1,7 +1,8 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_props.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/helpers/functions/helper_functions.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_time_marker_utils.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
@@ -31,10 +32,15 @@ void paintEndLine(
   ChartMarker marker,
   Offset anchor,
   MarkerStyle style,
+  ChartTheme theme,
   double zoom,
   MarkerProps props,
 ) {
-  final Color markerColor = getMarkerColor(props, style);
+  // Determine marker color based on marker.color or marker direction
+  final Color markerColor = marker.color ??
+      (marker.direction == MarkerDirection.up
+          ? theme.markerStyle.upColorProminent
+          : theme.markerStyle.downColorProminent);
   final bool isDashed = props.isRunning;
 
   // Draw the vertical line from near the top of the chart to near the bottom.

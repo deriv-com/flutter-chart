@@ -1,0 +1,94 @@
+
+name: Claude Code Assistant
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  claude-assistant:
+    # Only run on PR-related events that contain @claude
+    if: |
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude'))
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+
+    steps:
+      - name: Security Check - Validate User Access
+        run: |
+          ACTOR="${{ github.actor }}"
+          echo "Validating access for user: $ACTOR"
+          
+          # Check if user is organization member
+          MEMBERSHIP_STATUS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/orgs/deriv-com/members/$ACTOR" \
+            -w "%{http_code}" -o /dev/null)
+          
+          if [[ "$MEMBERSHIP_STATUS" == "204" ]]; then
+            echo "✅ User $ACTOR is a verified organization member"
+            exit 0
+          fi
+          
+          # Check if user is repository collaborator
+          COLLABORATOR_STATUS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/collaborators/$ACTOR" \
+            -w "%{http_code}" -o /dev/null)
+          
+          if [[ "$COLLABORATOR_STATUS" == "204" ]]; then
+            echo "✅ User $ACTOR is a verified repository collaborator"
+            exit 0
+          fi
+          
+          echo "❌ Access denied for user: $ACTOR"
+          echo "Only organization members and repository collaborators can trigger Claude actions."
+          exit 1
+
+      - name: Get PR details
+        id: pr
+        run: |
+          # Get PR URL based on event type
+          if [ "${{ github.event_name }}" = "issue_comment" ]; then
+            PR_URL="${{ github.event.issue.pull_request.url }}"
+          elif [ "${{ github.event_name }}" = "pull_request_review_comment" ]; then
+            PR_URL="${{ github.event.pull_request.url }}"
+          elif [ "${{ github.event_name }}" = "pull_request_review" ]; then
+            PR_URL="${{ github.event.pull_request.url }}"
+          fi
+          
+          echo "Getting PR data from: $PR_URL"
+          PR_DATA=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$PR_URL")
+          
+          # Extract fork repository and branch
+          FORK_REPO=$(echo "$PR_DATA" | jq -r '.head.repo.full_name')
+          BRANCH_NAME=$(echo "$PR_DATA" | jq -r '.head.ref')
+          
+          echo "fork_repo=$FORK_REPO" >> $GITHUB_OUTPUT
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
+          
+          echo "PR is from: $FORK_REPO:$BRANCH_NAME"
+
+      - name: Checkout PR branch from fork
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
+        with:
+          repository: ${{ steps.pr.outputs.fork_repo }}
+          ref: ${{ steps.pr.outputs.branch_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Run Claude Code Action
+        uses: anthropics/claude-code-action@0c127307fa529d701bc1f0f8f9c0bea881c49a9b
+        timeout-minutes: 60
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
