@@ -99,7 +99,7 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
 
     final Offset? startPoint = points[MarkerType.start];
     final Offset? exitPoint = points[MarkerType.exit];
-    final Offset? endPoint = points[MarkerType.end];
+    final Offset? endPoint = points[MarkerType.exitSpot];
 
     double opacity = 1;
 
@@ -142,7 +142,7 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
       MarkerProps props) {
     switch (marker.markerType) {
       case MarkerType.startTime:
-        paintStartLine(canvas, size, marker, anchor, style, zoom, props);
+        paintStartLine(canvas, size, marker, anchor, style, theme, zoom, props);
         break;
 
       case MarkerType.start:

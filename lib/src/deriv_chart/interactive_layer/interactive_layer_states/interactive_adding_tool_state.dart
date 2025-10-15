@@ -211,6 +211,10 @@ class InteractiveAddingToolState extends InteractiveState
 
   @override
   bool onTap(TapUpDetails details) {
+    if (_drawingPreview == null) {
+      return false;
+    }
+
     _drawingPreview!.onCreateTap(
       details,
       epochFromX,

@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_props.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
@@ -12,6 +13,7 @@ class ActiveMarkerGroup extends MarkerGroup {
     // MarkerGroup parameters
     required List<ChartMarker> markers,
     required String type,
+    required MarkerDirection direction,
     String? id,
     MarkerProps props = const MarkerProps(),
     MarkerStyle style = const MarkerStyle(
@@ -28,6 +30,7 @@ class ActiveMarkerGroup extends MarkerGroup {
   }) : super(
           markers,
           type: type,
+          direction: direction,
           id: id,
           props: props,
           style: style,

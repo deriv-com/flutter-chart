@@ -1,6 +1,8 @@
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_props.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_time_marker_utils.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
@@ -26,8 +28,12 @@ import 'package:flutter/material.dart';
 /// @param style The marker style, which provides colors and text styling information.
 /// @param zoom The zoom factor to apply to text size and other dimensions.
 void paintStartLine(Canvas canvas, Size size, ChartMarker marker, Offset anchor,
-    MarkerStyle style, double zoom, MarkerProps props) {
-  final Color markerColor = style.lineDefaultColor;
+    MarkerStyle style, ChartTheme theme, double zoom, MarkerProps props) {
+  // Determine marker color based on marker.color or marker direction
+  final Color markerColor = marker.color ??
+      (marker.direction == MarkerDirection.up
+          ? theme.markerStyle.upColorProminent
+          : theme.markerStyle.downColorProminent);
 
   // Draw a vertical dashed line from near the top of the chart to near the bottom.
   TimeMarkerPainters.paintVerticalTimeLine(

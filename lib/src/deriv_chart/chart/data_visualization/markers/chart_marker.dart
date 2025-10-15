@@ -38,7 +38,7 @@ enum MarkerType {
   ///
   /// This is more precise than a general entry marker and is tied to a specific price tick.
   /// It's often used in tick-based contracts to mark the exact tick where the contract started.
-  entryTick,
+  entrySpot,
 
   /// Represents the most recent tick marker.
   ///
@@ -62,7 +62,7 @@ enum MarkerType {
   ///
   /// This indicates the conclusion of a trade, contract, or other significant chart event.
   /// It serves as a reference point for the end of a trading activity.
-  end,
+  exitSpot,
 
   /// Represents an exit point marker.
   ///
@@ -76,6 +76,18 @@ enum MarkerType {
   /// It is rendered as a vertical dashed or solid line extending from near the top to near the bottom
   /// of the chart, with a flag icon centered at the bottom of the line.
   exitTime,
+
+  /// Represents a compact solid start-time connector line.
+  ///
+  /// Draws a short, solid vertical line segment near the price to indicate
+  /// the start time in a condensed layout.
+  startTimeCollapsed,
+
+  /// Represents a compact solid end-time connector line.
+  ///
+  /// Draws a short, solid vertical line segment near the price to indicate
+  /// the end time in a condensed layout.
+  exitTimeCollapsed,
 
   /// Represents the latest tick point specifically in relation to a barrier.
   ///
@@ -180,10 +192,7 @@ class ChartMarker extends Marker {
 
   /// The color of the marker.
   ///
-  /// This can be used to visually distinguish different types of markers or to highlight
-  /// specific markers. The exact usage of the color depends on the marker type and the
-  /// painter implementation.
-  ///
-  /// If null, a default color is typically used based on the marker type and theme.
+  /// If provided, this color overrides the default direction-based coloring.
+  /// If null, uses [style.upColor] for [MarkerDirection.up] or [style.downColor] for [MarkerDirection.down].
   final Color? color;
 }
