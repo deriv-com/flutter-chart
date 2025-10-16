@@ -305,8 +305,10 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       MarkerGroup markerGroup) {
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
       switch (marker.markerType) {
+        // Use a fixed zoom value of 1.2 for contract markers to provide a
+        // consistently larger size, improving tap target accessibility.
         case MarkerType.contractMarker:
-          _drawContractMarker(canvas, marker, anchor, style, zoom, granularity,
+          _drawContractMarker(canvas, marker, anchor, style, 1.2, granularity,
               opacity, animationInfo, markerGroupId, markerGroup);
           break;
         case MarkerType.startTime:
