@@ -313,7 +313,10 @@ class XAxisModel extends ChangeNotifier {
 
       // If this is a tick load (new tick arrived) and we're following the current tick,
       // scroll forward to maintain the view
-      if (tickLoad && oldMaxEpoch < _maxEpoch && _followCurrentTick && _maxEpoch > _rightBoundEpoch) {
+      if (tickLoad &&
+          oldMaxEpoch < _maxEpoch &&
+          _followCurrentTick &&
+          _maxEpoch > _rightBoundEpoch) {
         final int epochDiff = _maxEpoch - oldMaxEpoch;
         _rightBoundEpoch += epochDiff;
       }
