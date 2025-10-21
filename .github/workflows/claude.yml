@@ -1,21 +1,13 @@
-
 name: Claude Code Assistant
 
 on:
-  issue_comment:
-    types: [created]
-  pull_request_review_comment:
-    types: [created]
-  pull_request_review:
-    types: [submitted]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
   claude-assistant:
     # Only run on PR-related events that contain @claude
-    if: |
-      (github.event_name == 'issue_comment' && github.event.issue.pull_request && contains(github.event.comment.body, '@claude')) ||
-      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
-      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude'))
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     
     permissions:
@@ -24,6 +16,11 @@ jobs:
       issues: write
       id-token: write
       actions: read
+
+    # Cancel older runs when new commits arrive on the same PR
+    concurrency:
+      group: pr-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
 
     steps:
       - name: Security Check - Validate User Access
@@ -55,40 +52,40 @@ jobs:
           echo "Only organization members and repository collaborators can trigger Claude actions."
           exit 1
 
-      - name: Get PR details
-        id: pr
-        run: |
-          # Get PR URL based on event type
-          if [ "${{ github.event_name }}" = "issue_comment" ]; then
-            PR_URL="${{ github.event.issue.pull_request.url }}"
-          elif [ "${{ github.event_name }}" = "pull_request_review_comment" ]; then
-            PR_URL="${{ github.event.pull_request.url }}"
-          elif [ "${{ github.event_name }}" = "pull_request_review" ]; then
-            PR_URL="${{ github.event.pull_request.url }}"
-          fi
-          
-          echo "Getting PR data from: $PR_URL"
-          PR_DATA=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "$PR_URL")
-          
-          # Extract fork repository and branch
-          FORK_REPO=$(echo "$PR_DATA" | jq -r '.head.repo.full_name')
-          BRANCH_NAME=$(echo "$PR_DATA" | jq -r '.head.ref')
-          
-          echo "fork_repo=$FORK_REPO" >> $GITHUB_OUTPUT
-          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
-          
-          echo "PR is from: $FORK_REPO:$BRANCH_NAME"
-
-      - name: Checkout PR branch from fork
-        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955
+      # Ensure we have a real git repo at the PR HEAD (works for forks)
+      - name: Checkout PR head
+        uses: actions/checkout@v4
         with:
-          repository: ${{ steps.pr.outputs.fork_repo }}
-          ref: ${{ steps.pr.outputs.branch_name }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 20
           token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
+
+      # Sanity check (helps diagnose if anything goes wrong)
+      - name: Verify git workspace
+        run: |
+          pwd
+          git rev-parse --is-inside-work-tree
+          git log -1 --oneline
 
       - name: Run Claude Code Action
-        uses: anthropics/claude-code-action@0c127307fa529d701bc1f0f8f9c0bea881c49a9b
+        uses: anthropics/claude-code-action@v1
         timeout-minutes: 60
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          track_progress: true
+          prompt: |
+              REPO: ${{ github.repository }}
+              PR NUMBER: ${{ github.event.pull_request.number }}
+
+              Please review this pull request with a focus on:
+              - Correctness, regressions, and edge cases
+              - Code quality & readability (React + TypeScript best practices)
+              - Performance (render cost, memoization, effects)
+              - Security (XSS, auth flows, secrets)
+              - Tests (coverage for new logic)
+
+              Output:
+              - Inline comments for specific issues
+              - A summary comment with high/medium/low priority items
+              - Concrete fix suggestions and quick patches where safe
