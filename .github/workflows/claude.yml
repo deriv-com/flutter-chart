@@ -69,7 +69,7 @@ jobs:
           git log -1 --oneline
 
       - name: Run Claude Code Action
-        uses: anthropics/claude-code-action@v1
+        uses: anthropics/claude-code-action@e8bad572273ce919ba15fec95aef0ce974464753
         timeout-minutes: 60
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
