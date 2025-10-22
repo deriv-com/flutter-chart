@@ -102,8 +102,6 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     final ChartMarker? highMarker = markers[MarkerType.highBarrier];
     final ChartMarker? endMarker = markers[MarkerType.exitSpot];
 
-    final ChartMarker? previousTickMarker = markers[MarkerType.previousTick];
-
     if (lowMarker != null && highMarker != null) {
       final Offset lowOffset = _getOffset(lowMarker, epochToX, quoteToY);
       final Offset highOffset = _getOffset(highMarker, epochToX, quoteToY);
@@ -123,7 +121,6 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
         top: highOffset.dy,
         markerGroup: markerGroup,
         bottom: lowOffset.dy,
-        previousTickMarker: previousTickMarker,
       );
     }
   }
@@ -162,7 +159,6 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     required double top,
     required MarkerGroup markerGroup,
     required double bottom,
-    ChartMarker? previousTickMarker,
   }) {
     final double endTop = size.height;
 
@@ -197,17 +193,14 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     );
 
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
-      if (previousTickMarker != null && previousTickMarker.color != null) {
-        _drawPreviousTickBarrier(
-          size,
-          canvas,
-          startLeft,
-          endLeft,
-          middleTop,
-          previousTickMarker.color!,
-          barrierColor,
-        );
-      }
+      _drawPreviousTickBarrier(
+        size,
+        canvas,
+        startLeft,
+        endLeft,
+        middleTop,
+        barrierColor,
+      );
 
       if (isTopVisible || hasPersistentBorders) {
         final Path path = Path()
@@ -304,15 +297,8 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     double startX,
     double endX,
     double y,
-    Color circleColor,
     Color barrierColor,
   ) {
-    canvas.drawCircle(
-      Offset(startX, y),
-      1.5,
-      Paint()..color = circleColor,
-    );
-
     paintHorizontalDashedLine(
       canvas,
       startX,

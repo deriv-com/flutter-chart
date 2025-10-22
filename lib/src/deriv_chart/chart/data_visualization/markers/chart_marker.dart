@@ -46,12 +46,6 @@ enum MarkerType {
   /// quickly identify the current market price.
   latestTick,
 
-  /// Represents the tick immediately before the latest tick.
-  ///
-  /// This can be used for comparison or to show price movement between the previous
-  /// and latest ticks. It's useful for visualizing short-term price changes.
-  previousTick,
-
   /// Represents a standard tick marker.
   ///
   /// This is a generic marker for any price tick that needs to be highlighted.
