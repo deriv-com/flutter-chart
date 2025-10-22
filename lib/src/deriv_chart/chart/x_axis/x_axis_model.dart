@@ -306,6 +306,22 @@ class XAxisModel extends ChangeNotifier {
     // modified in place.
     _entries = entries.sublist(0);
 
+    // Update _maxEpoch to track the latest tick
+    if (entries.isNotEmpty) {
+      final int oldMaxEpoch = _maxEpoch;
+      _maxEpoch = entries.last.epoch;
+
+      // If this is a tick load (new tick arrived) and we're following the current tick,
+      // scroll forward to maintain the view
+      if (tickLoad &&
+          oldMaxEpoch < _maxEpoch &&
+          _followCurrentTick &&
+          _maxEpoch > _rightBoundEpoch) {
+        final int epochDiff = _maxEpoch - oldMaxEpoch;
+        _rightBoundEpoch += epochDiff;
+      }
+    }
+
     // After switching between closed and open symbols, since their epoch range
     // might be without any overlap, scroll position on the new symbol might be
     // completely off where there is no data hence the chart will show just a
