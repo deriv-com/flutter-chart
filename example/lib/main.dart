@@ -867,35 +867,47 @@ class _FullscreenChartState extends State<FullscreenChart> {
       final bool showStandardMarkers = currentEpoch < endEpoch + 500;
       if (showStandardMarkers) {
         chartMarkers.addAll(<ChartMarker>[
+          // ChartMarker(
+          //   epoch: marker.epoch - 1000,
+          //   quote: marker.quote,
+          //   direction: marker.direction,
+          //   markerType: MarkerType.startTimeCollapsed,
+          // ),
+          // ChartMarker(
+          //   epoch: marker.epoch - 1000,
+          //   quote: marker.quote,
+          //   direction: marker.direction,
+          //   markerType: MarkerType.startTime,
+          // ),
+          // ChartMarker(
+          //   epoch: marker.epoch,
+          //   quote: marker.quote,
+          //   direction: marker.direction,
+          //   markerType: MarkerType.entrySpot,
+          // ),
+          // ChartMarker(
+          //   epoch: endEpoch,
+          //   quote: marker.quote,
+          //   direction: marker.direction,
+          //   markerType: MarkerType.exitTimeCollapsed,
+          // ),
+          // ChartMarker(
+          //   epoch: endEpoch,
+          //   quote: marker.quote,
+          //   direction: marker.direction,
+          //   markerType: MarkerType.exitTime,
+          // ),
           ChartMarker(
-            epoch: marker.epoch - 1000,
-            quote: marker.quote,
+            epoch: marker.epoch,
+            quote: marker.quote - 0.1,
             direction: marker.direction,
-            markerType: MarkerType.startTimeCollapsed,
-          ),
-          ChartMarker(
-            epoch: marker.epoch - 1000,
-            quote: marker.quote,
-            direction: marker.direction,
-            markerType: MarkerType.startTime,
+            markerType: MarkerType.lowBarrier,
           ),
           ChartMarker(
             epoch: marker.epoch,
-            quote: marker.quote,
+            quote: marker.quote + 0.1,
             direction: marker.direction,
-            markerType: MarkerType.entrySpot,
-          ),
-          ChartMarker(
-            epoch: endEpoch,
-            quote: marker.quote,
-            direction: marker.direction,
-            markerType: MarkerType.exitTimeCollapsed,
-          ),
-          ChartMarker(
-            epoch: endEpoch,
-            quote: marker.quote,
-            direction: marker.direction,
-            markerType: MarkerType.exitTime,
+            markerType: MarkerType.highBarrier,
           ),
           ChartMarker(
             epoch: marker.epoch,
@@ -919,6 +931,12 @@ class _FullscreenChartState extends State<FullscreenChart> {
                 );
               });
             },
+          ),
+          ChartMarker(
+            epoch: marker.epoch,
+            quote: marker.quote,
+            direction: marker.direction,
+            markerType: MarkerType.latestTick,
           ),
         ]);
       }
@@ -974,7 +992,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
       return MarkerGroupSeries(
         SplayTreeSet<Marker>(),
-        markerGroupIconPainter: TickMarkerIconPainter(),
+        markerGroupIconPainter: AccumulatorMarkerIconPainter(),
         markerGroupList: _convertMarkersToGroups(currentEpoch),
         activeMarkerGroup: activeGroupForBuild,
       );

@@ -15,6 +15,12 @@ enum MarkerType {
   /// markers like entry points, exit points, and barrier levels.
   contractMarker,
 
+  /// Represents a contract marker with fixed positioning.
+  ///
+  /// Similar to contractMarker but with fixed 24px spacing between the contract marker and the current spot.
+  /// Used specifically for accumulator contracts to maintain consistent spacing.
+  contractMarkerFixed,
+
   /// Represents the start time of a contract with a vertical dashed line and a clock icon at the bottom.
   ///
   /// This marker visually indicates the contract's start time on the chart using a vertical dashed line
