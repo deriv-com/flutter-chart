@@ -420,8 +420,8 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                 super.build(context),
                 if (widget.overlaySeries != null)
                   _buildSeries(widget.overlaySeries!),
-                _buildAnnotations(),
                 if (widget.markerSeries != null) _buildMarkerArea(),
+                _buildAnnotations(),
                 if (widget.drawingTools != null && widget.useDrawingToolsV2)
                   _buildInteractiveLayer(context, xAxis)
                 else if (widget.drawingTools != null)
