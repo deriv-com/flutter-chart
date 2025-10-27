@@ -18,8 +18,8 @@ dependencies:
   pref: ^2.7.1
   flutter_deriv_api:
     git:
-      url: https://github.com/regentmarkets/flutter-deriv-api.git
-      ref: v1.3.0
+      url: git@github.com:regentmarkets/flutter-deriv-api.git
+      ref: flutter-version-3
 
 dev_dependencies:
   deriv_lint:
