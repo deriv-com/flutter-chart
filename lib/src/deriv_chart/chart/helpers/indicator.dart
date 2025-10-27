@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 

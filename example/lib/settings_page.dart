@@ -31,13 +31,10 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _hasChanged = false;
 
   @override
-  Widget build(BuildContext context) => PopScope(
-      canPop: false,
-      onPopInvoked: (bool didPop) {
-        if (didPop) {
-          return;
-        }
+  Widget build(BuildContext context) => WillPopScope(
+      onWillPop: () async {
         Navigator.of(context).pop<bool>(_hasChanged);
+        return false;
       },
       child: Scaffold(
         appBar: AppBar(title: const Text('Setting')),
