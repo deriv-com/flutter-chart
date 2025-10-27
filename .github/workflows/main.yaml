@@ -28,11 +28,6 @@ jobs:
           cache: true
           cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash:-${{ hashFiles('**/pubspec.lock') }}
 
-      - name: 🤫 Set SSH Key
-        uses: webfactory/ssh-agent@fd34b8dee206fe74b288a5e61bc95fba2f1911eb
-        with:
-          ssh-private-key: ${{secrets.SSH_PRIVATE_KEY}}
-
       - name: 📦 Install Dependencies
         run: flutter pub get
 
