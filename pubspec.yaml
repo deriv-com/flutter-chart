@@ -12,11 +12,7 @@ dependencies:
     sdk: flutter
 
   collection: ^1.15.0-nullsafety.4
-  deriv_technical_analysis:
-    git:
-      url: git@github.com:regentmarkets/flutter-deriv-packages.git
-      path: packages/deriv_technical_analysis
-      ref: dev
+  deriv_technical_analysis: ^1.1.1
 
   equatable: ^2.0.5
   intl: ^0.18.0
