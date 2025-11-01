@@ -562,17 +562,6 @@ class _InteractiveLayerGestureHandlerState
                 children: widget.series.input.isEmpty
                     ? []
                     : [
-                        CrosshairWidget(
-                          mainSeries: widget.series,
-                          quoteToCanvasY: widget.quoteToY,
-                          quoteFromCanvasY: widget.quoteFromY,
-                          pipSize: widget.pipSize,
-                          crosshairController: widget.crosshairController,
-                          crosshairZoomOutAnimation:
-                              widget.crosshairZoomOutAnimation,
-                          crosshairVariant: widget.crosshairVariant,
-                          showCrosshair: widget.showCrosshair,
-                        ),
                         ...widget.drawings
                             .where(
                               (e) =>
@@ -609,7 +598,18 @@ class _InteractiveLayerGestureHandlerState
                                   animationValue,
                                 ))
                             .toList(),
-                        ...widget.interactiveLayerBehaviour.previewWidgets
+                        CrosshairWidget(
+                          mainSeries: widget.series,
+                          quoteToCanvasY: widget.quoteToY,
+                          quoteFromCanvasY: widget.quoteFromY,
+                          pipSize: widget.pipSize,
+                          crosshairController: widget.crosshairController,
+                          crosshairZoomOutAnimation:
+                              widget.crosshairZoomOutAnimation,
+                          crosshairVariant: widget.crosshairVariant,
+                          showCrosshair: widget.showCrosshair,
+                        ),
+                        ...widget.interactiveLayerBehaviour.previewWidgets,
                       ],
               );
             }),

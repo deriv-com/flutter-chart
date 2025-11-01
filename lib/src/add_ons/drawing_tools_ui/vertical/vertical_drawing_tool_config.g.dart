@@ -18,8 +18,13 @@ VerticalDrawingToolConfig _$VerticalDrawingToolConfigFromJson(
               .toList() ??
           const <EdgePoint>[],
       lineStyle: json['lineStyle'] == null
-          ? const LineStyle(thickness: 0.9, color: Colors.white)
+          ? const LineStyle(color: CoreDesignTokens.coreColorSolidBlue700)
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
+      labelStyle: json['labelStyle'] == null
+          ? const TextStyle(
+              color: CoreDesignTokens.coreColorSolidBlue700, fontSize: 12)
+          : const TextStyleJsonConverter()
+              .fromJson(json['labelStyle'] as Map<String, dynamic>),
       pattern: $enumDecodeNullable(_$DrawingPatternsEnumMap, json['pattern']) ??
           DrawingPatterns.solid,
       enableLabel: json['enableLabel'] as bool? ?? true,
@@ -29,11 +34,12 @@ VerticalDrawingToolConfig _$VerticalDrawingToolConfigFromJson(
 Map<String, dynamic> _$VerticalDrawingToolConfigToJson(
         VerticalDrawingToolConfig instance) =>
     <String, dynamic>{
+      'configId': instance.configId,
       'number': instance.number,
       'drawingData': instance.drawingData,
       'edgePoints': instance.edgePoints,
-      'configId': instance.configId,
       'lineStyle': instance.lineStyle,
+      'labelStyle': const TextStyleJsonConverter().toJson(instance.labelStyle),
       'pattern': _$DrawingPatternsEnumMap[instance.pattern]!,
       'enableLabel': instance.enableLabel,
     };

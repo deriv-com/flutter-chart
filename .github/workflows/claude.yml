@@ -1,0 +1,91 @@
+name: Claude Code Assistant
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  claude-assistant:
+    # Only run on PR-related events that contain @claude
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+
+    # Cancel older runs when new commits arrive on the same PR
+    concurrency:
+      group: pr-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Security Check - Validate User Access
+        run: |
+          ACTOR="${{ github.actor }}"
+          echo "Validating access for user: $ACTOR"
+          
+          # Check if user is organization member
+          MEMBERSHIP_STATUS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/orgs/deriv-com/members/$ACTOR" \
+            -w "%{http_code}" -o /dev/null)
+          
+          if [[ "$MEMBERSHIP_STATUS" == "204" ]]; then
+            echo "✅ User $ACTOR is a verified organization member"
+            exit 0
+          fi
+          
+          # Check if user is repository collaborator
+          COLLABORATOR_STATUS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/collaborators/$ACTOR" \
+            -w "%{http_code}" -o /dev/null)
+          
+          if [[ "$COLLABORATOR_STATUS" == "204" ]]; then
+            echo "✅ User $ACTOR is a verified repository collaborator"
+            exit 0
+          fi
+          
+          echo "❌ Access denied for user: $ACTOR"
+          echo "Only organization members and repository collaborators can trigger Claude actions."
+          exit 1
+
+      # Ensure we have a real git repo at the PR HEAD (works for forks)
+      - name: Checkout PR head
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 20
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Sanity check (helps diagnose if anything goes wrong)
+      - name: Verify git workspace
+        run: |
+          pwd
+          git rev-parse --is-inside-work-tree
+          git log -1 --oneline
+
+      - name: Run Claude Code Action
+        uses: anthropics/claude-code-action@e8bad572273ce919ba15fec95aef0ce974464753
+        timeout-minutes: 60
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          track_progress: true
+          prompt: |
+              REPO: ${{ github.repository }}
+              PR NUMBER: ${{ github.event.pull_request.number }}
+
+              Please review this pull request with a focus on:
+              - Correctness, regressions, and edge cases
+              - Code quality & readability (React + TypeScript best practices)
+              - Performance (render cost, memoization, effects)
+              - Security (XSS, auth flows, secrets)
+              - Tests (coverage for new logic)
+
+              Output:
+              - Inline comments for specific issues
+              - A summary comment with high/medium/low priority items
+              - Concrete fix suggestions and quick patches where safe

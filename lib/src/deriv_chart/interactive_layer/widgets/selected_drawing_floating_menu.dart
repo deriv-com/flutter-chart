@@ -42,6 +42,9 @@ class _SelectedDrawingFloatingMenuState
   // Store the menu size
   Size _menuSize = Size.zero;
 
+  // Local state to persist the dragged position across rebuilds
+  Offset? _draggedPosition;
+
   MouseCursor _cursor = SystemMouseCursors.grab;
 
   late final InteractiveLayerController _controller;
@@ -62,6 +65,9 @@ class _SelectedDrawingFloatingMenuState
       parent: widget.interactiveLayerBehaviour.stateChangeController,
       curve: Curves.easeOut,
     );
+
+    // Initialize dragged position from controller
+    _draggedPosition = _controller.floatingMenuPosition;
 
     // Schedule a post-frame callback to get the menu size
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -86,9 +92,13 @@ class _SelectedDrawingFloatingMenuState
     // Use MediaQuery to get the screen size as a fallback
     final screenSize = MediaQuery.of(context).size;
 
+    // Use local dragged position if available, otherwise use controller's position
+    final effectivePosition =
+        _draggedPosition ?? _controller.floatingMenuPosition;
+
     return Positioned(
-      left: _controller.floatingMenuPosition.dx,
-      top: _controller.floatingMenuPosition.dy,
+      left: effectivePosition.dx,
+      top: effectivePosition.dy,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onPanStart: (details) {
@@ -99,8 +109,10 @@ class _SelectedDrawingFloatingMenuState
         onPanUpdate: (details) {
           _cursor = SystemMouseCursors.grabbing;
 
-          // Calculate new position
-          final newPosition = _controller.floatingMenuPosition + details.delta;
+          // Calculate new position based on current effective position
+          final currentPosition =
+              _draggedPosition ?? _controller.floatingMenuPosition;
+          final newPosition = currentPosition + details.delta;
 
           // Update menu size if not already set
           if (_menuSize == Size.zero) {
@@ -118,8 +130,15 @@ class _SelectedDrawingFloatingMenuState
           final constrainedY =
               newPosition.dy.clamp(0.0, parentSize.height - _menuSize.height);
 
-          _controller.floatingMenuPosition = Offset(constrainedX, constrainedY);
-          setState(() {});
+          final constrainedPosition = Offset(constrainedX, constrainedY);
+
+          // Store in local state to persist across rebuilds
+          setState(() {
+            _draggedPosition = constrainedPosition;
+          });
+
+          // Also update controller for other components that might need it
+          _controller.floatingMenuPosition = constrainedPosition;
         },
         child: AnimatedBuilder(
           animation: widget.interactiveLayerBehaviour.stateChangeController,
