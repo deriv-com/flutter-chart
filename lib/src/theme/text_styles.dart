@@ -105,7 +105,7 @@ class TextStyles {
       FontFeature.liningFigures(),
       FontFeature.tabularFigures(),
     ],
-    fontFamily: fontFamilyDeriv,
+    fontFamily: appFontFamily,
     fontSize: 10,
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.w400,
@@ -117,7 +117,7 @@ class TextStyles {
       FontFeature.liningFigures(),
       FontFeature.tabularFigures(),
     ],
-    fontFamily: fontFamilyDeriv,
+    fontFamily: appFontFamily,
     fontSize: 12,
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.w600,
@@ -131,7 +131,7 @@ class TextStyles {
       FontFeature.proportionalFigures(),
     ],
 
-    fontFamily: fontFamilyDeriv,
+    fontFamily: appFontFamily,
 
     fontSize: 10,
 
@@ -149,7 +149,7 @@ class TextStyles {
       FontFeature.proportionalFigures(),
     ],
 
-    fontFamily: fontFamilyDeriv,
+    fontFamily: appFontFamily,
 
     fontSize: 12,
 
@@ -167,7 +167,7 @@ class TextStyles {
       FontFeature.proportionalFigures(),
     ],
 
-    fontFamily: fontFamilyDeriv,
+    fontFamily: appFontFamily,
 
     fontSize: 10,
 
@@ -185,7 +185,7 @@ class TextStyles {
       FontFeature.proportionalFigures(),
     ],
 
-    fontFamily: fontFamilyDeriv,
+    fontFamily: appFontFamily,
 
     fontSize: 12,
 
@@ -201,7 +201,7 @@ class TextStyles {
       FontFeature.liningFigures(),
       FontFeature.tabularFigures(),
     ],
-    fontFamily: fontFamilyDeriv,
+    fontFamily: appFontFamily,
     fontSize: 14,
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.w400,
@@ -213,7 +213,7 @@ class TextStyles {
       FontFeature.liningFigures(),
       FontFeature.tabularFigures(),
     ],
-    fontFamily: fontFamilyDeriv,
+    fontFamily: appFontFamily,
     fontSize: 14,
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.w400,
@@ -225,7 +225,7 @@ class TextStyles {
       FontFeature.liningFigures(),
       FontFeature.tabularFigures(),
     ],
-    fontFamily: fontFamilyDeriv,
+    fontFamily: appFontFamily,
     fontSize: 12,
     fontStyle: FontStyle.normal,
     fontWeight: FontWeight.w700,
