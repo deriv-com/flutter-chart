@@ -1,13 +1,11 @@
 name: Claude Code Assistant
 
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
   claude-assistant:
-    # Only run on PR-related events that contain @claude
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     
     permissions:
@@ -73,7 +71,6 @@ jobs:
         timeout-minutes: 60
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           track_progress: true
           prompt: |
               REPO: ${{ github.repository }}
