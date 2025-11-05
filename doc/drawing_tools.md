@@ -107,7 +107,7 @@ Chart(
 
 ### Legacy Drawing Tools Implementation
 
-The following sections describe the implementation details of the legacy drawing tools system. If you're using the new V2 implementation with `useDrawingToolsV2: true`, please refer to the [Interactive Layer documentation](interactive_layer.md) for detailed information about its architecture and components.
+The following sections describe the implementation details of the legacy drawing tools system. If you're using the new V2 implementation with `useDrawingToolsV2: true`, please refer to the [Interactive Layer documentation](core_concepts/interactive_layer.md) for detailed information about its architecture and components.
 
 The process initiates by opening the drawing tools dialog and selecting a preferred drawing tool. Subsequently, the user can add specific taps on the Deriv chart to start drawing with default configurations.
 
