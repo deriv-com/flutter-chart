@@ -17,7 +17,9 @@ dependencies:
     sdk: flutter
   pref: ^2.7.1
   flutter_deriv_api:
-    path: ../../flutter-deriv-api
+    git:
+      url: https://github.com/deriv-com/flutter-deriv-api.git
+      ref: v1.3.0
   win32: ^5.9.0
 
 dev_dependencies:
