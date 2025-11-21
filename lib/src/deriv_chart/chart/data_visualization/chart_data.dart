@@ -97,6 +97,19 @@ abstract class ChartData {
     ChartTheme theme,
     ChartScaleModel chartScaleModel,
   );
+
+  /// Provides semantic information for accessibility.
+  ///
+  /// This method should return a list of [CustomPainterSemantics] objects that
+  /// contain semantic information for this chart data.
+  ///
+  /// The returned list will be used to create semantic nodes in the semantic tree,
+  /// making the chart accessible to screen readers and other accessibility tools.
+  List<CustomPainterSemantics> buildSemantics(
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+  );
 }
 
 /// An extension on Iterable with [ChartData] elements.
