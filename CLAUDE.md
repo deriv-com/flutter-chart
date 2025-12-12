@@ -158,7 +158,6 @@ Design tokens in `lib/src/theme/design_tokens/` define consistent styling values
 **Code Style:**
 - Follow Flutter/Dart best practices and conventions
 - Use meaningful, descriptive names (avoid abbreviations)
-- Line length: 80 characters max
 - Use `PascalCase` for classes, `camelCase` for members/variables/functions, `snake_case` for files
 - Functions should be short with single purpose (<20 lines preferred)
 
