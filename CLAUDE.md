@@ -8,7 +8,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Language**: Dart 3.0+
 - **Framework**: Flutter 3.10.1+
-- **Package Version**: 0.4.1
 
 ## Common Commands
 
