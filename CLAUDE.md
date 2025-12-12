@@ -185,7 +185,6 @@ Design tokens in `lib/src/theme/design_tokens/` define consistent styling values
 ## Additional Documentation
 
 For detailed information, see:
-- `doc/architecture.md` - Overall architecture patterns
 - `doc/how_chart_lib_works.md` - Detailed technical explanation
 - `doc/drawing_tools.md` - Drawing tools implementation
 - `doc/interactive_layer.md` - New interactive layer architecture
