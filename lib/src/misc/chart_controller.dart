@@ -3,6 +3,9 @@ import 'package:deriv_chart/deriv_chart.dart';
 /// ScrollToLastTick callback.
 typedef OnScrollToLastTick = Function({required bool animate});
 
+/// Callback to complete the current tick animation immediately.
+typedef OnCompleteTickAnimation = void Function();
+
 /// Scale callback;
 typedef OnScale = double? Function(double);
 
@@ -40,6 +43,10 @@ typedef GetMsPerPx = double Function();
 class ChartController {
   /// Called to scroll the current display chart to last tick.
   OnScrollToLastTick? onScrollToLastTick;
+
+  /// Called to complete the current tick animation immediately.
+  /// Used when resuming from background to skip stale animations.
+  OnCompleteTickAnimation? onCompleteTickAnimation;
 
   /// Called to scale the chart
   OnScale? onScale;
