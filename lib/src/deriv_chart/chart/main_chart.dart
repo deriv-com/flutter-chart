@@ -310,6 +310,12 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
       }
     };
 
+    widget.controller?.onCompleteTickAnimation = () {
+      if (mounted) {
+        completeCurrentTickAnimation();
+      }
+    };
+
     widget.controller?.onScale = (double scale) {
       xAxis
         ..onScaleAndPanStart(ScaleStartDetails())
