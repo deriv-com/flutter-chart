@@ -55,78 +55,129 @@ jobs:
           - Missing rate limiting
           - Dependency vulnerabilities (outdated packages)
           ## Technology-Specific Checks
-          ### JavaScript/TypeScript Frontend:
-          ```javascript
-          // DOM Manipulation & XSS Prevention:
-          - innerHTML/outerHTML/document.write() with user input
-          - dangerouslySetInnerHTML with unsanitized user input
-          - html-react-parser() without DOMPurify or sanitization
-          - $.html(), $.append(), $.after() with unsanitized data
-          - Unescaped user data in JSX expressions
-          - template literals with user input in HTML context
-          
-          // Code Execution Risks:
-          - eval(), new Function(), setTimeout/setInterval with string arguments
-          - Dynamic imports from untrusted sources
-          - postMessage without targetOrigin validation
-          - window.open() with user-controlled URLs
-          
-          // React-Specific Security:
-          - dangerouslySetInnerHTML usage (always requires justification)
-          - Props spreading (...props) potentially exposing sensitive attributes
-          - useEffect/useState with untrusted external data
-          - Component injection via dynamic imports without validation
-          - Context API exposing sensitive data (tokens, credentials)
-          - Ref manipulation allowing XSS
-          
+          ### Flutter/Dart Application:
+          ```dart
           // Data Storage & Exposure:
-          - localStorage/sessionStorage storing tokens, passwords, PII
-          - Sensitive data in console.log/console.error/console.debug
-          - API keys, secrets, or credentials in frontend code
-          - Tokens or sensitive data in URL query parameters
+          - SharedPreferences storing tokens, passwords, API keys, or PII without encryption
+          - Sensitive data stored in plain text files (getApplicationDocumentsDirectory)
+          - Database (sqflite, Hive, ObjectBox) without encryption for sensitive data
+          - Credentials hardcoded in source code or asset files
+          - API keys, secrets, or tokens in pubspec.yaml or environment variables committed to repo
+          - Sensitive data in print(), debugPrint(), or log() statements
           - Session data persisting after logout
-          
-          // Cryptography & Encoding:
-          - crypto-js using weak algorithms (MD5, SHA1 for passwords)
+          - Clipboard containing sensitive data without clearing
+          - Screenshots containing sensitive information (missing FLAG_SECURE equivalent)
+
+          // Platform Channel Security:
+          - MethodChannel/EventChannel accepting untrusted input without validation
+          - Platform-specific code (Android/iOS) with insecure implementations
+          - Binary messages without proper serialization validation
+          - Unchecked data from native side causing crashes or exploits
+          - Missing null safety checks on platform channel data
+
+          // WebView Security:
+          - WebView with javascriptMode: JavascriptMode.unrestricted without proper validation
+          - WebView loading user-controlled URLs without allowlist
+          - JavascriptChannel exposing sensitive native functionality
+          - WebView without proper SSL certificate validation
+          - Insecure WebView settings (allowFileAccess, allowContentAccess)
+          - Missing Content-Security-Policy in WebView content
+
+          // Network & API Security:
+          - HTTP connections instead of HTTPS for sensitive data
+          - Certificate pinning missing for critical API endpoints
+          - BadCertificateCallback returning true (accepting all certificates)
+          - API responses used without validation/sanitization
+          - Missing timeout configurations leading to resource exhaustion
+          - Credentials transmitted in URL query parameters
+          - Missing authentication/authorization headers
+          - GraphQL queries vulnerable to injection
+          - WebSocket connections without proper authentication
+
+          // Cryptography & Hashing:
+          - Using dart:crypto MD5/SHA1 for password hashing
+          - Missing use of proper password hashing (bcrypt, argon2, scrypt)
           - Hardcoded encryption keys or initialization vectors
           - Base64 encoding used as security measure
-          - Math.random() for security-sensitive operations
+          - Random().nextInt() for security-sensitive operations (use Random.secure())
+          - AES encryption without proper key derivation (PBKDF2, scrypt)
+          - Weak or predictable IV generation
           - Client-side-only password validation
-          
-          // API & WebSocket Security:
-          - API responses used without validation/sanitization
-          - Credentials transmitted over unencrypted WebSocket
-          
-          // Navigation & Redirects:
-          - window.location/location.href with user input
-          - history.pushState/replaceState with untrusted data
-          - Open redirects (redirect parameter not validated)
-          - <a href> with javascript: protocol
-          - target="_blank" without rel="noopener noreferrer"
-          
-          // Configuration & Build:
-          - .env files committed to repository
-          - Webpack exposing sensitive environment variables to frontend
-          - Debug/development mode enabled in production
-          - Source maps exposed in production builds
-          - Missing Subresource Integrity (SRI) on CDN resources
-          - CSP headers missing or overly permissive
-          
-          // Deserialization & Parsing:
-          - JSON.parse() without try-catch or validation
-          - js-yaml.load() without safeLoad (allows code execution)
-          - XML parsing without XXE protection
-          - User-controlled data in eval-like functions
-          
-          // Additional Frontend Risks:
-          - CORS policies too permissive (allowing * origin)
-          - Clickjacking (missing X-Frame-Options/CSP frame-ancestors)
-          - MIME type sniffing (missing X-Content-Type-Options)
-          - Reflected XSS in error messages
-          - DOM-based XSS via URL fragments (#)
-          - Prototype pollution via Object.assign, merge functions
-          - ReDoS (Regex Denial of Service) patterns
-          - Missing CSRF tokens on state-changing operations
+
+          // Input Validation & Injection:
+          - SQL injection via raw queries (rawQuery, rawInsert without parameterization)
+          - Path traversal in File operations with user input
+          - Command injection via Process.run with unsanitized input
+          - NoSQL injection in Firestore/MongoDB queries
+          - Regex Denial of Service (ReDoS) patterns
+          - Unvalidated deep links/universal links
+          - File upload without size/type validation
+
+          // Widget & UI Security:
+          - Text widgets displaying sensitive data without obscureText
+          - TextField for passwords without obscureText: true
+          - Sensitive data in navigation arguments (Navigator.push)
+          - Deep link parameters not validated before use
+          - url_launcher opening user-controlled URLs without validation
+          - InAppWebView with insecure configurations
+
+          // Code Execution & Dynamic Loading:
+          - dart:mirrors usage allowing reflection attacks
+          - Dynamic library loading from untrusted sources
+          - eval-like patterns via function builders
+          - Unsafe deserialization of untrusted data
+          - Code generation (build_runner) artifacts committed to repo
+          - Dynamic imports from external/unverified sources
+
+          // Authentication & Session Management:
+          - JWT tokens stored insecurely (SharedPreferences without encryption)
+          - Biometric authentication without proper fallback validation
+          - OAuth tokens exposed in logs or error messages
+          - Missing token expiration/refresh logic
+          - Biometric/PIN bypass via insecure local authentication
+          - Session fixation vulnerabilities
+          - Authentication state stored only client-side
+
+          // Android-Specific Risks:
+          - android:exported="true" on components without permission checks
+          - AndroidManifest.xml with insecure permissions (WRITE_EXTERNAL_STORAGE)
+          - android:allowBackup="true" allowing data extraction
+          - Missing android:usesCleartextTraffic="false"
+          - Insecure BroadcastReceiver/ContentProvider configurations
+          - Root detection missing for sensitive operations
+
+          // iOS-Specific Risks:
+          - Info.plist allowing arbitrary loads (NSAppTransportSecurity)
+          - Missing App Transport Security (ATS) configurations
+          - Keychain items without proper access control flags
+          - Missing certificate pinning in NSURLSession
+          - Background modes exposing sensitive data
+          - Insecure inter-app communication (custom URL schemes)
+
+          // Build & Configuration:
+          - Debug mode enabled in production builds (kDebugMode checks)
+          - Obfuscation disabled for production (--obfuscate flag missing)
+          - Developer options/debug features accessible in release builds
+          - Source code not obfuscated containing sensitive logic
+          - Build variants exposing debug endpoints in production
+          - Environment-specific configs (dev/staging) accessible in prod
+
+          // Dependency & Package Security:
+          - Outdated packages with known CVEs (pub outdated)
+          - Packages from untrusted sources (not pub.dev)
+          - Dependency overrides in pubspec.yaml without justification
+          - Git dependencies instead of pub.dev versions
+          - Transitive dependencies with vulnerabilities
+
+          // Additional Flutter Risks:
+          - Isolate communication exposing sensitive data
+          - Background fetch/services with improper authentication
+          - Push notifications containing sensitive data in payload
+          - Analytics/crash reporting sending PII without consent
+          - Third-party SDK integrations without security review
+          - Missing runtime integrity checks (jailbreak/root detection)
+          - Improper disposal of sensitive data in State objects
+          - Memory dumps containing sensitive unencrypted data
           ```
           ## Review Output Format
           For each finding, provide:
