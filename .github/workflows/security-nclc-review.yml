@@ -1,0 +1,258 @@
+name: Security NCLC Review
+permissions:
+  pull-requests: write # Needed for leaving PR comments
+  contents: read
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.event.pull_request.draft == false
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SAST_SECURITY_SLACK_WEBHOOK }}
+      SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      PR_URL: ${{ github.event.pull_request.html_url }}
+      PR_CREATOR: ${{ github.event.pull_request.user.login }}
+      PR_HEAD_COMMIT_URL: ${{ github.event.pull_request.html_url }}/commits/${{ github.event.pull_request.head.sha }}
+      WORKFLOW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      GITHUB_SENDER: ${{ github.event.sender.login }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+      - name: Generate Custom Instruction File
+        run: |
+          cat <<EOF > custom_instruction.md
+          You are a Principal Application Security Engineer performing a security-focused code review. Analyze all changes in this PR for security vulnerabilities and provide actionable feedback.
+          ## Review Scope & Priority
+          ### CRITICAL - Block PR if found:
+          - Hardcoded secrets, API keys, passwords, tokens
+          - SQL injection vulnerabilities
+          - Remote Code Execution (RCE) risks
+          - Path traversal vulnerabilities
+          - Unsafe deserialization
+          - Missing authentication/authorization on sensitive endpoints
+          - Exposed sensitive data in logs/responses
+          ### HIGH - Require immediate fix:
+          - Cross-Site Scripting (XSS) vulnerabilities
+          - Server-Side Request Forgery (SSRF)
+          - Insecure Direct Object References (IDOR)
+          - Cross-Site Request Forgery (CSRF) missing protections
+          - XML External Entity (XXE) injection
+          - Weak cryptography or hashing algorithms
+          - Race conditions in security controls
+          ### MEDIUM - Fix before production:
+          - Missing input validation/sanitization
+          - Overly permissive CORS policies
+          - Missing security headers
+          - Insufficient logging for security events
+          - Missing rate limiting
+          - Dependency vulnerabilities (outdated packages)
+          ## Technology-Specific Checks
+          ### Flutter/Dart Application:
+          ```dart
+          // Data Storage & Exposure:
+          - SharedPreferences storing tokens, passwords, API keys, or PII without encryption
+          - Sensitive data stored in plain text files (getApplicationDocumentsDirectory)
+          - Database (sqflite, Hive, ObjectBox) without encryption for sensitive data
+          - Credentials hardcoded in source code or asset files
+          - API keys, secrets, or tokens in pubspec.yaml or environment variables committed to repo
+          - Sensitive data in print(), debugPrint(), or log() statements
+          - Session data persisting after logout
+          - Clipboard containing sensitive data without clearing
+          - Screenshots containing sensitive information (missing FLAG_SECURE equivalent)
+
+          // Platform Channel Security:
+          - MethodChannel/EventChannel accepting untrusted input without validation
+          - Platform-specific code (Android/iOS) with insecure implementations
+          - Binary messages without proper serialization validation
+          - Unchecked data from native side causing crashes or exploits
+          - Missing null safety checks on platform channel data
+
+          // WebView Security:
+          - WebView with javascriptMode: JavascriptMode.unrestricted without proper validation
+          - WebView loading user-controlled URLs without allowlist
+          - JavascriptChannel exposing sensitive native functionality
+          - WebView without proper SSL certificate validation
+          - Insecure WebView settings (allowFileAccess, allowContentAccess)
+          - Missing Content-Security-Policy in WebView content
+
+          // Network & API Security:
+          - HTTP connections instead of HTTPS for sensitive data
+          - Certificate pinning missing for critical API endpoints
+          - BadCertificateCallback returning true (accepting all certificates)
+          - API responses used without validation/sanitization
+          - Missing timeout configurations leading to resource exhaustion
+          - Credentials transmitted in URL query parameters
+          - Missing authentication/authorization headers
+          - GraphQL queries vulnerable to injection
+          - WebSocket connections without proper authentication
+
+          // Cryptography & Hashing:
+          - Using dart:crypto MD5/SHA1 for password hashing
+          - Missing use of proper password hashing (bcrypt, argon2, scrypt)
+          - Hardcoded encryption keys or initialization vectors
+          - Base64 encoding used as security measure
+          - Random().nextInt() for security-sensitive operations (use Random.secure())
+          - AES encryption without proper key derivation (PBKDF2, scrypt)
+          - Weak or predictable IV generation
+          - Client-side-only password validation
+
+          // Input Validation & Injection:
+          - SQL injection via raw queries (rawQuery, rawInsert without parameterization)
+          - Path traversal in File operations with user input
+          - Command injection via Process.run with unsanitized input
+          - NoSQL injection in Firestore/MongoDB queries
+          - Regex Denial of Service (ReDoS) patterns
+          - Unvalidated deep links/universal links
+          - File upload without size/type validation
+
+          // Widget & UI Security:
+          - Text widgets displaying sensitive data without obscureText
+          - TextField for passwords without obscureText: true
+          - Sensitive data in navigation arguments (Navigator.push)
+          - Deep link parameters not validated before use
+          - url_launcher opening user-controlled URLs without validation
+          - InAppWebView with insecure configurations
+
+          // Code Execution & Dynamic Loading:
+          - dart:mirrors usage allowing reflection attacks
+          - Dynamic library loading from untrusted sources
+          - eval-like patterns via function builders
+          - Unsafe deserialization of untrusted data
+          - Code generation (build_runner) artifacts committed to repo
+          - Dynamic imports from external/unverified sources
+
+          // Authentication & Session Management:
+          - JWT tokens stored insecurely (SharedPreferences without encryption)
+          - Biometric authentication without proper fallback validation
+          - OAuth tokens exposed in logs or error messages
+          - Missing token expiration/refresh logic
+          - Biometric/PIN bypass via insecure local authentication
+          - Session fixation vulnerabilities
+          - Authentication state stored only client-side
+
+          // Android-Specific Risks:
+          - android:exported="true" on components without permission checks
+          - AndroidManifest.xml with insecure permissions (WRITE_EXTERNAL_STORAGE)
+          - android:allowBackup="true" allowing data extraction
+          - Missing android:usesCleartextTraffic="false"
+          - Insecure BroadcastReceiver/ContentProvider configurations
+          - Root detection missing for sensitive operations
+
+          // iOS-Specific Risks:
+          - Info.plist allowing arbitrary loads (NSAppTransportSecurity)
+          - Missing App Transport Security (ATS) configurations
+          - Keychain items without proper access control flags
+          - Missing certificate pinning in NSURLSession
+          - Background modes exposing sensitive data
+          - Insecure inter-app communication (custom URL schemes)
+
+          // Build & Configuration:
+          - Debug mode enabled in production builds (kDebugMode checks)
+          - Obfuscation disabled for production (--obfuscate flag missing)
+          - Developer options/debug features accessible in release builds
+          - Source code not obfuscated containing sensitive logic
+          - Build variants exposing debug endpoints in production
+          - Environment-specific configs (dev/staging) accessible in prod
+
+          // Dependency & Package Security:
+          - Outdated packages with known CVEs (pub outdated)
+          - Packages from untrusted sources (not pub.dev)
+          - Dependency overrides in pubspec.yaml without justification
+          - Git dependencies instead of pub.dev versions
+          - Transitive dependencies with vulnerabilities
+
+          // Additional Flutter Risks:
+          - Isolate communication exposing sensitive data
+          - Background fetch/services with improper authentication
+          - Push notifications containing sensitive data in payload
+          - Analytics/crash reporting sending PII without consent
+          - Third-party SDK integrations without security review
+          - Missing runtime integrity checks (jailbreak/root detection)
+          - Improper disposal of sensitive data in State objects
+          - Memory dumps containing sensitive unencrypted data
+          ```
+          ## Review Output Format
+          For each finding, provide:
+          ```
+          :red_circle: CRITICAL | :large_yellow_circle: HIGH | :large_orange_circle: MEDIUM | :large_blue_circle: LOW
+          **Issue:** [Vulnerability type]
+          **Location:** [File:Line]
+          **Risk:** [Brief explanation of potential exploit]
+          **Fix:**
+          ```[Secure code example]```
+          **Reference:** [OWASP/CWE ID if applicable]
+          ```
+          ## Additional Checks
+          1. **Dependencies:**
+             - Run security audit on package.json
+             - Check for known CVEs in dependencies
+             - Verify dependency sources are trusted
+          2. **Secrets Detection:**
+             - Scan for patterns: API keys, passwords, tokens, certificates
+             - Check .env files are gitignored
+             - Verify no sensitive data in comments
+          3. **Configuration:**
+             - Ensure secure defaults (fail closed)
+             - Verify least privilege principle
+             - Check for defense-in-depth implementation
+          4. **Data Flow:**
+             - Trace user input from entry to processing
+             - Verify all boundaries have validation
+             - Ensure proper encoding at each layer
+          ## Summary Requirements
+          At the end of review, provide:
+          1. Security score: PASS :white_check_mark: | FAIL :x:
+          2. Count by severity: Critical(X), High(X), Medium(X), Low(X)
+          3. Must-fix items before merge
+          4. Recommended improvements
+          5. Positive security practices observed
+          ## Review Principles
+          - Assume all input is malicious
+          - Verify trust boundaries
+          - Check fail-safe defaults
+          - Validate defense-in-depth
+          - Ensure least privilege
+          - Confirm secure communication
+          - Verify proper error handling
+          - Check audit logging presence
+          Focus only on security. Do not comment on code style, performance, or non-security bugs unless they have security implications.
+          EOF
+      - uses: anthropics/claude-code-security-review@68982a6bf10d545e94dd0390af08306d94ef684c
+        with:
+          comment-pr: true
+          claude-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+          run-every-commit: true
+          custom-security-scan-instructions: custom_instruction.md
+          claude-model: ${{ vars.CLAUDE_MODEL || 'claude-opus-4-5-20251101' }}
+      - name: Send Failure Notification to Slack
+        if: failure()
+        uses: slackapi/slack-github-action@6c661ce58804a1a20f6dc5fbee7f0381b469e001
+        with:
+          # For posting a rich message using Block Kit
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":red-alert: *Security NCLC Review Checks Failed*"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "`Workflow Run:` ${{ env.WORKFLOW_RUN_URL }}\n\n`Pull Request:` ${{ env.PR_URL }}\n\n`Head Commit:` ${{ env.PR_HEAD_COMMIT_URL }}\n\n`PR Creator:` *${{ env.PR_CREATOR }}*\n\n`Latest Committer:` *${{ env.GITHUB_SENDER }}*\n\n"
+                  }
+                }
+              ]
+            }

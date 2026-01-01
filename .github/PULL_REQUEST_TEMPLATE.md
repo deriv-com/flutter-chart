@@ -1,4 +1,4 @@
-<!-- Please refer to this [guide](https://github.com/regentmarkets/flutter-deriv-packages/blob/master/.github/GIT_RULES.md#pr-rules) for any confusion while creating the PR -->
+<!-- Please refer to this [guide](https://github.com/deriv-com/flutter-deriv-packages/blob/master/.github/GIT_RULES.md#pr-rules) for any confusion while creating the PR -->
 
 **Clickup link:** <!-- Add your clickup link here, Remove this line if this PR is not for a task -->
 **Fixes issue:** #<!-- Issue number here, Remove this line if this PR isn't related to any issue -->
@@ -27,7 +27,7 @@ As a creator of this PR:
 
 <!-- Put an `x` in all the boxes that apply ([x]) -->
 
-- [ ] ✍️ I have included clickup id and package/app_name in the PR title. <!-- Find the guide [here](https://github.com/regentmarkets/flutter-deriv-packages/blob/master/.github/GIT_RULES.md#pr-rules) -->
+- [ ] ✍️ I have included clickup id and package/app_name in the PR title. <!-- Find the guide [here](https://github.com/deriv-com/flutter-deriv-packages/blob/master/.github/GIT_RULES.md#pr-rules) -->
 - [ ] 👁️ I have gone through the code and removed any temporary changes (commented lines, prints, debug statements etc.).
 - [ ] ⚒️ I have fixed any errors/warnings shown by the analyzer/linter.
 - [ ] 📝 I have added documentation, comments and logging wherever required.

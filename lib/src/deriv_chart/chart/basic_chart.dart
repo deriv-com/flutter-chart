@@ -222,6 +222,14 @@ class BasicChartState<T extends BasicChart> extends State<T>
     }
   }
 
+  /// Completes the current tick animation immediately.
+  /// This clears stale animation state (previousObject, prevLastEntry)
+  /// by setting currentTickPercent to 1.
+  void completeCurrentTickAnimation() {
+    _currentTickAnimationController.value = 1.0;
+    _isTickAnimationPlaying = false;
+  }
+
   YAxisModel _setupYAxisModel(Size canvasSize) => yAxisModel = YAxisModel(
         yTopBound: chartQuoteToCanvasY(_topBoundQuote),
         yBottomBound: chartQuoteToCanvasY(_bottomBoundQuote),
