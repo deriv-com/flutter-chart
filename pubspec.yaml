@@ -32,9 +32,6 @@ dev_dependencies:
   json_serializable: ^6.7.1
 
 flutter:
-  assets:
-    - assets/icons/
-    - assets/icons/symbols/
   fonts:
     - family: QuillIcons
       fonts:
