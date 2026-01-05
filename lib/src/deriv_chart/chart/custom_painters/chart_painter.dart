@@ -59,4 +59,11 @@ class ChartPainter extends CustomPainter {
 
   @override
   bool shouldRebuildSemantics(ChartPainter oldDelegate) => false;
+
+  @override
+  SemanticsBuilderCallback get semanticsBuilder {
+    return (Size size) {
+      return chartData.buildSemantics(size, epochToCanvasX, quoteToCanvasY);
+    };
+  }
 }
