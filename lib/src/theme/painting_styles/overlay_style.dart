@@ -1,7 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'overlay_style.g.dart';
 
 /// Style of the overlay.
+@JsonSerializable()
 class OverlayStyle extends Equatable {
   /// Initializes a barrier style
   const OverlayStyle({
@@ -16,14 +20,26 @@ class OverlayStyle extends Equatable {
     ),
   });
 
+  /// Initializes from JSON.
+  factory OverlayStyle.fromJson(Map<String, dynamic> json) =>
+      _$OverlayStyleFromJson(json);
+
   /// Height of the label.
   final double labelHeight;
 
   /// Color of the overlay barriers.
+  @JsonKey(
+    fromJson: _colorFromJson,
+    toJson: _colorToJson,
+  )
   final Color color;
 
   /// Style of the text used in the overlay.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   final TextStyle textStyle;
+
+  /// Converts to JSON.
+  Map<String, dynamic> toJson() => _$OverlayStyleToJson(this);
 
   /// Creates a copy of this object.
   OverlayStyle copyWith({
@@ -43,3 +59,9 @@ class OverlayStyle extends Equatable {
   @override
   List<Object?> get props => <Object?>[labelHeight, color, textStyle];
 }
+
+/// Converts a Color to JSON representation.
+int _colorToJson(Color color) => color.value;
+
+/// Converts JSON representation to a Color.
+Color _colorFromJson(int value) => Color(value);

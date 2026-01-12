@@ -1,4 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'chart_axis_config.g.dart';
 
 /// Default top bound quote.
 const double defaultTopBoundQuote = 60;
@@ -12,6 +15,7 @@ const double defaultMaxCurrentTickOffset = 150;
 
 /// Configuration for the chart axis.
 @immutable
+@JsonSerializable()
 class ChartAxisConfig {
   /// Initializes the chart axis configuration.
   const ChartAxisConfig({
@@ -24,6 +28,10 @@ class ChartAxisConfig {
     this.showFrame = false,
     this.smoothScrolling = true,
   });
+
+  /// Initializes from JSON.
+  factory ChartAxisConfig.fromJson(Map<String, dynamic> json) =>
+      _$ChartAxisConfigFromJson(json);
 
   /// Top quote bound target for animated transition.
   final double initialTopBoundQuote;
@@ -59,6 +67,9 @@ class ChartAxisConfig {
   ///
   /// Default is `true`.
   final bool smoothScrolling;
+
+  /// Converts to JSON.
+  Map<String, dynamic> toJson() => _$ChartAxisConfigToJson(this);
 
   /// Creates a copy of this ChartAxisConfig but with the given fields replaced.
   ChartAxisConfig copyWith({
