@@ -3,12 +3,16 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/painter_props.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/tick_marker_icon_painter.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/chart_marker.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_marker_pill.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 /// AccumulatorMarkerIconPainter is a specialized painter for rendering accumulator contract markers on charts.
 ///
@@ -79,31 +83,22 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     PainterProps painterProps,
     AnimationInfo animationInfo,
   ) {
-    super.paintMarkerGroup(
-      canvas,
-      size,
-      theme,
-      markerGroup,
-      epochToX,
-      quoteToY,
-      painterProps,
-      animationInfo,
-    );
-
+    // 1. Collect marker references
     final Map<MarkerType, ChartMarker> markers = <MarkerType, ChartMarker>{};
-
     for (final ChartMarker marker in markerGroup.markers) {
       if (marker.markerType != null) {
         markers[marker.markerType!] = marker;
       }
     }
 
+    final ChartMarker? contractMarker = markers[MarkerType.contractMarker] ??
+        markers[MarkerType.contractMarkerFixed];
+    final ChartMarker? latestTickMarker = markers[MarkerType.latestTick];
     final ChartMarker? lowMarker = markers[MarkerType.lowBarrier];
     final ChartMarker? highMarker = markers[MarkerType.highBarrier];
     final ChartMarker? endMarker = markers[MarkerType.exitSpot];
 
-    final ChartMarker? previousTickMarker = markers[MarkerType.previousTick];
-
+    // 2. Draw barriers first (so they appear behind the contract marker)
     if (lowMarker != null && highMarker != null) {
       final Offset lowOffset = _getOffset(lowMarker, epochToX, quoteToY);
       final Offset highOffset = _getOffset(highMarker, epochToX, quoteToY);
@@ -123,8 +118,107 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
         top: highOffset.dy,
         markerGroup: markerGroup,
         bottom: lowOffset.dy,
-        previousTickMarker: previousTickMarker,
       );
+    }
+
+    // 3. Draw contract marker with pill
+    double pillRightEdge = 0;
+    if (contractMarker != null) {
+      final MarkerStyle style = markerGroup.style;
+      final double outerRadius =
+          (12 * painterProps.zoom) + (1 * painterProps.zoom);
+      final double iconCenterX =
+          markerGroup.props.contractMarkerLeftPadding + outerRadius;
+      final double iconOuterRadius = style.radius + 4;
+      final double centerY = quoteToY(contractMarker.quote);
+
+      // Draw the circular contract marker first using parent's protected method
+      final Offset anchor = Offset(iconCenterX, centerY);
+      YAxisConfig.instance.yAxisClipping(canvas, size, () {
+        drawContractMarkerCircle(
+          canvas,
+          contractMarker,
+          anchor,
+          style,
+          1.2,
+          painterProps.granularity,
+          1,
+          animationInfo,
+          markerGroup,
+        );
+      });
+
+      // Calculate pill width based on text and marker type
+      final String profitLossText = markerGroup.profitAndLossText ?? '';
+      final TextPainter textPainter = makeTextPainter(
+        profitLossText,
+        style.activeMarkerText,
+      );
+
+      final double arcRightX = iconCenterX + iconOuterRadius;
+
+      // Determine pill width based on marker type
+      double pillWidth;
+      if (contractMarker.markerType == MarkerType.contractMarkerFixed &&
+          latestTickMarker != null) {
+        // Fixed positioning: 24px gap from latest tick
+        final double latestTickX = epochToX(latestTickMarker.epoch);
+        const double fixedGap = 24;
+        final double maxPillRight = latestTickX - fixedGap;
+        final double naturalPillWidth =
+            style.textLeftPadding + textPainter.width + style.textRightPadding;
+        pillWidth = math.max(0, maxPillRight - arcRightX);
+        // If natural width fits, use it; otherwise constrain to available space
+        pillWidth = math.min(pillWidth, naturalPillWidth);
+      } else {
+        // Standard positioning: pill extends naturally based on text width
+        pillWidth =
+            style.textLeftPadding + textPainter.width + style.textRightPadding;
+      }
+
+      // Paint the profit/loss pill (no animation, always fully expanded)
+      final MarkerPillResult pillResult = paintMarkerPill(
+        canvas: canvas,
+        contractMarker: contractMarker,
+        style: style,
+        painterProps: painterProps,
+        profitAndLossText: profitLossText,
+        quoteToY: quoteToY,
+        contractMarkerLeftPadding: markerGroup.props.contractMarkerLeftPadding,
+        pillWidth: pillWidth,
+      );
+
+      pillRightEdge = pillResult.pillRightEdge;
+      contractMarker.tapArea = pillResult.tapArea;
+    }
+
+    // [AI]
+    // 4. Draw horizontal dashed connector line from pill to current spot
+    if (contractMarker != null && latestTickMarker != null) {
+      final double lineEndX = epochToX(latestTickMarker.epoch);
+      final double lineY = quoteToY(contractMarker.quote);
+
+      // Only draw the line if there's space between pill and latest tick
+      final double distance = lineEndX - pillRightEdge;
+
+      if (distance > 0) {
+        final Color lineColor = contractMarker.direction == MarkerDirection.up
+            ? theme.markerStyle.upColorProminent
+            : theme.markerStyle.downColorProminent;
+
+        YAxisConfig.instance.yAxisClipping(canvas, size, () {
+          paintHorizontalDashedLine(
+            canvas,
+            pillRightEdge,
+            lineEndX,
+            lineY,
+            lineColor,
+            1,
+            dashWidth: 2,
+            dashSpace: 2,
+          );
+        });
+      }
     }
   }
 
@@ -162,7 +256,6 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     required double top,
     required MarkerGroup markerGroup,
     required double bottom,
-    ChartMarker? previousTickMarker,
   }) {
     final double endTop = size.height;
 
@@ -197,17 +290,14 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     );
 
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
-      if (previousTickMarker != null && previousTickMarker.color != null) {
-        _drawPreviousTickBarrier(
-          size,
-          canvas,
-          startLeft,
-          endLeft,
-          middleTop,
-          previousTickMarker.color!,
-          barrierColor,
-        );
-      }
+      _drawPreviousTickBarrier(
+        size,
+        canvas,
+        startLeft,
+        endLeft,
+        middleTop,
+        barrierColor,
+      );
 
       if (isTopVisible || hasPersistentBorders) {
         final Path path = Path()
@@ -304,7 +394,6 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     double startX,
     double endX,
     double y,
-    Color circleColor,
     Color barrierColor,
   ) {
     paintHorizontalDashedLine(
@@ -313,9 +402,9 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
       endX,
       y,
       barrierColor,
-      1.5,
+      1,
       dashWidth: 2,
-      dashSpace: 4,
+      dashSpace: 2,
     );
   }
 }
