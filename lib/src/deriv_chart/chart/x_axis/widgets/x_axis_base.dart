@@ -30,6 +30,7 @@ class XAxisBase extends StatefulWidget {
     this.minIntervalWidth,
     this.maxIntervalWidth,
     this.dataFitPadding,
+    this.defaultTickOffset,
     Key? key,
   }) : super(key: key);
 
@@ -71,6 +72,17 @@ class XAxisBase extends StatefulWidget {
   /// Padding around data used in data-fit mode.
   final EdgeInsets? dataFitPadding;
 
+  /// Default distance between the latest data point and the right edge of the
+  /// chart in pixels.
+  ///
+  /// This value is used for:
+  /// - Initial chart load tick offset
+  /// - Target position when "scroll to last tick" button is clicked
+  ///
+  /// If not specified, defaults to [maxCurrentTickOffset].
+  /// The value will be clamped between 0 and [maxCurrentTickOffset].
+  final double? defaultTickOffset;
+
   /// Duration of the scroll animation.
   final Duration scrollAnimationDuration;
 
@@ -109,6 +121,7 @@ class XAxisState extends State<XAxisBase> with TickerProviderStateMixin {
       minEpoch: widget.minEpoch,
       maxEpoch: widget.maxEpoch,
       maxCurrentTickOffset: chartConfig.chartAxisConfig.maxCurrentTickOffset,
+      defaultTickOffset: widget.defaultTickOffset,
       defaultIntervalWidth: chartConfig.chartAxisConfig.defaultIntervalWidth,
       msPerPx: widget.msPerPx,
       minIntervalWidth: widget.minIntervalWidth,

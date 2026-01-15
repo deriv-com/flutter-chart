@@ -18,6 +18,7 @@ class ChartAxisConfig {
     this.initialTopBoundQuote = defaultTopBoundQuote,
     this.initialBottomBoundQuote = defaultBottomBoundQuote,
     this.maxCurrentTickOffset = defaultMaxCurrentTickOffset,
+    this.defaultTickOffset,
     this.defaultIntervalWidth = 20,
     this.showQuoteGrid = true,
     this.showEpochGrid = true,
@@ -34,6 +35,17 @@ class ChartAxisConfig {
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
   /// Limits panning to the right.
   final double maxCurrentTickOffset;
+
+  /// Default distance between the latest data point and the right edge of the
+  /// chart in pixels.
+  ///
+  /// This value is used for:
+  /// - Initial chart load tick offset
+  /// - Target position when "scroll to last tick" button is clicked
+  ///
+  /// If not specified, defaults to [maxCurrentTickOffset].
+  /// The value will be clamped between 0 and [maxCurrentTickOffset].
+  final double? defaultTickOffset;
 
   /// Show Quote Grid lines and labels.
   final bool showQuoteGrid;
@@ -65,11 +77,13 @@ class ChartAxisConfig {
     double? initialTopBoundQuote,
     double? initialBottomBoundQuote,
     double? maxCurrentTickOffset,
+    double? defaultTickOffset,
   }) =>
       ChartAxisConfig(
         initialTopBoundQuote: initialTopBoundQuote ?? this.initialTopBoundQuote,
         initialBottomBoundQuote:
             initialBottomBoundQuote ?? this.initialBottomBoundQuote,
         maxCurrentTickOffset: maxCurrentTickOffset ?? this.maxCurrentTickOffset,
+        defaultTickOffset: defaultTickOffset ?? this.defaultTickOffset,
       );
 }

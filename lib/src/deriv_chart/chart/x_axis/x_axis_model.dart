@@ -65,6 +65,7 @@ class XAxisModel extends ChangeNotifier {
     double? minIntervalWidth,
     double? maxIntervalWidth,
     EdgeInsets? dataFitPadding,
+    double? defaultTickOffset,
     this.onScale,
     this.onScroll,
   }) {
@@ -85,7 +86,9 @@ class XAxisModel extends ChangeNotifier {
     _msPerPx = msPerPx ?? _defaultMsPerPx;
     _isLive = isLive;
     _maxCurrentTickOffset = maxCurrentTickOffset;
-    _rightBoundEpoch = _maxRightBoundEpoch;
+    _defaultTickOffset = defaultTickOffset?.clamp(0, _maxCurrentTickOffset) ??
+        _maxCurrentTickOffset;
+    _rightBoundEpoch = _shiftEpoch(_maxEpoch, _defaultTickOffset);
     _dataFitMode = startWithDataFitMode;
     _minIntervalWidth = minIntervalWidth ?? 1;
     _maxIntervalWidth = maxIntervalWidth ?? 80;
@@ -120,6 +123,13 @@ class XAxisModel extends ChangeNotifier {
   /// Max distance between [rightBoundEpoch] and [_nowEpoch] in pixels.
   /// Limits panning to the right.
   double _maxCurrentTickOffset = 200;
+
+  /// Default distance between the latest data point and the right edge of the
+  /// chart in pixels. Used for initial chart load and "scroll to last tick" button.
+  ///
+  /// Defaults to [_maxCurrentTickOffset] if not specified via [defaultTickOffset] parameter.
+  /// The value is clamped between 0 and [_maxCurrentTickOffset].
+  late double _defaultTickOffset;
 
   late bool _isLive;
 
@@ -537,7 +547,7 @@ class XAxisModel extends ChangeNotifier {
     final int target = _shiftEpoch(
             // _lastEntryEpoch will be removed later.
             (_entries?.isNotEmpty ?? false) ? _entries!.last.epoch : _nowEpoch,
-            _maxCurrentTickOffset) +
+            _defaultTickOffset) +
         duration.inMilliseconds;
 
     final double distance = target > _rightBoundEpoch
