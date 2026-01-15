@@ -30,6 +30,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  assets:
+    - assets/icons/
+    - assets/icons/symbols/
+
 flutter_intl:
   main_locale: en
   enabled: true

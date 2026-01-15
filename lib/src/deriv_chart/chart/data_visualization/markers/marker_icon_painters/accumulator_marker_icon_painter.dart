@@ -307,12 +307,6 @@ class AccumulatorMarkerIconPainter extends TickMarkerIconPainter {
     Color circleColor,
     Color barrierColor,
   ) {
-    canvas.drawCircle(
-      Offset(startX, y),
-      1.5,
-      Paint()..color = circleColor,
-    );
-
     paintHorizontalDashedLine(
       canvas,
       startX,

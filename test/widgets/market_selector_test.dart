@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import '../helpers/image_mock_helper.dart';
+
 void main() {
   group('Test different scenarios that might break the [MarketSelector] widget',
       () {
@@ -14,6 +16,14 @@ void main() {
     late Asset r25Favourite;
     late SubMarket r50SubMarket;
     late SubMarket r25SubMarket;
+
+    setUpAll(() {
+      setUpImageAssetMocking();
+    });
+
+    tearDownAll(() {
+      tearDownImageAssetMocking();
+    });
 
     setUp(() {
       r50 = Asset(
