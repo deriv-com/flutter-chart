@@ -171,11 +171,17 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
     if (widget.currentTickAnimationDuration.inMilliseconds !=
         oldChart.currentTickAnimationDuration.inMilliseconds) {
+      // Complete current animation to clear stale previousObject state
+      completeCurrentTickAnimation();
+      // Dispose old controller before creating new one
+      _currentTickAnimationController.dispose();
       _setupCurrentTickAnimation();
     }
 
     if (widget.quoteBoundsAnimationDuration.inMilliseconds !=
         oldChart.quoteBoundsAnimationDuration.inMilliseconds) {
+      topBoundQuoteAnimationController.dispose();
+      bottomBoundQuoteAnimationController.dispose();
       _setupBoundsAnimation();
     }
 
