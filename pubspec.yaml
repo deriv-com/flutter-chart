@@ -1,6 +1,6 @@
 name: deriv_chart
 description: A financial charting library for Flutter applications, offering a comprehensive suite of features for technical analysis and trading visualization.
-version: 0.4.1
+version: 0.5.0
 homepage: https://github.com/deriv-com/flutter-chart
 repository: https://github.com/deriv-com/flutter-chart
 
