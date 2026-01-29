@@ -58,7 +58,7 @@
 
 ## [0.3.0]
 
-- Fix overlay indicators' lable spacing
+- Fix overlay indicators' label spacing
 - Add numbering logic to drawing tools
 - Upgrade Flutter version to 3.24.x
 
