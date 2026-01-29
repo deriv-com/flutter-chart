@@ -27,6 +27,11 @@ class YGridLinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    final Paint gridPaint = Paint()
+      ..color = style.gridLineColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = style.lineThickness;
+
     for (final double quote in gridLineQuotes) {
       final double y = quoteToCanvasY(quote);
 
@@ -36,10 +41,7 @@ class YGridLinePainter extends CustomPainter {
           size.width - labelWidth - style.labelHorizontalPadding * 2,
           y,
         ),
-        Paint()
-          ..color = style.gridLineColor
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = style.lineThickness,
+        gridPaint,
       );
     }
   }
