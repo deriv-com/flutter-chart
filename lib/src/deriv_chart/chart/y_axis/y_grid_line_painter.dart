@@ -1,4 +1,5 @@
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// A `CustomPainter` that paints the Y axis grids.
@@ -11,6 +12,10 @@ class YGridLinePainter extends CustomPainter {
     required this.quoteToCanvasY,
     required this.style,
     required this.labelWidth,
+    required this.topBoundQuote,
+    required this.bottomBoundQuote,
+    required this.topPadding,
+    required this.bottomPadding,
   });
 
   /// The list of quotes.
@@ -24,6 +29,18 @@ class YGridLinePainter extends CustomPainter {
 
   /// The width of the grid line's label
   final double labelWidth;
+
+  /// The top bound quote (affects Y coordinate conversion).
+  final double topBoundQuote;
+
+  /// The bottom bound quote (affects Y coordinate conversion).
+  final double bottomBoundQuote;
+
+  /// The top padding (affects Y coordinate conversion).
+  final double topPadding;
+
+  /// The bottom padding (affects Y coordinate conversion).
+  final double bottomPadding;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -47,7 +64,14 @@ class YGridLinePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(YGridLinePainter oldDelegate) => true;
+  bool shouldRepaint(YGridLinePainter oldDelegate) =>
+      !listEquals(gridLineQuotes, oldDelegate.gridLineQuotes) ||
+      style != oldDelegate.style ||
+      labelWidth != oldDelegate.labelWidth ||
+      topBoundQuote != oldDelegate.topBoundQuote ||
+      bottomBoundQuote != oldDelegate.bottomBoundQuote ||
+      topPadding != oldDelegate.topPadding ||
+      bottomPadding != oldDelegate.bottomPadding;
 
   @override
   bool shouldRebuildSemantics(YGridLinePainter oldDelegate) => false;

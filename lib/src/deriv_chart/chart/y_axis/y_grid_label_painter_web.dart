@@ -13,6 +13,10 @@ class YGridLabelPainterWeb extends YGridLabelPainter {
     required super.pipSize,
     required super.quoteToCanvasY,
     required super.style,
+    required super.topBoundQuote,
+    required super.bottomBoundQuote,
+    required super.topPadding,
+    required super.bottomPadding,
   });
 
   @override
