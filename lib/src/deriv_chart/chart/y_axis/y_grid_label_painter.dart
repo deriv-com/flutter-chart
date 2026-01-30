@@ -30,16 +30,24 @@ class YGridLabelPainter extends CustomPainter {
 
   final GridStyle style;
 
-  /// The top bound quote (affects Y coordinate conversion).
+  /// The top bound quote used for repaint optimization.
+  /// Note: This value is already captured by [quoteToCanvasY] closure
+  /// and is tracked separately to detect when repainting is needed.
   final double topBoundQuote;
 
-  /// The bottom bound quote (affects Y coordinate conversion).
+  /// The bottom bound quote used for repaint optimization.
+  /// Note: This value is already captured by [quoteToCanvasY] closure
+  /// and is tracked separately to detect when repainting is needed.
   final double bottomBoundQuote;
 
-  /// The top padding (affects Y coordinate conversion).
+  /// The top padding used for repaint optimization.
+  /// Note: This value is already captured by [quoteToCanvasY] closure
+  /// and is tracked separately to detect when repainting is needed.
   final double topPadding;
 
-  /// The bottom padding (affects Y coordinate conversion).
+  /// The bottom padding used for repaint optimization.
+  /// Note: This value is already captured by [quoteToCanvasY] closure
+  /// and is tracked separately to detect when repainting is needed.
   final double bottomPadding;
 
   @override
