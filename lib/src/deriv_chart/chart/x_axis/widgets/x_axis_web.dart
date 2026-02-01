@@ -23,6 +23,7 @@ class XAxisWeb extends XAxisBase {
     super.minIntervalWidth,
     super.maxIntervalWidth,
     super.dataFitPadding,
+    super.defaultTickOffset,
     super.key,
   });
 

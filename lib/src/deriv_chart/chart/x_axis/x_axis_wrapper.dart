@@ -102,6 +102,7 @@ class XAxisWrapper extends StatelessWidget {
         maxIntervalWidth: maxIntervalWidth,
         dataFitPadding: dataFitPadding,
         scrollAnimationDuration: scrollAnimationDuration,
+        defaultTickOffset: chartAxisConfig.defaultTickOffset,
       );
     } else {
       return XAxisMobile(
@@ -118,6 +119,7 @@ class XAxisWrapper extends StatelessWidget {
         maxIntervalWidth: maxIntervalWidth,
         dataFitPadding: dataFitPadding,
         scrollAnimationDuration: scrollAnimationDuration,
+        defaultTickOffset: chartAxisConfig.defaultTickOffset,
       );
     }
   }

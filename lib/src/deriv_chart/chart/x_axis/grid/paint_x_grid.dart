@@ -57,18 +57,25 @@ void _paintTimeGridLines(
   List<DateTime> time,
   double msPerPx,
 ) {
+  final Paint normalGridPaint = Paint()
+    ..color = gridStyle.gridLineColor
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = gridStyle.lineThickness;
+
+  final Paint verticalBarrierPaint = Paint()
+    ..color = style.verticalBarrierStyle.color
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = gridStyle.lineThickness;
+
   for (int i = 0; i < xCoords.length; i++) {
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
       canvas.drawLine(
         Offset(xCoords[i], 0),
         Offset(xCoords[i], size.height - gridStyle.xLabelsAreaHeight),
-        Paint()
-          // checking if msPerPx is <  300000
-          ..color = (msPerPx < 300000 && checkNewDate(time[i]))
-              ? style.verticalBarrierStyle.color
-              : gridStyle.gridLineColor
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = gridStyle.lineThickness,
+        // checking if msPerPx is <  300000
+        (msPerPx < 300000 && checkNewDate(time[i]))
+            ? verticalBarrierPaint
+            : normalGridPaint,
       );
     });
   }
