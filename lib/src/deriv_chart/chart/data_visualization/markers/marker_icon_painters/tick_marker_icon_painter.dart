@@ -79,8 +79,9 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     for (final ChartMarker marker in markerGroup.markers) {
       final Offset center;
 
-      // Special handling for contractMarker - position with left padding
-      if (marker.markerType == MarkerType.contractMarker) {
+      // Special handling for contractMarker and contractMarkerFixed - position with left padding
+      if (marker.markerType == MarkerType.contractMarker ||
+          marker.markerType == MarkerType.contractMarkerFixed) {
         center = Offset(
           markerGroup.props.contractMarkerLeftPadding + _contractOuterRadius,
           quoteToY(marker.quote),
@@ -115,7 +116,8 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
 
     for (final ChartMarker marker in markerGroup.markers) {
       final Offset center = points[marker.markerType!] ??
-          (marker.markerType == MarkerType.contractMarker
+          (marker.markerType == MarkerType.contractMarker ||
+                  marker.markerType == MarkerType.contractMarkerFixed
               ? Offset(
                   markerGroup.props.contractMarkerLeftPadding +
                       _contractOuterRadius,
@@ -308,6 +310,10 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
         // Use a fixed zoom value of 1.2 for contract markers to provide a
         // consistently larger size, improving tap target accessibility.
         case MarkerType.contractMarker:
+          _drawContractMarker(canvas, marker, anchor, style, 1.2, granularity,
+              opacity, animationInfo, markerGroupId, markerGroup);
+          break;
+        case MarkerType.contractMarkerFixed:
           _drawContractMarker(canvas, marker, anchor, style, 1.2, granularity,
               opacity, animationInfo, markerGroupId, markerGroup);
           break;
@@ -592,8 +598,115 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     String? markerGroupId,
     MarkerGroup markerGroup,
   ) {
+    // Use the extracted protected method
+    drawContractMarkerCircle(
+      canvas,
+      marker,
+      anchor,
+      style,
+      zoom,
+      granularity,
+      opacity,
+      animationInfo,
+      markerGroup,
+    );
+  }
+
+  /// Protected helper method to draw a label inside the contract marker circle.
+  ///
+  /// This method is accessible to subclasses for reuse.
+  @protected
+  void drawContractMarkerLabel(Canvas canvas, Offset anchor, String label,
+      double opacity, double zoom, MarkerStyle style) {
+    // Base radius used in _drawContractMarker
     final double radius = 12 * zoom;
-    final double borderRadius = radius + (1 * zoom); // Add 1 pixel padding
+    final double padding = 5 * zoom; // small padding from circle border
+    final double maxWidth = (radius - padding) * 2;
+    final double maxHeight = (radius - padding) * 2;
+
+    final TextStyle baseTextStyle = style.markerLabelTextStyle.copyWith(
+      fontSize: style.markerLabelTextStyle.fontSize! * zoom,
+      color: style.markerLabelTextStyle.color!.withOpacity(opacity),
+      height: 1,
+    );
+
+    final TextPainter painter = makeFittedTextPainter(
+      label,
+      baseTextStyle,
+      maxWidth: maxWidth,
+      maxHeight: maxHeight,
+    );
+
+    paintWithTextPainter(
+      canvas,
+      painter: painter,
+      anchor: anchor,
+    );
+  }
+
+  /// Protected helper method to draw a diagonal arrow icon inside the contract marker.
+  ///
+  /// This method is accessible to subclasses for reuse.
+  @protected
+  void drawContractMarkerArrow(Canvas canvas, Offset center, ChartMarker marker,
+      Color color, double zoom) {
+    final double dir = marker.direction == MarkerDirection.up ? 1 : -1;
+    final double iconSize = 22 * zoom;
+
+    final Path path = Path();
+
+    canvas
+      ..save()
+      ..translate(
+        center.dx - iconSize / 2,
+        center.dy - (iconSize / 2) * dir,
+      )
+      // Scale from 24x24 original SVG size to desired icon size
+      ..scale(
+        iconSize / 24,
+        (iconSize / 24) * dir,
+      );
+
+    // Arrow-up path (will be flipped for down direction)
+    path
+      ..moveTo(17, 8)
+      ..lineTo(17, 15)
+      ..cubicTo(17, 15.5625, 16.5312, 16, 16, 16)
+      ..cubicTo(15.4375, 16, 15, 15.5625, 15, 15)
+      ..lineTo(15, 10.4375)
+      ..lineTo(8.6875, 16.7188)
+      ..cubicTo(8.3125, 17.125, 7.65625, 17.125, 7.28125, 16.7188)
+      ..cubicTo(6.875, 16.3438, 6.875, 15.6875, 7.28125, 15.3125)
+      ..lineTo(13.5625, 9)
+      ..lineTo(9, 9)
+      ..cubicTo(8.4375, 9, 8, 8.5625, 8, 8)
+      ..cubicTo(8, 7.46875, 8.4375, 7, 9, 7)
+      ..lineTo(16, 7)
+      ..cubicTo(16.5312, 7, 17, 7.46875, 17, 8)
+      ..close();
+
+    canvas
+      ..drawPath(path, Paint()..color = color)
+      ..restore();
+  }
+
+  /// Protected helper method to draw the contract marker circle with progress arc.
+  ///
+  /// This method is accessible to subclasses for reuse.
+  @protected
+  void drawContractMarkerCircle(
+    Canvas canvas,
+    ChartMarker marker,
+    Offset anchor,
+    MarkerStyle style,
+    double zoom,
+    int granularity,
+    double opacity,
+    AnimationInfo animationInfo,
+    MarkerGroup markerGroup,
+  ) {
+    final double radius = 12 * zoom;
+    final double borderRadius = radius + (1 * zoom);
 
     // Determine colors based on marker direction
     final Color markerColor = marker.direction == MarkerDirection.up
@@ -648,48 +761,25 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
 
     canvas.drawArc(
       Rect.fromCircle(center: anchor, radius: radius),
-      -math.pi / 2, // Start from top
+      -math.pi / 2,
       sweepAngle,
       false,
       progressPaint,
     );
 
+    // Draw label or arrow icon
     if (markerGroup.props.markerLabel != null) {
-      _drawMarkerLabel(
+      drawContractMarkerLabel(
           canvas, anchor, markerGroup.props.markerLabel!, opacity, zoom, style);
     } else {
-      // Draw arrow icon in the center
-      _drawArrowIcon(
+      drawContractMarkerArrow(
           canvas, anchor, marker, Colors.white.withOpacity(opacity), zoom);
     }
   }
 
   void _drawMarkerLabel(Canvas canvas, Offset anchor, String label,
       double opacity, double zoom, MarkerStyle style) {
-    // Base radius used in _drawContractMarker
-    final double radius = 12 * zoom;
-    final double padding = 5 * zoom; // small padding from circle border
-    final double maxWidth = (radius - padding) * 2;
-    final double maxHeight = (radius - padding) * 2;
-
-    final TextStyle baseTextStyle = style.markerLabelTextStyle.copyWith(
-      fontSize: style.markerLabelTextStyle.fontSize! * zoom,
-      color: style.markerLabelTextStyle.color!.withOpacity(opacity),
-      height: 1,
-    );
-
-    final TextPainter painter = makeFittedTextPainter(
-      label,
-      baseTextStyle,
-      maxWidth: maxWidth,
-      maxHeight: maxHeight,
-    );
-
-    paintWithTextPainter(
-      canvas,
-      painter: painter,
-      anchor: anchor,
-    );
+    drawContractMarkerLabel(canvas, anchor, label, opacity, zoom, style);
   }
 
   /// Draws a diagonal arrow icon inside the contract marker.
@@ -701,44 +791,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// @param zoom The current zoom level of the chart.
   void _drawArrowIcon(Canvas canvas, Offset center, ChartMarker marker,
       Color color, double zoom) {
-    final double dir = marker.direction == MarkerDirection.up ? 1 : -1;
-    final double iconSize = 22 * zoom;
-
-    final Path path = Path();
-
-    canvas
-      ..save()
-      ..translate(
-        center.dx - iconSize / 2,
-        center.dy - (iconSize / 2) * dir,
-      )
-      // Scale from 24x24 original SVG size to desired icon size
-      ..scale(
-        iconSize / 24,
-        (iconSize / 24) * dir,
-      );
-
-    // Arrow-up path (will be flipped for down direction)
-    path
-      ..moveTo(17, 8)
-      ..lineTo(17, 15)
-      ..cubicTo(17, 15.5625, 16.5312, 16, 16, 16)
-      ..cubicTo(15.4375, 16, 15, 15.5625, 15, 15)
-      ..lineTo(15, 10.4375)
-      ..lineTo(8.6875, 16.7188)
-      ..cubicTo(8.3125, 17.125, 7.65625, 17.125, 7.28125, 16.7188)
-      ..cubicTo(6.875, 16.3438, 6.875, 15.6875, 7.28125, 15.3125)
-      ..lineTo(13.5625, 9)
-      ..lineTo(9, 9)
-      ..cubicTo(8.4375, 9, 8, 8.5625, 8, 8)
-      ..cubicTo(8, 7.46875, 8.4375, 7, 9, 7)
-      ..lineTo(16, 7)
-      ..cubicTo(16.5312, 7, 17, 7.46875, 17, 8)
-      ..close();
-
-    canvas
-      ..drawPath(path, Paint()..color = color)
-      ..restore();
+    drawContractMarkerArrow(canvas, center, marker, color, zoom);
   }
 
   /// Renders a tick point marker.

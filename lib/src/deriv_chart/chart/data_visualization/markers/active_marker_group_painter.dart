@@ -1,8 +1,7 @@
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_marker_pill.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -61,10 +60,11 @@ class ActiveMarkerGroupPainter extends CustomPainter {
       return;
     }
 
-    // Find the contractMarker in the active group to anchor the pill and icon
+    // Find the contractMarker or contractMarkerFixed in the active group to anchor the pill and icon
     ChartMarker? contractMarker;
     for (final ChartMarker marker in activeMarkerGroup.markers) {
-      if (marker.markerType == MarkerType.contractMarker) {
+      if (marker.markerType == MarkerType.contractMarker ||
+          marker.markerType == MarkerType.contractMarkerFixed) {
         contractMarker = marker;
         break;
       }
@@ -86,111 +86,31 @@ class ActiveMarkerGroupPainter extends CustomPainter {
       animationInfo,
     );
 
-    // Positioning rules:
-    // - Contract icon is painted by TickMarkerIconPainter at x defined by
-    //   props.contractMarkerLeftPadding + outerRadius, where outerRadius is
-    //   (12 * zoom) + (1 * zoom), matching the circle's drawn outer border.
-    // - The profit/loss pill starts as the right semicircle (arc) of that icon and expands rightward to form a pill
-    final double _outerRadius =
-        (12 * painterProps.zoom) + (1 * painterProps.zoom);
-    final double iconCenterX =
-        activeMarkerGroup.props.contractMarkerLeftPadding + _outerRadius;
-    final double iconOuterRadius =
-        style.radius + 4; // Matches contract marker outer circle
-    final double centerY = quoteToY(contractMarker.quote);
-
-    // Fade text opacity directly with clamped animation progress
+    // Calculate pill width for animation
+    final String profitLossText = activeMarkerGroup.profitAndLossText ?? '';
     final TextPainter textPainter = makeTextPainter(
-      activeMarkerGroup.profitAndLossText ?? '',
-      style.activeMarkerText.copyWith(
-        color: Colors.white.withOpacity(animationProgress.clamp(0.0, 1.0)),
-      ),
+      profitLossText,
+      style.activeMarkerText,
+    );
+    final double naturalPillWidth =
+        style.textLeftPadding + textPainter.width + style.textRightPadding;
+
+    // Paint the profit/loss pill with animation
+    final MarkerPillResult pillResult = paintMarkerPill(
+      canvas: canvas,
+      contractMarker: contractMarker,
+      style: style,
+      painterProps: painterProps,
+      profitAndLossText: profitLossText,
+      quoteToY: quoteToY,
+      contractMarkerLeftPadding:
+          activeMarkerGroup.props.contractMarkerLeftPadding,
+      pillWidth: naturalPillWidth,
+      animationProgress: animationProgress,
     );
 
-    // Make pill height match the icon border circle for a seamless joint
-    final double pillRadius = iconOuterRadius;
-
-    // Left reference where the arc meets the horizontal center line
-    final double arcRightX = iconCenterX + iconOuterRadius;
-
-    // Total width = full capsule width + animated text width contribution
-    final double animatedTextWidth =
-        (style.textLeftPadding + textPainter.width + style.textRightPadding) *
-            animationProgress;
-    final double pillWidth = animatedTextWidth;
-
-    // Build the pill path that starts with the right semicircle of the icon
-    final double rightEndX = arcRightX + pillWidth;
-    final Offset rightEndCenter = Offset(rightEndX - pillRadius, centerY);
-
-    final Path pillPath = Path()
-      // Move to top of the icon circle
-      ..moveTo(iconCenterX, centerY - iconOuterRadius)
-      // Right semicircle of icon (from top to bottom)
-      ..arcTo(
-        Rect.fromCircle(
-            center: Offset(iconCenterX, centerY), radius: iconOuterRadius),
-        -math.pi / 2,
-        math.pi,
-        false,
-      )
-      // Bottom edge to the right rounded end
-      ..lineTo(rightEndCenter.dx, centerY + pillRadius)
-      // Right rounded end (bottom to top)
-      ..arcTo(
-        Rect.fromCircle(center: rightEndCenter, radius: pillRadius),
-        math.pi / 2,
-        -math.pi,
-        false,
-      )
-      // Top edge back to the top of the icon arc
-      ..lineTo(iconCenterX, centerY - iconOuterRadius)
-      ..close();
-
-    // Pill background (dark container)
-    final Color pillFillColor = const Color(0xFF181C25);
-    canvas.drawPath(pillPath, Paint()..color = pillFillColor);
-
-    // Pill border uses profit/loss color (exclude the left arc next to the icon)
-    final Color borderColor = contractMarker.direction == MarkerDirection.up
-        ? style.upColor
-        : style.downColor;
-    final Path pillBorderPath = Path()
-      ..moveTo(iconCenterX, centerY + pillRadius)
-      ..lineTo(rightEndCenter.dx, centerY + pillRadius)
-      ..arcTo(
-        Rect.fromCircle(center: rightEndCenter, radius: pillRadius),
-        math.pi / 2,
-        -math.pi,
-        false,
-      )
-      ..lineTo(iconCenterX, centerY - pillRadius);
-    canvas.drawPath(
-      pillBorderPath,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1
-        ..strokeJoin = StrokeJoin.round
-        ..strokeCap = StrokeCap.round
-        ..color = borderColor,
-    );
-
-    // Label: paint while expanding but clip to animated pill area so it reveals smoothly
-    canvas.save();
-    canvas.clipPath(pillPath);
-    paintWithTextPainter(
-      canvas,
-      painter: textPainter,
-      anchor: Offset(arcRightX + style.textLeftPadding, centerY),
-      anchorAlignment: Alignment.centerLeft,
-    );
-    canvas.restore();
-
-    // Expand tap area to include both the icon and the pill
-    final Rect iconArea = Rect.fromCircle(
-        center: Offset(iconCenterX, centerY), radius: iconOuterRadius);
-    final Rect pillBounds = pillPath.getBounds();
-    contractMarker.tapArea = pillBounds.expandToInclude(iconArea);
+    // Update the contract marker's tap area
+    contractMarker.tapArea = pillResult.tapArea;
   }
 
   @override
