@@ -423,7 +423,7 @@ linter:
     Image.asset('assets/images/placeholder.png')
     ```
 * **Network images:** Use NetworkImage for images loaded from the network.
-* **Cached images:** For cached images, use NetworkImage a package like
+* **Cached images:** For cached images, use `NetworkImage` or a package like
   `cached_network_image`.
 * **Custom Icons:** Use `ImageIcon` to display an icon from an `ImageProvider`,
   useful for custom icons not in the `Icons` class.
