@@ -166,9 +166,9 @@ linter:
 ### State Management
 * **Built-in Solutions:** Prefer Flutter's built-in state management solutions.
   Do not use a third-party package unless explicitly requested.
-* **Streams:** Use `Streams` and `StreamBuilder` for handling a sequence of
+* **Streams:** Use `Stream` and `StreamBuilder` for handling a sequence of
   asynchronous events.
-* **Futures:** Use `Futures` and `FutureBuilder` for handling a single
+* **Futures:** Use `Future` and `FutureBuilder` for handling a single
   asynchronous operation that will complete in the future.
 * **ValueNotifier:** Use `ValueNotifier` with `ValueListenableBuilder` for
   simple, local state that involves a single value.
