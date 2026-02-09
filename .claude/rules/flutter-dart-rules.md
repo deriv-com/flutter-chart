@@ -75,7 +75,7 @@ mobile platforms.
     * Use `PascalCase` for classes, `camelCase` for
       members/variables/functions/enums, and `snake_case` for files.
 * **Functions:**
-    * Functions short and with a single purpose (strive for less than 20 lines).
+    * Keep functions short and with a single purpose (strive for less than 20 lines).
 * **Testing:** Write code with testing in mind. Use the `file`, `process`, and
   `platform` packages, if appropriate, so you can inject in-memory and fake
   versions of the objects.
