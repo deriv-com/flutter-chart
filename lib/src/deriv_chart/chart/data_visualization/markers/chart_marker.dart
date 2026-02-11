@@ -214,7 +214,7 @@ class ChartMarker extends Marker {
   /// If null, uses [style.upColor] for [MarkerDirection.up] or [style.downColor] for [MarkerDirection.down].
   final Color? color;
 
-  /// Whether vertical line markers should be rendered with reduced opacity by 50%.
+  /// Whether marker should be rendered with reduced opacity by 50%.
   ///
   /// When set to true, marker will be rendered at half opacity. This is useful for indicating markers that represent
   /// future or unreached checkpoints in multi-stage contracts.
