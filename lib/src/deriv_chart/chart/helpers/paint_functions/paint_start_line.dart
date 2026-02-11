@@ -23,7 +23,7 @@ import 'package:flutter/material.dart';
 ///
 /// The [canvas] is the canvas on which to paint the line and icon.
 /// The [size] is the size of the drawing area, used to determine the vertical extent of the line.
-/// The [marker] is the chart marker (kept for signature parity with other line painters).
+/// The [marker] is the chart marker used to determine line color.
 /// The [anchor] is the position on the canvas where the line should be anchored.
 /// The [style] is the marker style, which provides colors and icon styling information.
 /// The [theme] is the chart theme, which provides color schemes and styling.

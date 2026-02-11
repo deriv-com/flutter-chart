@@ -89,9 +89,6 @@ class TimeMarkerPainters {
     double zoom,
     Color color,
   ) {
-    // Use a circular container size matching the icon size for consistent alignment
-    final double containerSize = 24 * zoom;
-
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: text,
@@ -104,12 +101,10 @@ class TimeMarkerPainters {
       textDirection: TextDirection.ltr,
     )..layout();
 
-    // Center the text within the container area at the bottom
-    final Offset textOffset = Offset(
-      x - textPainter.width / 2,
-      size.height - containerSize + (containerSize - textPainter.height) / 2,
+    paintWithTextPainter(
+      canvas,
+      painter: textPainter,
+      anchor: Offset(x, size.height - 24 * zoom / 2),
     );
-
-    textPainter.paint(canvas, textOffset);
   }
 }
