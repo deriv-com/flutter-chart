@@ -6,6 +6,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/cha
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_checkpoint_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_end_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_line.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_start_line.dart';
@@ -50,14 +51,14 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// 3. Draws barrier lines connecting significant points
   /// 4. Delegates the rendering of individual markers to specialized methods
   ///
-  /// @param canvas The canvas on which to paint.
-  /// @param size The size of the drawing area.
-  /// @param theme The chart's theme, which provides colors and styles.
-  /// @param markerGroup The group of markers to render.
-  /// @param epochToX A function that converts epoch timestamps to X coordinates.
-  /// @param quoteToY A function that converts price quotes to Y coordinates.
-  /// @param painterProps Properties that affect how markers are rendered.
-  /// @param animationInfo Information about any ongoing animations.
+  /// The [canvas] is the canvas on which to paint.
+  /// The [size] is the size of the drawing area.
+  /// The [theme] is the chart's theme, which provides colors and styles.
+  /// The [markerGroup] is the group of markers to render.
+  /// The [epochToX] is a function that converts epoch timestamps to X coordinates.
+  /// The [quoteToY] is a function that converts price quotes to Y coordinates.
+  /// The [painterProps] contains properties that affect how markers are rendered.
+  /// The [animationInfo] contains information about any ongoing animations.
   @override
   void paintMarkerGroup(
     Canvas canvas,
@@ -128,6 +129,10 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
         continue;
       }
 
+      // Calculate marker-specific opacity: apply reduced opacity if specified
+      final double markerOpacity =
+          marker.hasReducedOpacity ? opacity * 0.5 : opacity;
+
       _drawMarker(
           canvas,
           size,
@@ -135,9 +140,9 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           marker,
           center,
           markerGroup.style,
-          painterProps.zoom,
+          1.2,
           painterProps.granularity,
-          opacity,
+          markerOpacity,
           paint,
           animationInfo,
           markerGroup.id,
@@ -156,13 +161,15 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// - A solid line from the entry tick to the end marker
   /// - A dashed horizontal line from the end marker to the chart's right edge
   ///
-  /// @param canvas The canvas on which to paint.
-  /// @param size The size of the drawing area.
-  /// @param points A map of marker types to their positions on the canvas.
-  /// @param markerGroup The group of markers to render.
-  /// @param style The style to apply to the barriers.
-  /// @param opacity The opacity to apply to the barriers.
-  /// @param painterProps Properties that affect how barriers are rendered.
+  /// The [canvas] is the canvas on which to paint.
+  /// The [size] is the size of the drawing area.
+  /// The [points] is a map of marker types to their positions on the canvas.
+  /// The [markerGroup] is the group of markers to render.
+  /// The [style] is the style to apply to the barriers.
+  /// The [theme] is the chart theme providing color schemes and styling.
+  /// The [opacity] is the opacity to apply to the barriers.
+  /// The [painterProps] contains properties that affect how barriers are rendered.
+  /// The [paint] is the paint object used for rendering.
   void _drawBarriers(
       Canvas canvas,
       Size size,
@@ -278,17 +285,19 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// (start, entry, tick, exit, end) with their specific visual representations.
   /// It delegates to specialized methods for each marker type.
   ///
-  /// @param canvas The canvas on which to paint.
-  /// @param size The size of the drawing area.
-  /// @param theme The chart's theme, which provides colors and styles.
-  /// @param marker The marker to render.
-  /// @param anchor The position on the canvas where the marker should be rendered.
-  /// @param style The style to apply to the marker.
-  /// @param zoom The current zoom level of the chart.
-  /// @param opacity The opacity to apply to the marker.
-  /// @param animationInfo Information about any ongoing animations.
-  /// @param markerGroupId The ID of the marker group for animation tracking.
-  /// @param markerGroup The marker group containing all related markers for this contract.
+  /// The [canvas] is the canvas on which to paint.
+  /// The [size] is the size of the drawing area.
+  /// The [theme] is the chart's theme, which provides colors and styles.
+  /// The [marker] is the marker to render.
+  /// The [anchor] is the position on the canvas where the marker should be rendered.
+  /// The [style] is the style to apply to the marker.
+  /// The [zoom] is the current zoom level of the chart.
+  /// The [granularity] is the time interval between data points.
+  /// The [opacity] is the opacity to apply to the marker.
+  /// The [paint] is the paint object used for rendering.
+  /// The [animationInfo] contains information about any ongoing animations.
+  /// The [markerGroupId] is the ID of the marker group for animation tracking.
+  /// The [markerGroup] is the marker group containing all related markers for this contract.
   void _drawMarker(
       Canvas canvas,
       Size size,
@@ -313,7 +322,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           break;
         case MarkerType.startTime:
           paintStartLine(canvas, size, marker, anchor, style, theme, zoom,
-              markerGroup.props);
+              opacity, markerGroup.props);
           break;
         case MarkerType.start:
           _drawStartPoint(
@@ -321,10 +330,10 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           break;
         case MarkerType.entry:
         case MarkerType.entrySpot:
-          _drawSpotPoint(canvas, marker, anchor, style, theme, zoom, opacity);
+          _drawEntrySpot(canvas, marker, anchor, style, theme, zoom, opacity);
           break;
         case MarkerType.exitSpot:
-          _drawSpotPoint(canvas, marker, anchor, style, theme, zoom, opacity);
+          _drawExitSpot(canvas, marker, anchor, style, theme, zoom, opacity);
           break;
         case MarkerType.exit:
           canvas.drawCircle(
@@ -342,7 +351,11 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           break;
         case MarkerType.exitTime:
           paintEndLine(canvas, size, marker, anchor, style, theme, zoom,
-              markerGroup.props);
+              opacity, markerGroup.props);
+          break;
+        case MarkerType.checkpointLine:
+          paintCheckpointLine(canvas, size, marker, anchor, style, theme, zoom,
+              opacity, markerGroup.props);
           break;
         case MarkerType.startTimeCollapsed:
           _drawCollapsedTimeLine(
@@ -506,10 +519,11 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// with smooth interpolation between updates using currentTickPercent from AnimationInfo.
   /// It takes granularity into account for accurate timing calculations.
   ///
-  /// @param markerGroup The marker group containing contract information.
-  /// @param animationInfo Animation information containing currentTickPercent.
-  /// @param granularity The time interval between data points in milliseconds.
-  /// @return The animated remaining duration as a value between 0.0 and 1.0.
+  /// The [markerGroup] is the marker group containing contract information.
+  /// The [animationInfo] contains animation information including currentTickPercent.
+  /// The [granularity] is the time interval between data points in milliseconds.
+  ///
+  /// Returns the animated remaining duration as a value between 0.0 and 1.0.
   double _calculateAnimatedRemainingDuration(
     MarkerGroup markerGroup,
     AnimationInfo animationInfo,
@@ -570,16 +584,16 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// The marker includes a background circle, progress arc, and a directional
   /// arrow icon in the center.
   ///
-  /// @param canvas The canvas on which to paint.
-  /// @param theme The chart's theme, which provides colors and styles.
-  /// @param marker The marker object containing direction and progress.
-  /// @param anchor The position on the canvas where the marker should be rendered.
-  /// @param style The style to apply to the marker.
-  /// @param zoom The current zoom level of the chart.
-  /// @param opacity The opacity to apply to the marker.
-  /// @param animationInfo Information about any ongoing animations.
-  /// @param markerGroupId The ID of the marker group for animation tracking.
-  /// @param markerGroup The marker group containing all related markers for this contract.
+  /// The [canvas] is the canvas on which to paint.
+  /// The [marker] is the marker object containing direction and progress.
+  /// The [anchor] is the position on the canvas where the marker should be rendered.
+  /// The [style] is the style to apply to the marker.
+  /// The [zoom] is the current zoom level of the chart.
+  /// The [granularity] is the time interval between data points.
+  /// The [opacity] is the opacity to apply to the marker.
+  /// The [animationInfo] contains information about any ongoing animations.
+  /// The [markerGroupId] is the ID of the marker group for animation tracking.
+  /// The [markerGroup] is the marker group containing all related markers for this contract.
   void _drawContractMarker(
     Canvas canvas,
     ChartMarker marker,
@@ -694,11 +708,11 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
 
   /// Draws a diagonal arrow icon inside the contract marker.
   ///
-  /// @param canvas The canvas on which to paint.
-  /// @param center The center position of the arrow.
-  /// @param marker The marker object containing direction information.
-  /// @param color The color of the arrow.
-  /// @param zoom The current zoom level of the chart.
+  /// The [canvas] is the canvas on which to paint.
+  /// The [center] is the center position of the arrow.
+  /// The [marker] is the marker object containing direction information.
+  /// The [color] is the color of the arrow.
+  /// The [zoom] is the current zoom level of the chart.
   void _drawArrowIcon(Canvas canvas, Offset center, ChartMarker marker,
       Color color, double zoom) {
     final double dir = marker.direction == MarkerDirection.up ? 1 : -1;
@@ -746,10 +760,10 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// This private method draws a small circular dot representing a price tick.
   /// Tick points are used to visualize individual price updates in the contract.
   ///
-  /// @param canvas The canvas on which to paint.
-  /// @param anchor The position on the canvas where the tick point should be rendered.
-  /// @param paint The paint object to use for drawing.
-  /// @param zoom The current zoom level of the chart.
+  /// The [canvas] is the canvas on which to paint.
+  /// The [anchor] is the position on the canvas where the tick point should be rendered.
+  /// The [paint] is the paint object to use for drawing.
+  /// The [zoom] is the current zoom level of the chart.
   void _drawTickPoint(Canvas canvas, Offset anchor, Paint paint, double zoom) {
     canvas.drawCircle(
       anchor,
@@ -765,13 +779,14 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// the price and time at which the contract started. It consists of an
   /// outer circle with marker direction color and an inner white circle.
   ///
-  /// @param canvas The canvas on which to paint.
-  /// @param marker The marker object containing direction information.
-  /// @param anchor The position on the canvas where the entry point should be rendered.
-  /// @param style The style to apply to the marker.
-  /// @param zoom The current zoom level of the chart.
-  /// @param opacity The opacity to apply to the entry point.
-  void _drawSpotPoint(Canvas canvas, ChartMarker marker, Offset anchor,
+  /// The [canvas] is the canvas on which to paint.
+  /// The [marker] is the marker object containing direction information.
+  /// The [anchor] is the position on the canvas where the entry point should be rendered.
+  /// The [style] is the style to apply to the marker.
+  /// The [theme] is the chart theme providing color schemes.
+  /// The [zoom] is the current zoom level of the chart.
+  /// The [opacity] is the opacity to apply to the entry point.
+  void _drawEntrySpot(Canvas canvas, ChartMarker marker, Offset anchor,
       MarkerStyle style, ChartTheme theme, double zoom, double opacity) {
     // Draw white filled circle
     final Paint fillPaint = Paint()
@@ -792,20 +807,52 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     canvas.drawCircle(anchor, 3 * zoom, strokePaint);
   }
 
+  /// Draws an exit spot marker as a filled circle.
+  ///
+  /// The exit spot is rendered as a solid filled circle with a color determined by:
+  /// - The marker's explicit color if provided (marker.color)
+  /// - Or the direction-based color from the theme (green for up, red for down)
+  ///
+  /// This is used for checkpoint markers in multi-stage contracts like Double Rise/Fall,
+  /// where each checkpoint has an exit spot indicating whether the checkpoint passed or failed.
+  ///
+  /// The [canvas] is the canvas on which to paint.
+  /// The [marker] is the chart marker containing direction and optional color.
+  /// The [anchor] is the position where the exit spot should be drawn.
+  /// The [style] is the marker style (unused but kept for signature consistency).
+  /// The [theme] is the chart theme providing direction-based colors.
+  /// The [zoom] is the zoom factor to scale the circle radius.
+  /// The [opacity] is the opacity to apply to the marker.
+  void _drawExitSpot(Canvas canvas, ChartMarker marker, Offset anchor,
+      MarkerStyle style, ChartTheme theme, double zoom, double opacity) {
+    // Determine color from marker.color or direction
+    final Color markerColor = marker.color ??
+        (marker.direction == MarkerDirection.up
+            ? theme.markerStyle.upColorProminent
+            : theme.markerStyle.downColorProminent);
+
+    // Draw filled circle
+    final Paint fillPaint = Paint()
+      ..color = markerColor.withOpacity(opacity)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawCircle(anchor, 3 * zoom, fillPaint);
+  }
+
   /// Renders the starting point of a tick contract.
   ///
   /// This private method draws a location pin marker at the starting point of
   /// the contract, with an optional text label. The marker's opacity is adjusted
   /// based on its position relative to other markers.
   ///
-  /// @param canvas The canvas on which to paint.
-  /// @param size The size of the drawing area.
-  /// @param theme The chart's theme, which provides colors and styles.
-  /// @param marker The marker to render.
-  /// @param anchor The position on the canvas where the marker should be rendered.
-  /// @param style The style to apply to the marker.
-  /// @param zoom The current zoom level of the chart.
-  /// @param opacity The opacity to apply to the marker.
+  /// The [canvas] is the canvas on which to paint.
+  /// The [size] is the size of the drawing area.
+  /// The [theme] is the chart's theme, which provides colors and styles.
+  /// The [marker] is the marker to render.
+  /// The [anchor] is the position on the canvas where the marker should be rendered.
+  /// The [style] is the style to apply to the marker.
+  /// The [zoom] is the current zoom level of the chart.
+  /// The [opacity] is the opacity to apply to the marker.
   void _drawStartPoint(
     Canvas canvas,
     Size size,
@@ -852,12 +899,12 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
   /// This private method draws a circular marker representing the end point
   /// of the contract. The color is determined by the marker direction.
   ///
-  /// @param canvas The canvas on which to paint.
-  /// @param marker The marker object containing direction information.
-  /// @param anchor The position on the canvas where the end point should be rendered.
-  /// @param style The style to apply to the marker.
-  /// @param zoom The current zoom level of the chart.
-  /// @param opacity The opacity to apply to the end point.
+  /// The [canvas] is the canvas on which to paint.
+  /// The [marker] is the marker object containing direction information.
+  /// The [anchor] is the position on the canvas where the end point should be rendered.
+  /// The [style] is the style to apply to the marker.
+  /// The [zoom] is the current zoom level of the chart.
+  /// The [opacity] is the opacity to apply to the end point.
   void _drawEndPoint(Canvas canvas, ChartMarker marker, Offset anchor,
       MarkerStyle style, double zoom, double opacity) {
     final Paint paint = Paint()

@@ -120,6 +120,14 @@ enum MarkerType {
   /// It appears as a pill-shaped label with rounded corners containing an icon and the profit/loss
   /// amount.
   profitAndLossLabelFixed,
+
+  /// Represents a checkpoint line marker for multi-stage contracts.
+  ///
+  /// This marker renders as a vertical dashed line similar to start/end time markers,
+  /// but without a bottom icon. It can display optional text (e.g., "1", "2") on the
+  /// line to indicate checkpoint sequence. Used for intermediate evaluation
+  /// points in contracts like Double Rise/Fall where multiple checkpoints need to be visualized.
+  checkpointLine,
 }
 
 /// A specialized marker class for displaying various types of markers on a financial chart.
@@ -153,12 +161,14 @@ class ChartMarker extends Marker {
   /// The `color` parameter allows for customization of the marker's color, which can be
   /// used to visually distinguish different types of markers or to highlight specific markers.
   ///
-  /// @param epoch The timestamp of the marker in epoch format (milliseconds since Unix epoch).
-  /// @param quote The price value of the marker.
-  /// @param direction The direction in which the marker is pointing (up or down).
-  /// @param markerType The type of marker, which determines its role and rendering.
-  /// @param text The text to display on or near the marker.
-  /// @param color The color of the marker.
+  /// The [epoch] is the timestamp of the marker in epoch format (milliseconds since Unix epoch).
+  /// The [quote] is the price value of the marker.
+  /// The [direction] is the direction in which the marker is pointing (up or down).
+  /// The [onTap] is an optional callback function invoked when the marker is tapped.
+  /// The [markerType] determines the type of marker, which determines its role and rendering.
+  /// The [text] is the text to display on or near the marker.
+  /// The [color] is the color of the marker.
+  /// The [hasReducedOpacity] determines whether the marker should be rendered with reduced (0.5) opacity.
   ChartMarker({
     required int epoch,
     required double quote,
@@ -167,6 +177,7 @@ class ChartMarker extends Marker {
     this.markerType,
     this.text,
     this.color,
+    this.hasReducedOpacity = false,
   }) : super(epoch: epoch, quote: quote, direction: direction, onTap: onTap);
 
   /// The type of marker, which determines its role and how it's rendered on the chart.
@@ -195,4 +206,12 @@ class ChartMarker extends Marker {
   /// If provided, this color overrides the default direction-based coloring.
   /// If null, uses [style.upColor] for [MarkerDirection.up] or [style.downColor] for [MarkerDirection.down].
   final Color? color;
+
+  /// Whether vertical line markers should be rendered with reduced (0.5) opacity.
+  ///
+  /// When set to true, marker will be rendered at half opacity. This is useful for indicating markers that represent
+  /// future or unreached checkpoints in multi-stage contracts.
+  ///
+  /// Defaults to false (full opacity).
+  final bool hasReducedOpacity;
 }

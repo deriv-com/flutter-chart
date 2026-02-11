@@ -6,30 +6,33 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
-/// Renders a vertical dashed line with a flag icon to indicate the end time of a contract.
+/// Renders a vertical dashed line with optional text to indicate a checkpoint.
 ///
 /// This function draws a vertical dashed line at the specified horizontal position,
-/// extending from near the top of the chart to near the bottom. The line visually
-/// marks the end time of a contract or trade on a financial chart. It also renders
-/// a flag icon near the bottom of the line.
+/// similar to start/exit time markers, but without a bottom icon. If the marker has
+/// text, it renders the text at the anchor position.
+///
+/// This marker type is used for intermediate checkpoints in multi-stage contracts
+/// (e.g., Double Rise/Fall) where multiple evaluation points need to be visualized
+/// along the timeline.
 ///
 /// The function performs two main rendering operations:
-/// 1. Draws a vertical dashed line using the `paintVerticalDashedLine` helper function
-/// 2. Renders a flag icon near the bottom of the chart
+/// 1. Draws a vertical dashed line using the `paintVerticalTimeLine` helper function
+/// 2. If text is provided in the marker, renders a text label at the anchor position
 ///
-/// The vertical line uses the background color from the provided style, and the icon
-/// is styled according to the marker style with appropriate scaling based on the zoom factor.
+/// The vertical line uses the color determined by the marker's direction or explicit color,
+/// and can optionally be rendered with reduced opacity if specified in the marker properties.
 ///
-/// The [canvas] is the canvas on which to paint the line and icon.
+/// The [canvas] is the canvas on which to paint the line and text.
 /// The [size] is the size of the drawing area, used to determine the vertical extent of the line.
-/// The [marker] is the chart marker (kept for signature parity with start line painter).
+/// The [marker] is the chart marker containing information like text to display and direction.
 /// The [anchor] is the position on the canvas where the line should be anchored.
-/// The [style] is the marker style, which provides colors and icon styling information.
+/// The [style] is the marker style, which provides colors and styling information.
 /// The [theme] is the chart theme, which provides color schemes and styling.
-/// The [zoom] is the zoom factor to apply to icon size and other dimensions.
-/// The [opacity] is the opacity to apply to the line and icon.
+/// The [zoom] is the zoom factor to apply to text size and other dimensions.
+/// The [opacity] is the opacity to apply to the line and text.
 /// The [props] contains additional marker properties that can affect rendering.
-void paintEndLine(
+void paintCheckpointLine(
   Canvas canvas,
   Size size,
   ChartMarker marker,
@@ -48,7 +51,7 @@ void paintEndLine(
 
   final Color lineColor = markerColor.withOpacity(opacity);
 
-  // If marker has text, render it inline at the anchor level
+  // Render text label inline at the anchor level if provided (e.g., "1", "2")
   if (marker.text != null && marker.text!.isNotEmpty) {
     TimeMarkerPainters.paintVerticalLineWithText(
       canvas,
@@ -60,7 +63,7 @@ void paintEndLine(
       dashed: true,
     );
   } else {
-    // Draw full vertical line from near the top of the chart to near the bottom
+    // Draw full vertical dashed line from near the top to near the bottom of the chart
     TimeMarkerPainters.paintVerticalTimeLine(
       canvas,
       size,
@@ -69,14 +72,4 @@ void paintEndLine(
       dashed: true,
     );
   }
-
-  // Render the end icon (flag) at the bottom of the line following MarkerStyle
-  TimeMarkerPainters.paintBottomIcon(
-    canvas,
-    size,
-    anchor.dx,
-    style.endTimeIcon,
-    zoom,
-    lineColor,
-  );
 }
