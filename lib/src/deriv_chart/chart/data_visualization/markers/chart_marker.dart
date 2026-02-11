@@ -175,7 +175,7 @@ class ChartMarker extends Marker {
   /// The [markerType] determines the type of marker, which determines its role and rendering.
   /// The [text] is the text to display on or near the marker.
   /// The [color] is the color of the marker.
-  /// The [hasReducedOpacity] determines whether the marker should be rendered with reduced (0.5) opacity.
+  /// The [hasReducedOpacity] determines whether the marker should be rendered with reduced opacity by 50%.
   ChartMarker({
     required int epoch,
     required double quote,
@@ -214,7 +214,7 @@ class ChartMarker extends Marker {
   /// If null, uses [style.upColor] for [MarkerDirection.up] or [style.downColor] for [MarkerDirection.down].
   final Color? color;
 
-  /// Whether vertical line markers should be rendered with reduced (0.5) opacity.
+  /// Whether vertical line markers should be rendered with reduced opacity by 50%.
   ///
   /// When set to true, marker will be rendered at half opacity. This is useful for indicating markers that represent
   /// future or unreached checkpoints in multi-stage contracts.
