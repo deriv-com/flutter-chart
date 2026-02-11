@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 ///
 /// This function draws a vertical dashed line at the specified horizontal position,
 /// similar to start/exit time markers, but without a bottom icon. If the marker has
-/// text, it renders the text at the anchor position.
+/// text, it renders the text at the bottom of the line.
 ///
 /// This marker type is used for intermediate checkpoints in multi-stage contracts
 /// (e.g., Double Rise/Fall) where multiple evaluation points need to be visualized
@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 ///
 /// The function performs two main rendering operations:
 /// 1. Draws a vertical dashed line using the `paintVerticalTimeLine` helper function
-/// 2. If text is provided in the marker, renders a text label at the anchor position
+/// 2. If text is provided in the marker, renders a text label at the bottom of the line
 ///
 /// The vertical line uses the color determined by the marker's direction or explicit color,
 /// and can optionally be rendered with reduced opacity if specified in the marker properties.
@@ -51,25 +51,24 @@ void paintCheckpointLine(
 
   final Color lineColor = markerColor.withOpacity(opacity);
 
-  // Render text label inline at the anchor level if provided (e.g., "1", "2")
+  // Draw full vertical dashed line from near the top to near the bottom of the chart
+  TimeMarkerPainters.paintVerticalTimeLine(
+    canvas,
+    size,
+    anchor.dx,
+    color: lineColor,
+    dashed: true,
+  );
+
+  // Render text label at the bottom if provided (e.g., "1", "2")
   if (marker.text != null && marker.text!.isNotEmpty) {
-    TimeMarkerPainters.paintVerticalLineWithText(
-      canvas,
-      size,
-      marker.text!,
-      anchor,
-      lineColor,
-      zoom,
-      dashed: true,
-    );
-  } else {
-    // Draw full vertical dashed line from near the top to near the bottom of the chart
-    TimeMarkerPainters.paintVerticalTimeLine(
+    TimeMarkerPainters.paintBottomText(
       canvas,
       size,
       anchor.dx,
-      color: lineColor,
-      dashed: true,
+      marker.text!,
+      zoom,
+      lineColor,
     );
   }
 }

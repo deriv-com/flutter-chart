@@ -128,6 +128,13 @@ enum MarkerType {
   /// line to indicate checkpoint sequence. Used for intermediate evaluation
   /// points in contracts like Double Rise/Fall where multiple checkpoints need to be visualized.
   checkpointLine,
+
+  /// Represents a compact solid checkpoint vertical line.
+  ///
+  /// Draws a short, solid vertical line segment to indicate
+  /// a checkpoint time in a condensed layout. Similar to startTimeCollapsed and exitTimeCollapsed,
+  /// but used for intermediate checkpoints in multi-stage contracts.
+  checkpointLineCollapsed,
 }
 
 /// A specialized marker class for displaying various types of markers on a financial chart.

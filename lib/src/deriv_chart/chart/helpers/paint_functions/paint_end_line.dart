@@ -11,11 +11,11 @@ import 'package:flutter/material.dart';
 /// This function draws a vertical dashed line at the specified horizontal position,
 /// extending from near the top of the chart to near the bottom. The line visually
 /// marks the end time of a contract or trade on a financial chart. It also renders
-/// a flag icon near the bottom of the line.
+/// a flag icon near the bottom of the line or displays text if provided in the marker.
 ///
 /// The function performs two main rendering operations:
 /// 1. Draws a vertical dashed line using the `paintVerticalDashedLine` helper function
-/// 2. Renders a flag icon near the bottom of the chart
+/// 2. Renders a flag icon near the bottom of the chart or text if provided in the marker
 ///
 /// The vertical line uses the background color from the provided style, and the icon
 /// is styled according to the marker style with appropriate scaling based on the zoom factor.
@@ -48,35 +48,33 @@ void paintEndLine(
 
   final Color lineColor = markerColor.withOpacity(opacity);
 
-  // If marker has text, render it inline at the anchor level
-  if (marker.text != null && marker.text!.isNotEmpty) {
-    TimeMarkerPainters.paintVerticalLineWithText(
-      canvas,
-      size,
-      marker.text!,
-      anchor,
-      lineColor,
-      zoom,
-      dashed: true,
-    );
-  } else {
-    // Draw full vertical line from near the top of the chart to near the bottom
-    TimeMarkerPainters.paintVerticalTimeLine(
-      canvas,
-      size,
-      anchor.dx,
-      color: lineColor,
-      dashed: true,
-    );
-  }
-
-  // Render the end icon (flag) at the bottom of the line following MarkerStyle
-  TimeMarkerPainters.paintBottomIcon(
+  // Draw full vertical line from near the top of the chart to near the bottom
+  TimeMarkerPainters.paintVerticalTimeLine(
     canvas,
     size,
     anchor.dx,
-    style.endTimeIcon,
-    zoom,
-    lineColor,
+    color: lineColor,
+    dashed: true,
   );
+
+  // Render text at the bottom if provided, otherwise render the flag icon
+  if (marker.text != null && marker.text!.isNotEmpty) {
+    TimeMarkerPainters.paintBottomText(
+      canvas,
+      size,
+      anchor.dx,
+      marker.text!,
+      zoom,
+      lineColor,
+    );
+  } else {
+    TimeMarkerPainters.paintBottomIcon(
+      canvas,
+      size,
+      anchor.dx,
+      style.endTimeIcon,
+      zoom,
+      lineColor,
+    );
+  }
 }

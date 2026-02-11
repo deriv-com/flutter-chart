@@ -379,6 +379,17 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
             opacity,
           );
           break;
+        case MarkerType.checkpointLineCollapsed:
+          _drawCollapsedTimeLine(
+            canvas,
+            marker,
+            anchor,
+            style,
+            theme,
+            zoom,
+            opacity,
+          );
+          break;
         case MarkerType.profitAndLossLabel:
           _drawProfitAndLossLabel(
             canvas,
