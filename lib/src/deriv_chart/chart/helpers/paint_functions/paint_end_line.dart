@@ -6,28 +6,29 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 
-/// Renders a vertical dashed line with a flag icon to indicate the end time of a contract.
+/// Renders a vertical dashed line with a flag icon or text at the bottom to indicate the end time of a contract.
 ///
 /// This function draws a vertical dashed line at the specified horizontal position,
 /// extending from near the top of the chart to near the bottom. The line visually
-/// marks the end time of a contract or trade on a financial chart. It also renders
-/// a flag icon near the bottom of the line or displays text if provided in the marker.
+/// marks the end time of a contract or trade on a financial chart. If the marker has
+/// text, it renders the text at the bottom; otherwise, it renders a flag icon.
 ///
 /// The function performs two main rendering operations:
-/// 1. Draws a vertical dashed line using the `paintVerticalDashedLine` helper function
-/// 2. Renders a flag icon near the bottom of the chart or text if provided in the marker
+/// 1. Draws a vertical dashed line using the `paintVerticalTimeLine` helper function
+/// 2. Renders either text or a flag icon at the bottom of the chart (conditionally)
 ///
-/// The vertical line uses the background color from the provided style, and the icon
-/// is styled according to the marker style with appropriate scaling based on the zoom factor.
+/// The vertical line uses the color determined by the marker's direction or explicit color,
+/// and the icon/text is styled according to the marker style with appropriate scaling based
+/// on the zoom factor.
 ///
-/// The [canvas] is the canvas on which to paint the line and icon.
+/// The [canvas] is the canvas on which to paint the line and icon/text.
 /// The [size] is the size of the drawing area, used to determine the vertical extent of the line.
-/// The [marker] is the chart marker (kept for signature parity with start line painter).
+/// The [marker] is the chart marker used to determine line color and optional text.
 /// The [anchor] is the position on the canvas where the line should be anchored.
 /// The [style] is the marker style, which provides colors and icon styling information.
 /// The [theme] is the chart theme, which provides color schemes and styling.
-/// The [zoom] is the zoom factor to apply to icon size and other dimensions.
-/// The [opacity] is the opacity to apply to the line and icon.
+/// The [zoom] is the zoom factor to apply to icon/text size and other dimensions.
+/// The [opacity] is the opacity to apply to the line and icon/text.
 /// The [props] contains additional marker properties that can affect rendering.
 void paintEndLine(
   Canvas canvas,

@@ -123,10 +123,10 @@ enum MarkerType {
 
   /// Represents a checkpoint line marker for multi-stage contracts.
   ///
-  /// This marker renders as a vertical dashed line similar to start/end time markers,
-  /// but without a bottom icon. It can display optional text (e.g., "1", "2") on the
-  /// line to indicate checkpoint sequence. Used for intermediate evaluation
-  /// points in contracts like Double Rise/Fall where multiple checkpoints need to be visualized.
+  /// This marker renders as a vertical dashed line similar to start/end time markers.
+  /// It can display optional text (e.g., "1", "2") at the bottom of the line to indicate
+  /// checkpoint sequence. Used for intermediate evaluation points in contracts like
+  /// Double Rise/Fall where multiple checkpoints need to be visualized.
   checkpointLine,
 
   /// Represents a compact solid checkpoint vertical line.
