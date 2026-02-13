@@ -120,10 +120,10 @@ class _FullscreenChartState extends State<FullscreenChart> {
 
   late PrefServiceCache _prefService;
 
-  TradeType _currentTradeType = TradeType.multipliers;
+  TradeType _currentTradeType = TradeType.riseFall;
 
   // Dynamic marker duration in milliseconds
-  int _markerDurationMs = 1000 * 60 * 1 * 1;
+  int _markerDurationMs = 1000 * 5 * 1 * 1;
   // PnL label lifetime after marker end in milliseconds
   static const int _pnlLabelLifetimeMs = 4000;
 
@@ -146,7 +146,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
     await _prefService.setDefaultValues(<String, dynamic>{
       'appID': defaultAppID,
       'endpoint': defaultEndpoint,
-      'tradeType': TradeType.multipliers.value,
+      'tradeType': TradeType.riseFall.value,
     });
 
     // Load current trade type from preferences
@@ -886,6 +886,19 @@ class _FullscreenChartState extends State<FullscreenChart> {
             markerType: MarkerType.entrySpot,
           ),
           ChartMarker(
+            epoch: (endEpoch - marker.epoch) ~/ 2 + marker.epoch,
+            quote: marker.quote,
+            direction: marker.direction,
+            text: '1',
+            markerType: MarkerType.checkpointLine,
+          ),
+          ChartMarker(
+            epoch: (endEpoch - marker.epoch) ~/ 2 + marker.epoch,
+            quote: marker.quote,
+            direction: marker.direction,
+            markerType: MarkerType.checkpointLineCollapsed,
+          ),
+          ChartMarker(
             epoch: endEpoch,
             quote: marker.quote,
             direction: marker.direction,
@@ -895,6 +908,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
             epoch: endEpoch,
             quote: marker.quote,
             direction: marker.direction,
+            text: '2',
             markerType: MarkerType.exitTime,
           ),
           ChartMarker(
