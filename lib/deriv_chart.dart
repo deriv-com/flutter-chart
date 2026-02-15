@@ -148,6 +148,7 @@ export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/ac
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/digit_marker_icon_painter.dart';
 export 'src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/tick_marker_icon_painter.dart';
 export 'src/deriv_chart/chart/helpers/chart.dart';
+export 'src/deriv_chart/chart/helpers/paint_functions/paint_checkpoint_line.dart';
 export 'src/deriv_chart/chart/helpers/paint_functions/paint_end_marker.dart';
 export 'src/deriv_chart/chart/helpers/paint_functions/paint_start_line.dart';
 export 'src/deriv_chart/chart/helpers/paint_functions/paint_start_marker.dart';

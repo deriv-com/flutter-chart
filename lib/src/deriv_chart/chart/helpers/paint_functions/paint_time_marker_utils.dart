@@ -23,12 +23,15 @@ class TimeMarkerPainters {
     double dashWidth = 2,
     double dashSpace = 2,
   }) {
+    final double lineStartY = topPadding;
+    final double lineEndY = size.height - bottomPadding;
+
     if (dashed) {
       paintVerticalDashedLine(
         canvas,
         x,
-        topPadding,
-        size.height - bottomPadding,
+        lineStartY,
+        lineEndY,
         color,
         strokeWidth,
         dashWidth: dashWidth,
@@ -38,12 +41,7 @@ class TimeMarkerPainters {
       final Paint paint = Paint()
         ..color = color
         ..strokeWidth = strokeWidth;
-
-      canvas.drawLine(
-        Offset(x, topPadding),
-        Offset(x, size.height - bottomPadding),
-        paint,
-      );
+      canvas.drawLine(Offset(x, lineStartY), Offset(x, lineEndY), paint);
     }
   }
 
@@ -76,6 +74,37 @@ class TimeMarkerPainters {
       painter: iconPainter,
       anchor: Offset(x, size.height),
       anchorAlignment: Alignment.bottomCenter,
+    );
+  }
+
+  /// Paints [text] centered at the bottom (a few pixels above) of the chart at [x].
+  ///
+  /// This is similar to [paintBottomIcon] but for text labels (e.g., "1", "2").
+  /// Used for checkpoint markers and exit time markers.
+  static void paintBottomText(
+    Canvas canvas,
+    Size size,
+    double x,
+    String text,
+    double zoom,
+    Color color,
+  ) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: TextStyle(
+          color: color,
+          fontSize: 14 * zoom,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    paintWithTextPainter(
+      canvas,
+      painter: textPainter,
+      anchor: Offset(x, size.height - 24 * zoom / 2),
     );
   }
 }

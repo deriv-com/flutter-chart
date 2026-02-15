@@ -42,8 +42,8 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
   /// when rendering price values. This affects how the last digit is extracted and
   /// displayed in tick markers.
   ///
-  /// @param pipSize The number of decimal places to display for price values.
-  ///                Default is 4, which means prices will be shown with 4 decimal places.
+  /// The [pipSize] parameter determines the number of decimal places to display for price values.
+  /// Default is 4, which means prices will be shown with 4 decimal places.
   DigitMarkerIconPainter({this.pipSize = 4});
 
   /// The number of decimal places to display for price values.
@@ -65,14 +65,14 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
   /// 2. Calculates the opacity based on marker positions
   /// 3. Delegates the rendering of individual markers to specialized methods
   ///
-  /// @param canvas The canvas on which to paint.
-  /// @param size The size of the drawing area.
-  /// @param theme The chart's theme, which provides colors and styles.
-  /// @param markerGroup The group of markers to render.
-  /// @param epochToX A function that converts epoch timestamps to X coordinates.
-  /// @param quoteToY A function that converts price quotes to Y coordinates.
-  /// @param painterProps Properties that affect how markers are rendered.
-  /// @param animationInfo Information about any ongoing animations.
+  /// The [canvas] is the canvas on which to paint.
+  /// The [size] is the size of the drawing area.
+  /// The [theme] is the chart's theme, which provides colors and styles.
+  /// The [markerGroup] is the group of markers to render.
+  /// The [epochToX] is a function that converts epoch timestamps to X coordinates.
+  /// The [quoteToY] is a function that converts price quotes to Y coordinates.
+  /// The [painterProps] contains properties that affect how markers are rendered.
+  /// The [animationInfo] contains information about any ongoing animations.
   @override
   void paintMarkerGroup(
     Canvas canvas,
@@ -122,14 +122,15 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
   /// (start, exit, tick) with their specific visual representations. It delegates
   /// to specialized methods for each marker type.
   ///
-  /// @param canvas The canvas on which to paint.
-  /// @param size The size of the drawing area.
-  /// @param theme The chart's theme, which provides colors and styles.
-  /// @param marker The marker to render.
-  /// @param anchor The position on the canvas where the marker should be rendered.
-  /// @param style The style to apply to the marker.
-  /// @param zoom The current zoom level of the chart.
-  /// @param opacity The opacity to apply to the marker.
+  /// The [canvas] is the canvas on which to paint.
+  /// The [size] is the size of the drawing area.
+  /// The [theme] is the chart's theme, which provides colors and styles.
+  /// The [marker] is the marker to render.
+  /// The [anchor] is the position on the canvas where the marker should be rendered.
+  /// The [style] is the style to apply to the marker.
+  /// The [zoom] is the current zoom level of the chart.
+  /// The [opacity] is the opacity to apply to the marker.
+  /// The [props] contains additional marker properties that can affect rendering.
   void _drawMarker(
       Canvas canvas,
       Size size,
@@ -142,7 +143,8 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
       MarkerProps props) {
     switch (marker.markerType) {
       case MarkerType.startTime:
-        paintStartLine(canvas, size, marker, anchor, style, theme, zoom, props);
+        paintStartLine(
+            canvas, size, marker, anchor, style, theme, zoom, opacity, props);
         break;
 
       case MarkerType.start:
@@ -178,13 +180,13 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
   /// This private method draws a circular marker with the last digit of the price
   /// displayed inside it. It's used for both regular tick markers and exit markers.
   ///
-  /// @param canvas The canvas on which to paint.
-  /// @param marker The marker to render.
-  /// @param anchor The position on the canvas where the marker should be rendered.
-  /// @param style The style to apply to the marker.
-  /// @param paint The paint object to use for drawing.
-  /// @param fontColor The color to use for the digit text.
-  /// @param zoom The current zoom level of the chart.
+  /// The [canvas] is the canvas on which to paint.
+  /// The [marker] is the marker to render.
+  /// The [anchor] is the position on the canvas where the marker should be rendered.
+  /// The [style] is the style to apply to the marker.
+  /// The [paint] is the paint object to use for drawing.
+  /// The [fontColor] is the color to use for the digit text.
+  /// The [zoom] is the current zoom level of the chart.
   void _drawTick(Canvas canvas, Marker marker, Offset anchor, MarkerStyle style,
       Paint paint, Color fontColor, double zoom) {
     canvas
@@ -226,14 +228,14 @@ class DigitMarkerIconPainter extends MarkerGroupIconPainter {
   /// the contract, with an optional text label. The marker's opacity is adjusted
   /// based on its position relative to other markers.
   ///
-  /// @param canvas The canvas on which to paint.
-  /// @param size The size of the drawing area.
-  /// @param theme The chart's theme, which provides colors and styles.
-  /// @param marker The marker to render.
-  /// @param anchor The position on the canvas where the marker should be rendered.
-  /// @param style The style to apply to the marker.
-  /// @param zoom The current zoom level of the chart.
-  /// @param opacity The opacity to apply to the marker.
+  /// The [canvas] is the canvas on which to paint.
+  /// The [size] is the size of the drawing area.
+  /// The [theme] is the chart's theme, which provides colors and styles.
+  /// The [marker] is the marker to render.
+  /// The [anchor] is the position on the canvas where the marker should be rendered.
+  /// The [style] is the style to apply to the marker.
+  /// The [zoom] is the current zoom level of the chart.
+  /// The [opacity] is the opacity to apply to the marker.
   void _drawStartPoint(
       Canvas canvas,
       Size size,

@@ -1,5 +1,6 @@
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/theme/painting_styles/grid_style.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// A class that paints a lable on the Y axis of grid.
@@ -10,6 +11,10 @@ class YGridLabelPainter extends CustomPainter {
     required this.pipSize,
     required this.quoteToCanvasY,
     required this.style,
+    required this.topBoundQuote,
+    required this.bottomBoundQuote,
+    required this.topPadding,
+    required this.bottomPadding,
   });
 
   /// Number of digits after decimal point in price.
@@ -24,6 +29,26 @@ class YGridLabelPainter extends CustomPainter {
   /// The style of chart's grid.
 
   final GridStyle style;
+
+  /// The top bound quote used for repaint optimization.
+  /// Note: This value is already captured by [quoteToCanvasY] closure
+  /// and is tracked separately to detect when repainting is needed.
+  final double topBoundQuote;
+
+  /// The bottom bound quote used for repaint optimization.
+  /// Note: This value is already captured by [quoteToCanvasY] closure
+  /// and is tracked separately to detect when repainting is needed.
+  final double bottomBoundQuote;
+
+  /// The top padding used for repaint optimization.
+  /// Note: This value is already captured by [quoteToCanvasY] closure
+  /// and is tracked separately to detect when repainting is needed.
+  final double topPadding;
+
+  /// The bottom padding used for repaint optimization.
+  /// Note: This value is already captured by [quoteToCanvasY] closure
+  /// and is tracked separately to detect when repainting is needed.
+  final double bottomPadding;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -41,7 +66,14 @@ class YGridLabelPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(YGridLabelPainter oldDelegate) => true;
+  bool shouldRepaint(YGridLabelPainter oldDelegate) =>
+      !listEquals(gridLineQuotes, oldDelegate.gridLineQuotes) ||
+      pipSize != oldDelegate.pipSize ||
+      style != oldDelegate.style ||
+      topBoundQuote != oldDelegate.topBoundQuote ||
+      bottomBoundQuote != oldDelegate.bottomBoundQuote ||
+      topPadding != oldDelegate.topPadding ||
+      bottomPadding != oldDelegate.bottomPadding;
 
   @override
   bool shouldRebuildSemantics(YGridLabelPainter oldDelegate) => false;
