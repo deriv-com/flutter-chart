@@ -426,7 +426,7 @@ _controller.scale(100);
 
 For more detailed information, check out these documentation files:
 
-- [How Chart Library Works](doc/how_chart_lib_works.md)
+- [How Chart Library Works](doc/core_concepts/how_chart_lib_works.md)
 - [Data Series](doc/data_series.png)
 - [Data Painters](doc/data_painters.png)
 - [Drawing Tools](doc/drawing_tools.md)
