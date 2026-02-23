@@ -116,6 +116,8 @@ class DerivChart extends StatefulWidget {
   final ChartAxisConfig chartAxisConfig;
 
   /// Whether the chart should be showing live data or not.
+  /// In case of being true the chart will keep auto-scrolling when its visible
+  /// area is on the newest ticks/candles.
   final bool isLive;
 
   /// Starts in data fit mode and adds a data-fit button.
@@ -131,9 +133,11 @@ class DerivChart extends StatefulWidget {
   final double? msPerPx;
 
   /// Specifies the minimum interval width
+  /// that is used for calculating the maximum msPerPx.
   final double? minIntervalWidth;
 
   /// Specifies the maximum interval width
+  /// that is used for calculating the maximum msPerPx.
   final double? maxIntervalWidth;
 
   /// Padding around data used in data-fit mode.
@@ -149,6 +153,7 @@ class DerivChart extends StatefulWidget {
   final bool? showCurrentTickBlinkAnimation;
 
   /// Fraction of the chart's height taken by top or bottom padding.
+  /// Quote scaling (drag on quote area) is controlled by this variable.
   final double? verticalPaddingFraction;
 
   /// Specifies the margin to prevent overlap.
@@ -164,6 +169,12 @@ class DerivChart extends StatefulWidget {
   final Color? loadingAnimationColor;
 
   /// Chart's indicators
+  ///
+  /// The configs of [indicatorsRepo] should be unique on the property
+  /// [IndicatorConfig.title] and [IndicatorConfig.number] combined.
+  ///
+  /// Method [AddOnsRepositoryConfigExtension.getNumberForNewAddOn]
+  /// can be used to get a unique number for a new indicator.
   final Repository<IndicatorConfig>? indicatorsRepo;
 
   /// Chart's drawings
@@ -173,9 +184,19 @@ class DerivChart extends StatefulWidget {
   final DrawingTools? drawingTools;
 
   /// The variant of the crosshair to be used.
+  /// This is used to determine the type of crosshair to display.
+  /// The default is [CrosshairVariant.smallScreen].
+  /// [CrosshairVariant.largeScreen] is mostly for web.
   final CrosshairVariant crosshairVariant;
 
   /// Defines the behaviour that interactive layer should have.
+  ///
+  /// Interactive layer is the layer on top of the chart responsible for
+  /// handling components that user can interact with them. such as cross-hair,
+  /// drawing tools, etc.
+  ///
+  /// If not set it will be set internally to [InteractiveLayerDesktopBehaviour]
+  /// on web and [InteractiveLayerMobileBehaviour] on mobile or other platforms.
   final InteractiveLayerBehaviour? interactiveLayerBehaviour;
 
   @override
