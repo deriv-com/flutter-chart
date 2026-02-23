@@ -13,5 +13,4 @@ library core_chart;
 export 'package:deriv_chart/src/deriv_chart/deriv_chart_lite.dart';
 
 // Re-export everything else from the full library except DerivChart itself.
-export 'package:deriv_chart/deriv_chart.dart'
-    hide DerivChart;
+export 'package:deriv_chart/deriv_chart.dart' hide DerivChart;
