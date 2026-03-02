@@ -135,6 +135,17 @@ enum MarkerType {
   /// a checkpoint time in a condensed layout. Similar to startTimeCollapsed and exitTimeCollapsed,
   /// but used for intermediate checkpoints in multi-stage contracts.
   checkpointLineCollapsed,
+
+  /// Represents the spot price at a checkpoint time line for multi-stage contracts.
+  ///
+  /// This marker indicates the price value at the moment a checkpoint is evaluated.
+  /// Visually identical to [exitSpot] (rendered as a solid filled circle), but
+  /// semantically distinct — it marks an intermediate checkpoint price rather
+  /// than the final exit price of a contract.
+  ///
+  /// Used in multi-stage contracts (e.g., Double Rise/Fall) where each checkpoint
+  /// line has a corresponding price spot that needs to be highlighted.
+  checkpointSpot,
 }
 
 /// A specialized marker class for displaying various types of markers on a financial chart.

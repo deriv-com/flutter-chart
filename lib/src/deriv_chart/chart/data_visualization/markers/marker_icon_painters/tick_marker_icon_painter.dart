@@ -333,7 +333,10 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           _drawEntrySpot(canvas, marker, anchor, style, theme, zoom, opacity);
           break;
         case MarkerType.exitSpot:
-          _drawExitSpot(canvas, marker, anchor, style, theme, zoom, opacity);
+          _drawSpotMarker(canvas, marker, anchor, style, theme, zoom, opacity);
+          break;
+        case MarkerType.checkpointSpot:
+          _drawSpotMarker(canvas, marker, anchor, style, theme, zoom, opacity);
           break;
         case MarkerType.exit:
           canvas.drawCircle(
@@ -818,23 +821,20 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     canvas.drawCircle(anchor, 3 * zoom, strokePaint);
   }
 
-  /// Draws an exit spot marker as a filled circle.
+  /// Draws a spot marker as a filled circle.
   ///
-  /// The exit spot is rendered as a solid filled circle with a color determined by:
+  /// The circle color is determined by:
   /// - The marker's explicit color if provided (marker.color)
   /// - Or the direction-based color from the theme (green for up, red for down)
   ///
-  /// This is used for checkpoint markers in multi-stage contracts like Double Rise/Fall,
-  /// where each checkpoint has an exit spot indicating whether the checkpoint passed or failed.
-  ///
   /// The [canvas] is the canvas on which to paint.
   /// The [marker] is the chart marker containing direction and optional color.
-  /// The [anchor] is the position where the exit spot should be drawn.
+  /// The [anchor] is the position where the spot should be drawn.
   /// The [style] is the marker style (unused but kept for signature consistency).
   /// The [theme] is the chart theme providing direction-based colors.
   /// The [zoom] is the zoom factor to scale the circle radius.
   /// The [opacity] is the opacity to apply to the marker.
-  void _drawExitSpot(Canvas canvas, ChartMarker marker, Offset anchor,
+  void _drawSpotMarker(Canvas canvas, ChartMarker marker, Offset anchor,
       MarkerStyle style, ChartTheme theme, double zoom, double opacity) {
     // Determine color from marker.color or direction
     final Color markerColor = marker.color ??
