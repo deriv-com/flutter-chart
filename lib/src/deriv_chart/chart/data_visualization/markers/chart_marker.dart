@@ -187,6 +187,7 @@ class ChartMarker extends Marker {
   /// The [text] is the text to display on or near the marker.
   /// The [color] is the color of the marker.
   /// The [hasReducedOpacity] determines whether the marker should be rendered with reduced opacity by 50%.
+  /// The [displayOffset] is an optional pixel offset applied to the marker's rendered position.
   ChartMarker({
     required int epoch,
     required double quote,
@@ -196,6 +197,7 @@ class ChartMarker extends Marker {
     this.text,
     this.color,
     this.hasReducedOpacity = false,
+    this.displayOffset = Offset.zero,
   }) : super(epoch: epoch, quote: quote, direction: direction, onTap: onTap);
 
   /// The type of marker, which determines its role and how it's rendered on the chart.
@@ -232,4 +234,16 @@ class ChartMarker extends Marker {
   ///
   /// Defaults to false (full opacity).
   final bool hasReducedOpacity;
+
+  /// An optional pixel offset applied to the marker's rendered position on the canvas.
+  ///
+  /// Defaults to [Offset.zero] (no offset). The offset is applied **after** the
+  /// epoch/quote → canvas coordinate conversion, so it is expressed in logical
+  /// pixels and is independent of zoom level.
+  ///
+  /// Use this to nudge a marker visually without changing its underlying
+  /// epoch/quote data. For example, set `displayOffset: Offset(0, -8)` on a
+  /// `profitAndLossLabel` marker to position the pill 8 pixels above the exit
+  /// spot dot when they share the same quote value and would otherwise overlap.
+  final Offset displayOffset;
 }

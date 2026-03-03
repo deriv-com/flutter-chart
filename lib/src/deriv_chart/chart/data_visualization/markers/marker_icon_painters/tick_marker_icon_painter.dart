@@ -14,7 +14,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/theme/quill_icons.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
@@ -36,8 +35,7 @@ import 'dart:math' as math;
 /// - Start markers are shown as location pins with optional labels
 /// - Entry points are shown as circles with a distinctive border
 /// - Tick points are shown as small dots
-/// - Exit points are shown as circles
-/// - End points are shown as flag icons
+/// - Exit and end points are shown as circles
 ///
 /// This class is part of the chart's visualization pipeline and works in conjunction
 /// with `MarkerGroupPainter` to render marker groups on the chart canvas.
@@ -133,12 +131,14 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       final double markerOpacity =
           marker.hasReducedOpacity ? opacity * 0.5 : opacity;
 
+      final Offset markerCenter = center + marker.displayOffset;
+
       _drawMarker(
           canvas,
           size,
           theme,
           marker,
-          center,
+          markerCenter,
           markerGroup.style,
           1.2,
           painterProps.granularity,
@@ -449,9 +449,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
 
     final double pillHeight = 32 * zoom;
     final double radius = pillHeight / 2;
-    final double iconSize = 24 * zoom;
-    const double leftPadding = 8;
-    const double spacing = 4;
+    const double leftPadding = 16;
     const double rightPadding = 16;
 
     final TextStyle textStyle = theme
@@ -467,8 +465,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     final String text = markerGroup.profitAndLossText ?? '';
     final TextPainter textPainter = makeTextPainter(text, textStyle);
 
-    final double contentWidth =
-        leftPadding + iconSize + spacing + textPainter.width + rightPadding;
+    final double contentWidth = leftPadding + textPainter.width + rightPadding;
 
     Rect pillRect;
     if (fixedLeftAligned) {
@@ -500,27 +497,10 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       ..strokeWidth = 1;
     canvas.drawRRect(rrect, strokePaint);
 
-    final TextPainter iconPainter = TextPainter(
-      text: TextSpan(
-        text: String.fromCharCode(QuillIcons.flag_checkered.codePoint),
-        style: TextStyle(
-          fontFamily: QuillIcons.kFontFam,
-          fontSize: iconSize,
-          package: QuillIcons.kFontPkg,
-          color: textIconColor.withOpacity(opacity),
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-
-    final double iconX = pillRect.left + leftPadding;
-    final double iconY = anchor.dy - iconPainter.height / 2;
-    iconPainter.paint(canvas, Offset(iconX, iconY));
-
     paintWithTextPainter(
       canvas,
       painter: textPainter,
-      anchor: Offset(iconX + iconSize + spacing, anchor.dy),
+      anchor: Offset(pillRect.left + leftPadding, anchor.dy),
       anchorAlignment: Alignment.centerLeft,
     );
 
