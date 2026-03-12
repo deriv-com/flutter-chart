@@ -253,11 +253,13 @@ abstract class DataSeries<T extends Tick> extends Series {
           oldSeries.entries != null &&
           entries!.last == oldSeries.entries!.last) {
         prevLastEntry = oldSeries.prevLastEntry as IndexedEntry<T>?;
-      } else if (oldSeries.entries != null) {
+      } else if (oldSeries.entries != null && _isSameSeries(oldSeries)) {
         prevLastEntry = IndexedEntry<T>(
           oldSeries.entries!.last as T,
           oldSeries.entries!.length - 1,
         );
+        updated = true;
+      } else {
         updated = true;
       }
     } else {
@@ -286,6 +288,24 @@ abstract class DataSeries<T extends Tick> extends Series {
   @protected
   bool isOldDataAvailable(covariant DataSeries<Tick>? oldSeries) =>
       oldSeries?.entries?.isNotEmpty ?? false;
+
+  /// Returns true when [oldSeries] and this series share the same data source,
+  /// i.e. this series is an incremental update of [oldSeries] rather than an
+  /// entirely new dataset (e.g. a market/symbol switch).
+  ///
+  /// Compares the first entries by epoch and quote: for an incremental update
+  /// (new tick, new candle) the beginning of the data is unchanged, so the
+  /// first entries are identical. For a market switch both datasets cover the
+  /// same time window, but the prices differ, so the first entries will not
+  /// match and [prevLastEntry] must not carry over.
+  bool _isSameSeries(DataSeries<Tick> oldSeries) {
+    if (input.isEmpty || (oldSeries.entries?.isEmpty ?? true)) {
+      return false;
+    }
+    final T newFirst = input.first;
+    final Tick oldFirst = oldSeries.entries!.first;
+    return newFirst.epoch == oldFirst.epoch && newFirst.quote == oldFirst.quote;
+  }
 
   @override
   // ignore: avoid_renaming_method_parameters
