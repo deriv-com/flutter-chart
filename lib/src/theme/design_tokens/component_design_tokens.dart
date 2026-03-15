@@ -10,774 +10,204 @@ import 'package:deriv_chart/src/theme/design_tokens/dark_theme_design_tokens.dar
 class ComponentDesignTokens {
   ComponentDesignTokens._();
 
-  /// componentTextIconNormalProminent with value: {semantic.color.slate.solid.textIcon.normal.highest}
-  static const componentTextIconNormalProminentLight =
-      LightThemeDesignTokens.semanticColorSlateSolidTextIconNormalHighest;
-
-  /// componentTextIconNormalProminent with value: {semantic.color.slate.solid.textIcon.normal.highest}
-  static const componentTextIconNormalProminentDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidTextIconNormalHighest;
-
-  /// componentTextIconNormalDefault with value: {semantic.color.monochrome.textIcon.normal.high}
-  static final componentTextIconNormalDefaultLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalHigh;
-
-  /// componentTextIconNormalDefault with value: {semantic.color.monochrome.textIcon.normal.high}
-  static final componentTextIconNormalDefaultDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalHigh;
-
-  /// componentTextIconNormalSubtle with value: {semantic.color.monochrome.textIcon.normal.mid}
-  static final componentTextIconNormalSubtleLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalMid;
-
-  /// componentTextIconNormalSubtle with value: {semantic.color.monochrome.textIcon.normal.mid}
-  static final componentTextIconNormalSubtleDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalMid;
-
-  /// componentTextIconNormalDisabled with value: {semantic.color.monochrome.textIcon.normal.low}
-  static final componentTextIconNormalDisabledLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalLow;
-
-  /// componentTextIconNormalDisabled with value: {semantic.color.monochrome.textIcon.normal.low}
-  static final componentTextIconNormalDisabledDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalLow;
-
-  /// componentTextIconInverseProminent with value: {semantic.color.slate.solid.textIcon.inverse.highest}
-  static const componentTextIconInverseProminentLight =
-      LightThemeDesignTokens.semanticColorSlateSolidTextIconInverseHighest;
-
-  /// componentTextIconInverseProminent with value: {semantic.color.slate.solid.textIcon.inverse.highest}
-  static const componentTextIconInverseProminentDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidTextIconInverseHighest;
-
-  /// componentTextIconInverseDefault with value: {semantic.color.monochrome.textIcon.inverse.high}
-  static final componentTextIconInverseDefaultLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconInverseHigh;
-
-  /// componentTextIconInverseDefault with value: {semantic.color.monochrome.textIcon.inverse.high}
-  static final componentTextIconInverseDefaultDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconInverseHigh;
-
-  /// componentTextIconInverseSubtle with value: {semantic.color.monochrome.textIcon.inverse.mid}
-  static final componentTextIconInverseSubtleLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconInverseMid;
-
-  /// componentTextIconInverseSubtle with value: {semantic.color.monochrome.textIcon.inverse.mid}
-  static final componentTextIconInverseSubtleDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconInverseMid;
-
-  /// componentTextIconInverseDisabled with value: {semantic.color.monochrome.textIcon.inverse.low}
-  static final componentTextIconInverseDisabledLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconInverseLow;
-
-  /// componentTextIconInverseDisabled with value: {semantic.color.monochrome.textIcon.inverse.low}
-  static final componentTextIconInverseDisabledDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconInverseLow;
-
-  /// componentTextIconStaticProminentLight with value: {core.color.solid.slate.1400}
-  static const componentTextIconStaticProminentLight =
-      CoreDesignTokens.coreColorSolidSlate1400;
-
-  /// componentTextIconStaticDefaultLight with value: {semantic.color.monochrome.textIcon.static.blackHigh}
-  static final componentTextIconStaticDefaultLightLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconStaticBlackHigh;
-
-  /// componentTextIconStaticDefaultLight with value: {semantic.color.monochrome.textIcon.static.blackHigh}
-  static final componentTextIconStaticDefaultLightDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconStaticBlackHigh;
-
-  /// componentTextIconStaticSubtleLight with value: {semantic.color.monochrome.textIcon.static.blackMid}
-  static final componentTextIconStaticSubtleLightLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconStaticBlackMid;
-
-  /// componentTextIconStaticSubtleLight with value: {semantic.color.monochrome.textIcon.static.blackMid}
-  static final componentTextIconStaticSubtleLightDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconStaticBlackMid;
-
-  /// componentTextIconStaticDisabledLight with value: {semantic.color.monochrome.textIcon.static.blackLow}
-  static final componentTextIconStaticDisabledLightLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconStaticBlackLow;
-
-  /// componentTextIconStaticDisabledLight with value: {semantic.color.monochrome.textIcon.static.blackLow}
-  static final componentTextIconStaticDisabledLightDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconStaticBlackLow;
-
-  /// componentTextIconStaticProminentDark with value: {core.color.solid.slate.50}
-  static const componentTextIconStaticProminentDark =
-      CoreDesignTokens.coreColorSolidSlate50;
-
-  /// componentTextIconStaticDefaultDark with value: {core.color.opacity.white.600}
-  static final componentTextIconStaticDefaultDark =
-      CoreDesignTokens.coreColorOpacityWhite600;
-
-  /// componentTextIconStaticSubtleDark with value: {core.color.opacity.white.400}
-  static final componentTextIconStaticSubtleDark =
-      CoreDesignTokens.coreColorOpacityWhite400;
-
-  /// componentTextIconStaticDisabledDark with value: {core.color.opacity.white.300}
-  static final componentTextIconStaticDisabledDark =
-      CoreDesignTokens.coreColorOpacityWhite300;
-
-  /// componentTextIconStatusNormalInformation with value: {semantic.color.blue.solid.textIcon.normal.high}
-  static const componentTextIconStatusNormalInformationLight =
-      LightThemeDesignTokens.semanticColorBlueSolidTextIconNormalHigh;
-
-  /// componentTextIconStatusNormalInformation with value: {semantic.color.blue.solid.textIcon.normal.high}
-  static const componentTextIconStatusNormalInformationDark =
-      DarkThemeDesignTokens.semanticColorBlueSolidTextIconNormalHigh;
-
-  /// componentTextIconStatusNormalSuccess with value: {semantic.color.green.solid.textIcon.normal.high}
-  static const componentTextIconStatusNormalSuccessLight =
-      LightThemeDesignTokens.semanticColorGreenSolidTextIconNormalHigh;
-
-  /// componentTextIconStatusNormalSuccess with value: {semantic.color.green.solid.textIcon.normal.high}
-  static const componentTextIconStatusNormalSuccessDark =
-      DarkThemeDesignTokens.semanticColorGreenSolidTextIconNormalHigh;
-
-  /// componentTextIconStatusNormalWarning with value: {semantic.color.yellow.solid.textIcon.normal.high}
-  static const componentTextIconStatusNormalWarningLight =
-      LightThemeDesignTokens.semanticColorYellowSolidTextIconNormalHigh;
-
-  /// componentTextIconStatusNormalWarning with value: {semantic.color.yellow.solid.textIcon.normal.high}
-  static const componentTextIconStatusNormalWarningDark =
-      DarkThemeDesignTokens.semanticColorYellowSolidTextIconNormalHigh;
-
-  /// componentTextIconStatusNormalDanger with value: {semantic.color.red.solid.textIcon.normal.high}
-  static const componentTextIconStatusNormalDangerLight =
-      LightThemeDesignTokens.semanticColorRedSolidTextIconNormalHigh;
-
-  /// componentTextIconStatusNormalDanger with value: {semantic.color.red.solid.textIcon.normal.high}
-  static const componentTextIconStatusNormalDangerDark =
-      DarkThemeDesignTokens.semanticColorRedSolidTextIconNormalHigh;
-
-  /// componentTextIconStatusInverseInformation with value: {semantic.color.blue.solid.textIcon.inverse.high}
-  static const componentTextIconStatusInverseInformationLight =
-      LightThemeDesignTokens.semanticColorBlueSolidTextIconInverseHigh;
-
-  /// componentTextIconStatusInverseInformation with value: {semantic.color.blue.solid.textIcon.inverse.high}
-  static const componentTextIconStatusInverseInformationDark =
-      DarkThemeDesignTokens.semanticColorBlueSolidTextIconInverseHigh;
-
-  /// componentTextIconStatusInverseSuccess with value: {semantic.color.green.solid.textIcon.inverse.high}
-  static const componentTextIconStatusInverseSuccessLight =
-      LightThemeDesignTokens.semanticColorGreenSolidTextIconInverseHigh;
-
-  /// componentTextIconStatusInverseSuccess with value: {semantic.color.green.solid.textIcon.inverse.high}
-  static const componentTextIconStatusInverseSuccessDark =
-      DarkThemeDesignTokens.semanticColorGreenSolidTextIconInverseHigh;
-
-  /// componentTextIconStatusInverseWarning with value: {semantic.color.yellow.solid.textIcon.inverse.high}
-  static const componentTextIconStatusInverseWarningLight =
-      LightThemeDesignTokens.semanticColorYellowSolidTextIconInverseHigh;
-
-  /// componentTextIconStatusInverseWarning with value: {semantic.color.yellow.solid.textIcon.inverse.high}
-  static const componentTextIconStatusInverseWarningDark =
-      DarkThemeDesignTokens.semanticColorYellowSolidTextIconInverseHigh;
-
-  /// componentTextIconStatusInverseDanger with value: {semantic.color.red.solid.textIcon.inverse.high}
-  static const componentTextIconStatusInverseDangerLight =
-      LightThemeDesignTokens.semanticColorRedSolidTextIconInverseHigh;
-
-  /// componentTextIconStatusInverseDanger with value: {semantic.color.red.solid.textIcon.inverse.high}
-  static const componentTextIconStatusInverseDangerDark =
-      DarkThemeDesignTokens.semanticColorRedSolidTextIconInverseHigh;
-
-  /// componentTextIconStatusStaticInformationLight with value: {semantic.color.blue.solid.textIcon.static.high}
-  static const componentTextIconStatusStaticInformationLightLight =
-      LightThemeDesignTokens.semanticColorBlueSolidTextIconStaticHigh;
-
-  /// componentTextIconStatusStaticInformationLight with value: {semantic.color.blue.solid.textIcon.static.high}
-  static const componentTextIconStatusStaticInformationLightDark =
-      DarkThemeDesignTokens.semanticColorBlueSolidTextIconStaticHigh;
-
-  /// componentTextIconStatusStaticSuccessLight with value: {semantic.color.green.solid.textIcon.static.high}
-  static const componentTextIconStatusStaticSuccessLightLight =
-      LightThemeDesignTokens.semanticColorGreenSolidTextIconStaticHigh;
-
-  /// componentTextIconStatusStaticSuccessLight with value: {semantic.color.green.solid.textIcon.static.high}
-  static const componentTextIconStatusStaticSuccessLightDark =
-      DarkThemeDesignTokens.semanticColorGreenSolidTextIconStaticHigh;
-
-  /// componentTextIconStatusStaticWarningLight with value: {semantic.color.yellow.solid.textIcon.static.high}
-  static const componentTextIconStatusStaticWarningLightLight =
-      LightThemeDesignTokens.semanticColorYellowSolidTextIconStaticHigh;
-
-  /// componentTextIconStatusStaticWarningLight with value: {semantic.color.yellow.solid.textIcon.static.high}
-  static const componentTextIconStatusStaticWarningLightDark =
-      DarkThemeDesignTokens.semanticColorYellowSolidTextIconStaticHigh;
-
-  /// componentTextIconStatusStaticDangerLight with value: {semantic.color.red.solid.textIcon.static.high}
-  static const componentTextIconStatusStaticDangerLightLight =
-      LightThemeDesignTokens.semanticColorRedSolidTextIconStaticHigh;
-
-  /// componentTextIconStatusStaticDangerLight with value: {semantic.color.red.solid.textIcon.static.high}
-  static const componentTextIconStatusStaticDangerLightDark =
-      DarkThemeDesignTokens.semanticColorRedSolidTextIconStaticHigh;
-
-  /// componentTextIconStatusStaticInformationDark with value: {semantic.color.blue.solid.textIcon.static.low}
-  static const componentTextIconStatusStaticInformationDarkLight =
-      LightThemeDesignTokens.semanticColorBlueSolidTextIconStaticLow;
-
-  /// componentTextIconStatusStaticInformationDark with value: {semantic.color.blue.solid.textIcon.static.low}
-  static const componentTextIconStatusStaticInformationDarkDark =
-      DarkThemeDesignTokens.semanticColorBlueSolidTextIconStaticLow;
-
-  /// componentTextIconStatusStaticSuccessDark with value: {semantic.color.green.solid.textIcon.static.low}
-  static const componentTextIconStatusStaticSuccessDarkLight =
-      LightThemeDesignTokens.semanticColorGreenSolidTextIconStaticLow;
-
-  /// componentTextIconStatusStaticSuccessDark with value: {semantic.color.green.solid.textIcon.static.low}
-  static const componentTextIconStatusStaticSuccessDarkDark =
-      DarkThemeDesignTokens.semanticColorGreenSolidTextIconStaticLow;
-
-  /// componentTextIconStatusStaticWarningDark with value: {semantic.color.yellow.solid.textIcon.static.low}
-  static const componentTextIconStatusStaticWarningDarkLight =
-      LightThemeDesignTokens.semanticColorYellowSolidTextIconStaticLow;
-
-  /// componentTextIconStatusStaticWarningDark with value: {semantic.color.yellow.solid.textIcon.static.low}
-  static const componentTextIconStatusStaticWarningDarkDark =
-      DarkThemeDesignTokens.semanticColorYellowSolidTextIconStaticLow;
-
-  /// componentTextIconStatusStaticDangerDark with value: {semantic.color.red.solid.textIcon.static.low}
-  static const componentTextIconStatusStaticDangerDarkLight =
-      LightThemeDesignTokens.semanticColorRedSolidTextIconStaticLow;
-
-  /// componentTextIconStatusStaticDangerDark with value: {semantic.color.red.solid.textIcon.static.low}
-  static const componentTextIconStatusStaticDangerDarkDark =
-      DarkThemeDesignTokens.semanticColorRedSolidTextIconStaticLow;
-
-  /// componentHandleBg with value: {semantic.color.monochrome.surface.normal.midHigh}
-  static final componentHandleBgLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
-
-  /// componentHandleBg with value: {semantic.color.monochrome.surface.normal.midHigh}
-  static final componentHandleBgDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
-
-  /// componentHandleBorderRadius with value: {semantic.borderRadius.pill}
-  static const componentHandleBorderRadius =
-      CoreDesignTokens.semanticBorderRadiusPill;
-
-  /// componentHandleWidth with value: {core.size.2400}
-  static const componentHandleWidth = CoreDesignTokens.coreSize2400;
-
-  /// componentHandleHeight with value: {core.size.200}
-  static const componentHandleHeight = CoreDesignTokens.coreSize200;
-
-  /// componentSelectionControlIconSelectedHover with value: {semantic.color.monochrome.surface.normal.high}
-  static final componentSelectionControlIconSelectedHoverLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalHigh;
-
-  /// componentSelectionControlIconSelectedHover with value: {semantic.color.monochrome.surface.normal.high}
-  static final componentSelectionControlIconSelectedHoverDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalHigh;
-
-  /// componentSelectionControlIconSelectedActive with value: {semantic.color.monochrome.surface.normal.highest}
-  static final componentSelectionControlIconSelectedActiveLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalHighest;
-
-  /// componentSelectionControlIconSelectedActive with value: {semantic.color.monochrome.surface.normal.highest}
-  static final componentSelectionControlIconSelectedActiveDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalHighest;
-
-  /// componentSelectionControlSpacingGapSm with value: {semantic.spacing.gap.md}
-  static const componentSelectionControlSpacingGapSm =
-      CoreDesignTokens.semanticSpacingGapMd;
-
-  /// componentSelectionControlSpacingGapMd with value: {semantic.spacing.gap.md}
-  static const componentSelectionControlSpacingGapMd =
-      CoreDesignTokens.semanticSpacingGapMd;
-
-  /// componentTabBorderColorDefault with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentTabBorderColorDefaultLight =
-      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentTabBorderColorDefault with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentTabBorderColorDefaultDark =
-      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentTabBorderColorHover with value: {semantic.color.monochrome.border.normal.high}
-  static final componentTabBorderColorHoverLight =
-      LightThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
-
-  /// componentTabBorderColorHover with value: {semantic.color.monochrome.border.normal.high}
-  static final componentTabBorderColorHoverDark =
-      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
-
-  /// componentTabBorderColorActive with value: {semantic.color.monochrome.border.normal.highest}
-  static final componentTabBorderColorActiveLight =
-      LightThemeDesignTokens.semanticColorMonochromeBorderNormalHighest;
-
-  /// componentTabBorderColorActive with value: {semantic.color.monochrome.border.normal.highest}
-  static final componentTabBorderColorActiveDark =
-      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalHighest;
-
-  /// componentTabBorderColorSelected with value: {semantic.color.slate.solid.border.inverse.lowest}
-  static const componentTabBorderColorSelectedLight =
-      LightThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
-
-  /// componentTabBorderColorSelected with value: {semantic.color.slate.solid.border.inverse.lowest}
-  static const componentTabBorderColorSelectedDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
-
-  /// componentTabBorderColorDisabled with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentTabBorderColorDisabledLight =
-      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentTabBorderColorDisabled with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentTabBorderColorDisabledDark =
-      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentTabSpacingPaddingSm with value: {semantic.spacing.general.sm}
-  static const componentTabSpacingPaddingSm =
-      CoreDesignTokens.semanticSpacingGeneralSm;
-
-  /// componentTabSpacingPaddingMd with value: {semantic.spacing.general.md}
-  static const componentTabSpacingPaddingMd =
-      CoreDesignTokens.semanticSpacingGeneralMd;
-
-  /// componentTabSpacingPaddingLg with value: {semantic.spacing.general.lg}
-  static const componentTabSpacingPaddingLg =
-      CoreDesignTokens.semanticSpacingGeneralLg;
-
-  /// componentTabSpacingGapSm with value: {semantic.spacing.gap.sm}
-  static const componentTabSpacingGapSm = CoreDesignTokens.semanticSpacingGapSm;
-
-  /// componentTabSpacingGapMd with value: {semantic.spacing.gap.md}
-  static const componentTabSpacingGapMd = CoreDesignTokens.semanticSpacingGapMd;
-
-  /// componentTabHeightIconTopSm with value: {core.size.3200}
-  static const componentTabHeightIconTopSm = CoreDesignTokens.coreSize3200;
-
-  /// componentTabHeightIconTopMd with value: {core.size.3600}
-  static const componentTabHeightIconTopMd = CoreDesignTokens.coreSize3600;
-
-  /// componentTabHeightIconLeftSm with value: {core.size.1600}
-  static const componentTabHeightIconLeftSm = CoreDesignTokens.coreSize1600;
-
-  /// componentTabHeightIconLeftMd with value: {core.size.2400}
-  static const componentTabHeightIconLeftMd = CoreDesignTokens.coreSize2400;
-
-  /// componentTabHeightLabelOnlySm with value: {core.size.1600}
-  static const componentTabHeightLabelOnlySm = CoreDesignTokens.coreSize1600;
-
-  /// componentTabHeightLabelOnlyMd with value: {core.size.2400}
-  static const componentTabHeightLabelOnlyMd = CoreDesignTokens.coreSize2400;
-
-  /// componentFieldBgOutlineDefault with value: {semantic.color.slate.solid.surface.frame.low}
-  static const componentFieldBgOutlineDefaultLight =
+  /// componentAccordionBgDefault with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentAccordionBgDefaultLight =
       LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
 
-  /// componentFieldBgOutlineDefault with value: {semantic.color.slate.solid.surface.frame.low}
-  static const componentFieldBgOutlineDefaultDark =
+  /// componentAccordionBgDefault with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentAccordionBgDefaultDark =
       DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
 
-  /// componentFieldBgFillDefault with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentFieldBgFillDefaultLight =
+  /// componentAccordionBgHover with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentAccordionBgHoverLight =
       LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
 
-  /// componentFieldBgFillDefault with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentFieldBgFillDefaultDark =
+  /// componentAccordionBgHover with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentAccordionBgHoverDark =
       DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
 
-  /// componentFieldBgFillHover with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentFieldBgFillHoverLight =
+  /// componentAccordionBgActive with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentAccordionBgActiveLight =
       LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
 
-  /// componentFieldBgFillHover with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentFieldBgFillHoverDark =
+  /// componentAccordionBgActive with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentAccordionBgActiveDark =
       DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
 
-  /// componentFieldBgFillFocus with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentFieldBgFillFocusLight =
+  /// componentAccordionBgExpand with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentAccordionBgExpandLight =
       LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
 
-  /// componentFieldBgFillFocus with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentFieldBgFillFocusDark =
+  /// componentAccordionBgExpand with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentAccordionBgExpandDark =
       DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
 
-  /// componentFieldBgFillSuccessDefault with value: {semantic.color.green.opacity.surface.low}
-  static final componentFieldBgFillSuccessDefaultLight =
-      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
+  /// componentAccordionBorderRadius with value: {core.borderRadius.1200}
+  static const componentAccordionBorderRadius =
+      CoreDesignTokens.coreBorderRadius1200;
 
-  /// componentFieldBgFillSuccessDefault with value: {semantic.color.green.opacity.surface.low}
-  static final componentFieldBgFillSuccessDefaultDark =
-      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
+  /// componentAccordionBorderWidth with value: {core.borderWidth.100}
+  static const componentAccordionBorderWidth =
+      CoreDesignTokens.coreBorderWidth100;
 
-  /// componentFieldBgFillSuccessHover with value: {semantic.color.green.opacity.surface.midLow}
-  static final componentFieldBgFillSuccessHoverLight =
-      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceMidLow;
-
-  /// componentFieldBgFillSuccessHover with value: {semantic.color.green.opacity.surface.midLow}
-  static final componentFieldBgFillSuccessHoverDark =
-      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceMidLow;
-
-  /// componentFieldBgFillSuccessFocus with value: {semantic.color.green.opacity.surface.low}
-  static final componentFieldBgFillSuccessFocusLight =
-      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
-
-  /// componentFieldBgFillSuccessFocus with value: {semantic.color.green.opacity.surface.low}
-  static final componentFieldBgFillSuccessFocusDark =
-      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
-
-  /// componentFieldBgFillFailDefault with value: {semantic.color.red.opacity.surface.low}
-  static final componentFieldBgFillFailDefaultLight =
-      LightThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
-
-  /// componentFieldBgFillFailDefault with value: {semantic.color.red.opacity.surface.low}
-  static final componentFieldBgFillFailDefaultDark =
-      DarkThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
-
-  /// componentFieldBgFillFailHover with value: {semantic.color.red.opacity.surface.midLow}
-  static final componentFieldBgFillFailHoverLight =
-      LightThemeDesignTokens.semanticColorRedOpacitySurfaceMidLow;
-
-  /// componentFieldBgFillFailHover with value: {semantic.color.red.opacity.surface.midLow}
-  static final componentFieldBgFillFailHoverDark =
-      DarkThemeDesignTokens.semanticColorRedOpacitySurfaceMidLow;
-
-  /// componentFieldBgFillFailFocus with value: {semantic.color.red.opacity.surface.low}
-  static final componentFieldBgFillFailFocusLight =
-      LightThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
-
-  /// componentFieldBgFillFailFocus with value: {semantic.color.red.opacity.surface.low}
-  static final componentFieldBgFillFailFocusDark =
-      DarkThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
-
-  /// componentFieldAddonOutlineDefault with value: {semantic.color.slate.solid.surface.frame.mid}
-  static const componentFieldAddonOutlineDefaultLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameMid;
-
-  /// componentFieldAddonOutlineDefault with value: {semantic.color.slate.solid.surface.frame.mid}
-  static const componentFieldAddonOutlineDefaultDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameMid;
-
-  /// componentFieldAddonFillDefault with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentFieldAddonFillDefaultLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentFieldAddonFillDefault with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentFieldAddonFillDefaultDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentFieldAddonFillHover with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentFieldAddonFillHoverLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentFieldAddonFillHover with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentFieldAddonFillHoverDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentFieldAddonFillFocus with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentFieldAddonFillFocusLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentFieldAddonFillFocus with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentFieldAddonFillFocusDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentFieldAddonFillSuccessDefault with value: {semantic.color.green.opacity.surface.low}
-  static final componentFieldAddonFillSuccessDefaultLight =
-      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
-
-  /// componentFieldAddonFillSuccessDefault with value: {semantic.color.green.opacity.surface.low}
-  static final componentFieldAddonFillSuccessDefaultDark =
-      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
-
-  /// componentFieldAddonFillSuccessHover with value: {semantic.color.green.opacity.surface.midLow}
-  static final componentFieldAddonFillSuccessHoverLight =
-      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceMidLow;
-
-  /// componentFieldAddonFillSuccessHover with value: {semantic.color.green.opacity.surface.midLow}
-  static final componentFieldAddonFillSuccessHoverDark =
-      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceMidLow;
-
-  /// componentFieldAddonFillSuccessFocus with value: {semantic.color.green.opacity.surface.low}
-  static final componentFieldAddonFillSuccessFocusLight =
-      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
-
-  /// componentFieldAddonFillSuccessFocus with value: {semantic.color.green.opacity.surface.low}
-  static final componentFieldAddonFillSuccessFocusDark =
-      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
-
-  /// componentFieldAddonFillFailDefault with value: {semantic.color.red.opacity.surface.low}
-  static final componentFieldAddonFillFailDefaultLight =
-      LightThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
-
-  /// componentFieldAddonFillFailDefault with value: {semantic.color.red.opacity.surface.low}
-  static final componentFieldAddonFillFailDefaultDark =
-      DarkThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
-
-  /// componentFieldAddonFillFailHover with value: {semantic.color.red.opacity.surface.midLow}
-  static final componentFieldAddonFillFailHoverLight =
-      LightThemeDesignTokens.semanticColorRedOpacitySurfaceMidLow;
-
-  /// componentFieldAddonFillFailHover with value: {semantic.color.red.opacity.surface.midLow}
-  static final componentFieldAddonFillFailHoverDark =
-      DarkThemeDesignTokens.semanticColorRedOpacitySurfaceMidLow;
-
-  /// componentFieldAddonFillFailFocus with value: {semantic.color.red.opacity.surface.low}
-  static final componentFieldAddonFillFailFocusLight =
-      LightThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
-
-  /// componentFieldAddonFillFailFocus with value: {semantic.color.red.opacity.surface.low}
-  static final componentFieldAddonFillFailFocusDark =
-      DarkThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
-
-  /// componentFieldBorderRadiusSm with value: {semantic.borderRadius.md}
-  static const componentFieldBorderRadiusSm =
-      CoreDesignTokens.semanticBorderRadiusMd;
-
-  /// componentFieldBorderRadiusMd with value: {semantic.borderRadius.md}
-  static const componentFieldBorderRadiusMd =
-      CoreDesignTokens.semanticBorderRadiusMd;
-
-  /// componentFieldBorderColorDefault with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentFieldBorderColorDefaultLight =
+  /// componentAccordionBorderColor with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentAccordionBorderColorLight =
       LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
 
-  /// componentFieldBorderColorDefault with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentFieldBorderColorDefaultDark =
+  /// componentAccordionBorderColor with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentAccordionBorderColorDark =
       DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
 
-  /// componentFieldBorderColorHover with value: {semantic.color.monochrome.border.normal.high}
-  static final componentFieldBorderColorHoverLight =
-      LightThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
+  /// componentAccordionSpacingXs with value: {core.spacing.200}
+  static const componentAccordionSpacingXs = CoreDesignTokens.coreSpacing200;
 
-  /// componentFieldBorderColorHover with value: {semantic.color.monochrome.border.normal.high}
-  static final componentFieldBorderColorHoverDark =
-      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
+  /// componentAccordionSpacingMd with value: {core.spacing.800}
+  static const componentAccordionSpacingMd = CoreDesignTokens.coreSpacing800;
 
-  /// componentFieldBorderColorFocus with value: {semantic.color.slate.solid.border.inverse.lowest}
-  static const componentFieldBorderColorFocusLight =
-      LightThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
+  /// componentAccordionSpacingLg with value: {core.spacing.1200}
+  static const componentAccordionSpacingLg = CoreDesignTokens.coreSpacing1200;
 
-  /// componentFieldBorderColorFocus with value: {semantic.color.slate.solid.border.inverse.lowest}
-  static const componentFieldBorderColorFocusDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
+  /// componentAccordionElevationShadow with value: {core.elevation.shadow.330}
+  static final componentAccordionElevationShadow =
+      CoreDesignTokens.coreElevationShadow330;
 
-  /// componentFieldBorderColorSuccessDefault with value: {semantic.color.green.opacity.border.high}
-  static final componentFieldBorderColorSuccessDefaultLight =
-      LightThemeDesignTokens.semanticColorGreenOpacityBorderHigh;
+  /// componentActionSheetTitleTypographyFontFamily with value: {core.fontFamily.inter}
+  static const componentActionSheetTitleTypographyFontFamily =
+      CoreDesignTokens.coreFontFamilyInter;
 
-  /// componentFieldBorderColorSuccessDefault with value: {semantic.color.green.opacity.border.high}
-  static final componentFieldBorderColorSuccessDefaultDark =
-      DarkThemeDesignTokens.semanticColorGreenOpacityBorderHigh;
+  /// componentActionSheetTitleTypographyFontSize with value: {core.fontSize.300}
+  static const componentActionSheetTitleTypographyFontSize =
+      CoreDesignTokens.coreFontSize300;
 
-  /// componentFieldBorderColorSuccessHover with value: {semantic.color.green.opacity.border.highest}
-  static final componentFieldBorderColorSuccessHoverLight =
-      LightThemeDesignTokens.semanticColorGreenOpacityBorderHighest;
+  /// componentActionSheetTitleTypographyFontWeight with value: {core.fontWeight.extraBold}
+  static const componentActionSheetTitleTypographyFontWeight =
+      CoreDesignTokens.coreFontWeightExtraBold;
 
-  /// componentFieldBorderColorSuccessHover with value: {semantic.color.green.opacity.border.highest}
-  static final componentFieldBorderColorSuccessHoverDark =
-      DarkThemeDesignTokens.semanticColorGreenOpacityBorderHighest;
+  /// componentActionSheetTitleTypographyLineHeight with value: {core.lineHeight.400}
+  static const componentActionSheetTitleTypographyLineHeight =
+      CoreDesignTokens.coreLineHeight400;
 
-  /// componentFieldBorderColorSuccessFocus with value: {semantic.color.green.solid.border.inverse.high}
-  static const componentFieldBorderColorSuccessFocusLight =
-      LightThemeDesignTokens.semanticColorGreenSolidBorderInverseHigh;
+  /// componentActionSheetTitleTypographyParagraphSpacing with value: {core.paragraphSpacing.300}
+  static const componentActionSheetTitleTypographyParagraphSpacing =
+      CoreDesignTokens.coreParagraphSpacing300;
 
-  /// componentFieldBorderColorSuccessFocus with value: {semantic.color.green.solid.border.inverse.high}
-  static const componentFieldBorderColorSuccessFocusDark =
-      DarkThemeDesignTokens.semanticColorGreenSolidBorderInverseHigh;
-
-  /// componentFieldBorderColorFailDefault with value: {semantic.color.red.opacity.border.high}
-  static final componentFieldBorderColorFailDefaultLight =
-      LightThemeDesignTokens.semanticColorRedOpacityBorderHigh;
-
-  /// componentFieldBorderColorFailDefault with value: {semantic.color.red.opacity.border.high}
-  static final componentFieldBorderColorFailDefaultDark =
-      DarkThemeDesignTokens.semanticColorRedOpacityBorderHigh;
-
-  /// componentFieldBorderColorFailHover with value: {semantic.color.red.opacity.border.highest}
-  static final componentFieldBorderColorFailHoverLight =
-      LightThemeDesignTokens.semanticColorRedOpacityBorderHighest;
-
-  /// componentFieldBorderColorFailHover with value: {semantic.color.red.opacity.border.highest}
-  static final componentFieldBorderColorFailHoverDark =
-      DarkThemeDesignTokens.semanticColorRedOpacityBorderHighest;
-
-  /// componentFieldBorderColorFailFocus with value: {semantic.color.red.solid.border.inverse.high}
-  static const componentFieldBorderColorFailFocusLight =
-      LightThemeDesignTokens.semanticColorRedSolidBorderInverseHigh;
-
-  /// componentFieldBorderColorFailFocus with value: {semantic.color.red.solid.border.inverse.high}
-  static const componentFieldBorderColorFailFocusDark =
-      DarkThemeDesignTokens.semanticColorRedSolidBorderInverseHigh;
-
-  /// componentFieldBorderColorDisabled with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentFieldBorderColorDisabledLight =
-      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentFieldBorderColorDisabled with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentFieldBorderColorDisabledDark =
-      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentFieldSpacingPaddingSm with value: {semantic.spacing.general.sm}
-  static const componentFieldSpacingPaddingSm =
-      CoreDesignTokens.semanticSpacingGeneralSm;
-
-  /// componentFieldSpacingPaddingMd with value: {semantic.spacing.general.md}
-  static const componentFieldSpacingPaddingMd =
-      CoreDesignTokens.semanticSpacingGeneralMd;
-
-  /// componentFieldSpacingGapXs with value: {semantic.spacing.gap.sm}
-  static const componentFieldSpacingGapXs =
-      CoreDesignTokens.semanticSpacingGapSm;
-
-  /// componentFieldSpacingGapSm with value: {semantic.spacing.gap.md}
-  static const componentFieldSpacingGapSm =
-      CoreDesignTokens.semanticSpacingGapMd;
-
-  /// componentFieldSpacingGapMd with value: {semantic.spacing.gap.lg}
-  static const componentFieldSpacingGapMd =
-      CoreDesignTokens.semanticSpacingGapLg;
-
-  /// componentFieldSpacingGapLg with value: {semantic.spacing.gap.xl}
-  static const componentFieldSpacingGapLg =
-      CoreDesignTokens.semanticSpacingGapXl;
-
-  /// componentFieldHeightSm with value: {core.size.1600}
-  static const componentFieldHeightSm = CoreDesignTokens.coreSize1600;
-
-  /// componentFieldHeightMd with value: {core.size.2800}
-  static const componentFieldHeightMd = CoreDesignTokens.coreSize2800;
-
-  /// componentToggleBgDefault with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentToggleBgDefaultLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
-
-  /// componentToggleBgDefault with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentToggleBgDefaultDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
-
-  /// componentToggleBgHover with value: {semantic.color.monochrome.surface.normal.midHigh}
-  static final componentToggleBgHoverLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
-
-  /// componentToggleBgHover with value: {semantic.color.monochrome.surface.normal.midHigh}
-  static final componentToggleBgHoverDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
-
-  /// componentToggleBgActive with value: {semantic.color.monochrome.textIcon.normal.mid}
-  static final componentToggleBgActiveLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalMid;
-
-  /// componentToggleBgActive with value: {semantic.color.monochrome.textIcon.normal.mid}
-  static final componentToggleBgActiveDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalMid;
-
-  /// componentToggleBgDisabled with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentToggleBgDisabledLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
-
-  /// componentToggleBgDisabled with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentToggleBgDisabledDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
-
-  /// componentToggleBgDefaultOn with value: {semantic.color.green.opacity.surface.high}
-  static final componentToggleBgDefaultOnLight =
-      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceHigh;
-
-  /// componentToggleBgDefaultOn with value: {semantic.color.green.opacity.surface.high}
-  static final componentToggleBgDefaultOnDark =
-      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceHigh;
-
-  /// componentToggleBgHoverOn with value: {semantic.color.green.opacity.surface.highest}
-  static final componentToggleBgHoverOnLight =
-      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceHighest;
-
-  /// componentToggleBgHoverOn with value: {semantic.color.green.opacity.surface.highest}
-  static final componentToggleBgHoverOnDark =
-      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceHighest;
-
-  /// componentToggleBgActiveOn with value: {semantic.color.green.solid.surface.inverse.mid}
-  static const componentToggleBgActiveOnLight =
-      LightThemeDesignTokens.semanticColorGreenSolidSurfaceInverseMid;
-
-  /// componentToggleBgActiveOn with value: {semantic.color.green.solid.surface.inverse.mid}
-  static const componentToggleBgActiveOnDark =
-      DarkThemeDesignTokens.semanticColorGreenSolidSurfaceInverseMid;
-
-  /// componentToggleBgDisabledOn with value: {semantic.color.green.opacity.surface.high}
-  static final componentToggleBgDisabledOnLight =
-      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceHigh;
-
-  /// componentToggleBgDisabledOn with value: {semantic.color.green.opacity.surface.high}
-  static final componentToggleBgDisabledOnDark =
-      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceHigh;
-
-  /// componentToggleKnobDefault with value: {semantic.color.slate.solid.surface.static.lowest}
-  static const componentToggleKnobDefaultLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceStaticLowest;
-
-  /// componentToggleKnobDefault with value: {semantic.color.slate.solid.surface.static.lowest}
-  static const componentToggleKnobDefaultDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceStaticLowest;
-
-  /// componentToggleKnobDisabled with value: {semantic.color.monochrome.textIcon.static.whiteMid}
-  static final componentToggleKnobDisabledLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconStaticWhiteMid;
-
-  /// componentToggleKnobDisabled with value: {semantic.color.monochrome.textIcon.static.whiteMid}
-  static final componentToggleKnobDisabledDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconStaticWhiteMid;
-
-  /// componentToggleKnobSize with value: {core.size.1000}
-  static const componentToggleKnobSize = CoreDesignTokens.coreSize1000;
-
-  /// componentToggleBorderRadius with value: {semantic.borderRadius.pill}
-  static const componentToggleBorderRadius =
-      CoreDesignTokens.semanticBorderRadiusPill;
-
-  /// componentToggleSpacingPadding with value: {semantic.spacing.general.2xs}
-  static const componentToggleSpacingPadding =
-      CoreDesignTokens.semanticSpacingGeneral2xs;
-
-  /// componentToggleWidth with value: {core.size.2200}
-  static const componentToggleWidth = CoreDesignTokens.coreSize2200;
-
-  /// componentToggleHeight with value: {core.size.1200}
-  static const componentToggleHeight = CoreDesignTokens.coreSize1200;
-
-  /// componentModalBg with value: {semantic.color.slate.solid.surface.frame.low}
-  static const componentModalBgLight =
+  /// componentActionSheetBg with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentActionSheetBgLight =
       LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
 
-  /// componentModalBg with value: {semantic.color.slate.solid.surface.frame.low}
-  static const componentModalBgDark =
+  /// componentActionSheetBg with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentActionSheetBgDark =
       DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
 
-  /// componentModalBorderRadiusBottom with value: {core.borderRadius.800}
-  static const componentModalBorderRadiusBottom =
+  /// componentActionSheetBorderRadius with value: {core.borderRadius.800}
+  static const componentActionSheetBorderRadius =
       CoreDesignTokens.coreBorderRadius800;
 
-  /// componentModalBorderRadiusOverlay with value: {core.borderRadius.1600}
-  static const componentModalBorderRadiusOverlay =
-      CoreDesignTokens.coreBorderRadius1600;
+  /// componentActionSheetSpacingPaddingSm with value: {core.spacing.400}
+  static const componentActionSheetSpacingPaddingSm =
+      CoreDesignTokens.coreSpacing400;
 
-  /// componentModalSpacingBottomPaddingSm with value: {core.spacing.1200}
-  static const componentModalSpacingBottomPaddingSm =
+  /// componentActionSheetSpacingPaddingMd with value: {core.spacing.800}
+  static const componentActionSheetSpacingPaddingMd =
+      CoreDesignTokens.coreSpacing800;
+
+  /// componentActionSheetSpacingPaddingLg with value: {core.spacing.1200}
+  static const componentActionSheetSpacingPaddingLg =
       CoreDesignTokens.coreSpacing1200;
 
-  /// componentModalSpacingBottomPaddingLg with value: {core.spacing.2200}
-  static const componentModalSpacingBottomPaddingLg =
-      CoreDesignTokens.coreSpacing2200;
+  /// componentActionSheetSpacingGapSm with value: {core.spacing.400}
+  static const componentActionSheetSpacingGapSm =
+      CoreDesignTokens.coreSpacing400;
 
-  /// componentModalSpacingBottomGap with value: {core.spacing.1200}
-  static const componentModalSpacingBottomGap =
-      CoreDesignTokens.coreSpacing1200;
+  /// componentActionSheetSpacingGapMd with value: {core.spacing.600}
+  static const componentActionSheetSpacingGapMd =
+      CoreDesignTokens.coreSpacing600;
 
-  /// componentModalSpacingOverlayPaddingSm with value: {core.spacing.1200}
-  static const componentModalSpacingOverlayPaddingSm =
-      CoreDesignTokens.coreSpacing1200;
+  /// componentActionSheetHeightHeaderTitle with value: {core.spacing.2400}
+  static const componentActionSheetHeightHeaderTitle =
+      CoreDesignTokens.coreSpacing2400;
 
-  /// componentModalSpacingOverlayPaddingMd with value: {core.spacing.1600}
-  static const componentModalSpacingOverlayPaddingMd =
-      CoreDesignTokens.coreSpacing1600;
+  /// componentBadgeNotificationLabelColor with value: {semantic.color.slate.solid.surface.static.lowest}
+  static const componentBadgeNotificationLabelColorLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceStaticLowest;
 
-  /// componentModalSpacingOverlayGap with value: {core.spacing.1600}
-  static const componentModalSpacingOverlayGap =
-      CoreDesignTokens.coreSpacing1600;
+  /// componentBadgeNotificationLabelColor with value: {semantic.color.slate.solid.surface.static.lowest}
+  static const componentBadgeNotificationLabelColorDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceStaticLowest;
+
+  /// componentBadgeNotificationBg with value: {semantic.color.red.solid.surface.static.mid}
+  static const componentBadgeNotificationBgLight =
+      LightThemeDesignTokens.semanticColorRedSolidSurfaceStaticMid;
+
+  /// componentBadgeNotificationBg with value: {semantic.color.red.solid.surface.static.mid}
+  static const componentBadgeNotificationBgDark =
+      DarkThemeDesignTokens.semanticColorRedSolidSurfaceStaticMid;
+
+  /// componentBadgeNotificationBorderRadius with value: {semantic.borderRadius.pill}
+  static const componentBadgeNotificationBorderRadius =
+      CoreDesignTokens.semanticBorderRadiusPill;
+
+  /// componentBadgeNotificationSpacingPaddingMd with value: {core.spacing.400}
+  static const componentBadgeNotificationSpacingPaddingMd =
+      CoreDesignTokens.coreSpacing400;
+
+  /// componentBadgeNotificationSpacingPaddingLg with value: {core.spacing.500}
+  static const componentBadgeNotificationSpacingPaddingLg =
+      CoreDesignTokens.coreSpacing500;
+
+  /// componentBadgeStatusBgSuccess with value: {semantic.color.green.solid.surface.static.mid}
+  static const componentBadgeStatusBgSuccessLight =
+      LightThemeDesignTokens.semanticColorGreenSolidSurfaceStaticMid;
+
+  /// componentBadgeStatusBgSuccess with value: {semantic.color.green.solid.surface.static.mid}
+  static const componentBadgeStatusBgSuccessDark =
+      DarkThemeDesignTokens.semanticColorGreenSolidSurfaceStaticMid;
+
+  /// componentBadgeStatusBgWarning with value: {semantic.color.yellow.solid.surface.static.mid}
+  static const componentBadgeStatusBgWarningLight =
+      LightThemeDesignTokens.semanticColorYellowSolidSurfaceStaticMid;
+
+  /// componentBadgeStatusBgWarning with value: {semantic.color.yellow.solid.surface.static.mid}
+  static const componentBadgeStatusBgWarningDark =
+      DarkThemeDesignTokens.semanticColorYellowSolidSurfaceStaticMid;
+
+  /// componentBadgeStatusBgDanger with value: {semantic.color.red.solid.surface.static.mid}
+  static const componentBadgeStatusBgDangerLight =
+      LightThemeDesignTokens.semanticColorRedSolidSurfaceStaticMid;
+
+  /// componentBadgeStatusBgDanger with value: {semantic.color.red.solid.surface.static.mid}
+  static const componentBadgeStatusBgDangerDark =
+      DarkThemeDesignTokens.semanticColorRedSolidSurfaceStaticMid;
+
+  /// componentBadgeStatusBorderRadius with value: {semantic.borderRadius.pill}
+  static const componentBadgeStatusBorderRadius =
+      CoreDesignTokens.semanticBorderRadiusPill;
+
+  /// componentBadgeStatusWidthSm with value: {core.size.400}
+  static const componentBadgeStatusWidthSm = CoreDesignTokens.coreSize400;
+
+  /// componentBadgeStatusWidthMd with value: {core.size.800}
+  static const componentBadgeStatusWidthMd = CoreDesignTokens.coreSize800;
+
+  /// componentBadgeStatusWidthLg with value: {core.size.1200}
+  static const componentBadgeStatusWidthLg = CoreDesignTokens.coreSize1200;
+
+  /// componentBadgeStatusHeightSm with value: {core.size.400}
+  static const componentBadgeStatusHeightSm = CoreDesignTokens.coreSize400;
+
+  /// componentBadgeStatusHeightMd with value: {core.size.800}
+  static const componentBadgeStatusHeightMd = CoreDesignTokens.coreSize800;
+
+  /// componentBadgeStatusHeightLg with value: {core.size.1200}
+  static const componentBadgeStatusHeightLg = CoreDesignTokens.coreSize1200;
+
+  /// componentBreadcrumbSpacingGapSm with value: {core.spacing.200}
+  static const componentBreadcrumbSpacingGapSm =
+      CoreDesignTokens.coreSpacing200;
+
+  /// componentBreadcrumbSpacingGapMd with value: {core.spacing.400}
+  static const componentBreadcrumbSpacingGapMd =
+      CoreDesignTokens.coreSpacing400;
 
   /// componentButtonIconCoralPrimary with value: {core.color.solid.slate.50}
   static const componentButtonIconCoralPrimary =
@@ -934,30 +364,6 @@ class ComponentDesignTokens {
   /// componentButtonIconFailTertiary with value: {core.color.solid.red.700}
   static const componentButtonIconFailTertiary =
       CoreDesignTokens.coreColorSolidRed700;
-
-  /// componentButtonIconGooglePrimary with value: {core.color.solid.slate.1400}
-  static const componentButtonIconGooglePrimary =
-      CoreDesignTokens.coreColorSolidSlate1400;
-
-  /// componentButtonIconGoogleSecondary with value: {core.color.solid.slate.1400}
-  static const componentButtonIconGoogleSecondary =
-      CoreDesignTokens.coreColorSolidSlate1400;
-
-  /// componentButtonIconFacebookPrimary with value: {core.color.solid.slate.50}
-  static const componentButtonIconFacebookPrimary =
-      CoreDesignTokens.coreColorSolidSlate50;
-
-  /// componentButtonIconFacebookSecondary with value: {core.color.solid.slate.1400}
-  static const componentButtonIconFacebookSecondary =
-      CoreDesignTokens.coreColorSolidSlate1400;
-
-  /// componentButtonIconApplePrimary with value: {core.color.solid.slate.50}
-  static const componentButtonIconApplePrimary =
-      CoreDesignTokens.coreColorSolidSlate50;
-
-  /// componentButtonIconAppleSecondary with value: {core.color.solid.slate.1400}
-  static const componentButtonIconAppleSecondary =
-      CoreDesignTokens.coreColorSolidSlate1400;
 
   /// componentButtonLabelTypographyPrimarySmFontFamily with value: {core.fontFamily.inter}
   static const componentButtonLabelTypographyPrimarySmFontFamily =
@@ -1139,6 +545,10 @@ class ComponentDesignTokens {
   static const componentButtonLabelTypographyTertiarySmParagraphSpacing =
       CoreDesignTokens.coreParagraphSpacing50;
 
+  /// componentButtonLabelTypographyTertiarySmTextDecoration with value: {core.fontDecoration.underline}
+  static const componentButtonLabelTypographyTertiarySmTextDecoration =
+      CoreDesignTokens.coreFontDecorationUnderline;
+
   /// componentButtonLabelTypographyTertiaryMdFontFamily with value: {core.fontFamily.inter}
   static const componentButtonLabelTypographyTertiaryMdFontFamily =
       CoreDesignTokens.coreFontFamilyInter;
@@ -1158,6 +568,10 @@ class ComponentDesignTokens {
   /// componentButtonLabelTypographyTertiaryMdParagraphSpacing with value: {core.paragraphSpacing.75}
   static const componentButtonLabelTypographyTertiaryMdParagraphSpacing =
       CoreDesignTokens.coreParagraphSpacing75;
+
+  /// componentButtonLabelTypographyTertiaryMdTextDecoration with value: {core.fontDecoration.underline}
+  static const componentButtonLabelTypographyTertiaryMdTextDecoration =
+      CoreDesignTokens.coreFontDecorationUnderline;
 
   /// componentButtonLabelTypographyTertiaryLgFontFamily with value: {core.fontFamily.inter}
   static const componentButtonLabelTypographyTertiaryLgFontFamily =
@@ -1179,6 +593,10 @@ class ComponentDesignTokens {
   static const componentButtonLabelTypographyTertiaryLgParagraphSpacing =
       CoreDesignTokens.coreParagraphSpacing100;
 
+  /// componentButtonLabelTypographyTertiaryLgTextDecoration with value: {core.fontDecoration.underline}
+  static const componentButtonLabelTypographyTertiaryLgTextDecoration =
+      CoreDesignTokens.coreFontDecorationUnderline;
+
   /// componentButtonLabelTypographyTertiaryXlFontFamily with value: {core.fontFamily.inter}
   static const componentButtonLabelTypographyTertiaryXlFontFamily =
       CoreDesignTokens.coreFontFamilyInter;
@@ -1198,6 +616,10 @@ class ComponentDesignTokens {
   /// componentButtonLabelTypographyTertiaryXlParagraphSpacing with value: {core.paragraphSpacing.200}
   static const componentButtonLabelTypographyTertiaryXlParagraphSpacing =
       CoreDesignTokens.coreParagraphSpacing200;
+
+  /// componentButtonLabelTypographyTertiaryXlTextDecoration with value: {core.fontDecoration.underline}
+  static const componentButtonLabelTypographyTertiaryXlTextDecoration =
+      CoreDesignTokens.coreFontDecorationUnderline;
 
   /// componentButtonLabelColorCoralPrimary with value: {core.color.solid.slate.50}
   static const componentButtonLabelColorCoralPrimary =
@@ -2231,6 +1653,1215 @@ class ComponentDesignTokens {
   /// componentButtonHeightXl with value: {core.size.3200}
   static const componentButtonHeightXl = CoreDesignTokens.coreSize3200;
 
+  /// componentCardIconDefault with value: {semantic.color.monochrome.textIcon.normal.high}
+  static final componentCardIconDefaultLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalHigh;
+
+  /// componentCardIconDefault with value: {semantic.color.monochrome.textIcon.normal.high}
+  static final componentCardIconDefaultDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalHigh;
+
+  /// componentCardIconDisabled with value: {semantic.color.monochrome.textIcon.normal.low}
+  static final componentCardIconDisabledLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalLow;
+
+  /// componentCardIconDisabled with value: {semantic.color.monochrome.textIcon.normal.low}
+  static final componentCardIconDisabledDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalLow;
+
+  /// componentCardTitleColorDefault with value: {semantic.color.slate.solid.textIcon.normal.highest}
+  static const componentCardTitleColorDefaultLight =
+      LightThemeDesignTokens.semanticColorSlateSolidTextIconNormalHighest;
+
+  /// componentCardTitleColorDefault with value: {semantic.color.slate.solid.textIcon.normal.highest}
+  static const componentCardTitleColorDefaultDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidTextIconNormalHighest;
+
+  /// componentCardSubtitleColorDefault with value: {semantic.color.monochrome.textIcon.normal.mid}
+  static final componentCardSubtitleColorDefaultLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalMid;
+
+  /// componentCardSubtitleColorDefault with value: {semantic.color.monochrome.textIcon.normal.mid}
+  static final componentCardSubtitleColorDefaultDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalMid;
+
+  /// componentCardDescriptionColorDefault with value: {semantic.color.monochrome.textIcon.normal.high}
+  static final componentCardDescriptionColorDefaultLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalHigh;
+
+  /// componentCardDescriptionColorDefault with value: {semantic.color.monochrome.textIcon.normal.high}
+  static final componentCardDescriptionColorDefaultDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalHigh;
+
+  /// componentCardBgElevate with value: {semantic.color.slate.solid.surface.normal.lowest}
+  static const componentCardBgElevateLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceNormalLowest;
+
+  /// componentCardBgElevate with value: {semantic.color.slate.solid.surface.normal.lowest}
+  static const componentCardBgElevateDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceNormalLowest;
+
+  /// componentCardBgOutline with value: {semantic.color.slate.solid.surface.normal.lowest}
+  static const componentCardBgOutlineLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceNormalLowest;
+
+  /// componentCardBgOutline with value: {semantic.color.slate.solid.surface.normal.lowest}
+  static const componentCardBgOutlineDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceNormalLowest;
+
+  /// componentCardBgFill with value: {semantic.color.slate.solid.surface.frame.mid}
+  static const componentCardBgFillLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameMid;
+
+  /// componentCardBgFill with value: {semantic.color.slate.solid.surface.frame.mid}
+  static const componentCardBgFillDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameMid;
+
+  /// componentCardBorderRadiusSm with value: {core.borderRadius.800}
+  static const componentCardBorderRadiusSm =
+      CoreDesignTokens.coreBorderRadius800;
+
+  /// componentCardBorderRadiusMd with value: {core.borderRadius.1200}
+  static const componentCardBorderRadiusMd =
+      CoreDesignTokens.coreBorderRadius1200;
+
+  /// componentCardBorderRadiusLg with value: {core.borderRadius.1600}
+  static const componentCardBorderRadiusLg =
+      CoreDesignTokens.coreBorderRadius1600;
+
+  /// componentCardBorderWidth with value: {core.borderWidth.75}
+  static const componentCardBorderWidth = CoreDesignTokens.coreBorderWidth75;
+
+  /// componentCardBorderColor with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentCardBorderColorLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentCardBorderColor with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentCardBorderColorDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentCardSpacingXs with value: {core.spacing.200}
+  static const componentCardSpacingXs = CoreDesignTokens.coreSpacing200;
+
+  /// componentCardSpacingSm with value: {core.spacing.400}
+  static const componentCardSpacingSm = CoreDesignTokens.coreSpacing400;
+
+  /// componentCardSpacingMd with value: {core.spacing.800}
+  static const componentCardSpacingMd = CoreDesignTokens.coreSpacing800;
+
+  /// componentCardSpacingLg with value: {core.spacing.1200}
+  static const componentCardSpacingLg = CoreDesignTokens.coreSpacing1200;
+
+  /// componentCardSpacingXl with value: {core.spacing.1600}
+  static const componentCardSpacingXl = CoreDesignTokens.coreSpacing1600;
+
+  /// componentCardSpacing2xl with value: {core.spacing.2400}
+  static const componentCardSpacing2xl = CoreDesignTokens.coreSpacing2400;
+
+  /// componentCardSpacing3xl with value: {core.spacing.3200}
+  static const componentCardSpacing3xl = CoreDesignTokens.coreSpacing3200;
+
+  /// componentCardSpacing4xl with value: {core.spacing.4800}
+  static const componentCardSpacing4xl = CoreDesignTokens.coreSpacing4800;
+
+  /// componentCardElevationDefault with value: {core.elevation.shadow.330}
+  static final componentCardElevationDefault =
+      CoreDesignTokens.coreElevationShadow330;
+
+  /// componentCardElevationHover with value: {core.elevation.shadow.430}
+  static final componentCardElevationHover =
+      CoreDesignTokens.coreElevationShadow430;
+
+  /// componentCardElevationActive with value: {core.elevation.shadow.330}
+  static final componentCardElevationActive =
+      CoreDesignTokens.coreElevationShadow330;
+
+  /// componentCardElevationDisabled with value: {core.elevation.shadow.330}
+  static final componentCardElevationDisabled =
+      CoreDesignTokens.coreElevationShadow330;
+
+  /// componentChipBgHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentChipBgHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentChipBgHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentChipBgHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentChipBgActive with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentChipBgActiveLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentChipBgActive with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentChipBgActiveDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentChipBgExpand with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentChipBgExpandLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentChipBgExpand with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentChipBgExpandDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentChipBgSelected with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentChipBgSelectedLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
+
+  /// componentChipBgSelected with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentChipBgSelectedDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
+
+  /// componentChipBgSelectedHover with value: {semantic.color.monochrome.surface.normal.high}
+  static final componentChipBgSelectedHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalHigh;
+
+  /// componentChipBgSelectedHover with value: {semantic.color.monochrome.surface.normal.high}
+  static final componentChipBgSelectedHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalHigh;
+
+  /// componentChipBgSelectedActive with value: {semantic.color.monochrome.surface.normal.highest}
+  static final componentChipBgSelectedActiveLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalHighest;
+
+  /// componentChipBgSelectedActive with value: {semantic.color.monochrome.surface.normal.highest}
+  static final componentChipBgSelectedActiveDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalHighest;
+
+  /// componentChipBgSelectedExpand with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentChipBgSelectedExpandLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
+
+  /// componentChipBgSelectedExpand with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentChipBgSelectedExpandDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
+
+  /// componentChipBgSelectedDisabled with value: {semantic.color.monochrome.surface.normal.midHigh}
+  static final componentChipBgSelectedDisabledLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
+
+  /// componentChipBgSelectedDisabled with value: {semantic.color.monochrome.surface.normal.midHigh}
+  static final componentChipBgSelectedDisabledDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
+
+  /// componentChipBorderRadius with value: {semantic.borderRadius.pill}
+  static const componentChipBorderRadius =
+      CoreDesignTokens.semanticBorderRadiusPill;
+
+  /// componentChipBorderWidth with value: {core.borderWidth.75}
+  static const componentChipBorderWidth = CoreDesignTokens.coreBorderWidth75;
+
+  /// componentChipBorderColor with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentChipBorderColorLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentChipBorderColor with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentChipBorderColorDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentChipSpacingPaddingXs with value: {core.spacing.300}
+  static const componentChipSpacingPaddingXs = CoreDesignTokens.coreSpacing300;
+
+  /// componentChipSpacingPaddingSm with value: {core.spacing.400}
+  static const componentChipSpacingPaddingSm = CoreDesignTokens.coreSpacing400;
+
+  /// componentChipSpacingPaddingMd with value: {core.spacing.600}
+  static const componentChipSpacingPaddingMd = CoreDesignTokens.coreSpacing600;
+
+  /// componentChipSpacingPaddingLg with value: {core.spacing.800}
+  static const componentChipSpacingPaddingLg = CoreDesignTokens.coreSpacing800;
+
+  /// componentChipSpacingPaddingXl with value: {core.spacing.1200}
+  static const componentChipSpacingPaddingXl = CoreDesignTokens.coreSpacing1200;
+
+  /// componentChipSpacingGapXs with value: {core.spacing.300}
+  static const componentChipSpacingGapXs = CoreDesignTokens.coreSpacing300;
+
+  /// componentChipSpacingGapSm with value: {core.spacing.400}
+  static const componentChipSpacingGapSm = CoreDesignTokens.coreSpacing400;
+
+  /// componentChipSpacingGapMd with value: {core.spacing.600}
+  static const componentChipSpacingGapMd = CoreDesignTokens.coreSpacing600;
+
+  /// componentChipHeightSm with value: {core.size.1200}
+  static const componentChipHeightSm = CoreDesignTokens.coreSize1200;
+
+  /// componentChipHeightMd with value: {core.size.1600}
+  static const componentChipHeightMd = CoreDesignTokens.coreSize1600;
+
+  /// componentChipHeightLg with value: {core.size.2400}
+  static const componentChipHeightLg = CoreDesignTokens.coreSize2400;
+
+  /// componentDropdownItemBgDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentDropdownItemBgDefaultLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentDropdownItemBgDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentDropdownItemBgDefaultDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentDropdownItemBgHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentDropdownItemBgHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentDropdownItemBgHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentDropdownItemBgHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentDropdownItemBgActive with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentDropdownItemBgActiveLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentDropdownItemBgActive with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentDropdownItemBgActiveDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentDropdownItemBgSelected with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentDropdownItemBgSelectedLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
+
+  /// componentDropdownItemBgSelected with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentDropdownItemBgSelectedDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
+
+  /// componentDropdownItemBgSelectedHover with value: {semantic.color.monochrome.surface.normal.high}
+  static final componentDropdownItemBgSelectedHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalHigh;
+
+  /// componentDropdownItemBgSelectedHover with value: {semantic.color.monochrome.surface.normal.high}
+  static final componentDropdownItemBgSelectedHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalHigh;
+
+  /// componentDropdownItemBgSelectedActive with value: {semantic.color.monochrome.surface.normal.highest}
+  static final componentDropdownItemBgSelectedActiveLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalHighest;
+
+  /// componentDropdownItemBgSelectedActive with value: {semantic.color.monochrome.surface.normal.highest}
+  static final componentDropdownItemBgSelectedActiveDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalHighest;
+
+  /// componentDropdownItemBgSelectedDisabled with value: {semantic.color.monochrome.surface.normal.midHigh}
+  static final componentDropdownItemBgSelectedDisabledLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
+
+  /// componentDropdownItemBgSelectedDisabled with value: {semantic.color.monochrome.surface.normal.midHigh}
+  static final componentDropdownItemBgSelectedDisabledDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
+
+  /// componentDropdownItemBorderRadius with value: {core.borderRadius.200}
+  static const componentDropdownItemBorderRadius =
+      CoreDesignTokens.coreBorderRadius200;
+
+  /// componentDropdownItemSpacingPaddingSm with value: {core.spacing.600}
+  static const componentDropdownItemSpacingPaddingSm =
+      CoreDesignTokens.coreSpacing600;
+
+  /// componentDropdownItemSpacingPaddingMd with value: {core.spacing.800}
+  static const componentDropdownItemSpacingPaddingMd =
+      CoreDesignTokens.coreSpacing800;
+
+  /// componentDropdownItemSpacingGapXs with value: {core.spacing.200}
+  static const componentDropdownItemSpacingGapXs =
+      CoreDesignTokens.coreSpacing200;
+
+  /// componentDropdownItemSpacingGapSm with value: {core.spacing.300}
+  static const componentDropdownItemSpacingGapSm =
+      CoreDesignTokens.coreSpacing300;
+
+  /// componentDropdownItemSpacingGapMd with value: {core.spacing.400}
+  static const componentDropdownItemSpacingGapMd =
+      CoreDesignTokens.coreSpacing400;
+
+  /// componentDropdownItemWidthDateSm with value: {core.size.2000}
+  static const componentDropdownItemWidthDateSm = CoreDesignTokens.coreSize2000;
+
+  /// componentDropdownItemWidthDateMd with value: {core.size.2400}
+  static const componentDropdownItemWidthDateMd = CoreDesignTokens.coreSize2400;
+
+  /// componentDropdownItemHeightItemSm with value: {core.size.1600}
+  static const componentDropdownItemHeightItemSm =
+      CoreDesignTokens.coreSize1600;
+
+  /// componentDropdownItemHeightItemMd with value: {core.size.2400}
+  static const componentDropdownItemHeightItemMd =
+      CoreDesignTokens.coreSize2400;
+
+  /// componentDropdownItemHeightDateSm with value: {core.size.2000}
+  static const componentDropdownItemHeightDateSm =
+      CoreDesignTokens.coreSize2000;
+
+  /// componentDropdownItemHeightDateMd with value: {core.size.2400}
+  static const componentDropdownItemHeightDateMd =
+      CoreDesignTokens.coreSize2400;
+
+  /// componentDropdownListBg with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentDropdownListBgLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+
+  /// componentDropdownListBg with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentDropdownListBgDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+
+  /// componentDropdownListBorderRadius with value: {core.borderRadius.400}
+  static const componentDropdownListBorderRadius =
+      CoreDesignTokens.coreBorderRadius400;
+
+  /// componentDropdownListBorderWidth with value: {core.borderWidth.75}
+  static const componentDropdownListBorderWidth =
+      CoreDesignTokens.coreBorderWidth75;
+
+  /// componentDropdownListBorderColor with value: {semantic.color.monochrome.border.normal.low}
+  static final componentDropdownListBorderColorLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalLow;
+
+  /// componentDropdownListBorderColor with value: {semantic.color.monochrome.border.normal.low}
+  static final componentDropdownListBorderColorDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalLow;
+
+  /// componentDropdownListSpacingPaddingSm with value: {core.spacing.200}
+  static const componentDropdownListSpacingPaddingSm =
+      CoreDesignTokens.coreSpacing200;
+
+  /// componentDropdownListSpacingPaddingMd with value: {core.spacing.400}
+  static const componentDropdownListSpacingPaddingMd =
+      CoreDesignTokens.coreSpacing400;
+
+  /// componentDropdownListSpacingPaddingLg with value: {core.spacing.800}
+  static const componentDropdownListSpacingPaddingLg =
+      CoreDesignTokens.coreSpacing800;
+
+  /// componentDropdownListSpacingPaddingXl with value: {core.spacing.1200}
+  static const componentDropdownListSpacingPaddingXl =
+      CoreDesignTokens.coreSpacing1200;
+
+  /// componentDropdownListSpacingGapSm with value: {core.spacing.800}
+  static const componentDropdownListSpacingGapSm =
+      CoreDesignTokens.coreSpacing800;
+
+  /// componentDropdownListSpacingGapMd with value: {core.spacing.1200}
+  static const componentDropdownListSpacingGapMd =
+      CoreDesignTokens.coreSpacing1200;
+
+  /// componentDropdownListElevationShadow with value: {semantic.elevation.shadow.menu}
+  static final componentDropdownListElevationShadow =
+      CoreDesignTokens.semanticElevationShadowMenu;
+
+  /// componentFieldBgOutlineDefault with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentFieldBgOutlineDefaultLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+
+  /// componentFieldBgOutlineDefault with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentFieldBgOutlineDefaultDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+
+  /// componentFieldBgFillDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentFieldBgFillDefaultLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentFieldBgFillDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentFieldBgFillDefaultDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentFieldBgFillHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentFieldBgFillHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentFieldBgFillHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentFieldBgFillHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentFieldBgFillFocus with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentFieldBgFillFocusLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentFieldBgFillFocus with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentFieldBgFillFocusDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentFieldBgFillSuccessDefault with value: {semantic.color.green.opacity.surface.low}
+  static final componentFieldBgFillSuccessDefaultLight =
+      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
+
+  /// componentFieldBgFillSuccessDefault with value: {semantic.color.green.opacity.surface.low}
+  static final componentFieldBgFillSuccessDefaultDark =
+      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
+
+  /// componentFieldBgFillSuccessHover with value: {semantic.color.green.opacity.surface.midLow}
+  static final componentFieldBgFillSuccessHoverLight =
+      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceMidLow;
+
+  /// componentFieldBgFillSuccessHover with value: {semantic.color.green.opacity.surface.midLow}
+  static final componentFieldBgFillSuccessHoverDark =
+      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceMidLow;
+
+  /// componentFieldBgFillSuccessFocus with value: {semantic.color.green.opacity.surface.low}
+  static final componentFieldBgFillSuccessFocusLight =
+      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
+
+  /// componentFieldBgFillSuccessFocus with value: {semantic.color.green.opacity.surface.low}
+  static final componentFieldBgFillSuccessFocusDark =
+      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
+
+  /// componentFieldBgFillFailDefault with value: {semantic.color.red.opacity.surface.low}
+  static final componentFieldBgFillFailDefaultLight =
+      LightThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
+
+  /// componentFieldBgFillFailDefault with value: {semantic.color.red.opacity.surface.low}
+  static final componentFieldBgFillFailDefaultDark =
+      DarkThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
+
+  /// componentFieldBgFillFailHover with value: {semantic.color.red.opacity.surface.midLow}
+  static final componentFieldBgFillFailHoverLight =
+      LightThemeDesignTokens.semanticColorRedOpacitySurfaceMidLow;
+
+  /// componentFieldBgFillFailHover with value: {semantic.color.red.opacity.surface.midLow}
+  static final componentFieldBgFillFailHoverDark =
+      DarkThemeDesignTokens.semanticColorRedOpacitySurfaceMidLow;
+
+  /// componentFieldBgFillFailFocus with value: {semantic.color.red.opacity.surface.low}
+  static final componentFieldBgFillFailFocusLight =
+      LightThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
+
+  /// componentFieldBgFillFailFocus with value: {semantic.color.red.opacity.surface.low}
+  static final componentFieldBgFillFailFocusDark =
+      DarkThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
+
+  /// componentFieldAddonOutlineDefault with value: {semantic.color.slate.solid.surface.frame.mid}
+  static const componentFieldAddonOutlineDefaultLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameMid;
+
+  /// componentFieldAddonOutlineDefault with value: {semantic.color.slate.solid.surface.frame.mid}
+  static const componentFieldAddonOutlineDefaultDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameMid;
+
+  /// componentFieldAddonFillDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentFieldAddonFillDefaultLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentFieldAddonFillDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentFieldAddonFillDefaultDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentFieldAddonFillHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentFieldAddonFillHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentFieldAddonFillHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentFieldAddonFillHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentFieldAddonFillFocus with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentFieldAddonFillFocusLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentFieldAddonFillFocus with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentFieldAddonFillFocusDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentFieldAddonFillSuccessDefault with value: {semantic.color.green.opacity.surface.low}
+  static final componentFieldAddonFillSuccessDefaultLight =
+      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
+
+  /// componentFieldAddonFillSuccessDefault with value: {semantic.color.green.opacity.surface.low}
+  static final componentFieldAddonFillSuccessDefaultDark =
+      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
+
+  /// componentFieldAddonFillSuccessHover with value: {semantic.color.green.opacity.surface.midLow}
+  static final componentFieldAddonFillSuccessHoverLight =
+      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceMidLow;
+
+  /// componentFieldAddonFillSuccessHover with value: {semantic.color.green.opacity.surface.midLow}
+  static final componentFieldAddonFillSuccessHoverDark =
+      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceMidLow;
+
+  /// componentFieldAddonFillSuccessFocus with value: {semantic.color.green.opacity.surface.low}
+  static final componentFieldAddonFillSuccessFocusLight =
+      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
+
+  /// componentFieldAddonFillSuccessFocus with value: {semantic.color.green.opacity.surface.low}
+  static final componentFieldAddonFillSuccessFocusDark =
+      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
+
+  /// componentFieldAddonFillFailDefault with value: {semantic.color.red.opacity.surface.low}
+  static final componentFieldAddonFillFailDefaultLight =
+      LightThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
+
+  /// componentFieldAddonFillFailDefault with value: {semantic.color.red.opacity.surface.low}
+  static final componentFieldAddonFillFailDefaultDark =
+      DarkThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
+
+  /// componentFieldAddonFillFailHover with value: {semantic.color.red.opacity.surface.midLow}
+  static final componentFieldAddonFillFailHoverLight =
+      LightThemeDesignTokens.semanticColorRedOpacitySurfaceMidLow;
+
+  /// componentFieldAddonFillFailHover with value: {semantic.color.red.opacity.surface.midLow}
+  static final componentFieldAddonFillFailHoverDark =
+      DarkThemeDesignTokens.semanticColorRedOpacitySurfaceMidLow;
+
+  /// componentFieldAddonFillFailFocus with value: {semantic.color.red.opacity.surface.low}
+  static final componentFieldAddonFillFailFocusLight =
+      LightThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
+
+  /// componentFieldAddonFillFailFocus with value: {semantic.color.red.opacity.surface.low}
+  static final componentFieldAddonFillFailFocusDark =
+      DarkThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
+
+  /// componentFieldBorderRadiusSm with value: {semantic.borderRadius.md}
+  static const componentFieldBorderRadiusSm =
+      CoreDesignTokens.semanticBorderRadiusMd;
+
+  /// componentFieldBorderRadiusMd with value: {semantic.borderRadius.md}
+  static const componentFieldBorderRadiusMd =
+      CoreDesignTokens.semanticBorderRadiusMd;
+
+  /// componentFieldBorderColorDefault with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentFieldBorderColorDefaultLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentFieldBorderColorDefault with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentFieldBorderColorDefaultDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentFieldBorderColorHover with value: {semantic.color.monochrome.border.normal.high}
+  static final componentFieldBorderColorHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
+
+  /// componentFieldBorderColorHover with value: {semantic.color.monochrome.border.normal.high}
+  static final componentFieldBorderColorHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
+
+  /// componentFieldBorderColorFocus with value: {semantic.color.slate.solid.border.inverse.lowest}
+  static const componentFieldBorderColorFocusLight =
+      LightThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
+
+  /// componentFieldBorderColorFocus with value: {semantic.color.slate.solid.border.inverse.lowest}
+  static const componentFieldBorderColorFocusDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
+
+  /// componentFieldBorderColorSuccessDefault with value: {semantic.color.green.opacity.border.high}
+  static final componentFieldBorderColorSuccessDefaultLight =
+      LightThemeDesignTokens.semanticColorGreenOpacityBorderHigh;
+
+  /// componentFieldBorderColorSuccessDefault with value: {semantic.color.green.opacity.border.high}
+  static final componentFieldBorderColorSuccessDefaultDark =
+      DarkThemeDesignTokens.semanticColorGreenOpacityBorderHigh;
+
+  /// componentFieldBorderColorSuccessHover with value: {semantic.color.green.opacity.border.highest}
+  static final componentFieldBorderColorSuccessHoverLight =
+      LightThemeDesignTokens.semanticColorGreenOpacityBorderHighest;
+
+  /// componentFieldBorderColorSuccessHover with value: {semantic.color.green.opacity.border.highest}
+  static final componentFieldBorderColorSuccessHoverDark =
+      DarkThemeDesignTokens.semanticColorGreenOpacityBorderHighest;
+
+  /// componentFieldBorderColorSuccessFocus with value: {semantic.color.green.solid.border.inverse.high}
+  static const componentFieldBorderColorSuccessFocusLight =
+      LightThemeDesignTokens.semanticColorGreenSolidBorderInverseHigh;
+
+  /// componentFieldBorderColorSuccessFocus with value: {semantic.color.green.solid.border.inverse.high}
+  static const componentFieldBorderColorSuccessFocusDark =
+      DarkThemeDesignTokens.semanticColorGreenSolidBorderInverseHigh;
+
+  /// componentFieldBorderColorFailDefault with value: {semantic.color.red.opacity.border.high}
+  static final componentFieldBorderColorFailDefaultLight =
+      LightThemeDesignTokens.semanticColorRedOpacityBorderHigh;
+
+  /// componentFieldBorderColorFailDefault with value: {semantic.color.red.opacity.border.high}
+  static final componentFieldBorderColorFailDefaultDark =
+      DarkThemeDesignTokens.semanticColorRedOpacityBorderHigh;
+
+  /// componentFieldBorderColorFailHover with value: {semantic.color.red.opacity.border.highest}
+  static final componentFieldBorderColorFailHoverLight =
+      LightThemeDesignTokens.semanticColorRedOpacityBorderHighest;
+
+  /// componentFieldBorderColorFailHover with value: {semantic.color.red.opacity.border.highest}
+  static final componentFieldBorderColorFailHoverDark =
+      DarkThemeDesignTokens.semanticColorRedOpacityBorderHighest;
+
+  /// componentFieldBorderColorFailFocus with value: {semantic.color.red.solid.border.inverse.high}
+  static const componentFieldBorderColorFailFocusLight =
+      LightThemeDesignTokens.semanticColorRedSolidBorderInverseHigh;
+
+  /// componentFieldBorderColorFailFocus with value: {semantic.color.red.solid.border.inverse.high}
+  static const componentFieldBorderColorFailFocusDark =
+      DarkThemeDesignTokens.semanticColorRedSolidBorderInverseHigh;
+
+  /// componentFieldBorderColorDisabled with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentFieldBorderColorDisabledLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentFieldBorderColorDisabled with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentFieldBorderColorDisabledDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentFieldSpacingPaddingSm with value: {semantic.spacing.general.sm}
+  static const componentFieldSpacingPaddingSm =
+      CoreDesignTokens.semanticSpacingGeneralSm;
+
+  /// componentFieldSpacingPaddingMd with value: {semantic.spacing.general.md}
+  static const componentFieldSpacingPaddingMd =
+      CoreDesignTokens.semanticSpacingGeneralMd;
+
+  /// componentFieldSpacingGapXs with value: {semantic.spacing.gap.sm}
+  static const componentFieldSpacingGapXs =
+      CoreDesignTokens.semanticSpacingGapSm;
+
+  /// componentFieldSpacingGapSm with value: {semantic.spacing.gap.md}
+  static const componentFieldSpacingGapSm =
+      CoreDesignTokens.semanticSpacingGapMd;
+
+  /// componentFieldSpacingGapMd with value: {semantic.spacing.gap.lg}
+  static const componentFieldSpacingGapMd =
+      CoreDesignTokens.semanticSpacingGapLg;
+
+  /// componentFieldSpacingGapLg with value: {semantic.spacing.gap.xl}
+  static const componentFieldSpacingGapLg =
+      CoreDesignTokens.semanticSpacingGapXl;
+
+  /// componentFieldHeightSm with value: {core.size.1600}
+  static const componentFieldHeightSm = CoreDesignTokens.coreSize1600;
+
+  /// componentFieldHeightMd with value: {core.size.2800}
+  static const componentFieldHeightMd = CoreDesignTokens.coreSize2800;
+
+  /// componentHandleBg with value: {semantic.color.monochrome.surface.normal.midHigh}
+  static final componentHandleBgLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
+
+  /// componentHandleBg with value: {semantic.color.monochrome.surface.normal.midHigh}
+  static final componentHandleBgDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
+
+  /// componentHandleBorderRadius with value: {semantic.borderRadius.pill}
+  static const componentHandleBorderRadius =
+      CoreDesignTokens.semanticBorderRadiusPill;
+
+  /// componentHandleWidth with value: {core.size.2400}
+  static const componentHandleWidth = CoreDesignTokens.coreSize2400;
+
+  /// componentHandleHeight with value: {core.size.200}
+  static const componentHandleHeight = CoreDesignTokens.coreSize200;
+
+  /// componentLinkSpacingGapSm with value: {core.spacing.400}
+  static const componentLinkSpacingGapSm = CoreDesignTokens.coreSpacing400;
+
+  /// componentLinkSpacingGapMd with value: {core.spacing.500}
+  static const componentLinkSpacingGapMd = CoreDesignTokens.coreSpacing500;
+
+  /// componentListBgMenuDefault with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentListBgMenuDefaultLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+
+  /// componentListBgMenuDefault with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentListBgMenuDefaultDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+
+  /// componentListBgMenuHover with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentListBgMenuHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentListBgMenuHover with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentListBgMenuHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentListBgMenuActive with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentListBgMenuActiveLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentListBgMenuActive with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentListBgMenuActiveDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentListBgMenuDisabled with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentListBgMenuDisabledLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+
+  /// componentListBgMenuDisabled with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentListBgMenuDisabledDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+
+  /// componentListBgSelectionControlDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentListBgSelectionControlDefaultLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentListBgSelectionControlDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentListBgSelectionControlDefaultDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentListBgSelectionControlHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentListBgSelectionControlHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentListBgSelectionControlHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentListBgSelectionControlHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentListBgSelectionControlActive with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentListBgSelectionControlActiveLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentListBgSelectionControlActive with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentListBgSelectionControlActiveDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentListBgSelectionControlSelectedDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentListBgSelectionControlSelectedDefaultLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentListBgSelectionControlSelectedDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentListBgSelectionControlSelectedDefaultDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentListBgSelectionControlSelectedHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentListBgSelectionControlSelectedHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentListBgSelectionControlSelectedHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentListBgSelectionControlSelectedHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentListBgSelectionControlSelectedActive with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentListBgSelectionControlSelectedActiveLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentListBgSelectionControlSelectedActive with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentListBgSelectionControlSelectedActiveDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentListBgSelectionControlDisabled with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentListBgSelectionControlDisabledLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentListBgSelectionControlDisabled with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentListBgSelectionControlDisabledDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentListBgSelectionControlSelectedDisabled with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentListBgSelectionControlSelectedDisabledLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentListBgSelectionControlSelectedDisabled with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentListBgSelectionControlSelectedDisabledDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentListBorderRadius with value: {core.borderRadius.400}
+  static const componentListBorderRadius = CoreDesignTokens.coreBorderRadius400;
+
+  /// componentListBorderWidth with value: {core.borderWidth.75}
+  static const componentListBorderWidth = CoreDesignTokens.coreBorderWidth75;
+
+  /// componentListBorderColorMenu with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentListBorderColorMenuLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentListBorderColorMenu with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentListBorderColorMenuDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentListBorderColorSelectionControlSelectedDefault with value: {semantic.color.slate.solid.border.inverse.lowest}
+  static const componentListBorderColorSelectionControlSelectedDefaultLight =
+      LightThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
+
+  /// componentListBorderColorSelectionControlSelectedDefault with value: {semantic.color.slate.solid.border.inverse.lowest}
+  static const componentListBorderColorSelectionControlSelectedDefaultDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
+
+  /// componentListBorderColorSelectionControlSelectedDisabled with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentListBorderColorSelectionControlSelectedDisabledLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentListBorderColorSelectionControlSelectedDisabled with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentListBorderColorSelectionControlSelectedDisabledDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentListSpacingSm with value: {core.spacing.400}
+  static const componentListSpacingSm = CoreDesignTokens.coreSpacing400;
+
+  /// componentListSpacingMd with value: {core.spacing.800}
+  static const componentListSpacingMd = CoreDesignTokens.coreSpacing800;
+
+  /// componentListSpacingLg with value: {core.spacing.1200}
+  static const componentListSpacingLg = CoreDesignTokens.coreSpacing1200;
+
+  /// componentListHeightMenu with value: {core.size.3600}
+  static const componentListHeightMenu = CoreDesignTokens.coreSize3600;
+
+  /// componentModalTitleTypographyFontFamily with value: {core.fontFamily.inter}
+  static const componentModalTitleTypographyFontFamily =
+      CoreDesignTokens.coreFontFamilyInter;
+
+  /// componentModalTitleTypographyFontSize with value: {core.fontSize.400}
+  static const componentModalTitleTypographyFontSize =
+      CoreDesignTokens.coreFontSize400;
+
+  /// componentModalTitleTypographyFontWeight with value: {core.fontWeight.extraBold}
+  static const componentModalTitleTypographyFontWeight =
+      CoreDesignTokens.coreFontWeightExtraBold;
+
+  /// componentModalTitleTypographyLineHeight with value: {core.lineHeight.600}
+  static const componentModalTitleTypographyLineHeight =
+      CoreDesignTokens.coreLineHeight600;
+
+  /// componentModalTitleTypographyParagraphSpacing with value: {core.paragraphSpacing.400}
+  static const componentModalTitleTypographyParagraphSpacing =
+      CoreDesignTokens.coreParagraphSpacing400;
+
+  /// componentModalBg with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentModalBgLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+
+  /// componentModalBg with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentModalBgDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+
+  /// componentModalBorderRadiusBottom with value: {core.borderRadius.800}
+  static const componentModalBorderRadiusBottom =
+      CoreDesignTokens.coreBorderRadius800;
+
+  /// componentModalBorderRadiusOverlay with value: {core.borderRadius.1600}
+  static const componentModalBorderRadiusOverlay =
+      CoreDesignTokens.coreBorderRadius1600;
+
+  /// componentModalSpacingBottomPaddingSm with value: {core.spacing.1200}
+  static const componentModalSpacingBottomPaddingSm =
+      CoreDesignTokens.coreSpacing1200;
+
+  /// componentModalSpacingBottomPaddingLg with value: {core.spacing.2200}
+  static const componentModalSpacingBottomPaddingLg =
+      CoreDesignTokens.coreSpacing2200;
+
+  /// componentModalSpacingBottomGap with value: {core.spacing.1200}
+  static const componentModalSpacingBottomGap =
+      CoreDesignTokens.coreSpacing1200;
+
+  /// componentModalSpacingOverlayPaddingSm with value: {core.spacing.1200}
+  static const componentModalSpacingOverlayPaddingSm =
+      CoreDesignTokens.coreSpacing1200;
+
+  /// componentModalSpacingOverlayPaddingMd with value: {core.spacing.1600}
+  static const componentModalSpacingOverlayPaddingMd =
+      CoreDesignTokens.coreSpacing1600;
+
+  /// componentModalSpacingOverlayGap with value: {core.spacing.1600}
+  static const componentModalSpacingOverlayGap =
+      CoreDesignTokens.coreSpacing1600;
+
+  /// componentNavigationBarBgItemHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentNavigationBarBgItemHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentNavigationBarBgItemHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentNavigationBarBgItemHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentNavigationBarBgItemActive with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentNavigationBarBgItemActiveLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentNavigationBarBgItemActive with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentNavigationBarBgItemActiveDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentNavigationBarBgItemSelectedDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentNavigationBarBgItemSelectedDefaultLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentNavigationBarBgItemSelectedDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentNavigationBarBgItemSelectedDefaultDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentNavigationBarBgItemSelectedHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentNavigationBarBgItemSelectedHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentNavigationBarBgItemSelectedHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentNavigationBarBgItemSelectedHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentNavigationBarBgItemSelectedActive with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentNavigationBarBgItemSelectedActiveLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentNavigationBarBgItemSelectedActive with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentNavigationBarBgItemSelectedActiveDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentNavigationBarBgBody with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentNavigationBarBgBodyLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+
+  /// componentNavigationBarBgBody with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentNavigationBarBgBodyDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+
+  /// componentNavigationBarBorderRadius with value: {core.borderRadius.400}
+  static const componentNavigationBarBorderRadius =
+      CoreDesignTokens.coreBorderRadius400;
+
+  /// componentNavigationBarBorderWidth with value: {core.borderWidth.75}
+  static const componentNavigationBarBorderWidth =
+      CoreDesignTokens.coreBorderWidth75;
+
+  /// componentNavigationBarBorderColor with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentNavigationBarBorderColorLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentNavigationBarBorderColor with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentNavigationBarBorderColorDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentNavigationBarDividerHeight with value: {core.size.75}
+  static const componentNavigationBarDividerHeight =
+      CoreDesignTokens.coreSize75;
+
+  /// componentNavigationBarDividerColor with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentNavigationBarDividerColorLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentNavigationBarDividerColor with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentNavigationBarDividerColorDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentNavigationBarSpacingSm with value: {core.spacing.400}
+  static const componentNavigationBarSpacingSm =
+      CoreDesignTokens.coreSpacing400;
+
+  /// componentNavigationBarSpacingMd with value: {core.spacing.800}
+  static const componentNavigationBarSpacingMd =
+      CoreDesignTokens.coreSpacing800;
+
+  /// componentNavigationBarSpacingLg with value: {core.spacing.1000}
+  static const componentNavigationBarSpacingLg =
+      CoreDesignTokens.coreSpacing1000;
+
+  /// componentNavigationBarSizingItemXs with value: {core.size.1600}
+  static const componentNavigationBarSizingItemXs =
+      CoreDesignTokens.coreSize1600;
+
+  /// componentNavigationBarSizingItemSm with value: {core.size.2000}
+  static const componentNavigationBarSizingItemSm =
+      CoreDesignTokens.coreSize2000;
+
+  /// componentNavigationBarSizingItemMd with value: {core.size.2400}
+  static const componentNavigationBarSizingItemMd =
+      CoreDesignTokens.coreSize2400;
+
+  /// componentNotificationBgBanner with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentNotificationBgBannerLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
+
+  /// componentNotificationBgBanner with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentNotificationBgBannerDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
+
+  /// componentNotificationBgItemDefault with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentNotificationBgItemDefaultLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+
+  /// componentNotificationBgItemDefault with value: {semantic.color.slate.solid.surface.frame.low}
+  static const componentNotificationBgItemDefaultDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+
+  /// componentNotificationBgItemHover with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentNotificationBgItemHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentNotificationBgItemHover with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentNotificationBgItemHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentNotificationBgItemActive with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentNotificationBgItemActiveLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentNotificationBgItemActive with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentNotificationBgItemActiveDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentNotificationBgDivider with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentNotificationBgDividerLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentNotificationBgDivider with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentNotificationBgDividerDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentNotificationBorderRadius with value: {core.borderRadius.800}
+  static const componentNotificationBorderRadius =
+      CoreDesignTokens.coreBorderRadius800;
+
+  /// componentNotificationBorderWidth with value: {core.borderWidth.75}
+  static const componentNotificationBorderWidth =
+      CoreDesignTokens.coreBorderWidth75;
+
+  /// componentNotificationBorderColor with value: {semantic.color.monochrome.border.inverse.high}
+  static final componentNotificationBorderColorLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderInverseHigh;
+
+  /// componentNotificationBorderColor with value: {semantic.color.monochrome.border.inverse.high}
+  static final componentNotificationBorderColorDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderInverseHigh;
+
+  /// componentNotificationSpacingPaddingSm with value: {core.spacing.800}
+  static const componentNotificationSpacingPaddingSm =
+      CoreDesignTokens.coreSpacing800;
+
+  /// componentNotificationSpacingPaddingMd with value: {core.spacing.1600}
+  static const componentNotificationSpacingPaddingMd =
+      CoreDesignTokens.coreSpacing1600;
+
+  /// componentNotificationSpacingGapXs with value: {core.spacing.200}
+  static const componentNotificationSpacingGapXs =
+      CoreDesignTokens.coreSpacing200;
+
+  /// componentNotificationSpacingGapSm with value: {core.spacing.800}
+  static const componentNotificationSpacingGapSm =
+      CoreDesignTokens.coreSpacing800;
+
+  /// componentNotificationSpacingGapMd with value: {core.spacing.1600}
+  static const componentNotificationSpacingGapMd =
+      CoreDesignTokens.coreSpacing1600;
+
+  /// componentNotificationSizingItemHeight with value: {core.size.4800}
+  static const componentNotificationSizingItemHeight =
+      CoreDesignTokens.coreSize4800;
+
+  /// componentNotificationElevationShadow with value: {core.elevation.shadow.330}
+  static final componentNotificationElevationShadow =
+      CoreDesignTokens.coreElevationShadow330;
+
+  /// componentPaginationBgDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentPaginationBgDefaultLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentPaginationBgDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentPaginationBgDefaultDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
+
+  /// componentPaginationBgHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentPaginationBgHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentPaginationBgHover with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentPaginationBgHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentPaginationBgActive with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentPaginationBgActiveLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentPaginationBgActive with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentPaginationBgActiveDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentPaginationBgSelected with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentPaginationBgSelectedLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
+
+  /// componentPaginationBgSelected with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentPaginationBgSelectedDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
+
+  /// componentPaginationBorderRadiusNumber with value: {core.borderRadius.200}
+  static const componentPaginationBorderRadiusNumber =
+      CoreDesignTokens.coreBorderRadius200;
+
+  /// componentPaginationBorderRadiusBullet with value: {semantic.borderRadius.pill}
+  static const componentPaginationBorderRadiusBullet =
+      CoreDesignTokens.semanticBorderRadiusPill;
+
+  /// componentPaginationBorderRadiusButton with value: {core.borderRadius.200}
+  static const componentPaginationBorderRadiusButton =
+      CoreDesignTokens.coreBorderRadius200;
+
+  /// componentPaginationSpacingGapBody with value: {core.borderRadius.400}
+  static const componentPaginationSpacingGapBody =
+      CoreDesignTokens.coreBorderRadius400;
+
+  /// componentPaginationWidthNumber with value: {core.size.1600}
+  static const componentPaginationWidthNumber = CoreDesignTokens.coreSize1600;
+
+  /// componentPaginationWidthBullet with value: {core.size.400}
+  static const componentPaginationWidthBullet = CoreDesignTokens.coreSize400;
+
+  /// componentPaginationWidthButton with value: {core.size.1600}
+  static const componentPaginationWidthButton = CoreDesignTokens.coreSize1600;
+
+  /// componentPaginationHeightNumber with value: {core.size.1600}
+  static const componentPaginationHeightNumber = CoreDesignTokens.coreSize1600;
+
+  /// componentPaginationHeightBullet with value: {core.size.400}
+  static const componentPaginationHeightBullet = CoreDesignTokens.coreSize400;
+
+  /// componentPaginationHeightButton with value: {core.size.1600}
+  static const componentPaginationHeightButton = CoreDesignTokens.coreSize1600;
+
+  /// componentProgressBarIndicatorFail with value: {semantic.color.red.solid.surface.normal.highest}
+  static const componentProgressBarIndicatorFailLight =
+      LightThemeDesignTokens.semanticColorRedSolidSurfaceNormalHighest;
+
+  /// componentProgressBarIndicatorFail with value: {semantic.color.red.solid.surface.normal.highest}
+  static const componentProgressBarIndicatorFailDark =
+      DarkThemeDesignTokens.semanticColorRedSolidSurfaceNormalHighest;
+
+  /// componentProgressBarIndicatorWarning with value: {semantic.color.yellow.solid.surface.normal.highest}
+  static const componentProgressBarIndicatorWarningLight =
+      LightThemeDesignTokens.semanticColorYellowSolidSurfaceNormalHighest;
+
+  /// componentProgressBarIndicatorWarning with value: {semantic.color.yellow.solid.surface.normal.highest}
+  static const componentProgressBarIndicatorWarningDark =
+      DarkThemeDesignTokens.semanticColorYellowSolidSurfaceNormalHighest;
+
+  /// componentProgressBarIndicatorSuccess with value: {semantic.color.green.solid.surface.normal.highest}
+  static const componentProgressBarIndicatorSuccessLight =
+      LightThemeDesignTokens.semanticColorGreenSolidSurfaceNormalHighest;
+
+  /// componentProgressBarIndicatorSuccess with value: {semantic.color.green.solid.surface.normal.highest}
+  static const componentProgressBarIndicatorSuccessDark =
+      DarkThemeDesignTokens.semanticColorGreenSolidSurfaceNormalHighest;
+
+  /// componentProgressBarIndicatorInformation with value: {semantic.color.blue.solid.surface.normal.highest}
+  static const componentProgressBarIndicatorInformationLight =
+      LightThemeDesignTokens.semanticColorBlueSolidSurfaceNormalHighest;
+
+  /// componentProgressBarIndicatorInformation with value: {semantic.color.blue.solid.surface.normal.highest}
+  static const componentProgressBarIndicatorInformationDark =
+      DarkThemeDesignTokens.semanticColorBlueSolidSurfaceNormalHighest;
+
+  /// componentProgressBarIndicatorDefault with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentProgressBarIndicatorDefaultLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
+
+  /// componentProgressBarIndicatorDefault with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentProgressBarIndicatorDefaultDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
+
+  /// componentProgressBarTrack with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentProgressBarTrackLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentProgressBarTrack with value: {semantic.color.monochrome.surface.normal.low}
+  static final componentProgressBarTrackDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+
+  /// componentProgressBarBorderRadius with value: {semantic.borderRadius.pill}
+  static const componentProgressBarBorderRadius =
+      CoreDesignTokens.semanticBorderRadiusPill;
+
+  /// componentProgressBarSpacingSm with value: {semantic.spacing.general.xs}
+  static const componentProgressBarSpacingSm =
+      CoreDesignTokens.semanticSpacingGeneralXs;
+
+  /// componentProgressBarSpacingMd with value: {semantic.spacing.general.sm}
+  static const componentProgressBarSpacingMd =
+      CoreDesignTokens.semanticSpacingGeneralSm;
+
+  /// componentProgressBarHeightSm with value: {core.size.200}
+  static const componentProgressBarHeightSm = CoreDesignTokens.coreSize200;
+
+  /// componentProgressBarHeightMd with value: {core.size.400}
+  static const componentProgressBarHeightMd = CoreDesignTokens.coreSize400;
+
   /// componentSegmentedControlBgSingleItemHover with value: {semantic.color.monochrome.surface.normal.low}
   static final componentSegmentedControlBgSingleItemHoverLight =
       LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
@@ -2421,103 +3052,97 @@ class ComponentDesignTokens {
   static const componentSegmentedControlHeightBodyMultiLg =
       CoreDesignTokens.coreSize2400;
 
-  /// componentPaginationBgDefault with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentPaginationBgDefaultLight =
+  /// componentSectionMessageBgDanger with value: {semantic.color.red.opacity.surface.low}
+  static final componentSectionMessageBgDangerLight =
+      LightThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
+
+  /// componentSectionMessageBgDanger with value: {semantic.color.red.opacity.surface.low}
+  static final componentSectionMessageBgDangerDark =
+      DarkThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
+
+  /// componentSectionMessageBgWarning with value: {semantic.color.yellow.opacity.surface.low}
+  static final componentSectionMessageBgWarningLight =
+      LightThemeDesignTokens.semanticColorYellowOpacitySurfaceLow;
+
+  /// componentSectionMessageBgWarning with value: {semantic.color.yellow.opacity.surface.low}
+  static final componentSectionMessageBgWarningDark =
+      DarkThemeDesignTokens.semanticColorYellowOpacitySurfaceLow;
+
+  /// componentSectionMessageBgSuccess with value: {semantic.color.green.opacity.surface.low}
+  static final componentSectionMessageBgSuccessLight =
+      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
+
+  /// componentSectionMessageBgSuccess with value: {semantic.color.green.opacity.surface.low}
+  static final componentSectionMessageBgSuccessDark =
+      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
+
+  /// componentSectionMessageBgInformation with value: {semantic.color.blue.opacity.surface.low}
+  static final componentSectionMessageBgInformationLight =
+      LightThemeDesignTokens.semanticColorBlueOpacitySurfaceLow;
+
+  /// componentSectionMessageBgInformation with value: {semantic.color.blue.opacity.surface.low}
+  static final componentSectionMessageBgInformationDark =
+      DarkThemeDesignTokens.semanticColorBlueOpacitySurfaceLow;
+
+  /// componentSectionMessageBgDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentSectionMessageBgDefaultLight =
       LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
 
-  /// componentPaginationBgDefault with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentPaginationBgDefaultDark =
+  /// componentSectionMessageBgDefault with value: {semantic.color.monochrome.surface.normal.lowest}
+  static final componentSectionMessageBgDefaultDark =
       DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
 
-  /// componentPaginationBgHover with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentPaginationBgHoverLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentPaginationBgHover with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentPaginationBgHoverDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentPaginationBgActive with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentPaginationBgActiveLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
-
-  /// componentPaginationBgActive with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentPaginationBgActiveDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
-
-  /// componentPaginationBgSelected with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentPaginationBgSelectedLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
-
-  /// componentPaginationBgSelected with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentPaginationBgSelectedDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
-
-  /// componentPaginationBorderRadiusNumber with value: {core.borderRadius.200}
-  static const componentPaginationBorderRadiusNumber =
-      CoreDesignTokens.coreBorderRadius200;
-
-  /// componentPaginationBorderRadiusBullet with value: {semantic.borderRadius.pill}
-  static const componentPaginationBorderRadiusBullet =
-      CoreDesignTokens.semanticBorderRadiusPill;
-
-  /// componentPaginationBorderRadiusButton with value: {core.borderRadius.200}
-  static const componentPaginationBorderRadiusButton =
-      CoreDesignTokens.coreBorderRadius200;
-
-  /// componentPaginationSpacingGapBody with value: {core.borderRadius.400}
-  static const componentPaginationSpacingGapBody =
-      CoreDesignTokens.coreBorderRadius400;
-
-  /// componentPaginationWidthNumber with value: {core.size.1600}
-  static const componentPaginationWidthNumber = CoreDesignTokens.coreSize1600;
-
-  /// componentPaginationWidthBullet with value: {core.size.400}
-  static const componentPaginationWidthBullet = CoreDesignTokens.coreSize400;
-
-  /// componentPaginationWidthButton with value: {core.size.1600}
-  static const componentPaginationWidthButton = CoreDesignTokens.coreSize1600;
-
-  /// componentPaginationHeightNumber with value: {core.size.1600}
-  static const componentPaginationHeightNumber = CoreDesignTokens.coreSize1600;
-
-  /// componentPaginationHeightBullet with value: {core.size.400}
-  static const componentPaginationHeightBullet = CoreDesignTokens.coreSize400;
-
-  /// componentPaginationHeightButton with value: {core.size.1600}
-  static const componentPaginationHeightButton = CoreDesignTokens.coreSize1600;
-
-  /// componentActionSheetBg with value: {semantic.color.slate.solid.surface.frame.low}
-  static const componentActionSheetBgLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
-
-  /// componentActionSheetBg with value: {semantic.color.slate.solid.surface.frame.low}
-  static const componentActionSheetBgDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
-
-  /// componentActionSheetBorderRadius with value: {core.borderRadius.800}
-  static const componentActionSheetBorderRadius =
+  /// componentSectionMessageBorderRadius with value: {core.borderRadius.800}
+  static const componentSectionMessageBorderRadius =
       CoreDesignTokens.coreBorderRadius800;
 
-  /// componentActionSheetSpacingPaddingSm with value: {core.spacing.400}
-  static const componentActionSheetSpacingPaddingSm =
+  /// componentSectionMessageSpacing2xs with value: {core.spacing.100}
+  static const componentSectionMessageSpacing2xs =
+      CoreDesignTokens.coreSpacing100;
+
+  /// componentSectionMessageSpacingXs with value: {core.spacing.300}
+  static const componentSectionMessageSpacingXs =
+      CoreDesignTokens.coreSpacing300;
+
+  /// componentSectionMessageSpacingSm with value: {core.spacing.400}
+  static const componentSectionMessageSpacingSm =
       CoreDesignTokens.coreSpacing400;
 
-  /// componentActionSheetSpacingPaddingMd with value: {core.spacing.800}
-  static const componentActionSheetSpacingPaddingMd =
+  /// componentSectionMessageSpacingMd with value: {core.spacing.600}
+  static const componentSectionMessageSpacingMd =
+      CoreDesignTokens.coreSpacing600;
+
+  /// componentSectionMessageSpacingLg with value: {core.spacing.700}
+  static const componentSectionMessageSpacingLg =
+      CoreDesignTokens.coreSpacing700;
+
+  /// componentSectionMessageSpacingXl with value: {core.spacing.800}
+  static const componentSectionMessageSpacingXl =
       CoreDesignTokens.coreSpacing800;
 
-  /// componentActionSheetSpacingPaddingLg with value: {core.spacing.1200}
-  static const componentActionSheetSpacingPaddingLg =
-      CoreDesignTokens.coreSpacing1200;
+  /// componentSelectionControlIconSelectedHover with value: {semantic.color.monochrome.surface.normal.high}
+  static final componentSelectionControlIconSelectedHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalHigh;
 
-  /// componentActionSheetSpacingGapSm with value: {core.spacing.400}
-  static const componentActionSheetSpacingGapSm =
-      CoreDesignTokens.coreSpacing400;
+  /// componentSelectionControlIconSelectedHover with value: {semantic.color.monochrome.surface.normal.high}
+  static final componentSelectionControlIconSelectedHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalHigh;
 
-  /// componentActionSheetSpacingGapMd with value: {core.spacing.600}
-  static const componentActionSheetSpacingGapMd =
-      CoreDesignTokens.coreSpacing600;
+  /// componentSelectionControlIconSelectedActive with value: {semantic.color.monochrome.surface.normal.highest}
+  static final componentSelectionControlIconSelectedActiveLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalHighest;
+
+  /// componentSelectionControlIconSelectedActive with value: {semantic.color.monochrome.surface.normal.highest}
+  static final componentSelectionControlIconSelectedActiveDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalHighest;
+
+  /// componentSelectionControlSpacingGapSm with value: {semantic.spacing.gap.md}
+  static const componentSelectionControlSpacingGapSm =
+      CoreDesignTokens.semanticSpacingGapMd;
+
+  /// componentSelectionControlSpacingGapMd with value: {semantic.spacing.gap.md}
+  static const componentSelectionControlSpacingGapMd =
+      CoreDesignTokens.semanticSpacingGapMd;
 
   /// componentSnackbarBgNeutral with value: {semantic.color.slate.solid.surface.inverse.lowest}
   static const componentSnackbarBgNeutralLight =
@@ -2566,233 +3191,189 @@ class ComponentDesignTokens {
   static final componentSnackbarElevationShadow =
       CoreDesignTokens.coreElevationShadow330;
 
-  /// componentBadgeNotificationLabelColor with value: {semantic.color.slate.solid.surface.static.lowest}
-  static const componentBadgeNotificationLabelColorLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceStaticLowest;
-
-  /// componentBadgeNotificationLabelColor with value: {semantic.color.slate.solid.surface.static.lowest}
-  static const componentBadgeNotificationLabelColorDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceStaticLowest;
-
-  /// componentBadgeNotificationBg with value: {semantic.color.red.solid.surface.static.mid}
-  static const componentBadgeNotificationBgLight =
-      LightThemeDesignTokens.semanticColorRedSolidSurfaceStaticMid;
-
-  /// componentBadgeNotificationBg with value: {semantic.color.red.solid.surface.static.mid}
-  static const componentBadgeNotificationBgDark =
-      DarkThemeDesignTokens.semanticColorRedSolidSurfaceStaticMid;
-
-  /// componentBadgeNotificationBorderRadius with value: {semantic.borderRadius.pill}
-  static const componentBadgeNotificationBorderRadius =
-      CoreDesignTokens.semanticBorderRadiusPill;
-
-  /// componentBadgeNotificationSpacingPaddingMd with value: {core.spacing.400}
-  static const componentBadgeNotificationSpacingPaddingMd =
-      CoreDesignTokens.coreSpacing400;
-
-  /// componentBadgeNotificationSpacingPaddingLg with value: {core.spacing.500}
-  static const componentBadgeNotificationSpacingPaddingLg =
-      CoreDesignTokens.coreSpacing500;
-
-  /// componentBadgeStatusBgSuccess with value: {semantic.color.green.solid.surface.static.mid}
-  static const componentBadgeStatusBgSuccessLight =
-      LightThemeDesignTokens.semanticColorGreenSolidSurfaceStaticMid;
-
-  /// componentBadgeStatusBgSuccess with value: {semantic.color.green.solid.surface.static.mid}
-  static const componentBadgeStatusBgSuccessDark =
-      DarkThemeDesignTokens.semanticColorGreenSolidSurfaceStaticMid;
-
-  /// componentBadgeStatusBgWarning with value: {semantic.color.yellow.solid.surface.static.mid}
-  static const componentBadgeStatusBgWarningLight =
-      LightThemeDesignTokens.semanticColorYellowSolidSurfaceStaticMid;
-
-  /// componentBadgeStatusBgWarning with value: {semantic.color.yellow.solid.surface.static.mid}
-  static const componentBadgeStatusBgWarningDark =
-      DarkThemeDesignTokens.semanticColorYellowSolidSurfaceStaticMid;
-
-  /// componentBadgeStatusBgDanger with value: {semantic.color.red.solid.surface.static.mid}
-  static const componentBadgeStatusBgDangerLight =
-      LightThemeDesignTokens.semanticColorRedSolidSurfaceStaticMid;
-
-  /// componentBadgeStatusBgDanger with value: {semantic.color.red.solid.surface.static.mid}
-  static const componentBadgeStatusBgDangerDark =
-      DarkThemeDesignTokens.semanticColorRedSolidSurfaceStaticMid;
-
-  /// componentBadgeStatusBorderRadius with value: {semantic.borderRadius.pill}
-  static const componentBadgeStatusBorderRadius =
-      CoreDesignTokens.semanticBorderRadiusPill;
-
-  /// componentBadgeStatusWidthSm with value: {core.size.400}
-  static const componentBadgeStatusWidthSm = CoreDesignTokens.coreSize400;
-
-  /// componentBadgeStatusWidthMd with value: {core.size.800}
-  static const componentBadgeStatusWidthMd = CoreDesignTokens.coreSize800;
-
-  /// componentBadgeStatusWidthLg with value: {core.size.1200}
-  static const componentBadgeStatusWidthLg = CoreDesignTokens.coreSize1200;
-
-  /// componentBadgeStatusHeightSm with value: {core.size.400}
-  static const componentBadgeStatusHeightSm = CoreDesignTokens.coreSize400;
-
-  /// componentBadgeStatusHeightMd with value: {core.size.800}
-  static const componentBadgeStatusHeightMd = CoreDesignTokens.coreSize800;
-
-  /// componentBadgeStatusHeightLg with value: {core.size.1200}
-  static const componentBadgeStatusHeightLg = CoreDesignTokens.coreSize1200;
-
-  /// componentDropdownItemBgDefault with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentDropdownItemBgDefaultLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentDropdownItemBgDefault with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentDropdownItemBgDefaultDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentDropdownItemBgHover with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentDropdownItemBgHoverLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentDropdownItemBgHover with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentDropdownItemBgHoverDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentDropdownItemBgActive with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentDropdownItemBgActiveLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
-
-  /// componentDropdownItemBgActive with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentDropdownItemBgActiveDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
-
-  /// componentDropdownItemBgSelected with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentDropdownItemBgSelectedLight =
+  /// componentStepperNodeBgComplete with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentStepperNodeBgCompleteLight =
       LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
 
-  /// componentDropdownItemBgSelected with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentDropdownItemBgSelectedDark =
+  /// componentStepperNodeBgComplete with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentStepperNodeBgCompleteDark =
       DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
 
-  /// componentDropdownItemBgSelectedHover with value: {semantic.color.monochrome.surface.normal.high}
-  static final componentDropdownItemBgSelectedHoverLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalHigh;
+  /// componentStepperNodeBgFail with value: {semantic.color.red.solid.surface.inverse.mid}
+  static const componentStepperNodeBgFailLight =
+      LightThemeDesignTokens.semanticColorRedSolidSurfaceInverseMid;
 
-  /// componentDropdownItemBgSelectedHover with value: {semantic.color.monochrome.surface.normal.high}
-  static final componentDropdownItemBgSelectedHoverDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalHigh;
+  /// componentStepperNodeBgFail with value: {semantic.color.red.solid.surface.inverse.mid}
+  static const componentStepperNodeBgFailDark =
+      DarkThemeDesignTokens.semanticColorRedSolidSurfaceInverseMid;
 
-  /// componentDropdownItemBgSelectedActive with value: {semantic.color.monochrome.surface.normal.highest}
-  static final componentDropdownItemBgSelectedActiveLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalHighest;
+  /// componentStepperNodeBgWarning with value: {semantic.color.yellow.solid.surface.inverse.mid}
+  static const componentStepperNodeBgWarningLight =
+      LightThemeDesignTokens.semanticColorYellowSolidSurfaceInverseMid;
 
-  /// componentDropdownItemBgSelectedActive with value: {semantic.color.monochrome.surface.normal.highest}
-  static final componentDropdownItemBgSelectedActiveDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalHighest;
+  /// componentStepperNodeBgWarning with value: {semantic.color.yellow.solid.surface.inverse.mid}
+  static const componentStepperNodeBgWarningDark =
+      DarkThemeDesignTokens.semanticColorYellowSolidSurfaceInverseMid;
 
-  /// componentDropdownItemBgSelectedDisabled with value: {semantic.color.monochrome.surface.normal.midHigh}
-  static final componentDropdownItemBgSelectedDisabledLight =
+  /// componentStepperNodeBorderRadius with value: {semantic.borderRadius.pill}
+  static const componentStepperNodeBorderRadius =
+      CoreDesignTokens.semanticBorderRadiusPill;
+
+  /// componentStepperNodeBorderColorIncomplete with value: {semantic.color.monochrome.border.normal.highest}
+  static final componentStepperNodeBorderColorIncompleteLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalHighest;
+
+  /// componentStepperNodeBorderColorIncomplete with value: {semantic.color.monochrome.border.normal.highest}
+  static final componentStepperNodeBorderColorIncompleteDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalHighest;
+
+  /// componentStepperNodeBorderColorActive with value: {semantic.color.slate.solid.border.inverse.lowest}
+  static const componentStepperNodeBorderColorActiveLight =
+      LightThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
+
+  /// componentStepperNodeBorderColorActive with value: {semantic.color.slate.solid.border.inverse.lowest}
+  static const componentStepperNodeBorderColorActiveDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
+
+  /// componentStepperNodeSizeSm with value: {core.size.1000}
+  static const componentStepperNodeSizeSm = CoreDesignTokens.coreSize1000;
+
+  /// componentStepperNodeSizeMd with value: {core.size.1200}
+  static const componentStepperNodeSizeMd = CoreDesignTokens.coreSize1200;
+
+  /// componentStepperNodeSizeLg with value: {core.size.1600}
+  static const componentStepperNodeSizeLg = CoreDesignTokens.coreSize1600;
+
+  /// componentStepperTrackColorDefault with value: {semantic.color.monochrome.surface.normal.midHigh}
+  static final componentStepperTrackColorDefaultLight =
       LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
 
-  /// componentDropdownItemBgSelectedDisabled with value: {semantic.color.monochrome.surface.normal.midHigh}
-  static final componentDropdownItemBgSelectedDisabledDark =
+  /// componentStepperTrackColorDefault with value: {semantic.color.monochrome.surface.normal.midHigh}
+  static final componentStepperTrackColorDefaultDark =
       DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
 
-  /// componentDropdownItemBorderRadius with value: {core.borderRadius.200}
-  static const componentDropdownItemBorderRadius =
-      CoreDesignTokens.coreBorderRadius200;
+  /// componentStepperTrackColorEnabled with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentStepperTrackColorEnabledLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
 
-  /// componentDropdownItemSpacingPaddingSm with value: {core.spacing.600}
-  static const componentDropdownItemSpacingPaddingSm =
-      CoreDesignTokens.coreSpacing600;
+  /// componentStepperTrackColorEnabled with value: {semantic.color.slate.solid.surface.inverse.lowest}
+  static const componentStepperTrackColorEnabledDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
 
-  /// componentDropdownItemSpacingPaddingMd with value: {core.spacing.800}
-  static const componentDropdownItemSpacingPaddingMd =
-      CoreDesignTokens.coreSpacing800;
+  /// componentStepperTrackHeightSm with value: {core.size.100}
+  static const componentStepperTrackHeightSm = CoreDesignTokens.coreSize100;
 
-  /// componentDropdownItemSpacingGapXs with value: {core.spacing.200}
-  static const componentDropdownItemSpacingGapXs =
-      CoreDesignTokens.coreSpacing200;
+  /// componentStepperTrackHeightMd with value: {core.size.400}
+  static const componentStepperTrackHeightMd = CoreDesignTokens.coreSize400;
 
-  /// componentDropdownItemSpacingGapSm with value: {core.spacing.300}
-  static const componentDropdownItemSpacingGapSm =
-      CoreDesignTokens.coreSpacing300;
+  /// componentStepperTrackWidth with value: {core.size.100}
+  static const componentStepperTrackWidth = CoreDesignTokens.coreSize100;
 
-  /// componentDropdownItemSpacingGapMd with value: {core.spacing.400}
-  static const componentDropdownItemSpacingGapMd =
-      CoreDesignTokens.coreSpacing400;
+  /// componentStepperSpacing3xs with value: {core.spacing.200}
+  static const componentStepperSpacing3xs = CoreDesignTokens.coreSpacing200;
 
-  /// componentDropdownItemWidthDateSm with value: {core.size.2000}
-  static const componentDropdownItemWidthDateSm = CoreDesignTokens.coreSize2000;
+  /// componentStepperSpacing2xs with value: {core.spacing.300}
+  static const componentStepperSpacing2xs = CoreDesignTokens.coreSpacing300;
 
-  /// componentDropdownItemWidthDateMd with value: {core.size.2400}
-  static const componentDropdownItemWidthDateMd = CoreDesignTokens.coreSize2400;
+  /// componentStepperSpacingSm with value: {core.spacing.400}
+  static const componentStepperSpacingSm = CoreDesignTokens.coreSpacing400;
 
-  /// componentDropdownItemHeightItemSm with value: {core.size.1600}
-  static const componentDropdownItemHeightItemSm =
-      CoreDesignTokens.coreSize1600;
+  /// componentStepperSpacingXl with value: {core.spacing.800}
+  static const componentStepperSpacingXl = CoreDesignTokens.coreSpacing800;
 
-  /// componentDropdownItemHeightItemMd with value: {core.size.2400}
-  static const componentDropdownItemHeightItemMd =
-      CoreDesignTokens.coreSize2400;
+  /// componentStepperWidthSm with value: {core.size.1000}
+  static const componentStepperWidthSm = CoreDesignTokens.coreSize1000;
 
-  /// componentDropdownItemHeightDateSm with value: {core.size.2000}
-  static const componentDropdownItemHeightDateSm =
-      CoreDesignTokens.coreSize2000;
+  /// componentStepperWidthMd with value: {core.size.1200}
+  static const componentStepperWidthMd = CoreDesignTokens.coreSize1200;
 
-  /// componentDropdownItemHeightDateMd with value: {core.size.2400}
-  static const componentDropdownItemHeightDateMd =
-      CoreDesignTokens.coreSize2400;
+  /// componentStepperWidthLg with value: {core.size.1600}
+  static const componentStepperWidthLg = CoreDesignTokens.coreSize1600;
 
-  /// componentDropdownListBg with value: {semantic.color.slate.solid.surface.frame.low}
-  static const componentDropdownListBgLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+  /// componentStepperHeightSm with value: {core.size.1000}
+  static const componentStepperHeightSm = CoreDesignTokens.coreSize1000;
 
-  /// componentDropdownListBg with value: {semantic.color.slate.solid.surface.frame.low}
-  static const componentDropdownListBgDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
+  /// componentStepperHeightMd with value: {core.size.1200}
+  static const componentStepperHeightMd = CoreDesignTokens.coreSize1200;
 
-  /// componentDropdownListBorderRadius with value: {core.borderRadius.400}
-  static const componentDropdownListBorderRadius =
-      CoreDesignTokens.coreBorderRadius400;
+  /// componentStepperHeightLg with value: {core.size.1600}
+  static const componentStepperHeightLg = CoreDesignTokens.coreSize1600;
 
-  /// componentDropdownListBorderWidth with value: {core.borderWidth.75}
-  static const componentDropdownListBorderWidth =
-      CoreDesignTokens.coreBorderWidth75;
+  /// componentTabBorderColorDefault with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentTabBorderColorDefaultLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
 
-  /// componentDropdownListBorderColor with value: {semantic.color.monochrome.border.normal.low}
-  static final componentDropdownListBorderColorLight =
-      LightThemeDesignTokens.semanticColorMonochromeBorderNormalLow;
+  /// componentTabBorderColorDefault with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentTabBorderColorDefaultDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
 
-  /// componentDropdownListBorderColor with value: {semantic.color.monochrome.border.normal.low}
-  static final componentDropdownListBorderColorDark =
-      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalLow;
+  /// componentTabBorderColorHover with value: {semantic.color.monochrome.border.normal.high}
+  static final componentTabBorderColorHoverLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
 
-  /// componentDropdownListSpacingPaddingSm with value: {core.spacing.200}
-  static const componentDropdownListSpacingPaddingSm =
-      CoreDesignTokens.coreSpacing200;
+  /// componentTabBorderColorHover with value: {semantic.color.monochrome.border.normal.high}
+  static final componentTabBorderColorHoverDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalHigh;
 
-  /// componentDropdownListSpacingPaddingMd with value: {core.spacing.400}
-  static const componentDropdownListSpacingPaddingMd =
-      CoreDesignTokens.coreSpacing400;
+  /// componentTabBorderColorActive with value: {semantic.color.monochrome.border.normal.highest}
+  static final componentTabBorderColorActiveLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalHighest;
 
-  /// componentDropdownListSpacingPaddingLg with value: {core.spacing.800}
-  static const componentDropdownListSpacingPaddingLg =
-      CoreDesignTokens.coreSpacing800;
+  /// componentTabBorderColorActive with value: {semantic.color.monochrome.border.normal.highest}
+  static final componentTabBorderColorActiveDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalHighest;
 
-  /// componentDropdownListSpacingPaddingXl with value: {core.spacing.1200}
-  static const componentDropdownListSpacingPaddingXl =
-      CoreDesignTokens.coreSpacing1200;
+  /// componentTabBorderColorSelected with value: {semantic.color.slate.solid.border.inverse.lowest}
+  static const componentTabBorderColorSelectedLight =
+      LightThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
 
-  /// componentDropdownListSpacingGapSm with value: {core.spacing.800}
-  static const componentDropdownListSpacingGapSm =
-      CoreDesignTokens.coreSpacing800;
+  /// componentTabBorderColorSelected with value: {semantic.color.slate.solid.border.inverse.lowest}
+  static const componentTabBorderColorSelectedDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
 
-  /// componentDropdownListSpacingGapMd with value: {core.spacing.1200}
-  static const componentDropdownListSpacingGapMd =
-      CoreDesignTokens.coreSpacing1200;
+  /// componentTabBorderColorDisabled with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentTabBorderColorDisabledLight =
+      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
 
-  /// componentDropdownListElevationShadow with value: {semantic.elevation.shadow.menu}
-  static final componentDropdownListElevationShadow =
-      CoreDesignTokens.semanticElevationShadowMenu;
+  /// componentTabBorderColorDisabled with value: {semantic.color.monochrome.border.normal.mid}
+  static final componentTabBorderColorDisabledDark =
+      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+
+  /// componentTabSpacingPaddingSm with value: {semantic.spacing.general.sm}
+  static const componentTabSpacingPaddingSm =
+      CoreDesignTokens.semanticSpacingGeneralSm;
+
+  /// componentTabSpacingPaddingMd with value: {semantic.spacing.general.md}
+  static const componentTabSpacingPaddingMd =
+      CoreDesignTokens.semanticSpacingGeneralMd;
+
+  /// componentTabSpacingPaddingLg with value: {semantic.spacing.general.lg}
+  static const componentTabSpacingPaddingLg =
+      CoreDesignTokens.semanticSpacingGeneralLg;
+
+  /// componentTabSpacingGapSm with value: {semantic.spacing.gap.sm}
+  static const componentTabSpacingGapSm = CoreDesignTokens.semanticSpacingGapSm;
+
+  /// componentTabSpacingGapMd with value: {semantic.spacing.gap.md}
+  static const componentTabSpacingGapMd = CoreDesignTokens.semanticSpacingGapMd;
+
+  /// componentTabHeightIconTopSm with value: {core.size.3200}
+  static const componentTabHeightIconTopSm = CoreDesignTokens.coreSize3200;
+
+  /// componentTabHeightIconTopMd with value: {core.size.3600}
+  static const componentTabHeightIconTopMd = CoreDesignTokens.coreSize3600;
+
+  /// componentTabHeightIconLeftSm with value: {core.size.1600}
+  static const componentTabHeightIconLeftSm = CoreDesignTokens.coreSize1600;
+
+  /// componentTabHeightIconLeftMd with value: {core.size.2400}
+  static const componentTabHeightIconLeftMd = CoreDesignTokens.coreSize2400;
+
+  /// componentTabHeightLabelOnlySm with value: {core.size.1600}
+  static const componentTabHeightLabelOnlySm = CoreDesignTokens.coreSize1600;
+
+  /// componentTabHeightLabelOnlyMd with value: {core.size.2400}
+  static const componentTabHeightLabelOnlyMd = CoreDesignTokens.coreSize2400;
 
   /// componentTagBgDefault with value: {semantic.color.monochrome.surface.normal.lowest}
   static final componentTagBgDefaultLight =
@@ -2925,211 +3506,338 @@ class ComponentDesignTokens {
   /// componentTagHeightLg with value: {core.size.2400}
   static const componentTagHeightLg = CoreDesignTokens.coreSize2400;
 
-  /// componentChipBgHover with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentChipBgHoverLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+  /// componentTextIconNormalProminent with value: {semantic.color.slate.solid.textIcon.normal.highest}
+  static const componentTextIconNormalProminentLight =
+      LightThemeDesignTokens.semanticColorSlateSolidTextIconNormalHighest;
 
-  /// componentChipBgHover with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentChipBgHoverDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
+  /// componentTextIconNormalProminent with value: {semantic.color.slate.solid.textIcon.normal.highest}
+  static const componentTextIconNormalProminentDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidTextIconNormalHighest;
 
-  /// componentChipBgActive with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentChipBgActiveLight =
+  /// componentTextIconNormalDefault with value: {semantic.color.monochrome.textIcon.normal.high}
+  static final componentTextIconNormalDefaultLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalHigh;
+
+  /// componentTextIconNormalDefault with value: {semantic.color.monochrome.textIcon.normal.high}
+  static final componentTextIconNormalDefaultDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalHigh;
+
+  /// componentTextIconNormalSubtle with value: {semantic.color.monochrome.textIcon.normal.mid}
+  static final componentTextIconNormalSubtleLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalMid;
+
+  /// componentTextIconNormalSubtle with value: {semantic.color.monochrome.textIcon.normal.mid}
+  static final componentTextIconNormalSubtleDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalMid;
+
+  /// componentTextIconNormalDisabled with value: {semantic.color.monochrome.textIcon.normal.low}
+  static final componentTextIconNormalDisabledLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalLow;
+
+  /// componentTextIconNormalDisabled with value: {semantic.color.monochrome.textIcon.normal.low}
+  static final componentTextIconNormalDisabledDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalLow;
+
+  /// componentTextIconInverseProminent with value: {semantic.color.slate.solid.textIcon.inverse.highest}
+  static const componentTextIconInverseProminentLight =
+      LightThemeDesignTokens.semanticColorSlateSolidTextIconInverseHighest;
+
+  /// componentTextIconInverseProminent with value: {semantic.color.slate.solid.textIcon.inverse.highest}
+  static const componentTextIconInverseProminentDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidTextIconInverseHighest;
+
+  /// componentTextIconInverseDefault with value: {semantic.color.monochrome.textIcon.inverse.high}
+  static final componentTextIconInverseDefaultLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconInverseHigh;
+
+  /// componentTextIconInverseDefault with value: {semantic.color.monochrome.textIcon.inverse.high}
+  static final componentTextIconInverseDefaultDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconInverseHigh;
+
+  /// componentTextIconInverseSubtle with value: {semantic.color.monochrome.textIcon.inverse.mid}
+  static final componentTextIconInverseSubtleLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconInverseMid;
+
+  /// componentTextIconInverseSubtle with value: {semantic.color.monochrome.textIcon.inverse.mid}
+  static final componentTextIconInverseSubtleDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconInverseMid;
+
+  /// componentTextIconInverseDisabled with value: {semantic.color.monochrome.textIcon.inverse.low}
+  static final componentTextIconInverseDisabledLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconInverseLow;
+
+  /// componentTextIconInverseDisabled with value: {semantic.color.monochrome.textIcon.inverse.low}
+  static final componentTextIconInverseDisabledDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconInverseLow;
+
+  /// componentTextIconStaticProminentLight with value: {core.color.solid.slate.1400}
+  static const componentTextIconStaticProminentLight =
+      CoreDesignTokens.coreColorSolidSlate1400;
+
+  /// componentTextIconStaticDefaultLight with value: {semantic.color.monochrome.textIcon.static.blackHigh}
+  static final componentTextIconStaticDefaultLightLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconStaticBlackHigh;
+
+  /// componentTextIconStaticDefaultLight with value: {semantic.color.monochrome.textIcon.static.blackHigh}
+  static final componentTextIconStaticDefaultLightDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconStaticBlackHigh;
+
+  /// componentTextIconStaticSubtleLight with value: {semantic.color.monochrome.textIcon.static.blackMid}
+  static final componentTextIconStaticSubtleLightLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconStaticBlackMid;
+
+  /// componentTextIconStaticSubtleLight with value: {semantic.color.monochrome.textIcon.static.blackMid}
+  static final componentTextIconStaticSubtleLightDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconStaticBlackMid;
+
+  /// componentTextIconStaticDisabledLight with value: {semantic.color.monochrome.textIcon.static.blackLow}
+  static final componentTextIconStaticDisabledLightLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconStaticBlackLow;
+
+  /// componentTextIconStaticDisabledLight with value: {semantic.color.monochrome.textIcon.static.blackLow}
+  static final componentTextIconStaticDisabledLightDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconStaticBlackLow;
+
+  /// componentTextIconStaticProminentDark with value: {core.color.solid.slate.50}
+  static const componentTextIconStaticProminentDark =
+      CoreDesignTokens.coreColorSolidSlate50;
+
+  /// componentTextIconStaticDefaultDark with value: {core.color.opacity.white.600}
+  static final componentTextIconStaticDefaultDark =
+      CoreDesignTokens.coreColorOpacityWhite600;
+
+  /// componentTextIconStaticSubtleDark with value: {core.color.opacity.white.400}
+  static final componentTextIconStaticSubtleDark =
+      CoreDesignTokens.coreColorOpacityWhite400;
+
+  /// componentTextIconStaticDisabledDark with value: {core.color.opacity.white.300}
+  static final componentTextIconStaticDisabledDark =
+      CoreDesignTokens.coreColorOpacityWhite300;
+
+  /// componentTextIconStatusNormalInformation with value: {semantic.color.blue.solid.textIcon.normal.high}
+  static const componentTextIconStatusNormalInformationLight =
+      LightThemeDesignTokens.semanticColorBlueSolidTextIconNormalHigh;
+
+  /// componentTextIconStatusNormalInformation with value: {semantic.color.blue.solid.textIcon.normal.high}
+  static const componentTextIconStatusNormalInformationDark =
+      DarkThemeDesignTokens.semanticColorBlueSolidTextIconNormalHigh;
+
+  /// componentTextIconStatusNormalSuccess with value: {semantic.color.green.solid.textIcon.normal.high}
+  static const componentTextIconStatusNormalSuccessLight =
+      LightThemeDesignTokens.semanticColorGreenSolidTextIconNormalHigh;
+
+  /// componentTextIconStatusNormalSuccess with value: {semantic.color.green.solid.textIcon.normal.high}
+  static const componentTextIconStatusNormalSuccessDark =
+      DarkThemeDesignTokens.semanticColorGreenSolidTextIconNormalHigh;
+
+  /// componentTextIconStatusNormalWarning with value: {semantic.color.yellow.solid.textIcon.normal.high}
+  static const componentTextIconStatusNormalWarningLight =
+      LightThemeDesignTokens.semanticColorYellowSolidTextIconNormalHigh;
+
+  /// componentTextIconStatusNormalWarning with value: {semantic.color.yellow.solid.textIcon.normal.high}
+  static const componentTextIconStatusNormalWarningDark =
+      DarkThemeDesignTokens.semanticColorYellowSolidTextIconNormalHigh;
+
+  /// componentTextIconStatusNormalDanger with value: {semantic.color.red.solid.textIcon.normal.high}
+  static const componentTextIconStatusNormalDangerLight =
+      LightThemeDesignTokens.semanticColorRedSolidTextIconNormalHigh;
+
+  /// componentTextIconStatusNormalDanger with value: {semantic.color.red.solid.textIcon.normal.high}
+  static const componentTextIconStatusNormalDangerDark =
+      DarkThemeDesignTokens.semanticColorRedSolidTextIconNormalHigh;
+
+  /// componentTextIconStatusInverseInformation with value: {semantic.color.blue.solid.textIcon.inverse.high}
+  static const componentTextIconStatusInverseInformationLight =
+      LightThemeDesignTokens.semanticColorBlueSolidTextIconInverseHigh;
+
+  /// componentTextIconStatusInverseInformation with value: {semantic.color.blue.solid.textIcon.inverse.high}
+  static const componentTextIconStatusInverseInformationDark =
+      DarkThemeDesignTokens.semanticColorBlueSolidTextIconInverseHigh;
+
+  /// componentTextIconStatusInverseSuccess with value: {semantic.color.green.solid.textIcon.inverse.high}
+  static const componentTextIconStatusInverseSuccessLight =
+      LightThemeDesignTokens.semanticColorGreenSolidTextIconInverseHigh;
+
+  /// componentTextIconStatusInverseSuccess with value: {semantic.color.green.solid.textIcon.inverse.high}
+  static const componentTextIconStatusInverseSuccessDark =
+      DarkThemeDesignTokens.semanticColorGreenSolidTextIconInverseHigh;
+
+  /// componentTextIconStatusInverseWarning with value: {semantic.color.yellow.solid.textIcon.inverse.high}
+  static const componentTextIconStatusInverseWarningLight =
+      LightThemeDesignTokens.semanticColorYellowSolidTextIconInverseHigh;
+
+  /// componentTextIconStatusInverseWarning with value: {semantic.color.yellow.solid.textIcon.inverse.high}
+  static const componentTextIconStatusInverseWarningDark =
+      DarkThemeDesignTokens.semanticColorYellowSolidTextIconInverseHigh;
+
+  /// componentTextIconStatusInverseDanger with value: {semantic.color.red.solid.textIcon.inverse.high}
+  static const componentTextIconStatusInverseDangerLight =
+      LightThemeDesignTokens.semanticColorRedSolidTextIconInverseHigh;
+
+  /// componentTextIconStatusInverseDanger with value: {semantic.color.red.solid.textIcon.inverse.high}
+  static const componentTextIconStatusInverseDangerDark =
+      DarkThemeDesignTokens.semanticColorRedSolidTextIconInverseHigh;
+
+  /// componentTextIconStatusStaticInformationLight with value: {semantic.color.blue.solid.textIcon.static.high}
+  static const componentTextIconStatusStaticInformationLightLight =
+      LightThemeDesignTokens.semanticColorBlueSolidTextIconStaticHigh;
+
+  /// componentTextIconStatusStaticInformationLight with value: {semantic.color.blue.solid.textIcon.static.high}
+  static const componentTextIconStatusStaticInformationLightDark =
+      DarkThemeDesignTokens.semanticColorBlueSolidTextIconStaticHigh;
+
+  /// componentTextIconStatusStaticSuccessLight with value: {semantic.color.green.solid.textIcon.static.high}
+  static const componentTextIconStatusStaticSuccessLightLight =
+      LightThemeDesignTokens.semanticColorGreenSolidTextIconStaticHigh;
+
+  /// componentTextIconStatusStaticSuccessLight with value: {semantic.color.green.solid.textIcon.static.high}
+  static const componentTextIconStatusStaticSuccessLightDark =
+      DarkThemeDesignTokens.semanticColorGreenSolidTextIconStaticHigh;
+
+  /// componentTextIconStatusStaticWarningLight with value: {semantic.color.yellow.solid.textIcon.static.high}
+  static const componentTextIconStatusStaticWarningLightLight =
+      LightThemeDesignTokens.semanticColorYellowSolidTextIconStaticHigh;
+
+  /// componentTextIconStatusStaticWarningLight with value: {semantic.color.yellow.solid.textIcon.static.high}
+  static const componentTextIconStatusStaticWarningLightDark =
+      DarkThemeDesignTokens.semanticColorYellowSolidTextIconStaticHigh;
+
+  /// componentTextIconStatusStaticDangerLight with value: {semantic.color.red.solid.textIcon.static.high}
+  static const componentTextIconStatusStaticDangerLightLight =
+      LightThemeDesignTokens.semanticColorRedSolidTextIconStaticHigh;
+
+  /// componentTextIconStatusStaticDangerLight with value: {semantic.color.red.solid.textIcon.static.high}
+  static const componentTextIconStatusStaticDangerLightDark =
+      DarkThemeDesignTokens.semanticColorRedSolidTextIconStaticHigh;
+
+  /// componentTextIconStatusStaticInformationDark with value: {semantic.color.blue.solid.textIcon.static.low}
+  static const componentTextIconStatusStaticInformationDarkLight =
+      LightThemeDesignTokens.semanticColorBlueSolidTextIconStaticLow;
+
+  /// componentTextIconStatusStaticInformationDark with value: {semantic.color.blue.solid.textIcon.static.low}
+  static const componentTextIconStatusStaticInformationDarkDark =
+      DarkThemeDesignTokens.semanticColorBlueSolidTextIconStaticLow;
+
+  /// componentTextIconStatusStaticSuccessDark with value: {semantic.color.green.solid.textIcon.static.low}
+  static const componentTextIconStatusStaticSuccessDarkLight =
+      LightThemeDesignTokens.semanticColorGreenSolidTextIconStaticLow;
+
+  /// componentTextIconStatusStaticSuccessDark with value: {semantic.color.green.solid.textIcon.static.low}
+  static const componentTextIconStatusStaticSuccessDarkDark =
+      DarkThemeDesignTokens.semanticColorGreenSolidTextIconStaticLow;
+
+  /// componentTextIconStatusStaticWarningDark with value: {semantic.color.yellow.solid.textIcon.static.low}
+  static const componentTextIconStatusStaticWarningDarkLight =
+      LightThemeDesignTokens.semanticColorYellowSolidTextIconStaticLow;
+
+  /// componentTextIconStatusStaticWarningDark with value: {semantic.color.yellow.solid.textIcon.static.low}
+  static const componentTextIconStatusStaticWarningDarkDark =
+      DarkThemeDesignTokens.semanticColorYellowSolidTextIconStaticLow;
+
+  /// componentTextIconStatusStaticDangerDark with value: {semantic.color.red.solid.textIcon.static.low}
+  static const componentTextIconStatusStaticDangerDarkLight =
+      LightThemeDesignTokens.semanticColorRedSolidTextIconStaticLow;
+
+  /// componentTextIconStatusStaticDangerDark with value: {semantic.color.red.solid.textIcon.static.low}
+  static const componentTextIconStatusStaticDangerDarkDark =
+      DarkThemeDesignTokens.semanticColorRedSolidTextIconStaticLow;
+
+  /// componentToggleBgDefault with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentToggleBgDefaultLight =
       LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
 
-  /// componentChipBgActive with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentChipBgActiveDark =
+  /// componentToggleBgDefault with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentToggleBgDefaultDark =
       DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
 
-  /// componentChipBgExpand with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentChipBgExpandLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
-
-  /// componentChipBgExpand with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentChipBgExpandDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
-
-  /// componentChipBgSelected with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentChipBgSelectedLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
-
-  /// componentChipBgSelected with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentChipBgSelectedDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
-
-  /// componentChipBgSelectedHover with value: {semantic.color.monochrome.surface.normal.high}
-  static final componentChipBgSelectedHoverLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalHigh;
-
-  /// componentChipBgSelectedHover with value: {semantic.color.monochrome.surface.normal.high}
-  static final componentChipBgSelectedHoverDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalHigh;
-
-  /// componentChipBgSelectedActive with value: {semantic.color.monochrome.surface.normal.highest}
-  static final componentChipBgSelectedActiveLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalHighest;
-
-  /// componentChipBgSelectedActive with value: {semantic.color.monochrome.surface.normal.highest}
-  static final componentChipBgSelectedActiveDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalHighest;
-
-  /// componentChipBgSelectedExpand with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentChipBgSelectedExpandLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
-
-  /// componentChipBgSelectedExpand with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentChipBgSelectedExpandDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
-
-  /// componentChipBgSelectedDisabled with value: {semantic.color.monochrome.surface.normal.midHigh}
-  static final componentChipBgSelectedDisabledLight =
+  /// componentToggleBgHover with value: {semantic.color.monochrome.surface.normal.midHigh}
+  static final componentToggleBgHoverLight =
       LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
 
-  /// componentChipBgSelectedDisabled with value: {semantic.color.monochrome.surface.normal.midHigh}
-  static final componentChipBgSelectedDisabledDark =
+  /// componentToggleBgHover with value: {semantic.color.monochrome.surface.normal.midHigh}
+  static final componentToggleBgHoverDark =
       DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
 
-  /// componentChipBorderRadius with value: {semantic.borderRadius.pill}
-  static const componentChipBorderRadius =
+  /// componentToggleBgActive with value: {semantic.color.monochrome.textIcon.normal.mid}
+  static final componentToggleBgActiveLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalMid;
+
+  /// componentToggleBgActive with value: {semantic.color.monochrome.textIcon.normal.mid}
+  static final componentToggleBgActiveDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalMid;
+
+  /// componentToggleBgDisabled with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentToggleBgDisabledLight =
+      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentToggleBgDisabled with value: {semantic.color.monochrome.surface.normal.midLow}
+  static final componentToggleBgDisabledDark =
+      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
+
+  /// componentToggleBgDefaultOn with value: {semantic.color.green.opacity.surface.high}
+  static final componentToggleBgDefaultOnLight =
+      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceHigh;
+
+  /// componentToggleBgDefaultOn with value: {semantic.color.green.opacity.surface.high}
+  static final componentToggleBgDefaultOnDark =
+      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceHigh;
+
+  /// componentToggleBgHoverOn with value: {semantic.color.green.opacity.surface.highest}
+  static final componentToggleBgHoverOnLight =
+      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceHighest;
+
+  /// componentToggleBgHoverOn with value: {semantic.color.green.opacity.surface.highest}
+  static final componentToggleBgHoverOnDark =
+      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceHighest;
+
+  /// componentToggleBgActiveOn with value: {semantic.color.green.solid.surface.inverse.mid}
+  static const componentToggleBgActiveOnLight =
+      LightThemeDesignTokens.semanticColorGreenSolidSurfaceInverseMid;
+
+  /// componentToggleBgActiveOn with value: {semantic.color.green.solid.surface.inverse.mid}
+  static const componentToggleBgActiveOnDark =
+      DarkThemeDesignTokens.semanticColorGreenSolidSurfaceInverseMid;
+
+  /// componentToggleBgDisabledOn with value: {semantic.color.green.opacity.surface.high}
+  static final componentToggleBgDisabledOnLight =
+      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceHigh;
+
+  /// componentToggleBgDisabledOn with value: {semantic.color.green.opacity.surface.high}
+  static final componentToggleBgDisabledOnDark =
+      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceHigh;
+
+  /// componentToggleKnobDefault with value: {semantic.color.slate.solid.surface.static.lowest}
+  static const componentToggleKnobDefaultLight =
+      LightThemeDesignTokens.semanticColorSlateSolidSurfaceStaticLowest;
+
+  /// componentToggleKnobDefault with value: {semantic.color.slate.solid.surface.static.lowest}
+  static const componentToggleKnobDefaultDark =
+      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceStaticLowest;
+
+  /// componentToggleKnobDisabled with value: {semantic.color.monochrome.textIcon.static.whiteMid}
+  static final componentToggleKnobDisabledLight =
+      LightThemeDesignTokens.semanticColorMonochromeTextIconStaticWhiteMid;
+
+  /// componentToggleKnobDisabled with value: {semantic.color.monochrome.textIcon.static.whiteMid}
+  static final componentToggleKnobDisabledDark =
+      DarkThemeDesignTokens.semanticColorMonochromeTextIconStaticWhiteMid;
+
+  /// componentToggleKnobSize with value: {core.size.1000}
+  static const componentToggleKnobSize = CoreDesignTokens.coreSize1000;
+
+  /// componentToggleBorderRadius with value: {semantic.borderRadius.pill}
+  static const componentToggleBorderRadius =
       CoreDesignTokens.semanticBorderRadiusPill;
 
-  /// componentChipBorderWidth with value: {core.borderWidth.75}
-  static const componentChipBorderWidth = CoreDesignTokens.coreBorderWidth75;
+  /// componentToggleSpacingPadding with value: {semantic.spacing.general.2xs}
+  static const componentToggleSpacingPadding =
+      CoreDesignTokens.semanticSpacingGeneral2xs;
 
-  /// componentChipBorderColor with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentChipBorderColorLight =
-      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
+  /// componentToggleWidth with value: {core.size.2200}
+  static const componentToggleWidth = CoreDesignTokens.coreSize2200;
 
-  /// componentChipBorderColor with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentChipBorderColorDark =
-      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentChipSpacingPaddingXs with value: {core.spacing.300}
-  static const componentChipSpacingPaddingXs = CoreDesignTokens.coreSpacing300;
-
-  /// componentChipSpacingPaddingSm with value: {core.spacing.400}
-  static const componentChipSpacingPaddingSm = CoreDesignTokens.coreSpacing400;
-
-  /// componentChipSpacingPaddingMd with value: {core.spacing.600}
-  static const componentChipSpacingPaddingMd = CoreDesignTokens.coreSpacing600;
-
-  /// componentChipSpacingPaddingLg with value: {core.spacing.800}
-  static const componentChipSpacingPaddingLg = CoreDesignTokens.coreSpacing800;
-
-  /// componentChipSpacingPaddingXl with value: {core.spacing.1200}
-  static const componentChipSpacingPaddingXl = CoreDesignTokens.coreSpacing1200;
-
-  /// componentChipSpacingGapXs with value: {core.spacing.300}
-  static const componentChipSpacingGapXs = CoreDesignTokens.coreSpacing300;
-
-  /// componentChipSpacingGapSm with value: {core.spacing.400}
-  static const componentChipSpacingGapSm = CoreDesignTokens.coreSpacing400;
-
-  /// componentChipSpacingGapMd with value: {core.spacing.600}
-  static const componentChipSpacingGapMd = CoreDesignTokens.coreSpacing600;
-
-  /// componentChipHeightSm with value: {core.size.1200}
-  static const componentChipHeightSm = CoreDesignTokens.coreSize1200;
-
-  /// componentChipHeightMd with value: {core.size.1600}
-  static const componentChipHeightMd = CoreDesignTokens.coreSize1600;
-
-  /// componentChipHeightLg with value: {core.size.2400}
-  static const componentChipHeightLg = CoreDesignTokens.coreSize2400;
-
-  /// componentNotificationBgBanner with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentNotificationBgBannerLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
-
-  /// componentNotificationBgBanner with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentNotificationBgBannerDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
-
-  /// componentNotificationBgItemDefault with value: {semantic.color.slate.solid.surface.frame.low}
-  static const componentNotificationBgItemDefaultLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
-
-  /// componentNotificationBgItemDefault with value: {semantic.color.slate.solid.surface.frame.low}
-  static const componentNotificationBgItemDefaultDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
-
-  /// componentNotificationBgItemHover with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentNotificationBgItemHoverLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentNotificationBgItemHover with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentNotificationBgItemHoverDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentNotificationBgItemActive with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentNotificationBgItemActiveLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentNotificationBgItemActive with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentNotificationBgItemActiveDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentNotificationBgDivider with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentNotificationBgDividerLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentNotificationBgDivider with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentNotificationBgDividerDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentNotificationBorderRadius with value: {core.borderRadius.800}
-  static const componentNotificationBorderRadius =
-      CoreDesignTokens.coreBorderRadius800;
-
-  /// componentNotificationBorderWidth with value: {core.borderWidth.75}
-  static const componentNotificationBorderWidth =
-      CoreDesignTokens.coreBorderWidth75;
-
-  /// componentNotificationBorderColor with value: {semantic.color.monochrome.border.inverse.high}
-  static final componentNotificationBorderColorLight =
-      LightThemeDesignTokens.semanticColorMonochromeBorderInverseHigh;
-
-  /// componentNotificationBorderColor with value: {semantic.color.monochrome.border.inverse.high}
-  static final componentNotificationBorderColorDark =
-      DarkThemeDesignTokens.semanticColorMonochromeBorderInverseHigh;
-
-  /// componentNotificationSpacingPaddingSm with value: {core.spacing.800}
-  static const componentNotificationSpacingPaddingSm =
-      CoreDesignTokens.coreSpacing800;
-
-  /// componentNotificationSpacingPaddingMd with value: {core.spacing.1600}
-  static const componentNotificationSpacingPaddingMd =
-      CoreDesignTokens.coreSpacing1600;
-
-  /// componentNotificationSpacingGapXs with value: {core.spacing.200}
-  static const componentNotificationSpacingGapXs =
-      CoreDesignTokens.coreSpacing200;
-
-  /// componentNotificationSpacingGapSm with value: {core.spacing.800}
-  static const componentNotificationSpacingGapSm =
-      CoreDesignTokens.coreSpacing800;
-
-  /// componentNotificationSpacingGapMd with value: {core.spacing.1600}
-  static const componentNotificationSpacingGapMd =
-      CoreDesignTokens.coreSpacing1600;
-
-  /// componentNotificationElevationShadow with value: {core.elevation.shadow.330}
-  static final componentNotificationElevationShadow =
-      CoreDesignTokens.coreElevationShadow330;
-
-  /// componentBreadcrumbSpacingGapSm with value: {core.spacing.200}
-  static const componentBreadcrumbSpacingGapSm =
-      CoreDesignTokens.coreSpacing200;
-
-  /// componentBreadcrumbSpacingGapMd with value: {core.spacing.400}
-  static const componentBreadcrumbSpacingGapMd =
-      CoreDesignTokens.coreSpacing400;
-
-  /// componentLinkSpacingGapSm with value: {core.spacing.400}
-  static const componentLinkSpacingGapSm = CoreDesignTokens.coreSpacing400;
-
-  /// componentLinkSpacingGapMd with value: {core.spacing.500}
-  static const componentLinkSpacingGapMd = CoreDesignTokens.coreSpacing500;
+  /// componentToggleHeight with value: {core.size.1200}
+  static const componentToggleHeight = CoreDesignTokens.coreSize1200;
 
   /// componentTooltipBgNeutral with value: {semantic.color.slate.solid.surface.inverse.lowest}
   static const componentTooltipBgNeutralLight =
@@ -3162,518 +3870,4 @@ class ComponentDesignTokens {
 
   /// componentTooltipSpacingLg with value: {core.spacing.1200}
   static const componentTooltipSpacingLg = CoreDesignTokens.coreSpacing1200;
-
-  /// componentAccordionBgDefault with value: {semantic.color.slate.solid.surface.frame.low}
-  static const componentAccordionBgDefaultLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
-
-  /// componentAccordionBgDefault with value: {semantic.color.slate.solid.surface.frame.low}
-  static const componentAccordionBgDefaultDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
-
-  /// componentAccordionBgHover with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentAccordionBgHoverLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentAccordionBgHover with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentAccordionBgHoverDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentAccordionBgActive with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentAccordionBgActiveLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentAccordionBgActive with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentAccordionBgActiveDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentAccordionBgExpand with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentAccordionBgExpandLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentAccordionBgExpand with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentAccordionBgExpandDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentAccordionBorderRadius with value: {core.borderRadius.1200}
-  static const componentAccordionBorderRadius =
-      CoreDesignTokens.coreBorderRadius1200;
-
-  /// componentAccordionBorderWidth with value: {core.borderWidth.100}
-  static const componentAccordionBorderWidth =
-      CoreDesignTokens.coreBorderWidth100;
-
-  /// componentAccordionBorderColor with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentAccordionBorderColorLight =
-      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentAccordionBorderColor with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentAccordionBorderColorDark =
-      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentAccordionSpacingXs with value: {core.spacing.200}
-  static const componentAccordionSpacingXs = CoreDesignTokens.coreSpacing200;
-
-  /// componentAccordionSpacingMd with value: {core.spacing.800}
-  static const componentAccordionSpacingMd = CoreDesignTokens.coreSpacing800;
-
-  /// componentAccordionSpacingLg with value: {core.spacing.1200}
-  static const componentAccordionSpacingLg = CoreDesignTokens.coreSpacing1200;
-
-  /// componentAccordionElevationShadow with value: {core.elevation.shadow.330}
-  static final componentAccordionElevationShadow =
-      CoreDesignTokens.coreElevationShadow330;
-
-  /// componentSectionMessageBgDanger with value: {semantic.color.red.opacity.surface.low}
-  static final componentSectionMessageBgDangerLight =
-      LightThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
-
-  /// componentSectionMessageBgDanger with value: {semantic.color.red.opacity.surface.low}
-  static final componentSectionMessageBgDangerDark =
-      DarkThemeDesignTokens.semanticColorRedOpacitySurfaceLow;
-
-  /// componentSectionMessageBgWarning with value: {semantic.color.yellow.opacity.surface.low}
-  static final componentSectionMessageBgWarningLight =
-      LightThemeDesignTokens.semanticColorYellowOpacitySurfaceLow;
-
-  /// componentSectionMessageBgWarning with value: {semantic.color.yellow.opacity.surface.low}
-  static final componentSectionMessageBgWarningDark =
-      DarkThemeDesignTokens.semanticColorYellowOpacitySurfaceLow;
-
-  /// componentSectionMessageBgSuccess with value: {semantic.color.green.opacity.surface.low}
-  static final componentSectionMessageBgSuccessLight =
-      LightThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
-
-  /// componentSectionMessageBgSuccess with value: {semantic.color.green.opacity.surface.low}
-  static final componentSectionMessageBgSuccessDark =
-      DarkThemeDesignTokens.semanticColorGreenOpacitySurfaceLow;
-
-  /// componentSectionMessageBgInformation with value: {semantic.color.blue.opacity.surface.low}
-  static final componentSectionMessageBgInformationLight =
-      LightThemeDesignTokens.semanticColorBlueOpacitySurfaceLow;
-
-  /// componentSectionMessageBgInformation with value: {semantic.color.blue.opacity.surface.low}
-  static final componentSectionMessageBgInformationDark =
-      DarkThemeDesignTokens.semanticColorBlueOpacitySurfaceLow;
-
-  /// componentSectionMessageBgDefault with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentSectionMessageBgDefaultLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentSectionMessageBgDefault with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentSectionMessageBgDefaultDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentSectionMessageBorderRadius with value: {core.borderRadius.800}
-  static const componentSectionMessageBorderRadius =
-      CoreDesignTokens.coreBorderRadius800;
-
-  /// componentSectionMessageSpacingSm with value: {core.spacing.400}
-  static const componentSectionMessageSpacingSm =
-      CoreDesignTokens.coreSpacing400;
-
-  /// componentSectionMessageSpacingMd with value: {core.spacing.800}
-  static const componentSectionMessageSpacingMd =
-      CoreDesignTokens.coreSpacing800;
-
-  /// componentNavigationBarBgItemHover with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentNavigationBarBgItemHoverLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentNavigationBarBgItemHover with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentNavigationBarBgItemHoverDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentNavigationBarBgItemActive with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentNavigationBarBgItemActiveLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
-
-  /// componentNavigationBarBgItemActive with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentNavigationBarBgItemActiveDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
-
-  /// componentNavigationBarBgItemSelectedDefault with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentNavigationBarBgItemSelectedDefaultLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentNavigationBarBgItemSelectedDefault with value: {semantic.color.monochrome.surface.normal.lowest}
-  static final componentNavigationBarBgItemSelectedDefaultDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLowest;
-
-  /// componentNavigationBarBgItemSelectedHover with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentNavigationBarBgItemSelectedHoverLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentNavigationBarBgItemSelectedHover with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentNavigationBarBgItemSelectedHoverDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentNavigationBarBgItemSelectedActive with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentNavigationBarBgItemSelectedActiveLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
-
-  /// componentNavigationBarBgItemSelectedActive with value: {semantic.color.monochrome.surface.normal.midLow}
-  static final componentNavigationBarBgItemSelectedActiveDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidLow;
-
-  /// componentNavigationBarBgBody with value: {semantic.color.slate.solid.surface.frame.low}
-  static const componentNavigationBarBgBodyLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
-
-  /// componentNavigationBarBgBody with value: {semantic.color.slate.solid.surface.frame.low}
-  static const componentNavigationBarBgBodyDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameLow;
-
-  /// componentNavigationBarBorderRadius with value: {core.borderRadius.400}
-  static const componentNavigationBarBorderRadius =
-      CoreDesignTokens.coreBorderRadius400;
-
-  /// componentNavigationBarBorderWidth with value: {core.borderWidth.75}
-  static const componentNavigationBarBorderWidth =
-      CoreDesignTokens.coreBorderWidth75;
-
-  /// componentNavigationBarBorderColor with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentNavigationBarBorderColorLight =
-      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentNavigationBarBorderColor with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentNavigationBarBorderColorDark =
-      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentNavigationBarDividerHeight with value: {core.size.75}
-  static const componentNavigationBarDividerHeight =
-      CoreDesignTokens.coreSize75;
-
-  /// componentNavigationBarDividerColor with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentNavigationBarDividerColorLight =
-      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentNavigationBarDividerColor with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentNavigationBarDividerColorDark =
-      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentNavigationBarSpacingSm with value: {core.spacing.400}
-  static const componentNavigationBarSpacingSm =
-      CoreDesignTokens.coreSpacing400;
-
-  /// componentNavigationBarSpacingMd with value: {core.spacing.800}
-  static const componentNavigationBarSpacingMd =
-      CoreDesignTokens.coreSpacing800;
-
-  /// componentNavigationBarSpacingLg with value: {core.spacing.1000}
-  static const componentNavigationBarSpacingLg =
-      CoreDesignTokens.coreSpacing1000;
-
-  /// componentNavigationBarSizingItemXs with value: {core.size.1600}
-  static const componentNavigationBarSizingItemXs =
-      CoreDesignTokens.coreSize1600;
-
-  /// componentNavigationBarSizingItemSm with value: {core.size.2000}
-  static const componentNavigationBarSizingItemSm =
-      CoreDesignTokens.coreSize2000;
-
-  /// componentNavigationBarSizingItemMd with value: {core.size.2400}
-  static const componentNavigationBarSizingItemMd =
-      CoreDesignTokens.coreSize2400;
-
-  /// componentProgressBarIndicatorFail with value: {semantic.color.red.solid.surface.normal.highest}
-  static const componentProgressBarIndicatorFailLight =
-      LightThemeDesignTokens.semanticColorRedSolidSurfaceNormalHighest;
-
-  /// componentProgressBarIndicatorFail with value: {semantic.color.red.solid.surface.normal.highest}
-  static const componentProgressBarIndicatorFailDark =
-      DarkThemeDesignTokens.semanticColorRedSolidSurfaceNormalHighest;
-
-  /// componentProgressBarIndicatorWarning with value: {semantic.color.yellow.solid.surface.normal.highest}
-  static const componentProgressBarIndicatorWarningLight =
-      LightThemeDesignTokens.semanticColorYellowSolidSurfaceNormalHighest;
-
-  /// componentProgressBarIndicatorWarning with value: {semantic.color.yellow.solid.surface.normal.highest}
-  static const componentProgressBarIndicatorWarningDark =
-      DarkThemeDesignTokens.semanticColorYellowSolidSurfaceNormalHighest;
-
-  /// componentProgressBarIndicatorSuccess with value: {semantic.color.green.solid.surface.normal.highest}
-  static const componentProgressBarIndicatorSuccessLight =
-      LightThemeDesignTokens.semanticColorGreenSolidSurfaceNormalHighest;
-
-  /// componentProgressBarIndicatorSuccess with value: {semantic.color.green.solid.surface.normal.highest}
-  static const componentProgressBarIndicatorSuccessDark =
-      DarkThemeDesignTokens.semanticColorGreenSolidSurfaceNormalHighest;
-
-  /// componentProgressBarIndicatorInformation with value: {semantic.color.blue.solid.surface.normal.highest}
-  static const componentProgressBarIndicatorInformationLight =
-      LightThemeDesignTokens.semanticColorBlueSolidSurfaceNormalHighest;
-
-  /// componentProgressBarIndicatorInformation with value: {semantic.color.blue.solid.surface.normal.highest}
-  static const componentProgressBarIndicatorInformationDark =
-      DarkThemeDesignTokens.semanticColorBlueSolidSurfaceNormalHighest;
-
-  /// componentProgressBarIndicatorDefault with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentProgressBarIndicatorDefaultLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
-
-  /// componentProgressBarIndicatorDefault with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentProgressBarIndicatorDefaultDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
-
-  /// componentProgressBarTrack with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentProgressBarTrackLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentProgressBarTrack with value: {semantic.color.monochrome.surface.normal.low}
-  static final componentProgressBarTrackDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalLow;
-
-  /// componentProgressBarBorderRadius with value: {semantic.borderRadius.pill}
-  static const componentProgressBarBorderRadius =
-      CoreDesignTokens.semanticBorderRadiusPill;
-
-  /// componentProgressBarSpacingSm with value: {semantic.spacing.general.xs}
-  static const componentProgressBarSpacingSm =
-      CoreDesignTokens.semanticSpacingGeneralXs;
-
-  /// componentProgressBarSpacingMd with value: {semantic.spacing.general.sm}
-  static const componentProgressBarSpacingMd =
-      CoreDesignTokens.semanticSpacingGeneralSm;
-
-  /// componentProgressBarHeightSm with value: {core.size.200}
-  static const componentProgressBarHeightSm = CoreDesignTokens.coreSize200;
-
-  /// componentProgressBarHeightMd with value: {core.size.400}
-  static const componentProgressBarHeightMd = CoreDesignTokens.coreSize400;
-
-  /// componentStepperNodeBgComplete with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentStepperNodeBgCompleteLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
-
-  /// componentStepperNodeBgComplete with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentStepperNodeBgCompleteDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
-
-  /// componentStepperNodeBgFail with value: {semantic.color.red.solid.surface.inverse.mid}
-  static const componentStepperNodeBgFailLight =
-      LightThemeDesignTokens.semanticColorRedSolidSurfaceInverseMid;
-
-  /// componentStepperNodeBgFail with value: {semantic.color.red.solid.surface.inverse.mid}
-  static const componentStepperNodeBgFailDark =
-      DarkThemeDesignTokens.semanticColorRedSolidSurfaceInverseMid;
-
-  /// componentStepperNodeBgWarning with value: {semantic.color.yellow.solid.surface.inverse.mid}
-  static const componentStepperNodeBgWarningLight =
-      LightThemeDesignTokens.semanticColorYellowSolidSurfaceInverseMid;
-
-  /// componentStepperNodeBgWarning with value: {semantic.color.yellow.solid.surface.inverse.mid}
-  static const componentStepperNodeBgWarningDark =
-      DarkThemeDesignTokens.semanticColorYellowSolidSurfaceInverseMid;
-
-  /// componentStepperNodeBorderRadius with value: {semantic.borderRadius.pill}
-  static const componentStepperNodeBorderRadius =
-      CoreDesignTokens.semanticBorderRadiusPill;
-
-  /// componentStepperNodeBorderColorIncomplete with value: {semantic.color.monochrome.border.normal.highest}
-  static final componentStepperNodeBorderColorIncompleteLight =
-      LightThemeDesignTokens.semanticColorMonochromeBorderNormalHighest;
-
-  /// componentStepperNodeBorderColorIncomplete with value: {semantic.color.monochrome.border.normal.highest}
-  static final componentStepperNodeBorderColorIncompleteDark =
-      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalHighest;
-
-  /// componentStepperNodeBorderColorActive with value: {semantic.color.slate.solid.border.inverse.lowest}
-  static const componentStepperNodeBorderColorActiveLight =
-      LightThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
-
-  /// componentStepperNodeBorderColorActive with value: {semantic.color.slate.solid.border.inverse.lowest}
-  static const componentStepperNodeBorderColorActiveDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidBorderInverseLowest;
-
-  /// componentStepperNodeSizeSm with value: {core.size.1000}
-  static const componentStepperNodeSizeSm = CoreDesignTokens.coreSize1000;
-
-  /// componentStepperNodeSizeMd with value: {core.size.1200}
-  static const componentStepperNodeSizeMd = CoreDesignTokens.coreSize1200;
-
-  /// componentStepperNodeSizeLg with value: {core.size.1600}
-  static const componentStepperNodeSizeLg = CoreDesignTokens.coreSize1600;
-
-  /// componentStepperTrackColorDefault with value: {semantic.color.monochrome.surface.normal.midHigh}
-  static final componentStepperTrackColorDefaultLight =
-      LightThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
-
-  /// componentStepperTrackColorDefault with value: {semantic.color.monochrome.surface.normal.midHigh}
-  static final componentStepperTrackColorDefaultDark =
-      DarkThemeDesignTokens.semanticColorMonochromeSurfaceNormalMidHigh;
-
-  /// componentStepperTrackColorEnabled with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentStepperTrackColorEnabledLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
-
-  /// componentStepperTrackColorEnabled with value: {semantic.color.slate.solid.surface.inverse.lowest}
-  static const componentStepperTrackColorEnabledDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceInverseLowest;
-
-  /// componentStepperTrackHeightSm with value: {core.size.100}
-  static const componentStepperTrackHeightSm = CoreDesignTokens.coreSize100;
-
-  /// componentStepperTrackHeightMd with value: {core.size.400}
-  static const componentStepperTrackHeightMd = CoreDesignTokens.coreSize400;
-
-  /// componentStepperTrackWidth with value: {core.size.100}
-  static const componentStepperTrackWidth = CoreDesignTokens.coreSize100;
-
-  /// componentStepperSpacing3xs with value: {core.spacing.200}
-  static const componentStepperSpacing3xs = CoreDesignTokens.coreSpacing200;
-
-  /// componentStepperSpacing2xs with value: {core.spacing.300}
-  static const componentStepperSpacing2xs = CoreDesignTokens.coreSpacing300;
-
-  /// componentStepperSpacingSm with value: {core.spacing.400}
-  static const componentStepperSpacingSm = CoreDesignTokens.coreSpacing400;
-
-  /// componentStepperSpacingXl with value: {core.spacing.800}
-  static const componentStepperSpacingXl = CoreDesignTokens.coreSpacing800;
-
-  /// componentStepperWidthSm with value: {core.size.1000}
-  static const componentStepperWidthSm = CoreDesignTokens.coreSize1000;
-
-  /// componentStepperWidthMd with value: {core.size.1200}
-  static const componentStepperWidthMd = CoreDesignTokens.coreSize1200;
-
-  /// componentStepperWidthLg with value: {core.size.1600}
-  static const componentStepperWidthLg = CoreDesignTokens.coreSize1600;
-
-  /// componentStepperHeightSm with value: {core.size.1000}
-  static const componentStepperHeightSm = CoreDesignTokens.coreSize1000;
-
-  /// componentStepperHeightMd with value: {core.size.1200}
-  static const componentStepperHeightMd = CoreDesignTokens.coreSize1200;
-
-  /// componentStepperHeightLg with value: {core.size.1600}
-  static const componentStepperHeightLg = CoreDesignTokens.coreSize1600;
-
-  /// componentCardIconDefault with value: {semantic.color.monochrome.textIcon.normal.high}
-  static final componentCardIconDefaultLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalHigh;
-
-  /// componentCardIconDefault with value: {semantic.color.monochrome.textIcon.normal.high}
-  static final componentCardIconDefaultDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalHigh;
-
-  /// componentCardIconDisabled with value: {semantic.color.monochrome.textIcon.normal.low}
-  static final componentCardIconDisabledLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalLow;
-
-  /// componentCardIconDisabled with value: {semantic.color.monochrome.textIcon.normal.low}
-  static final componentCardIconDisabledDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalLow;
-
-  /// componentCardTitleColorDefault with value: {semantic.color.slate.solid.textIcon.normal.highest}
-  static const componentCardTitleColorDefaultLight =
-      LightThemeDesignTokens.semanticColorSlateSolidTextIconNormalHighest;
-
-  /// componentCardTitleColorDefault with value: {semantic.color.slate.solid.textIcon.normal.highest}
-  static const componentCardTitleColorDefaultDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidTextIconNormalHighest;
-
-  /// componentCardSubtitleColorDefault with value: {semantic.color.monochrome.textIcon.normal.mid}
-  static final componentCardSubtitleColorDefaultLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalMid;
-
-  /// componentCardSubtitleColorDefault with value: {semantic.color.monochrome.textIcon.normal.mid}
-  static final componentCardSubtitleColorDefaultDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalMid;
-
-  /// componentCardDescriptionColorDefault with value: {semantic.color.monochrome.textIcon.normal.high}
-  static final componentCardDescriptionColorDefaultLight =
-      LightThemeDesignTokens.semanticColorMonochromeTextIconNormalHigh;
-
-  /// componentCardDescriptionColorDefault with value: {semantic.color.monochrome.textIcon.normal.high}
-  static final componentCardDescriptionColorDefaultDark =
-      DarkThemeDesignTokens.semanticColorMonochromeTextIconNormalHigh;
-
-  /// componentCardBgElevate with value: {semantic.color.slate.solid.surface.normal.lowest}
-  static const componentCardBgElevateLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceNormalLowest;
-
-  /// componentCardBgElevate with value: {semantic.color.slate.solid.surface.normal.lowest}
-  static const componentCardBgElevateDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceNormalLowest;
-
-  /// componentCardBgOutline with value: {semantic.color.slate.solid.surface.normal.lowest}
-  static const componentCardBgOutlineLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceNormalLowest;
-
-  /// componentCardBgOutline with value: {semantic.color.slate.solid.surface.normal.lowest}
-  static const componentCardBgOutlineDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceNormalLowest;
-
-  /// componentCardBgFill with value: {semantic.color.slate.solid.surface.frame.mid}
-  static const componentCardBgFillLight =
-      LightThemeDesignTokens.semanticColorSlateSolidSurfaceFrameMid;
-
-  /// componentCardBgFill with value: {semantic.color.slate.solid.surface.frame.mid}
-  static const componentCardBgFillDark =
-      DarkThemeDesignTokens.semanticColorSlateSolidSurfaceFrameMid;
-
-  /// componentCardBorderRadiusSm with value: {core.borderRadius.800}
-  static const componentCardBorderRadiusSm =
-      CoreDesignTokens.coreBorderRadius800;
-
-  /// componentCardBorderRadiusMd with value: {core.borderRadius.1200}
-  static const componentCardBorderRadiusMd =
-      CoreDesignTokens.coreBorderRadius1200;
-
-  /// componentCardBorderRadiusLg with value: {core.borderRadius.1600}
-  static const componentCardBorderRadiusLg =
-      CoreDesignTokens.coreBorderRadius1600;
-
-  /// componentCardBorderWidth with value: {core.borderWidth.75}
-  static const componentCardBorderWidth = CoreDesignTokens.coreBorderWidth75;
-
-  /// componentCardBorderColor with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentCardBorderColorLight =
-      LightThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentCardBorderColor with value: {semantic.color.monochrome.border.normal.mid}
-  static final componentCardBorderColorDark =
-      DarkThemeDesignTokens.semanticColorMonochromeBorderNormalMid;
-
-  /// componentCardSpacingXs with value: {core.spacing.200}
-  static const componentCardSpacingXs = CoreDesignTokens.coreSpacing200;
-
-  /// componentCardSpacingSm with value: {core.spacing.400}
-  static const componentCardSpacingSm = CoreDesignTokens.coreSpacing400;
-
-  /// componentCardSpacingMd with value: {core.spacing.800}
-  static const componentCardSpacingMd = CoreDesignTokens.coreSpacing800;
-
-  /// componentCardSpacingLg with value: {core.spacing.1200}
-  static const componentCardSpacingLg = CoreDesignTokens.coreSpacing1200;
-
-  /// componentCardSpacingXl with value: {core.spacing.1600}
-  static const componentCardSpacingXl = CoreDesignTokens.coreSpacing1600;
-
-  /// componentCardSpacing2xl with value: {core.spacing.2400}
-  static const componentCardSpacing2xl = CoreDesignTokens.coreSpacing2400;
-
-  /// componentCardSpacing3xl with value: {core.spacing.3200}
-  static const componentCardSpacing3xl = CoreDesignTokens.coreSpacing3200;
-
-  /// componentCardSpacing4xl with value: {core.spacing.4800}
-  static const componentCardSpacing4xl = CoreDesignTokens.coreSpacing4800;
-
-  /// componentCardElevationDefault with value: {core.elevation.shadow.330}
-  static final componentCardElevationDefault =
-      CoreDesignTokens.coreElevationShadow330;
-
-  /// componentCardElevationHover with value: {core.elevation.shadow.430}
-  static final componentCardElevationHover =
-      CoreDesignTokens.coreElevationShadow430;
-
-  /// componentCardElevationActive with value: {core.elevation.shadow.330}
-  static final componentCardElevationActive =
-      CoreDesignTokens.coreElevationShadow330;
-
-  /// componentCardElevationDisabled with value: {core.elevation.shadow.330}
-  static final componentCardElevationDisabled =
-      CoreDesignTokens.coreElevationShadow330;
 }
