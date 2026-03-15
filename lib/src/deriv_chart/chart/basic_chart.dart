@@ -322,14 +322,31 @@ class BasicChartState<T extends BasicChart> extends State<T>
       maxQuote += 2;
     }
 
-    if (!minQuote.isNaN && minQuote != bottomBoundQuoteTarget) {
+    if (minQuote.isNaN || maxQuote.isNaN) {
+      return;
+    }
+
+    // Snap bounds and skip tick animation when switching to a market with a
+    // disjoint price range, to avoid a long vertical-line artifact.
+    final bool rangeDisjoint =
+        maxQuote < bottomBoundQuoteTarget || minQuote > topBoundQuoteTarget;
+    if (rangeDisjoint) {
+      bottomBoundQuoteTarget = minQuote;
+      bottomBoundQuoteAnimationController.value = minQuote;
+      topBoundQuoteTarget = maxQuote;
+      topBoundQuoteAnimationController.value = maxQuote;
+      completeCurrentTickAnimation();
+      return;
+    }
+
+    if (minQuote != bottomBoundQuoteTarget) {
       bottomBoundQuoteTarget = minQuote;
       bottomBoundQuoteAnimationController.animateTo(
         bottomBoundQuoteTarget,
         curve: Curves.easeOut,
       );
     }
-    if (!maxQuote.isNaN && maxQuote != topBoundQuoteTarget) {
+    if (maxQuote != topBoundQuoteTarget) {
       topBoundQuoteTarget = maxQuote;
       topBoundQuoteAnimationController.animateTo(
         topBoundQuoteTarget,

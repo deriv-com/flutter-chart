@@ -14,7 +14,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/y_axis/y_axis_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
-import 'package:deriv_chart/src/theme/quill_icons.dart';
 import 'package:deriv_chart/src/theme/painting_styles/marker_style.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
@@ -36,8 +35,7 @@ import 'dart:math' as math;
 /// - Start markers are shown as location pins with optional labels
 /// - Entry points are shown as circles with a distinctive border
 /// - Tick points are shown as small dots
-/// - Exit points are shown as circles
-/// - End points are shown as flag icons
+/// - Exit and end points are shown as circles
 ///
 /// This class is part of the chart's visualization pipeline and works in conjunction
 /// with `MarkerGroupPainter` to render marker groups on the chart canvas.
@@ -133,12 +131,14 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       final double markerOpacity =
           marker.hasReducedOpacity ? opacity * 0.5 : opacity;
 
+      final Offset markerCenter = center + marker.displayOffset;
+
       _drawMarker(
           canvas,
           size,
           theme,
           marker,
-          center,
+          markerCenter,
           markerGroup.style,
           1.2,
           painterProps.granularity,
@@ -333,7 +333,10 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           _drawEntrySpot(canvas, marker, anchor, style, theme, zoom, opacity);
           break;
         case MarkerType.exitSpot:
-          _drawExitSpot(canvas, marker, anchor, style, theme, zoom, opacity);
+          _drawSpotMarker(canvas, marker, anchor, style, theme, zoom, opacity);
+          break;
+        case MarkerType.checkpointSpot:
+          _drawSpotMarker(canvas, marker, anchor, style, theme, zoom, opacity);
           break;
         case MarkerType.exit:
           canvas.drawCircle(
@@ -446,9 +449,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
 
     final double pillHeight = 32 * zoom;
     final double radius = pillHeight / 2;
-    final double iconSize = 24 * zoom;
-    const double leftPadding = 8;
-    const double spacing = 4;
+    const double leftPadding = 16;
     const double rightPadding = 16;
 
     final TextStyle textStyle = theme
@@ -464,8 +465,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     final String text = markerGroup.profitAndLossText ?? '';
     final TextPainter textPainter = makeTextPainter(text, textStyle);
 
-    final double contentWidth =
-        leftPadding + iconSize + spacing + textPainter.width + rightPadding;
+    final double contentWidth = leftPadding + textPainter.width + rightPadding;
 
     Rect pillRect;
     if (fixedLeftAligned) {
@@ -497,27 +497,10 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       ..strokeWidth = 1;
     canvas.drawRRect(rrect, strokePaint);
 
-    final TextPainter iconPainter = TextPainter(
-      text: TextSpan(
-        text: String.fromCharCode(QuillIcons.flag_checkered.codePoint),
-        style: TextStyle(
-          fontFamily: QuillIcons.kFontFam,
-          fontSize: iconSize,
-          package: QuillIcons.kFontPkg,
-          color: textIconColor.withOpacity(opacity),
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-
-    final double iconX = pillRect.left + leftPadding;
-    final double iconY = anchor.dy - iconPainter.height / 2;
-    iconPainter.paint(canvas, Offset(iconX, iconY));
-
     paintWithTextPainter(
       canvas,
       painter: textPainter,
-      anchor: Offset(iconX + iconSize + spacing, anchor.dy),
+      anchor: Offset(pillRect.left + leftPadding, anchor.dy),
       anchorAlignment: Alignment.centerLeft,
     );
 
@@ -818,23 +801,20 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     canvas.drawCircle(anchor, 3 * zoom, strokePaint);
   }
 
-  /// Draws an exit spot marker as a filled circle.
+  /// Draws a spot marker as a filled circle.
   ///
-  /// The exit spot is rendered as a solid filled circle with a color determined by:
+  /// The circle color is determined by:
   /// - The marker's explicit color if provided (marker.color)
   /// - Or the direction-based color from the theme (green for up, red for down)
   ///
-  /// This is used for checkpoint markers in multi-stage contracts like Double Rise/Fall,
-  /// where each checkpoint has an exit spot indicating whether the checkpoint passed or failed.
-  ///
   /// The [canvas] is the canvas on which to paint.
   /// The [marker] is the chart marker containing direction and optional color.
-  /// The [anchor] is the position where the exit spot should be drawn.
+  /// The [anchor] is the position where the spot should be drawn.
   /// The [style] is the marker style (unused but kept for signature consistency).
   /// The [theme] is the chart theme providing direction-based colors.
   /// The [zoom] is the zoom factor to scale the circle radius.
   /// The [opacity] is the opacity to apply to the marker.
-  void _drawExitSpot(Canvas canvas, ChartMarker marker, Offset anchor,
+  void _drawSpotMarker(Canvas canvas, ChartMarker marker, Offset anchor,
       MarkerStyle style, ChartTheme theme, double zoom, double opacity) {
     // Determine color from marker.color or direction
     final Color markerColor = marker.color ??
