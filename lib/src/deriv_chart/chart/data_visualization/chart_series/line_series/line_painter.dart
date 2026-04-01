@@ -38,6 +38,7 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
     if (style.hasArea) {
       final Paint areaPaint = Paint()
         ..style = PaintingStyle.fill
+        ..isAntiAlias = false
         ..shader = ui.Gradient.linear(
           const Offset(0, 0),
           Offset(0, size.height),
