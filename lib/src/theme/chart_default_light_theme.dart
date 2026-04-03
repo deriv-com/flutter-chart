@@ -256,5 +256,6 @@ class ChartDefaultLightTheme extends ChartDefaultTheme {
         lineDefaultColor: LightThemeColors.markerPaletteBorderColor,
         upColorProminent: LightThemeColors.upColorProminent,
         downColorProminent: LightThemeColors.downColorProminent,
+        markerTextColor: LightThemeColors.markerTextColor,
       );
 }
