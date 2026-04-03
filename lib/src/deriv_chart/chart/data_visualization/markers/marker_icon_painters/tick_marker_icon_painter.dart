@@ -314,7 +314,10 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     ChartTheme theme,
     double opacity,
   ) {
+    // Distance (in pixels) from the start time marker to the right edge of the text label.
     const double _textPaddingFromStartLine = 16;
+
+    // Gap (in pixels) between the text label and adjacent dashed line segments.
     const double _textGap = 4;
 
     final Color textColor =
@@ -324,25 +327,14 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
         ? makeDelimitedTextPainter(
             text,
             delimiter: '/',
-            primaryStyle: TextStyle(
-              color: textColor,
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-            ),
-            secondaryStyle: TextStyle(
-              color: textColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-            ),
+            primaryStyle: theme.markerStyle.markerCounterPrimaryTextStyle
+                .copyWith(color: textColor),
+            secondaryStyle: theme.markerStyle.markerCounterSecondaryTextStyle
+                .copyWith(color: textColor),
           )
         : makeTextPainter(
             text,
-            TextStyle(
-              color: textColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              height: 1,
-            ),
+            theme.markerStyle.markerPlainTextStyle.copyWith(color: textColor),
           );
 
     final double textRight = lineEnd.dx - _textPaddingFromStartLine;
