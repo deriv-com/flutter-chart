@@ -148,6 +148,19 @@ enum MarkerType {
   checkpointSpot,
 }
 
+/// Determines how the [ChartMarker.text] is styled.
+enum MarkerTextType {
+  /// Renders the text in a uniform style.
+  plain,
+
+  /// Renders the text as a progress counter (e.g. `"2/10"`).
+  ///
+  /// The text must contain a `/` separator. The part before `/` is rendered
+  /// prominently to indicate the current value, while the `/` and the part
+  /// after it are rendered smaller to indicate the total.
+  counter,
+}
+
 /// A specialized marker class for displaying various types of markers on a financial chart.
 ///
 /// `ChartMarker` extends the base `Marker` class to provide additional functionality
@@ -195,6 +208,7 @@ class ChartMarker extends Marker {
     VoidCallback? onTap,
     this.markerType,
     this.text,
+    this.textType = MarkerTextType.plain,
     this.color,
     this.hasReducedOpacity = false,
     this.displayOffset = Offset.zero,
@@ -220,6 +234,9 @@ class ChartMarker extends Marker {
   ///
   /// If null, no text is displayed for the marker.
   final String? text;
+
+  /// Controls how [text] is styled.
+  final MarkerTextType textType;
 
   /// The color of the marker.
   ///

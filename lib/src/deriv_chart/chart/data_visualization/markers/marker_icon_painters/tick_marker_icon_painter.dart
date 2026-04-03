@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_group.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_icon_painters/marker_group_icon_painter.dart';
@@ -196,16 +197,35 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
       // Horizontal dashed line from contractMarker to start time
       if (_contractMarkerOffset != null && _startCollapsedOffset != null) {
-        paintHorizontalDashedLine(
-          canvas,
-          _contractMarkerOffset.dx,
-          _startCollapsedOffset.dx,
-          _contractMarkerOffset.dy,
-          finalLineColor,
-          1,
-          dashWidth: 2,
-          dashSpace: 2,
-        );
+        final ChartMarker? contractMarker = markerGroup.markers
+            .firstWhereOrNull((m) => m.markerType == MarkerType.contractMarker);
+        final String? contractText = contractMarker?.text;
+
+        if (contractMarker != null &&
+            contractText != null &&
+            contractText.isNotEmpty) {
+          _paintDashedLineWithText(
+            canvas,
+            _contractMarkerOffset,
+            _startCollapsedOffset,
+            finalLineColor,
+            contractText,
+            contractMarker.textType,
+            theme,
+            opacity,
+          );
+        } else {
+          paintHorizontalDashedLine(
+            canvas,
+            _startCollapsedOffset.dx,
+            _contractMarkerOffset.dx,
+            _contractMarkerOffset.dy,
+            finalLineColor,
+            1,
+            dashWidth: 2,
+            dashSpace: 2,
+          );
+        }
       }
 
       final Paint solidLinePaint = Paint()
@@ -277,6 +297,92 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
         );
       }
     });
+  }
+
+  /// Draws the dashed connector line with a text label split into it.
+  ///
+  /// The text is positioned near [lineEnd] (the start time collapsed marker)
+  /// with a small padding gap. The dashed line is drawn on both sides of the
+  /// text.
+  void _paintDashedLineWithText(
+    Canvas canvas,
+    Offset lineStart,
+    Offset lineEnd,
+    Color lineColor,
+    String text,
+    MarkerTextType textType,
+    ChartTheme theme,
+    double opacity,
+  ) {
+    const double _textPaddingFromStartLine = 16;
+    const double _textGap = 4;
+
+    final Color textColor =
+        theme.markerStyle.markerTextColor.withOpacity(opacity);
+
+    final TextPainter textPainter = textType == MarkerTextType.counter
+        ? makeDelimitedTextPainter(
+            text,
+            delimiter: '/',
+            primaryStyle: TextStyle(
+              color: textColor,
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
+            ),
+            secondaryStyle: TextStyle(
+              color: textColor,
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+            ),
+          )
+        : makeTextPainter(
+            text,
+            TextStyle(
+              color: textColor,
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              height: 1,
+            ),
+          );
+
+    final double textRight = lineEnd.dx - _textPaddingFromStartLine;
+    final double textLeft = textRight - textPainter.width;
+
+    if (lineStart.dx < textLeft - _textGap) {
+      // Left portion of dashed line.
+      paintHorizontalDashedLine(
+        canvas,
+        textLeft - _textGap,
+        lineStart.dx,
+        lineStart.dy,
+        lineColor,
+        1,
+        dashWidth: 2,
+        dashSpace: 2,
+      );
+    }
+
+    // Right portion of dashed line (text to startTimeCollapsed).
+    if (lineStart.dx < lineEnd.dx) {
+      paintHorizontalDashedLine(
+        canvas,
+        textRight + _textGap,
+        lineEnd.dx,
+        lineStart.dy,
+        lineColor,
+        1,
+        dashWidth: 2,
+        dashSpace: 2,
+      );
+    }
+
+    // Draw text centered vertically on the line.
+    paintWithTextPainter(
+      canvas,
+      painter: textPainter,
+      anchor: Offset(textLeft, lineStart.dy),
+      anchorAlignment: Alignment.centerLeft,
+    );
   }
 
   /// Renders an individual marker based on its type.

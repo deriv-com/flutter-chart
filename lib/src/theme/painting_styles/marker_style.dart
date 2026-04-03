@@ -17,6 +17,7 @@ class MarkerStyle extends ChartPaintingStyle {
     this.lineProfitColor = const Color(0xFF008832),
     this.lineLossColor = const Color(0xFFE6190E),
     this.lineDefaultColor = const Color(0xFFCED0D6),
+    this.markerTextColor = const Color(0xFFFFFFFF),
     this.radius = 12.0,
     this.activeMarkerText = const TextStyle(
       color: Colors.black,
@@ -62,6 +63,9 @@ class MarkerStyle extends ChartPaintingStyle {
 
   /// Color of line for its default state.
   final Color lineDefaultColor;
+
+  /// Color of the text displayed for a marker.
+  final Color markerTextColor;
 
   /// Radius of a single marker.
   final double radius;
