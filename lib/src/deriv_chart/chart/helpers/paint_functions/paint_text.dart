@@ -74,6 +74,33 @@ TextPainter makeFittedTextPainter(
   return makeTextPainter(text, fittedStyle);
 }
 
+/// Constructs a [TextPainter] by splitting [text] on the first occurrence of
+/// [delimiter] and applying [primaryStyle] to the part before it and
+/// [secondaryStyle] to the delimiter and the part after it.
+///
+/// Falls back to [makeTextPainter] with [primaryStyle] if [delimiter] is not
+/// found or appears at the start of [text].
+TextPainter makeDelimitedTextPainter(
+  String text, {
+  required String delimiter,
+  required TextStyle primaryStyle,
+  required TextStyle secondaryStyle,
+}) {
+  final int index = text.indexOf(delimiter);
+  if (index > 0) {
+    return TextPainter(
+      text: TextSpan(
+        children: [
+          TextSpan(text: text.substring(0, index), style: primaryStyle),
+          TextSpan(text: text.substring(index), style: secondaryStyle),
+        ],
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+  }
+  return makeTextPainter(text, primaryStyle);
+}
+
 /// Paints on the canvas with the given text painter.
 void paintWithTextPainter(
   Canvas canvas, {

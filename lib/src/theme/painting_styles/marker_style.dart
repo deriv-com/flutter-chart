@@ -17,6 +17,7 @@ class MarkerStyle extends ChartPaintingStyle {
     this.lineProfitColor = const Color(0xFF008832),
     this.lineLossColor = const Color(0xFFE6190E),
     this.lineDefaultColor = const Color(0xFFCED0D6),
+    this.markerTextColor = const Color(0xFFFFFFFF),
     this.radius = 12.0,
     this.activeMarkerText = const TextStyle(
       color: Colors.black,
@@ -34,6 +35,22 @@ class MarkerStyle extends ChartPaintingStyle {
       color: Colors.white,
       fontSize: 12,
       fontWeight: FontWeight.w700,
+    ),
+    this.markerPlainTextStyle = const TextStyle(
+      color: Colors.white,
+      fontSize: 12,
+      fontWeight: FontWeight.w700,
+      height: 1,
+    ),
+    this.markerCounterPrimaryTextStyle = const TextStyle(
+      color: Colors.white,
+      fontSize: 20,
+      fontWeight: FontWeight.w700,
+    ),
+    this.markerCounterSecondaryTextStyle = const TextStyle(
+      color: Colors.white,
+      fontSize: 12,
+      fontWeight: FontWeight.w400,
     ),
     this.startTimeIcon = QuillIcons.stopwatch,
     this.endTimeIcon = QuillIcons.flag_checkered,
@@ -63,6 +80,9 @@ class MarkerStyle extends ChartPaintingStyle {
   /// Color of line for its default state.
   final Color lineDefaultColor;
 
+  /// Color of the text displayed for a marker.
+  final Color markerTextColor;
+
   /// Radius of a single marker.
   final double radius;
 
@@ -89,4 +109,17 @@ class MarkerStyle extends ChartPaintingStyle {
 
   /// Style of the marker label.
   final TextStyle markerLabelTextStyle;
+
+  /// Text style for plain marker text displayed on the connector line.
+  final TextStyle markerPlainTextStyle;
+
+  /// Text style for the primary (current value) part of a counter marker text.
+  ///
+  /// Applied to the portion before the `/` separator (e.g. `"2"` in `"2/10"`).
+  final TextStyle markerCounterPrimaryTextStyle;
+
+  /// Text style for the secondary (total value) part of a counter marker text.
+  ///
+  /// Applied to the `/` separator and the portion after it (e.g. `"/10"` in `"2/10"`).
+  final TextStyle markerCounterSecondaryTextStyle;
 }

@@ -175,6 +175,9 @@ class LightThemeColors {
       LightThemeDesignTokens.semanticColorEmeraldSolidBorderInverseHigh;
   static const Color downColorProminent =
       LightThemeDesignTokens.semanticColorCherrySolidBorderInverseHigh;
+
+  static const Color markerTextColor =
+      ComponentDesignTokens.componentTextIconNormalProminentLight;
 }
 
 /// Default colors for dark theme.
@@ -310,6 +313,9 @@ class DarkThemeColors {
       DarkThemeDesignTokens.semanticColorEmeraldSolidBorderInverseHigh;
   static const Color downColorProminent =
       DarkThemeDesignTokens.semanticColorCherrySolidBorderInverseHigh;
+
+  static const Color markerTextColor =
+      ComponentDesignTokens.componentTextIconNormalProminentDark;
 }
 
 /// Candle Bullish colors for light, dark
