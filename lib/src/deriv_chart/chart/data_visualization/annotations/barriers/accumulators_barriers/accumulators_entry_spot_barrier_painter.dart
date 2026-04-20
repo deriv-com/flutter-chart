@@ -106,4 +106,12 @@ class AccumulatorsEntrySpotBarrierPainter<
       1,
     );
   }
+
+  @override
+  List<CustomPainterSemantics> buildSemantics(
+      {required ui.Size size,
+      required EpochToX epochToX,
+      required QuoteToY quoteToY}) {
+    return <CustomPainterSemantics>[];
+  }
 }
