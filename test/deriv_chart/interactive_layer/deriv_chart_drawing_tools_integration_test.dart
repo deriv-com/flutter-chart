@@ -68,8 +68,7 @@ void main() {
       sharedPrefKey: 'R_100',
     );
     final DrawingTools drawingTools = DrawingTools();
-    final InteractiveLayerBehaviour behaviour =
-        InteractiveLayerMobileBehaviour(
+    final InteractiveLayerBehaviour behaviour = InteractiveLayerMobileBehaviour(
       controller: InteractiveLayerController(),
     );
 
