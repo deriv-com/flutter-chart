@@ -811,11 +811,19 @@ class _InteractiveLayerGestureHandlerState
   Widget _buildDrawingsLayer(BuildContext context, XAxisModel xAxis) =>
       RepaintBoundary(
         child: MultipleAnimatedBuilder(
-            animations: [
+            animations: <Listenable>[
               _stateChangeController,
               _interactionNotifier,
               widget.interactiveLayerBehaviour.controller,
               widget.drawingsChanged,
+              // Chart scroll (pan / zoom / autoscroll after a symbol switch)
+              // changes the epochToX / quoteToY closures captured by the
+              // CustomPainter. Without this listener the painter retained
+              // stale closures, causing drawings to drift off their anchored
+              // candle / price after an autoscroll — a release-only defect
+              // whose sibling (clear-all flow) was already patched via
+              // drawingsChanged.
+              xAxis,
             ],
             builder: (_, __) {
               final double animationValue =
