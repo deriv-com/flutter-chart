@@ -50,6 +50,17 @@ abstract class InteractiveLayerBehaviour {
 
   late final InteractiveLayerController _controller;
 
+  /// Resets the interactive layer to [InteractiveNormalState], dropping any
+  /// current selection or in-progress adding state. Safe to call before the
+  /// layer has mounted — bypasses [updateStateTo] which requires [interactiveLayer]
+  /// to be initialised. No-op if already in normal state.
+  void resetToNormalState() {
+    if (currentState is! InteractiveNormalState) {
+      _controller.currentState =
+          InteractiveNormalState(interactiveLayerBehaviour: this);
+    }
+  }
+
   /// The controller for state changes in the interactive layer.
   ///
   /// Note: This is not final to allow reassignment when the widget rebuilds
