@@ -27,7 +27,6 @@ dev_dependencies:
     sdk: flutter
   intl_utils: ^2.8.2
 
-
 flutter:
   uses-material-design: true
 
