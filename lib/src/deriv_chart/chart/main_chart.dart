@@ -399,11 +399,6 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(
-        // Force remount when markerSeries changes.
-        // LayoutBuilder only re-invokes its builder on constraint changes;
-        // without a key that tracks markerSeries identity, the old
-        // MarkerArea subtree persists after trade-type switches.
-        key: ObjectKey(widget.markerSeries),
         builder: (BuildContext context, BoxConstraints constraints) {
           final XAxisModel xAxis = context.watch<XAxisModel>();
 
@@ -584,20 +579,17 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         ),
       );
 
-  Widget _buildMarkerArea() => KeyedSubtree(
-        key: ObjectKey(widget.markerSeries),
-        child: MultipleAnimatedBuilder(
-          animations: <Listenable>[
-            currentTickAnimation,
-            topBoundQuoteAnimationController,
-            bottomBoundQuoteAnimationController
-          ],
-          builder: (BuildContext context, _) => MarkerArea(
-            markerSeries: widget.markerSeries!,
-            quoteToCanvasY: chartQuoteToCanvasY,
-            animationInfo: AnimationInfo(
-              currentTickPercent: currentTickAnimation.value,
-            ),
+  Widget _buildMarkerArea() => MultipleAnimatedBuilder(
+        animations: <Listenable>[
+          currentTickAnimation,
+          topBoundQuoteAnimationController,
+          bottomBoundQuoteAnimationController
+        ],
+        builder: (BuildContext context, _) => MarkerArea(
+          markerSeries: widget.markerSeries!,
+          quoteToCanvasY: chartQuoteToCanvasY,
+          animationInfo: AnimationInfo(
+            currentTickPercent: currentTickAnimation.value,
           ),
         ),
       );
