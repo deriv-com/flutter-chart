@@ -426,7 +426,12 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                 super.build(context),
                 if (widget.overlaySeries != null)
                   _buildSeries(widget.overlaySeries!),
-                if (widget.markerSeries != null) _buildMarkerArea(),
+                LayoutBuilder(
+                  key: ObjectKey(widget.markerSeries),
+                  builder: (_, __) => widget.markerSeries != null
+                      ? _buildMarkerArea()
+                      : const SizedBox.shrink(),
+                ),
                 _buildAnnotations(),
                 if (widget.drawingTools != null && widget.useDrawingToolsV2)
                   _buildInteractiveLayer(context, xAxis)
