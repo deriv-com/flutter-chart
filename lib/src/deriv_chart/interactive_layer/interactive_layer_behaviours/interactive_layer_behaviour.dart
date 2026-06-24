@@ -146,9 +146,11 @@ abstract class InteractiveLayerBehaviour {
   }) async {
     final int transitionSeq = ++_stateTransitionSeq;
 
-    chartDiag('updateStateTo #$transitionSeq '
-        '${_describeState(currentState)} -> ${_describeState(newState)} '
-        '(wait: $waitForAnimation, animate: $animate)');
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('updateStateTo #$transitionSeq '
+          '${_describeState(currentState)} -> ${_describeState(newState)} '
+          '(wait: $waitForAnimation, animate: $animate)');
+    }
 
     if (waitForAnimation) {
       await interactiveLayer.animateStateChange(direction, animate: animate);
@@ -159,8 +161,10 @@ abstract class InteractiveLayerBehaviour {
       // The newer transition owns the state machine now; applying this one
       // would overwrite it with stale state.
       if (transitionSeq != _stateTransitionSeq) {
-        chartDiag('updateStateTo #$transitionSeq superseded by '
-            '#$_stateTransitionSeq, dropping ${_describeState(newState)}');
+        if (kChartDiagnosticsEnabled) {
+          chartDiag('updateStateTo #$transitionSeq superseded by '
+              '#$_stateTransitionSeq, dropping ${_describeState(newState)}');
+        }
         return;
       }
     } else {
@@ -169,8 +173,10 @@ abstract class InteractiveLayerBehaviour {
     }
 
     _controller.currentState = newState;
-    chartDiag('updateStateTo #$transitionSeq applied '
-        '${_describeState(newState)}');
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('updateStateTo #$transitionSeq applied '
+          '${_describeState(newState)}');
+    }
     onUpdate();
   }
 

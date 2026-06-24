@@ -156,9 +156,11 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
   void initState() {
     super.initState();
 
-    chartDiag('layer#$hashCode initState, '
-        'repo#${widget.drawingToolsRepo.hashCode} '
-        'items: ${widget.drawingToolsRepo.items.map((c) => c.configId).toList()}');
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('layer#$hashCode initState, '
+          'repo#${widget.drawingToolsRepo.hashCode} '
+          'items: ${widget.drawingToolsRepo.items.map((c) => c.configId).toList()}');
+    }
 
     widget.drawingToolsRepo.addListener(syncDrawingsWithConfigs);
 
@@ -187,9 +189,11 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
     // layer. The build that follows this didUpdateWidget reconciles the
     // drawings against the new repo.
     if (!identical(oldWidget.drawingToolsRepo, widget.drawingToolsRepo)) {
-      chartDiag('layer#$hashCode repo changed '
-          '#${oldWidget.drawingToolsRepo.hashCode} -> '
-          '#${widget.drawingToolsRepo.hashCode}');
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('layer#$hashCode repo changed '
+            '#${oldWidget.drawingToolsRepo.hashCode} -> '
+            '#${widget.drawingToolsRepo.hashCode}');
+      }
       oldWidget.drawingToolsRepo.removeListener(syncDrawingsWithConfigs);
       widget.drawingToolsRepo.addListener(syncDrawingsWithConfigs);
     }
@@ -207,7 +211,9 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
       // Diagnostics: a throw between the map mutation and setState would
       // leave the painted drawings stale with no visible error in release.
       // Log it and still rebuild from whatever state the map is in.
-      chartDiag('layer#$hashCode reconcile threw: $error\n$stackTrace');
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('layer#$hashCode reconcile threw: $error\n$stackTrace');
+      }
     }
     setState(() {});
   }
@@ -229,7 +235,10 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
       // Very first build: the gesture handler hasn't bound the behaviour to
       // this layer yet. The post-frame initial sync from initState will
       // reconcile right after.
-      chartDiag('layer#$hashCode reconcile skipped: behaviour not initialized');
+      if (kChartDiagnosticsEnabled) {
+        chartDiag(
+            'layer#$hashCode reconcile skipped: behaviour not initialized');
+      }
       return;
     }
 
@@ -238,9 +247,11 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
 
     // Ensure drawing context is available before creating drawings
     if (drawingContext.fullSize == Size.zero) {
-      chartDiag('layer#$hashCode reconcile skipped: drawing context has zero '
-          'size (bound layer mounted: ${interactiveLayer.isStillMounted}), '
-          'retrying post-frame');
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('layer#$hashCode reconcile skipped: drawing context has zero '
+            'size (bound layer mounted: ${interactiveLayer.isStillMounted}), '
+            'retrying post-frame');
+      }
       // Drawing context not ready yet, schedule retry after next frame
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
@@ -294,15 +305,19 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
         _interactableDrawings.containsKey(selectedDrawing.id) &&
         !identical(
             _interactableDrawings[selectedDrawing.id], selectedDrawing)) {
-      chartDiag('layer#$hashCode reconcile: replacing map instance for '
-          '${selectedDrawing.id} with the selected instance');
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('layer#$hashCode reconcile: replacing map instance for '
+            '${selectedDrawing.id} with the selected instance');
+      }
       _interactableDrawings[selectedDrawing.id] = selectedDrawing;
       selectedInstanceReplaced = true;
     }
 
     if (addedIds.isNotEmpty) {
-      chartDiag('layer#$hashCode reconcile: added $addedIds, '
-          'map: ${_interactableDrawings.keys.toList()}');
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('layer#$hashCode reconcile: added $addedIds, '
+            'map: ${_interactableDrawings.keys.toList()}');
+      }
     }
 
     final List<String> removedIds = <String>[];
@@ -317,9 +332,11 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
     });
 
     if (removedIds.isNotEmpty) {
-      chartDiag('layer#$hashCode reconcile: removed $removedIds, '
-          'repo: ${configListIds.toList()}, '
-          'map: ${_interactableDrawings.keys.toList()}');
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('layer#$hashCode reconcile: removed $removedIds, '
+            'repo: ${configListIds.toList()}, '
+            'map: ${_interactableDrawings.keys.toList()}');
+      }
     }
 
     // If the state machine still references a drawing whose config no longer
@@ -331,8 +348,10 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
         selectedDrawing != null && !configListIds.contains(selectedDrawing.id);
 
     if (selectedToolIsGone) {
-      chartDiag('reconcile: selected tool ${selectedDrawing.id} is gone, '
-          'scheduling state reset');
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('reconcile: selected tool ${selectedDrawing.id} is gone, '
+            'scheduling state reset');
+      }
       _scheduleStateReset();
     }
 
@@ -435,8 +454,10 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
 
   @override
   void dispose() {
-    chartDiag('layer#$hashCode dispose, '
-        'map: ${_interactableDrawings.keys.toList()}');
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('layer#$hashCode dispose, '
+          'map: ${_interactableDrawings.keys.toList()}');
+    }
     widget.drawingToolsRepo.removeListener(syncDrawingsWithConfigs);
     _drawingsChanged.dispose();
     super.dispose();
@@ -608,9 +629,11 @@ class _InteractiveLayerGestureHandlerState
       duration: const Duration(milliseconds: 240),
     );
 
-    chartDiag('handler#$hashCode init, binding to '
-        'behaviour#${widget.interactiveLayerBehaviour.hashCode} '
-        '(state: ${widget.interactiveLayerBehaviour.currentState.runtimeType})');
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('handler#$hashCode init, binding to '
+          'behaviour#${widget.interactiveLayerBehaviour.hashCode} '
+          '(state: ${widget.interactiveLayerBehaviour.currentState.runtimeType})');
+    }
 
     widget.interactiveLayerBehaviour.init(
       interactiveLayer: this,
@@ -967,8 +990,10 @@ class _InteractiveLayerGestureHandlerState
 
   @override
   void dispose() {
-    chartDiag('handler#$hashCode dispose (behaviour still bound to this: '
-        '${identical(widget.interactiveLayerBehaviour.interactiveLayer, this)})');
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('handler#$hashCode dispose (behaviour still bound to this: '
+          '${identical(widget.interactiveLayerBehaviour.interactiveLayer, this)})');
+    }
     widget.drawingsChanged.removeListener(_checkIsAToolAdded);
     _interactionNotifier.dispose();
     _stateChangeController.dispose();

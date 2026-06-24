@@ -74,7 +74,9 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
 
     if (!prefs.containsKey(addOnsKey)) {
       // No saved indicators or drawing tools.
-      chartDiag('repo#$hashCode loadFromPrefs($addOnsKey): no saved items');
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('repo#$hashCode loadFromPrefs($addOnsKey): no saved items');
+      }
       notifyListeners();
       return;
     }
@@ -92,8 +94,10 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
       _hiddenStatus.add(false);
     }
 
-    chartDiag('repo#$hashCode loadFromPrefs($addOnsKey): loaded '
-        '${items.map((T c) => c.configId).toList()}');
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('repo#$hashCode loadFromPrefs($addOnsKey): loaded '
+          '${items.map((T c) => c.configId).toList()}');
+    }
 
     notifyListeners();
   }
@@ -103,8 +107,10 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   void add(T addOnConfig) {
     items.add(addOnConfig);
     _hiddenStatus.add(false);
-    chartDiag('repo#$hashCode add(${addOnConfig.configId}) -> $addOnsKey, '
-        'items: ${items.map((T c) => c.configId).toList()}');
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('repo#$hashCode add(${addOnConfig.configId}) -> $addOnsKey, '
+          'items: ${items.map((T c) => c.configId).toList()}');
+    }
     _writeToPrefs();
     notifyListeners();
   }
@@ -135,9 +141,11 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     }
     final removedItem = items.removeAt(index);
     _hiddenStatus.removeAt(index);
-    chartDiag('repo#$hashCode removeAt($index) '
-        'removed ${removedItem.configId} -> $addOnsKey, '
-        'items: ${items.map((T c) => c.configId).toList()}');
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('repo#$hashCode removeAt($index) '
+          'removed ${removedItem.configId} -> $addOnsKey, '
+          'items: ${items.map((T c) => c.configId).toList()}');
+    }
     _writeToPrefs();
     // Notify about the deletion
     onDeleteCallback?.call(removedItem, index);
@@ -158,7 +166,9 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   void clear() {
     items.clear();
     _hiddenStatus.clear();
-    chartDiag('repo#$hashCode clear() -> $addOnsKey');
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('repo#$hashCode clear() -> $addOnsKey');
+    }
     _writeToPrefs();
     notifyListeners();
   }
