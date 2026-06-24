@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:deriv_chart/src/add_ons/add_on_config.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
+import 'package:deriv_chart/src/misc/chart_diagnostics.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Called to create an AddOnConfig object from a map.
@@ -73,6 +74,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
 
     if (!prefs.containsKey(addOnsKey)) {
       // No saved indicators or drawing tools.
+      chartDiag('repo#$hashCode loadFromPrefs($addOnsKey): no saved items');
       notifyListeners();
       return;
     }
@@ -90,6 +92,9 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
       _hiddenStatus.add(false);
     }
 
+    chartDiag('repo#$hashCode loadFromPrefs($addOnsKey): loaded '
+        '${items.map((T c) => c.configId).toList()}');
+
     notifyListeners();
   }
 
@@ -98,6 +103,8 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   void add(T addOnConfig) {
     items.add(addOnConfig);
     _hiddenStatus.add(false);
+    chartDiag('repo#$hashCode add(${addOnConfig.configId}) -> $addOnsKey, '
+        'items: ${items.map((T c) => c.configId).toList()}');
     _writeToPrefs();
     notifyListeners();
   }
@@ -128,6 +135,9 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
     }
     final removedItem = items.removeAt(index);
     _hiddenStatus.removeAt(index);
+    chartDiag('repo#$hashCode removeAt($index) '
+        'removed ${removedItem.configId} -> $addOnsKey, '
+        'items: ${items.map((T c) => c.configId).toList()}');
     _writeToPrefs();
     // Notify about the deletion
     onDeleteCallback?.call(removedItem, index);
@@ -148,6 +158,7 @@ class AddOnsRepository<T extends AddOnConfig> extends ChangeNotifier
   void clear() {
     items.clear();
     _hiddenStatus.clear();
+    chartDiag('repo#$hashCode clear() -> $addOnsKey');
     _writeToPrefs();
     notifyListeners();
   }

@@ -71,21 +71,31 @@ class InteractiveAddingToolState extends InteractiveState
     );
 
     if (addingStateInfo.isFinished) {
-      interactiveLayer
-        ..clearAddingDrawing()
-        ..addDrawing(_drawingPreview!.interactableDrawing.getUpdatedConfig());
+      interactiveLayer.clearAddingDrawing();
+
+      final DrawingToolConfig addedConfig = interactiveLayer
+          .addDrawing(_drawingPreview!.interactableDrawing.getUpdatedConfig());
+
+      // Bind the persisted config (which now carries the generated configId)
+      // to the drawing instance BEFORE selecting it.
+      //
+      // Without this the selected instance keeps a configId-less config:
+      // - dragging it is never persisted (config updates with a null id are
+      //   dropped by the layer),
+      // - the floating-menu delete is a silent no-op (the repository cannot
+      //   find a config with a null id),
+      // - the painted (repo-backed) instance is a separate object, so the
+      //   selection acts on an invisible "ghost" copy of the tool.
+      _drawingPreview!.interactableDrawing.config = addedConfig;
 
       // Update the state to selected tool state with the newly added drawing.
-      //
-      // Once we have saved the drawing config in [AddOnsRepository] we should
-      // update to selected state with the interactable drawing that comes from
-      // that configs and not the preview one.
       interactiveLayerBehaviour.updateStateTo(
         InteractiveSelectedToolState(
           selected: _drawingPreview!.interactableDrawing,
           interactiveLayerBehaviour: interactiveLayerBehaviour,
         ),
         StateChangeAnimationDirection.forward,
+        waitForAnimation: false,
       );
 
       _drawingPreview = null;
