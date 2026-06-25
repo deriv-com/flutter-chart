@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/helpers/types.dart';
+import 'package:deriv_chart/src/misc/chart_diagnostics.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
 import 'package:flutter/gestures.dart';
@@ -76,6 +77,10 @@ abstract class InteractiveLayerBehaviour {
 
   bool _initialized = false;
 
+  /// Whether [init] has been called at least once, i.e. whether
+  /// [interactiveLayer], [onUpdate] and [stateChangeController] are bound.
+  bool get isInitialized => _initialized;
+
   /// The interactive layer that this manager is managing.
   ///
   /// Note: This is not final to allow reassignment when the widget rebuilds.
@@ -85,6 +90,11 @@ abstract class InteractiveLayerBehaviour {
   ///
   /// Note: This is not final to allow reassignment when the widget rebuilds.
   late VoidCallback onUpdate;
+
+  /// Monotonically increasing id of state transitions. Used to detect when a
+  /// transition that was suspended on its animation has been superseded by a
+  /// newer one (see [updateStateTo]).
+  int _stateTransitionSeq = 0;
 
   /// Initializes the [InteractiveLayerBehaviour].
   ///
@@ -134,16 +144,48 @@ abstract class InteractiveLayerBehaviour {
     bool waitForAnimation = true,
     bool animate = true,
   }) async {
+    final int transitionSeq = ++_stateTransitionSeq;
+
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('updateStateTo #$transitionSeq '
+          '${_describeState(currentState)} -> ${_describeState(newState)} '
+          '(wait: $waitForAnimation, animate: $animate)');
+    }
+
     if (waitForAnimation) {
       await interactiveLayer.animateStateChange(direction, animate: animate);
+
+      // While this transition was suspended on its animation, a newer
+      // transition may have started (the await can also resume late after the
+      // animation was cancelled by a keyed remount disposing the layer).
+      // The newer transition owns the state machine now; applying this one
+      // would overwrite it with stale state.
+      if (transitionSeq != _stateTransitionSeq) {
+        if (kChartDiagnosticsEnabled) {
+          chartDiag('updateStateTo #$transitionSeq superseded by '
+              '#$_stateTransitionSeq, dropping ${_describeState(newState)}');
+        }
+        return;
+      }
     } else {
       unawaited(
           interactiveLayer.animateStateChange(direction, animate: animate));
     }
 
     _controller.currentState = newState;
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('updateStateTo #$transitionSeq applied '
+          '${_describeState(newState)}');
+    }
     onUpdate();
   }
+
+  /// Describes a state for diagnostics, including the selected drawing id
+  /// when applicable.
+  static String _describeState(InteractiveState state) =>
+      state is InteractiveSelectedToolState
+          ? '${state.runtimeType}(${state.selected.id})'
+          : '${state.runtimeType}';
 
   /// Handles the addition of a drawing tool.
   /// Will be called when we want to add [drawingTool] to the layer.
