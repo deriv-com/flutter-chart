@@ -17,8 +17,11 @@ import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_
 import 'package:deriv_chart/src/models/axis_range.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
+import 'package:deriv_chart/src/misc/chart_diagnostics.dart';
+import 'package:flutter/foundation.dart' show ValueGetter, listEquals;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart' show SchedulerPhase;
 import 'package:provider/provider.dart';
 
 import '../chart/data_visualization/chart_data.dart';
@@ -34,6 +37,7 @@ import 'interactive_layer_base.dart';
 import 'enums/state_change_direction.dart';
 import 'interactive_layer_behaviours/interactive_layer_behaviour.dart';
 import 'interactive_layer_states/interactive_normal_state.dart';
+import 'interactive_layer_states/interactive_state.dart';
 
 /// Defines the different interaction modes for the interactive layer.
 ///
@@ -140,20 +144,114 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
   final Map<String, InteractableDrawing> _interactableDrawings =
       <String, InteractableDrawing>{};
 
+  /// Fired whenever [_interactableDrawings] changes, so the drawings paint
+  /// layer repaints from the live map even if the widget rebuild carrying the
+  /// new list does not propagate (observed in release builds on the
+  /// bottom-sheet "clear all" flow).
+  final InteractionNotifier _drawingsChanged = InteractionNotifier();
+
+  bool _stateResetScheduled = false;
+
   @override
   void initState() {
     super.initState();
 
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('layer#$hashCode initState, '
+          'repo#${widget.drawingToolsRepo.hashCode} '
+          'items: ${widget.drawingToolsRepo.items.map((c) => c.configId).toList()}');
+    }
+
     widget.drawingToolsRepo.addListener(syncDrawingsWithConfigs);
+
+    // Sync with the repo content on mount. The repo may already contain items
+    // whose notifications were fired before this layer was mounted (e.g.
+    // drawings loaded from SharedPreferences while the chart subtree was
+    // being (re)mounted, such as after a symbol switch). Without this initial
+    // sync, those drawings would never appear until the next repo mutation.
+    //
+    // Deferred to post-frame because the behaviour's `interactiveLayer`
+    // reference is bound by the child gesture handler's initState, which runs
+    // after this initState.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        syncDrawingsWithConfigs();
+      }
+    });
   }
 
+  @override
+  void didUpdateWidget(covariant InteractiveLayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // If the repository instance changed, move the listener to the new
+    // instance, otherwise mutations on the new repo would never reach this
+    // layer. The build that follows this didUpdateWidget reconciles the
+    // drawings against the new repo.
+    if (!identical(oldWidget.drawingToolsRepo, widget.drawingToolsRepo)) {
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('layer#$hashCode repo changed '
+            '#${oldWidget.drawingToolsRepo.hashCode} -> '
+            '#${widget.drawingToolsRepo.hashCode}');
+      }
+      oldWidget.drawingToolsRepo.removeListener(syncDrawingsWithConfigs);
+      widget.drawingToolsRepo.addListener(syncDrawingsWithConfigs);
+    }
+  }
+
+  /// Repository listener: reconciles and triggers a rebuild.
   void syncDrawingsWithConfigs() {
+    if (!mounted) {
+      return;
+    }
+
+    try {
+      _reconcileDrawings();
+    } on Object catch (error, stackTrace) {
+      // Diagnostics: a throw between the map mutation and setState would
+      // leave the painted drawings stale with no visible error in release.
+      // Log it and still rebuild from whatever state the map is in.
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('layer#$hashCode reconcile threw: $error\n$stackTrace');
+      }
+    }
+    setState(() {});
+  }
+
+  /// Reconciles [_interactableDrawings] with the repository contents.
+  ///
+  /// This is called from [build] (as well as from the repository listener) so
+  /// that the painted drawings always reflect the current repository state on
+  /// every rebuild. Correctness must not depend on ChangeNotifier listener
+  /// timing alone: in release builds the chart subtree can be remounted
+  /// (e.g. keyed remounts on symbol/marker changes) in timings where a
+  /// repository notification fires while no listener is attached, which
+  /// leaves stale drawings painted (and hit-testable) or loaded drawings
+  /// never shown.
+  void _reconcileDrawings() {
     final interactiveLayerBehaviour = widget.interactiveLayerBehaviour;
+
+    if (!interactiveLayerBehaviour.isInitialized) {
+      // Very first build: the gesture handler hasn't bound the behaviour to
+      // this layer yet. The post-frame initial sync from initState will
+      // reconcile right after.
+      if (kChartDiagnosticsEnabled) {
+        chartDiag(
+            'layer#$hashCode reconcile skipped: behaviour not initialized');
+      }
+      return;
+    }
+
     final interactiveLayer = interactiveLayerBehaviour.interactiveLayer;
     final drawingContext = interactiveLayer.drawingContext;
 
     // Ensure drawing context is available before creating drawings
     if (drawingContext.fullSize == Size.zero) {
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('layer#$hashCode reconcile skipped: drawing context has zero '
+            'size (bound layer mounted: ${interactiveLayer.isStillMounted}), '
+            'retrying post-frame');
+      }
       // Drawing context not ready yet, schedule retry after next frame
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
@@ -166,38 +264,155 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
     final configListIds =
         widget.drawingToolsRepo.items.map((c) => c.configId).toSet();
 
+    // The behaviour and its state machine outlive this State (the behaviour
+    // is owned by the chart's client and survives layer remounts). Gestures
+    // mutate the selected InteractableDrawing instance held by the state
+    // machine, so when (re)building the map, reuse that instance instead of
+    // creating a duplicate for the same configId; otherwise drags would
+    // mutate an instance that is no longer the one being painted.
+    final InteractiveState currentState =
+        widget.interactiveLayerBehaviour.currentState;
+    final InteractableDrawing? selectedDrawing =
+        currentState is InteractiveSelectedToolState
+            ? currentState.selected
+            : null;
+
+    final List<String> addedIds = <String>[];
+
     for (final config in widget.drawingToolsRepo.items) {
       if (!_interactableDrawings.containsKey(config.configId)) {
         // Add new drawing if it doesn't exist
-        final drawing = config.getInteractableDrawing(
-          drawingContext,
-          interactiveLayerBehaviour.getToolState,
-        );
+        final drawing =
+            selectedDrawing != null && selectedDrawing.id == config.configId
+                ? selectedDrawing
+                : config.getInteractableDrawing(
+                    drawingContext,
+                    interactiveLayerBehaviour.getToolState,
+                  );
         _interactableDrawings[config.configId!] = drawing;
+        addedIds.add(config.configId!);
       }
     }
 
-    bool anyToolRemoved = false;
+    bool selectedInstanceReplaced = false;
+
+    // The map and the state machine can hold DIFFERENT instances for the same
+    // configId (e.g. during the add flow the repo listener creates a map
+    // instance before the selection is established with the preview's
+    // instance). Gestures mutate the selected instance, so it must also be
+    // the painted/hit-tested one.
+    if (selectedDrawing != null &&
+        _interactableDrawings.containsKey(selectedDrawing.id) &&
+        !identical(
+            _interactableDrawings[selectedDrawing.id], selectedDrawing)) {
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('layer#$hashCode reconcile: replacing map instance for '
+            '${selectedDrawing.id} with the selected instance');
+      }
+      _interactableDrawings[selectedDrawing.id] = selectedDrawing;
+      selectedInstanceReplaced = true;
+    }
+
+    if (addedIds.isNotEmpty) {
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('layer#$hashCode reconcile: added $addedIds, '
+            'map: ${_interactableDrawings.keys.toList()}');
+      }
+    }
+
+    final List<String> removedIds = <String>[];
 
     // Remove drawings that are not in the config list
     _interactableDrawings.removeWhere((id, _) {
       if (!configListIds.contains(id)) {
-        anyToolRemoved = true;
+        removedIds.add(id);
         return true;
       }
       return false;
     });
 
-    if (anyToolRemoved) {
+    if (removedIds.isNotEmpty) {
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('layer#$hashCode reconcile: removed $removedIds, '
+            'repo: ${configListIds.toList()}, '
+            'map: ${_interactableDrawings.keys.toList()}');
+      }
+    }
+
+    // If the state machine still references a drawing whose config no longer
+    // exists in the repo (deleted tool, or a selection that survived a keyed
+    // remount into another symbol), reset to normal state. Otherwise the
+    // stale selection keeps showing its floating menu (via the state's
+    // preview widgets) for a drawing that can no longer be interacted with.
+    final bool selectedToolIsGone =
+        selectedDrawing != null && !configListIds.contains(selectedDrawing.id);
+
+    if (selectedToolIsGone) {
+      if (kChartDiagnosticsEnabled) {
+        chartDiag('reconcile: selected tool ${selectedDrawing.id} is gone, '
+            'scheduling state reset');
+      }
+      _scheduleStateReset();
+    }
+
+    if (addedIds.isNotEmpty ||
+        removedIds.isNotEmpty ||
+        selectedInstanceReplaced) {
+      _notifyDrawingsChanged();
+    }
+  }
+
+  /// Signals the drawings paint layer that [_interactableDrawings] changed.
+  ///
+  /// Deferred to post-frame when reconciliation runs during build (notifying
+  /// mid-build would trigger setState-during-build in the listening
+  /// AnimatedBuilder); fired immediately otherwise so deletes repaint within
+  /// the same frame.
+  void _notifyDrawingsChanged() {
+    if (WidgetsBinding.instance.schedulerPhase ==
+        SchedulerPhase.persistentCallbacks) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _drawingsChanged.notify();
+        }
+      });
+    } else {
+      _drawingsChanged.notify();
+    }
+  }
+
+  /// Resets the behaviour state machine to normal state after the current
+  /// frame.
+  ///
+  /// Deferred to post-frame because reconciliation can run during build, and
+  /// the state transition triggers `onUpdate` callbacks that must not run
+  /// mid-build.
+  ///
+  /// The reset is applied synchronously (no animation wait): it is a cleanup
+  /// for a state that references a deleted drawing, and waiting on an
+  /// animation would make the reset itself lose the race against the next
+  /// keyed remount.
+  void _scheduleStateReset() {
+    if (_stateResetScheduled) {
+      return;
+    }
+    _stateResetScheduled = true;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _stateResetScheduled = false;
+      if (!mounted) {
+        return;
+      }
+
       widget.interactiveLayerBehaviour.updateStateTo(
         InteractiveNormalState(
           interactiveLayerBehaviour: widget.interactiveLayerBehaviour,
         ),
         StateChangeAnimationDirection.forward,
+        waitForAnimation: false,
+        animate: false,
       );
-    }
-
-    setState(() {});
+    });
   }
 
   /// Updates the config in the repository with debouncing
@@ -239,7 +454,12 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
 
   @override
   void dispose() {
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('layer#$hashCode dispose, '
+          'map: ${_interactableDrawings.keys.toList()}');
+    }
     widget.drawingToolsRepo.removeListener(syncDrawingsWithConfigs);
+    _drawingsChanged.dispose();
     super.dispose();
   }
 
@@ -247,8 +467,19 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
 
   @override
   Widget build(BuildContext context) {
+    // Reconcile on every build so the painted/hit-tested drawings always
+    // match the repository, regardless of listener timing (MainChart watches
+    // the repository through Provider, so every repo mutation rebuilds this
+    // widget).
+    _reconcileDrawings();
+
     return _InteractiveLayerGestureHandler(
-      drawings: _interactableDrawings.values.toList(),
+      // A live getter (not a snapshot list): paint and hit-testing must always
+      // reflect the reconciled map, even if a widget rebuild carrying a new
+      // snapshot fails to propagate (observed in release builds after
+      // repo.clear() from the bottom sheet).
+      getDrawings: () => _interactableDrawings.values.toList(growable: false),
+      drawingsChanged: _drawingsChanged,
       epochFromX: widget.epochFromCanvasX,
       quoteFromY: widget.quoteFromCanvasY,
       epochToX: widget.epochToCanvasX,
@@ -275,7 +506,8 @@ class _InteractiveLayerState extends State<InteractiveLayer> {
 
 class _InteractiveLayerGestureHandler extends StatefulWidget {
   const _InteractiveLayerGestureHandler({
-    required this.drawings,
+    required this.getDrawings,
+    required this.drawingsChanged,
     required this.epochFromX,
     required this.quoteFromY,
     required this.epochToX,
@@ -298,7 +530,12 @@ class _InteractiveLayerGestureHandler extends StatefulWidget {
     this.onCrosshairDisappeared,
   });
 
-  final List<InteractableDrawing> drawings;
+  /// Live access to the layer's reconciled drawings.
+  final ValueGetter<List<InteractableDrawing>> getDrawings;
+
+  /// Fires whenever the reconciled drawings change, to trigger a repaint
+  /// independently of widget rebuild propagation.
+  final Listenable drawingsChanged;
 
   final InteractiveLayerBehaviour interactiveLayerBehaviour;
 
@@ -392,9 +629,22 @@ class _InteractiveLayerGestureHandlerState
       duration: const Duration(milliseconds: 240),
     );
 
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('handler#$hashCode init, binding to '
+          'behaviour#${widget.interactiveLayerBehaviour.hashCode} '
+          '(state: ${widget.interactiveLayerBehaviour.currentState.runtimeType})');
+    }
+
     widget.interactiveLayerBehaviour.init(
       interactiveLayer: this,
-      onUpdate: () => setState(() {}),
+      onUpdate: () {
+        // The shared behaviour can outlive this State across keyed remounts;
+        // a transition finishing late must not call setState on a disposed
+        // State.
+        if (mounted) {
+          setState(() {});
+        }
+      },
       stateChangeController: _stateChangeController,
     );
     // Initialize the drawing tool gesture recognizer once
@@ -409,11 +659,20 @@ class _InteractiveLayerGestureHandlerState
       onCrosshairCancel: _cancelCrosshair,
       debugOwner: this,
     );
+
+    // The add-flow handoff must not depend on a widget rebuild reaching this
+    // element: react to reconciled-map changes directly.
+    widget.drawingsChanged.addListener(_checkIsAToolAdded);
   }
 
   @override
   void didUpdateWidget(covariant _InteractiveLayerGestureHandler oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    if (!identical(oldWidget.drawingsChanged, widget.drawingsChanged)) {
+      oldWidget.drawingsChanged.removeListener(_checkIsAToolAdded);
+      widget.drawingsChanged.addListener(_checkIsAToolAdded);
+    }
 
     _checkAddingToolToLayer(oldWidget);
   }
@@ -435,15 +694,22 @@ class _InteractiveLayerGestureHandlerState
   /// Checks if a tool has been added to the layer and updates the state to
   /// [InteractiveSelectedToolState] if it has.
   void _checkIsAToolAdded() {
-    for (final drawing in widget.drawings) {
+    if (_addedDrawing == null) {
+      return;
+    }
+
+    for (final drawing in widget.getDrawings()) {
       if (drawing.id == _addedDrawing) {
+        // Consume the marker only on a successful match. A widget update can
+        // arrive BEFORE the rebuild that carries the newly added drawing
+        // (release-mode timing); clearing unconditionally would drop the
+        // selection handoff to the repo-backed instance.
+        _addedDrawing = null;
         WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback(
             (_) => widget.interactiveLayerBehaviour.aNewToolsIsAdded(drawing));
         break;
       }
     }
-
-    _addedDrawing = null;
   }
 
   @override
@@ -451,6 +717,12 @@ class _InteractiveLayerGestureHandlerState
     StateChangeAnimationDirection direction, {
     bool animate = true,
   }) async {
+    if (!mounted) {
+      // This layer was disposed (e.g. a keyed remount on symbol/marker
+      // change). There is nothing to animate; return so that awaiting state
+      // transitions complete immediately instead of hanging forever.
+      return;
+    }
     await _runAnimation(direction, animate);
   }
 
@@ -458,19 +730,30 @@ class _InteractiveLayerGestureHandlerState
     StateChangeAnimationDirection direction,
     bool animate,
   ) async {
-    if (direction == StateChangeAnimationDirection.forward) {
-      _stateChangeController.reset();
-      if (animate) {
-        await _stateChangeController.forward();
+    try {
+      if (direction == StateChangeAnimationDirection.forward) {
+        _stateChangeController.reset();
+        if (animate) {
+          // `.orCancel` is essential: a plain TickerFuture NEVER completes if
+          // the animation is interrupted (controller reset by a concurrent
+          // transition, or disposed by a keyed remount). Without it, the
+          // `await` in InteractiveLayerBehaviour.updateStateTo hangs forever
+          // and the state assignment after it is silently lost, leaving the
+          // shared state machine stuck (release-mode ghost tools).
+          await _stateChangeController.forward().orCancel;
+        } else {
+          _stateChangeController.value = 1.0;
+        }
       } else {
-        _stateChangeController.value = 1.0;
+        if (animate) {
+          await _stateChangeController.reverse(from: 1).orCancel;
+        } else {
+          _stateChangeController.value = 0.0;
+        }
       }
-    } else {
-      if (animate) {
-        await _stateChangeController.reverse(from: 1);
-      } else {
-        _stateChangeController.value = 0.0;
-      }
+    } on TickerCanceled {
+      // Animation interrupted: completing normally is the desired behaviour,
+      // the awaiting state transition decides whether it still applies.
     }
   }
 
@@ -545,24 +828,50 @@ class _InteractiveLayerGestureHandlerState
     });
   }
 
+  /// Last painted drawing ids, used only for diagnostics.
+  List<String> _lastPaintedIds = const <String>[];
+
   Widget _buildDrawingsLayer(BuildContext context, XAxisModel xAxis) =>
       RepaintBoundary(
         child: MultipleAnimatedBuilder(
-            animations: [
+            animations: <Listenable>[
               _stateChangeController,
               _interactionNotifier,
-              widget.interactiveLayerBehaviour.controller
+              widget.interactiveLayerBehaviour.controller,
+              widget.drawingsChanged,
+              // Chart scroll (pan / zoom / autoscroll after a symbol switch)
+              // changes the epochToX / quoteToY closures captured by the
+              // CustomPainter. Without this listener the painter retained
+              // stale closures, causing drawings to drift off their anchored
+              // candle / price after an autoscroll — a release-only defect
+              // whose sibling (clear-all flow) was already patched via
+              // drawingsChanged.
+              xAxis,
             ],
             builder: (_, __) {
               final double animationValue =
                   _stateChangeCurve.transform(_stateChangeController.value);
+
+              final List<InteractableDrawing> currentDrawings =
+                  widget.getDrawings();
+
+              if (kChartDiagnosticsEnabled) {
+                final List<String> ids = currentDrawings
+                    .map((InteractableDrawing d) => d.id)
+                    .toList();
+                if (!listEquals(ids, _lastPaintedIds)) {
+                  chartDiag(
+                      'handler#$hashCode painting: $_lastPaintedIds -> $ids');
+                  _lastPaintedIds = ids;
+                }
+              }
 
               return Stack(
                 fit: StackFit.expand,
                 children: widget.series.input.isEmpty
                     ? []
                     : [
-                        ...widget.drawings
+                        ...currentDrawings
                             .where(
                               (e) =>
                                   widget.interactiveLayerBehaviour
@@ -576,7 +885,7 @@ class _InteractiveLayerGestureHandlerState
                                   animationValue,
                                 ))
                             .toList(),
-                        ...widget.drawings
+                        ...currentDrawings
                             .where(
                               (e) =>
                                   widget.interactiveLayerBehaviour
@@ -646,7 +955,8 @@ class _InteractiveLayerGestureHandlerState
       );
 
   @override
-  List<InteractableDrawing<DrawingToolConfig>> get drawings => widget.drawings;
+  List<InteractableDrawing<DrawingToolConfig>> get drawings =>
+      widget.getDrawings();
 
   @override
   EpochFromX get epochFromX => widget.epochFromX;
@@ -680,6 +990,11 @@ class _InteractiveLayerGestureHandlerState
 
   @override
   void dispose() {
+    if (kChartDiagnosticsEnabled) {
+      chartDiag('handler#$hashCode dispose (behaviour still bound to this: '
+          '${identical(widget.interactiveLayerBehaviour.interactiveLayer, this)})');
+    }
+    widget.drawingsChanged.removeListener(_checkIsAToolAdded);
     _interactionNotifier.dispose();
     _stateChangeController.dispose();
     _drawingToolGestureRecognizer.dispose();

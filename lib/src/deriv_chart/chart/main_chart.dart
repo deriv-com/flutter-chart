@@ -426,7 +426,12 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                 super.build(context),
                 if (widget.overlaySeries != null)
                   _buildSeries(widget.overlaySeries!),
-                if (widget.markerSeries != null) _buildMarkerArea(),
+                LayoutBuilder(
+                  key: ObjectKey(widget.markerSeries),
+                  builder: (_, __) => widget.markerSeries != null
+                      ? _buildMarkerArea()
+                      : const SizedBox.shrink(),
+                ),
                 _buildAnnotations(),
                 if (widget.drawingTools != null && widget.useDrawingToolsV2)
                   _buildInteractiveLayer(context, xAxis)
@@ -506,38 +511,43 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         loadingAnimationColor: widget.loadingAnimationColor,
       );
 
-  Widget _buildAnnotations() => MultipleAnimatedBuilder(
-        animations: <Animation<double>>[
-          currentTickAnimation,
-          _currentTickBlinkAnimation,
-          topBoundQuoteAnimationController,
-          bottomBoundQuoteAnimationController,
-        ],
-        builder: (BuildContext context, _) =>
-            Stack(fit: StackFit.expand, children: <Widget>[
-          if (widget.annotations != null)
-            ...widget.annotations!
-                .map(
-                  (ChartData annotation) => RepaintBoundary(
-                    child: CustomPaint(
-                      key: ValueKey<String>(annotation.id),
-                      painter: ChartPainter(
-                        animationInfo: AnimationInfo(
-                          currentTickPercent: currentTickAnimation.value,
-                          blinkingPercent: _currentTickBlinkAnimation.value,
+  Widget _buildAnnotations() => LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          final XAxisModel xAxisModel = context.watch<XAxisModel>();
+          return MultipleAnimatedBuilder(
+            animations: <Listenable>[
+              currentTickAnimation,
+              _currentTickBlinkAnimation,
+              topBoundQuoteAnimationController,
+              bottomBoundQuoteAnimationController,
+            ],
+            builder: (BuildContext context, _) =>
+                Stack(fit: StackFit.expand, children: <Widget>[
+              if (widget.annotations != null)
+                ...widget.annotations!
+                    .map(
+                      (ChartData annotation) => RepaintBoundary(
+                        child: CustomPaint(
+                          key: ValueKey<String>(annotation.id),
+                          painter: ChartPainter(
+                            animationInfo: AnimationInfo(
+                              currentTickPercent: currentTickAnimation.value,
+                              blinkingPercent: _currentTickBlinkAnimation.value,
+                            ),
+                            chartData: annotation,
+                            chartConfig: context.watch<ChartConfig>(),
+                            theme: context.watch<ChartTheme>(),
+                            epochToCanvasX: xAxisModel.xFromEpoch,
+                            quoteToCanvasY: chartQuoteToCanvasY,
+                            chartScaleModel: context.watch<ChartScaleModel>(),
+                          ),
                         ),
-                        chartData: annotation,
-                        chartConfig: context.watch<ChartConfig>(),
-                        theme: context.watch<ChartTheme>(),
-                        epochToCanvasX: xAxis.xFromEpoch,
-                        quoteToCanvasY: chartQuoteToCanvasY,
-                        chartScaleModel: context.watch<ChartScaleModel>(),
                       ),
-                    ),
-                  ),
-                )
-                .toList()
-        ]),
+                    )
+                    .toList()
+            ]),
+          );
+        },
       );
 
   Widget _buildScrollToLastTickButton() => Material(
@@ -585,13 +595,26 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
           topBoundQuoteAnimationController,
           bottomBoundQuoteAnimationController
         ],
-        builder: (BuildContext context, _) => MarkerArea(
-          markerSeries: widget.markerSeries!,
-          quoteToCanvasY: chartQuoteToCanvasY,
-          animationInfo: AnimationInfo(
-            currentTickPercent: currentTickAnimation.value,
-          ),
-        ),
+        builder: (BuildContext context, _) {
+          // This builder re-runs on every animation tick, independently of the
+          // gating LayoutBuilder. During a trade-type switch / navigation the
+          // series can become null while the animation controllers are still
+          // ticking (e.g. a running contract), so we must NOT force-unwrap
+          // markerSeries here — doing so threw "Null check operator used on a
+          // null value", which Flutter rendered as the release-mode grey
+          // ErrorWidget overlaying the chart.
+          final MarkerSeries? markerSeries = widget.markerSeries;
+          if (markerSeries == null) {
+            return const SizedBox.shrink();
+          }
+          return MarkerArea(
+            markerSeries: markerSeries,
+            quoteToCanvasY: chartQuoteToCanvasY,
+            animationInfo: AnimationInfo(
+              currentTickPercent: currentTickAnimation.value,
+            ),
+          );
+        },
       );
 
   Widget _buildDataFitButton() {
