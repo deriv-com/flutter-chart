@@ -217,8 +217,6 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   void didUpdateWidget(MainChart oldChart) {
     super.didUpdateWidget(oldChart);
 
-    didUpdateChartData(oldChart);
-
     if (widget.isLive != oldChart.isLive ||
         widget.showCurrentTickBlinkAnimation !=
             oldChart.showCurrentTickBlinkAnimation) {
