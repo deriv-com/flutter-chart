@@ -133,6 +133,9 @@ class ChartDefaultLightTheme extends ChartDefaultTheme {
       LightThemeColors.floatingMenuDragIconColor;
 
   @override
+  Color get panelDividerActiveColor => LightThemeColors.panelDividerActiveColor;
+
+  @override
   Color get lineThicknessDropdownButtonTextColor =>
       LightThemeColors.lineThicknessDropdownButtonTextColor;
 

@@ -92,13 +92,7 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
             : Stack(
                 children: <Widget>[
                   if (widget.showFrame) _buildChartFrame(context),
-                  if (!widget.isHidden)
-                    Column(
-                      children: <Widget>[
-                        Expanded(child: super.build(context)),
-                        _buildDivider(),
-                      ],
-                    ),
+                  if (!widget.isHidden) super.build(context),
                   Positioned(
                     top: 4,
                     left: widget.bottomChartTitleMargin?.left ?? 10,

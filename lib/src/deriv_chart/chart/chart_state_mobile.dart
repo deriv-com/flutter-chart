@@ -1,27 +1,6 @@
 part of 'chart.dart';
 
 class _ChartStateMobile extends _ChartState {
-  double _bottomSectionHeight = 0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _bottomSectionHeight =
-        _getBottomIndicatorsSectionHeightFraction(widget.bottomConfigs.length);
-  }
-
-  @override
-  void didUpdateWidget(covariant Chart oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.bottomConfigs.length != widget.bottomConfigs.length) {
-      _bottomSectionHeight = _getBottomIndicatorsSectionHeightFraction(
-        widget.bottomConfigs.length,
-      );
-    }
-  }
-
   @override
   Widget buildChartsLayout(
     BuildContext context,
@@ -34,54 +13,124 @@ class _ChartStateMobile extends _ChartState {
     final Duration quoteBoundsAnimationDuration =
         widget.quoteBoundsAnimationDuration ?? _defaultDuration;
 
-    List<Widget> getBottomIndicatorsList(BuildContext context) =>
-        widget.indicatorsRepo!.items
-            .mapIndexed((int index, IndicatorConfig config) {
-          if (config.isOverlay) {
-            return const SizedBox.shrink();
-          }
+    final Repository<IndicatorConfig>? repository = widget.indicatorsRepo;
 
-          final Series series = config.getSeries(
-            IndicatorInput(
-              widget.mainSeries.input,
-              widget.granularity,
+    // Bottom (non-overlay) indicators, in repo order, keeping their true
+    // index within `repository.items` (needed for hidden-status lookups).
+    final List<int> bottomRepoIndices = <int>[
+      if (repository != null)
+        for (int i = 0; i < repository.items.length; i++)
+          if (!repository.items[i].isOverlay) i
+    ];
+
+    final List<int> visibleBottomRepoIndices = bottomRepoIndices
+        .where((int i) => !repository!.getHiddenStatus(i))
+        .toList();
+
+    final List<String> visibleIndicatorKeys = visibleBottomRepoIndices
+        .map((int i) => _panelKeyFor(repository!.items[i], i))
+        .toList();
+
+    // A single flat, ordered chain covering the main chart and every
+    // *visible* bottom indicator panel. Keeping this as one chain (rather
+    // than resizing the bottom section as a whole and then splitting it
+    // among indicators independently) is what lets a resize cascade past
+    // an indicator already at its minimum height into the next one that
+    // still has room, no matter which divider is being dragged.
+    final List<String> orderedKeys = <String>[
+      PanelSizeRepository.mainPanelKey,
+      ...visibleIndicatorKeys,
+    ];
+
+    final double bottomSectionDefaultFraction =
+        _getBottomIndicatorsSectionHeightFraction(bottomRepoIndices.length);
+
+    _syncPanelFractions(
+      orderedKeys,
+      (String key) => key == PanelSizeRepository.mainPanelKey
+          ? 1 - bottomSectionDefaultFraction
+          : bottomSectionDefaultFraction /
+              (visibleIndicatorKeys.isEmpty ? 1 : visibleIndicatorKeys.length),
+    );
+
+    List<Widget> getBottomIndicatorsList(
+      BuildContext context,
+      double usableHeight,
+    ) {
+      final List<Widget> children = <Widget>[];
+      int visiblePosition = 0;
+
+      for (final int repoIndex in bottomRepoIndices) {
+        final IndicatorConfig config = repository!.items[repoIndex];
+        final bool isHidden = repository.getHiddenStatus(repoIndex);
+
+        final Series series = config.getSeries(
+          IndicatorInput(
+            widget.mainSeries.input,
+            widget.granularity,
+          ),
+        );
+
+        // TODO(Ramin): Use the key (type + number) once it's implemented.
+        final int indexInBottomConfigs =
+            referenceIndexOf(widget.bottomConfigs, config);
+
+        final Widget bottomChart = BottomChartMobile(
+          series: series,
+          isHidden: isHidden,
+          granularity: widget.granularity,
+          pipSize: config.pipSize,
+          title:
+              '${config.shortTitle} ${config.number > 0 ? config.number : ''}'
+              ' (${config.configSummary})',
+          currentTickAnimationDuration: currentTickAnimationDuration,
+          quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
+          bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
+          onHideUnhideToggle: () =>
+              _onIndicatorHideToggleTapped(repository, repoIndex),
+          onSwap: (int offset) => _onSwap(
+              config, widget.bottomConfigs[indexInBottomConfigs + offset]),
+          showMoveUpIcon: bottomSeries!.length > 1 && indexInBottomConfigs != 0,
+          showMoveDownIcon: bottomSeries.length > 1 &&
+              indexInBottomConfigs != bottomSeries.length - 1,
+          showFrame: context.read<ChartConfig>().chartAxisConfig.showFrame,
+        );
+
+        if (isHidden) {
+          children.add(bottomChart);
+          continue;
+        }
+
+        final String key = _panelKeyFor(config, repoIndex);
+
+        // The divider directly above this panel sits between
+        // `orderedKeys[visiblePosition]` (main, or the previous indicator)
+        // and `orderedKeys[visiblePosition + 1]` (this indicator) - i.e.
+        // its divider index within the shared chain is `visiblePosition`.
+        final int dividerIndex = visiblePosition;
+        children
+          ..add(
+            ResizableChartDivider(
+              onDragUpdate: (double deltaPixels) => _resizeCascadingPanels(
+                orderedKeys,
+                dividerIndex,
+                deltaPixels / usableHeight,
+              ),
+              onDragEnd: _persistPanelFractions,
+            ),
+          )
+          ..add(
+            SizedBox(
+              height: (_panelFractions[key] ?? 0) * usableHeight,
+              child: bottomChart,
             ),
           );
-          final Repository<IndicatorConfig>? repository = widget.indicatorsRepo;
 
-          // TODO(Ramin): Use the key (type + number) once it's implemented.
-          final int indexInBottomConfigs =
-              referenceIndexOf(widget.bottomConfigs, config);
+        visiblePosition++;
+      }
 
-          final Widget bottomChart = BottomChartMobile(
-            series: series,
-            isHidden: repository?.getHiddenStatus(index) ?? false,
-            granularity: widget.granularity,
-            pipSize: config.pipSize,
-            title:
-                '${config.shortTitle} ${config.number > 0 ? config.number : ''}'
-                ' (${config.configSummary})',
-            currentTickAnimationDuration: currentTickAnimationDuration,
-            quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
-            bottomChartTitleMargin:
-                const EdgeInsets.only(left: Dimens.margin04),
-            onHideUnhideToggle: () =>
-                _onIndicatorHideToggleTapped(repository, index),
-            onSwap: (int offset) => _onSwap(
-                config, widget.bottomConfigs[indexInBottomConfigs + offset]),
-            showMoveUpIcon:
-                bottomSeries!.length > 1 && indexInBottomConfigs != 0,
-            showMoveDownIcon: bottomSeries.length > 1 &&
-                indexInBottomConfigs != bottomSeries.length - 1,
-            showFrame: context.read<ChartConfig>().chartAxisConfig.showFrame,
-          );
-
-          return (repository?.getHiddenStatus(index) ?? false)
-              ? bottomChart
-              : Expanded(
-                  child: bottomChart,
-                );
-        }).toList();
+      return children;
+    }
 
     final List<Series> overlaySeries = <Series>[];
 
@@ -105,8 +154,24 @@ class _ChartStateMobile extends _ChartState {
       BuildContext context,
       BoxConstraints constraints,
     ) {
+      final double availableHeight = constraints.maxHeight;
+      final double mainFraction =
+          _panelFractions[PanelSizeRepository.mainPanelKey] ?? 1.0;
+
+      // Each divider takes up real space in the bottom section's Column
+      // alongside the indicator panels, so it must be subtracted from the
+      // space panel fractions are applied to - otherwise the panels plus
+      // dividers overflow the section's fixed-height SizedBox below.
+      final double reservedForDividers =
+          visibleIndicatorKeys.length * Dimens.chartPanelDividerHitHeight;
+      final double usableHeight =
+          _usableHeightFor(availableHeight, visibleIndicatorKeys.length);
+      final double bottomSectionHeight =
+          (1 - mainFraction) * usableHeight + reservedForDividers;
+
       final List<Widget> bottomIndicatorsList =
-          getBottomIndicatorsList(context);
+          getBottomIndicatorsList(context, usableHeight);
+
       return Column(
         children: <Widget>[
           Expanded(
@@ -158,18 +223,11 @@ class _ChartStateMobile extends _ChartState {
               ],
             ),
           ),
-          if (context.read<ChartConfig>().chartAxisConfig.showFrame &&
-              bottomIndicatorsList.isNotEmpty)
-            const Divider(
-              height: 0.5,
-              thickness: 1,
-              color: Color(0xFF242828),
-            ),
           if (_isAllBottomIndicatorsHidden)
             ...bottomIndicatorsList
           else
             SizedBox(
-              height: _bottomSectionHeight * constraints.maxHeight,
+              height: bottomSectionHeight,
               child: Column(children: bottomIndicatorsList),
             ),
         ],

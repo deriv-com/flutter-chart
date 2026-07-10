@@ -8,6 +8,7 @@ import 'package:deriv_chart/src/add_ons/extensions.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/panel_size/panel_size_repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_object.dart';
@@ -54,6 +55,7 @@ class DerivChart extends StatefulWidget {
     this.chartAxisConfig = const ChartAxisConfig(),
     this.indicatorsRepo,
     this.drawingToolsRepo,
+    this.panelSizeRepo,
     this.drawingTools,
     this.msPerPx,
     this.minIntervalWidth,
@@ -184,6 +186,10 @@ class DerivChart extends StatefulWidget {
   /// Chart's drawings
   final Repository<DrawingToolConfig>? drawingToolsRepo;
 
+  /// Persists the relative sizes of the main chart and bottom indicator
+  /// panels as the user resizes them.
+  final PanelSizeRepository? panelSizeRepo;
+
   /// Drawing tools
   final DrawingTools? drawingTools;
 
@@ -211,6 +217,8 @@ class _DerivChartState extends State<DerivChart> {
   late AddOnsRepository<IndicatorConfig> _indicatorsRepo;
 
   late AddOnsRepository<DrawingToolConfig> _drawingToolsRepo;
+
+  final PanelSizeRepository _panelSizeRepo = PanelSizeRepository();
 
   final DrawingTools _drawingTools = DrawingTools();
 
@@ -270,6 +278,11 @@ class _DerivChartState extends State<DerivChart> {
 
   Future<void> loadSavedIndicatorsAndDrawingTools() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (widget.panelSizeRepo == null) {
+      _panelSizeRepo.loadFromPrefs(prefs, widget.activeSymbol);
+    }
+
     final List<AddOnsRepository<AddOnConfig>> _stateRepos =
         <AddOnsRepository<AddOnConfig>>[_indicatorsRepo, _drawingToolsRepo];
 
@@ -390,6 +403,7 @@ class _DerivChartState extends State<DerivChart> {
                 annotations: widget.annotations,
                 showCrosshair: widget.showCrosshair,
                 indicatorsRepo: widget.indicatorsRepo ?? _indicatorsRepo,
+                panelSizeRepo: widget.panelSizeRepo ?? _panelSizeRepo,
                 msPerPx: widget.msPerPx,
                 minIntervalWidth: widget.minIntervalWidth,
                 maxIntervalWidth: widget.maxIntervalWidth,

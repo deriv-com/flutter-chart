@@ -48,4 +48,18 @@ class Dimens {
 
   /// Large area line thickness 2
   static const double areaLineLargeThickness = 2;
+
+  /// Minimum height a chart panel (main chart or a bottom indicator panel)
+  /// can be resized down to via [ResizableChartDivider], expressed as a
+  /// fraction of the total space shared by all panels in its chain rather
+  /// than a fixed pixel amount. A fixed pixel minimum ends up too large a
+  /// share of the screen on small devices (e.g. with the maximum of 3
+  /// indicators on a short screen); a fixed fraction scales down with the
+  /// screen instead.
+  static const double minChartPanelHeightFraction = 0.1;
+
+  /// Height of the hit area for [ResizableChartDivider]. Sized well above
+  /// its visible line so the drag target stays comfortably tappable on
+  /// touch devices.
+  static const double chartPanelDividerHitHeight = 32;
 }

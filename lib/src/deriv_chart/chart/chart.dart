@@ -1,6 +1,7 @@
-import 'package:collection/collection.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/mobile_chart_frame_dividers.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/panel_size/panel_size_repository.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/resizable_chart_divider.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_variant.dart';
 import 'package:deriv_chart/src/theme/dimens.dart';
@@ -38,6 +39,96 @@ part 'chart_state_web.dart';
 part 'chart_state_mobile.dart';
 
 const Duration _defaultDuration = Duration(milliseconds: 300);
+
+/// Ensures [fractions] has exactly one entry per key in [keys], seeding new
+/// keys from [saved] (if previously persisted) or from [defaultFraction],
+/// dropping any key no longer present in [keys], and renormalizing so the
+/// remaining fractions always sum to `1.0`.
+///
+/// [fractions] is expected to represent one independent group of sibling
+/// panels whose heights add up to the full space they share - e.g. the main
+/// chart plus every bottom panel, or (on mobile) the individual indicator
+/// panels sharing the bottom section.
+void syncPanelFractions(
+  Map<String, double> fractions,
+  List<String> keys,
+  Map<String, double> saved,
+  double Function(String key) defaultFraction,
+) {
+  final Set<String> keySet = keys.toSet();
+  fractions.removeWhere((String key, _) => !keySet.contains(key));
+
+  for (final String key in keys) {
+    fractions[key] ??= saved[key] ?? defaultFraction(key);
+  }
+
+  final double sum = fractions.values.fold(0, (double a, double b) => a + b);
+  if (sum > 0 && sum != 1.0) {
+    fractions.updateAll((_, double value) => value / sum);
+  }
+}
+
+/// Cascading resize: dragging the divider between `orderedKeys[dividerIndex]`
+/// and `orderedKeys[dividerIndex + 1]` grows one side by [deltaFraction] and
+/// shrinks the other. A positive [deltaFraction] grows
+/// `orderedKeys[dividerIndex]`; a negative one grows
+/// `orderedKeys[dividerIndex + 1]`.
+///
+/// The space to shrink is taken from the nearest neighbor on the shrinking
+/// side first; if that neighbor is already at the minimum height (a fixed
+/// share of the total, [Dimens.minChartPanelHeightFraction], rather than a
+/// fixed pixel amount - so it scales down on small screens instead of
+/// eating an unreasonably large share of them), the remainder cascades
+/// further down the chain (e.g. dragging the divider between a second and
+/// third panel can shrink the first panel too, once the second has nothing
+/// left to give) so resizing never gets stuck behind an in-between panel
+/// that's already at its minimum. Returns whether [fractions] was changed.
+bool resizeCascadingFractions(
+  Map<String, double> fractions,
+  List<String> orderedKeys,
+  int dividerIndex,
+  double deltaFraction,
+) {
+  if (deltaFraction == 0) {
+    return false;
+  }
+
+  const double minFraction = Dimens.minChartPanelHeightFraction;
+
+  final String recipientKey;
+  final List<String> donorChain;
+  if (deltaFraction > 0) {
+    recipientKey = orderedKeys[dividerIndex];
+    donorChain = orderedKeys.sublist(dividerIndex + 1);
+  } else {
+    recipientKey = orderedKeys[dividerIndex + 1];
+    donorChain = orderedKeys.sublist(0, dividerIndex + 1).reversed.toList();
+  }
+
+  double remaining = deltaFraction.abs();
+  double actualDelta = 0;
+  for (final String donor in donorChain) {
+    if (remaining <= 0) {
+      break;
+    }
+    final double current = fractions[donor] ?? 0;
+    final double avail = current - minFraction;
+    if (avail <= 0) {
+      continue;
+    }
+    final double take = avail < remaining ? avail : remaining;
+    fractions[donor] = current - take;
+    remaining -= take;
+    actualDelta += take;
+  }
+
+  if (actualDelta <= 0) {
+    return false;
+  }
+
+  fractions[recipientKey] = (fractions[recipientKey] ?? 0) + actualDelta;
+  return true;
+}
 
 /// Interactive chart widget.
 class Chart extends StatefulWidget {
@@ -79,6 +170,7 @@ class Chart extends StatefulWidget {
     this.showScrollToLastTickButton,
     this.loadingAnimationColor,
     this.useDrawingToolsV2 = false,
+    this.panelSizeRepo,
     Key? key,
   }) : super(key: key);
 
@@ -202,6 +294,10 @@ class Chart extends StatefulWidget {
   /// The interactive layer behaviour.
   final InteractiveLayerBehaviour? interactiveLayerBehaviour;
 
+  /// Persists the relative sizes of the main chart and bottom indicator
+  /// panels as the user drags [ResizableChartDivider]s between them.
+  final PanelSizeRepository? panelSizeRepo;
+
   @override
   State<StatefulWidget> createState() =>
       // TODO(Ramin): Make this customizable from outside.
@@ -215,6 +311,11 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
   late ChartTheme _chartTheme;
   late List<Series>? bottomSeries;
   int? expandedIndex;
+
+  /// Current fraction of the available height occupied by each chart panel,
+  /// keyed by [PanelSizeRepository.mainPanelKey] for the main chart and by
+  /// [IndicatorConfig.configId] for each bottom indicator panel.
+  final Map<String, double> _panelFractions = <String, double>{};
 
   @override
   void initState() {
@@ -254,6 +355,64 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
             ? ChartDefaultDarkTheme()
             : ChartDefaultLightTheme());
   }
+
+  /// Ensures [_panelFractions] has exactly one entry per key in [keys],
+  /// seeding new keys from [widget.panelSizeRepo] (if previously saved) or
+  /// from [defaultFraction], dropping stale keys, and renormalizing so the
+  /// fractions always sum to `1.0`.
+  void _syncPanelFractions(
+    List<String> keys,
+    double Function(String key) defaultFraction,
+  ) =>
+      syncPanelFractions(
+        _panelFractions,
+        keys,
+        widget.panelSizeRepo?.fractions ?? const <String, double>{},
+        defaultFraction,
+      );
+
+  /// Cascading resize of the divider at [dividerIndex] within
+  /// [_panelFractions]. See [resizeCascadingFractions].
+  void _resizeCascadingPanels(
+    List<String> orderedKeys,
+    int dividerIndex,
+    double deltaFraction,
+  ) {
+    if (resizeCascadingFractions(
+      _panelFractions,
+      orderedKeys,
+      dividerIndex,
+      deltaFraction,
+    )) {
+      setState(() {});
+    }
+  }
+
+  /// Persists [_panelFractions], merged with any [extraFractions] (used by
+  /// mobile to also persist the relative sizes of individual bottom
+  /// indicator panels, which are tracked in a separate map).
+  void _persistPanelFractions([
+    Map<String, double> extraFractions = const <String, double>{},
+  ]) {
+    widget.panelSizeRepo?.save(<String, double>{
+      ..._panelFractions,
+      ...extraFractions,
+    });
+  }
+
+  /// Key for [config]'s panel within [_panelFractions]/[PanelSizeRepository],
+  /// falling back to a stable per-index name if it doesn't have a
+  /// [IndicatorConfig.configId] yet (defensive - repo-managed indicators
+  /// always get one assigned).
+  String _panelKeyFor(IndicatorConfig config, int index) =>
+      config.configId ?? 'bottom_$index';
+
+  /// Height available for panel fractions once [dividerCount]
+  /// [ResizableChartDivider]s - which take up real space in the same
+  /// Column as the panels - have been subtracted from [totalHeight].
+  double _usableHeightFor(double totalHeight, int dividerCount) =>
+      (totalHeight - dividerCount * Dimens.chartPanelDividerHitHeight)
+          .clamp(0.0, double.infinity);
 
   void _onCrosshairHover(
     Offset globalPosition,
