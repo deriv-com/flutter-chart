@@ -8,10 +8,7 @@ import 'package:provider/provider.dart';
 const double _handleWidth = 32;
 
 /// Height of the visible drag handle pill.
-const double _handleHeight = 16;
-
-/// Width of each of the two bars inside the drag handle.
-const double _handleBarWidth = 21.33;
+const double _handleHeight = 8;
 
 /// Height of the web hover/drag band around the line - narrower than the
 /// touch hit area, since a mouse is precise enough that the cursor should
@@ -80,17 +77,9 @@ class _ResizableChartDividerState extends State<ResizableChartDivider> {
       width: _handleWidth,
       height: _handleHeight,
       decoration: BoxDecoration(
-        color: _theme.backgroundColor,
+        color: _isDragging ? color : _theme.backgroundColor,
         borderRadius: BorderRadius.circular(Dimens.borderRadius04),
         border: Border.all(color: color),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(width: _handleBarWidth, height: 1, color: color),
-          const SizedBox(height: 4),
-          Container(width: _handleBarWidth, height: 1, color: color),
-        ],
       ),
     );
 
@@ -114,7 +103,7 @@ class _ResizableChartDividerState extends State<ResizableChartDivider> {
           )
         : Center(
             child: SizedBox(
-              width: 44,
+              width: Dimens.chartPanelDividerHandleHitWidth,
               height: Dimens.chartPanelDividerHitHeight,
               child: _dragArea(child: const SizedBox.expand()),
             ),

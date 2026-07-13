@@ -61,5 +61,10 @@ class Dimens {
   /// Height of the hit area for [ResizableChartDivider]. Sized well above
   /// its visible line so the drag target stays comfortably tappable on
   /// touch devices.
-  static const double chartPanelDividerHitHeight = 32;
+  static const double chartPanelDividerHitHeight = 40;
+
+  /// Width of the touch hit area around [ResizableChartDivider]'s drag
+  /// handle on mobile - wider than the visible handle so it's easy to tap
+  /// and grab without needing pixel-perfect accuracy.
+  static const double chartPanelDividerHandleHitWidth = 64;
 }
