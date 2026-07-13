@@ -21,12 +21,14 @@ GatorIndicatorConfig _$GatorIndicatorConfigFromJson(
       pipSize: json['pipSize'] as int? ?? 4,
       title: json['title'] as String?,
       number: json['number'] as int? ?? 0,
+      configId: json['configId'] as String?,
     );
 
 Map<String, dynamic> _$GatorIndicatorConfigToJson(
         GatorIndicatorConfig instance) =>
     <String, dynamic>{
       'number': instance.number,
+      'configId': instance.configId,
       'title': instance.title,
       'pipSize': instance.pipSize,
       'jawOffset': instance.jawOffset,

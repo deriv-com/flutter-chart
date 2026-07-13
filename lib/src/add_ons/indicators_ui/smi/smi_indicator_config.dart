@@ -39,6 +39,7 @@ class SMIIndicatorConfig extends IndicatorConfig {
     bool showLastIndicator = false,
     String? title,
     super.number,
+    super.configId,
   }) : super(
           isOverlay: false,
           pipSize: pipSize,
@@ -129,6 +130,7 @@ class SMIIndicatorConfig extends IndicatorConfig {
     bool? showLastIndicator,
     String? title,
     int? number,
+    String? configId,
   }) =>
       SMIIndicatorConfig(
         period: period ?? this.period,
@@ -145,5 +147,6 @@ class SMIIndicatorConfig extends IndicatorConfig {
         showLastIndicator: showLastIndicator ?? this.showLastIndicator,
         title: title ?? this.title,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
       );
 }

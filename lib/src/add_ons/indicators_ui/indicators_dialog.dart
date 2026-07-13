@@ -158,7 +158,11 @@ class _IndicatorsDialogState extends State<IndicatorsDialog> {
                         // the repository itself.
                         final int postFixNumber =
                             repo.getNumberForNewAddOn(config);
-                        repo.add(config.copyWith(number: postFixNumber));
+                        repo.add(config.copyWith(
+                          number: postFixNumber,
+                          configId:
+                              DateTime.now().millisecondsSinceEpoch.toString(),
+                        ));
                         setState(() {});
                       }
                     : null,

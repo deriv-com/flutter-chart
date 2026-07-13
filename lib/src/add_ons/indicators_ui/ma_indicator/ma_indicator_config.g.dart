@@ -21,12 +21,14 @@ MAIndicatorConfig _$MAIndicatorConfigFromJson(Map<String, dynamic> json) =>
       showLastIndicator: json['showLastIndicator'] as bool? ?? false,
       title: json['title'] as String?,
       number: json['number'] as int? ?? 0,
+      configId: json['configId'] as String?,
     );
 
 Map<String, dynamic> _$MAIndicatorConfigToJson(MAIndicatorConfig instance) =>
     <String, dynamic>{
       'isOverlay': instance.isOverlay,
       'number': instance.number,
+      'configId': instance.configId,
       'title': instance.title,
       'showLastIndicator': instance.showLastIndicator,
       'pipSize': instance.pipSize,

@@ -39,6 +39,7 @@ abstract class IndicatorConfig extends AddOnConfig {
     this.showLastIndicator = false,
     this.pipSize = 4,
     super.number,
+    super.configId,
   }) : super(isOverlay: isOverlay);
 
   /// Creates a concrete indicator config from JSON.
@@ -152,5 +153,6 @@ abstract class IndicatorConfig extends AddOnConfig {
     bool? showLastIndicator,
     int? pipSize,
     int? number,
+    String? configId,
   });
 }

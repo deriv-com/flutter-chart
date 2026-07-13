@@ -23,6 +23,7 @@ class ParabolicSARConfig extends IndicatorConfig {
     this.scatterStyle = const ScatterStyle(),
     String? title,
     super.number,
+    super.configId,
   }) : super(title: title ?? ParabolicSARConfig.name);
 
   /// Initializes from JSON.
@@ -70,6 +71,7 @@ class ParabolicSARConfig extends IndicatorConfig {
     ScatterStyle? scatterStyle,
     String? title,
     int? number,
+    String? configId,
     bool? showLastIndicator,
     int? pipSize,
   }) =>
@@ -81,5 +83,6 @@ class ParabolicSARConfig extends IndicatorConfig {
         scatterStyle: scatterStyle ?? this.scatterStyle,
         title: title ?? this.title,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
       );
 }

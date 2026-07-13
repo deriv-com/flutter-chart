@@ -49,17 +49,31 @@ const Duration _defaultDuration = Duration(milliseconds: 300);
 /// panels whose heights add up to the full space they share - e.g. the main
 /// chart plus every bottom panel, or (on mobile) the individual indicator
 /// panels sharing the bottom section.
+///
+/// `SharedPreferences` access backing [saved] is async, so a chart's very
+/// first build always runs before it has actually loaded - every key gets
+/// seeded from [defaultFraction] since [saved] is still empty at that point.
+/// Set [forceApplySaved] once that load has completed (see
+/// [PanelSizeRepository.loadGeneration]) to overwrite already-seeded keys
+/// with the real saved values instead of leaving them stuck at the
+/// placeholder defaults; leave it `false` on every other build so a value
+/// the user is actively resizing isn't clobbered by a stale saved fraction.
 void syncPanelFractions(
   Map<String, double> fractions,
   List<String> keys,
   Map<String, double> saved,
-  double Function(String key) defaultFraction,
-) {
+  double Function(String key) defaultFraction, {
+  bool forceApplySaved = false,
+}) {
   final Set<String> keySet = keys.toSet();
   fractions.removeWhere((String key, _) => !keySet.contains(key));
 
   for (final String key in keys) {
-    fractions[key] ??= saved[key] ?? defaultFraction(key);
+    if (forceApplySaved && saved.containsKey(key)) {
+      fractions[key] = saved[key]!;
+    } else {
+      fractions[key] ??= saved[key] ?? defaultFraction(key);
+    }
   }
 
   final double sum = fractions.values.fold(0, (double a, double b) => a + b);
@@ -317,11 +331,27 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
   /// [IndicatorConfig.configId] for each bottom indicator panel.
   final Map<String, double> _panelFractions = <String, double>{};
 
+  /// The [PanelSizeRepository.loadGeneration] already applied to
+  /// [_panelFractions], or `null` if none has been applied yet. See
+  /// [_syncPanelFractions].
+  int? _appliedPanelSizeGeneration;
+
   @override
   void initState() {
     super.initState();
     WidgetsFlutterBinding.ensureInitialized().addObserver(this);
     _initChartController();
+    widget.panelSizeRepo?.addListener(_onPanelSizeRepoChanged);
+  }
+
+  /// `PanelSizeRepository.loadFromPrefs` completes asynchronously, so this
+  /// forces a rebuild once it has (see [_syncPanelFractions]) - otherwise a
+  /// load that finishes after this chart's first build would silently never
+  /// reach the screen.
+  void _onPanelSizeRepoChanged() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -360,16 +390,34 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
   /// seeding new keys from [widget.panelSizeRepo] (if previously saved) or
   /// from [defaultFraction], dropping stale keys, and renormalizing so the
   /// fractions always sum to `1.0`.
+  ///
+  /// [widget.panelSizeRepo]'s load is async, so the first call here (during
+  /// this chart's very first build) always seeds every key from
+  /// [defaultFraction] since nothing has loaded yet. Once
+  /// [PanelSizeRepository.loadGeneration] moves past whatever generation was
+  /// last applied - flagged via [_onPanelSizeRepoChanged] forcing a rebuild -
+  /// this overwrites those placeholder defaults with the real saved values
+  /// exactly once per load, instead of leaving them stuck.
   void _syncPanelFractions(
     List<String> keys,
     double Function(String key) defaultFraction,
-  ) =>
-      syncPanelFractions(
-        _panelFractions,
-        keys,
-        widget.panelSizeRepo?.fractions ?? const <String, double>{},
-        defaultFraction,
-      );
+  ) {
+    final PanelSizeRepository? repo = widget.panelSizeRepo;
+    final bool forceApplySaved = repo != null &&
+        repo.loadGeneration > 0 &&
+        repo.loadGeneration != _appliedPanelSizeGeneration;
+    if (forceApplySaved) {
+      _appliedPanelSizeGeneration = repo.loadGeneration;
+    }
+
+    syncPanelFractions(
+      _panelFractions,
+      keys,
+      repo?.fractions ?? const <String, double>{},
+      defaultFraction,
+      forceApplySaved: forceApplySaved,
+    );
+  }
 
   /// Cascading resize of the divider at [dividerIndex] within
   /// [_panelFractions]. See [resizeCascadingFractions].
@@ -400,12 +448,19 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
     });
   }
 
-  /// Key for [config]'s panel within [_panelFractions]/[PanelSizeRepository],
-  /// falling back to a stable per-index name if it doesn't have a
-  /// [IndicatorConfig.configId] yet (defensive - repo-managed indicators
-  /// always get one assigned).
-  String _panelKeyFor(IndicatorConfig config, int index) =>
-      config.configId ?? 'bottom_$index';
+  /// Key for [config]'s panel within [_panelFractions]/[PanelSizeRepository].
+  ///
+  /// Prefers [AddOnConfig.configId] - a fresh id assigned when the indicator
+  /// is added (see `IndicatorsDialog`'s "Add" handler) - since a positional
+  /// or title/number-based key would tie a saved size to whatever happens to
+  /// look the same, meaning deleting an indicator and adding a new one of
+  /// the same type back could silently inherit the deleted one's size.
+  /// Falls back to [IndicatorConfig.title] + [AddOnConfig.number] for
+  /// indicators added without a [configId] (e.g. persisted from before this
+  /// existed, or added directly by a host app rather than through the
+  /// indicators dialog).
+  String _panelKeyFor(IndicatorConfig config) =>
+      config.configId ?? '${config.title}#${config.number}';
 
   /// Height available for panel fractions once [dividerCount]
   /// [ResizableChartDivider]s - which take up real space in the same
@@ -569,12 +624,19 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsFlutterBinding.ensureInitialized().removeObserver(this);
+    widget.panelSizeRepo?.removeListener(_onPanelSizeRepoChanged);
     super.dispose();
   }
 
   @override
   void didUpdateWidget(covariant Chart oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    if (widget.panelSizeRepo != oldWidget.panelSizeRepo) {
+      oldWidget.panelSizeRepo?.removeListener(_onPanelSizeRepoChanged);
+      widget.panelSizeRepo?.addListener(_onPanelSizeRepoChanged);
+      _appliedPanelSizeGeneration = null;
+    }
 
     // if controller is set
     if (widget.controller != oldWidget.controller) {

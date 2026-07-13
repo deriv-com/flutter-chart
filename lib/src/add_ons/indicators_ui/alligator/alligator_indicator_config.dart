@@ -32,6 +32,7 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
     bool showLastIndicator = false,
     String? title,
     super.number,
+    super.configId,
     super.pipSize,
   }) : super(
           showLastIndicator: showLastIndicator,
@@ -129,6 +130,7 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
     String? title,
     int? pipSize,
     int? number,
+    String? configId,
   }) =>
       AlligatorIndicatorConfig(
         jawPeriod: jawPeriod ?? this.jawPeriod,
@@ -145,6 +147,7 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
         showLastIndicator: showLastIndicator ?? this.showLastIndicator,
         title: title ?? this.title,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
         pipSize: pipSize ?? this.pipSize,
       );
 }

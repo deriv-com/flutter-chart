@@ -109,4 +109,80 @@ void main() {
       expect(fractions, before);
     });
   });
+
+  group('syncPanelFractions', () {
+    test('seeds new keys from defaultFraction when nothing is saved yet', () {
+      final Map<String, double> fractions = <String, double>{};
+
+      syncPanelFractions(
+        fractions,
+        <String>['main', 'a'],
+        const <String, double>{}, // saved repo hasn't loaded yet
+        (String key) => key == 'main' ? 0.7 : 0.3,
+      );
+
+      expect(fractions['main'], 0.7);
+      expect(fractions['a'], 0.3);
+    });
+
+    test(
+        'without forceApplySaved, an already-seeded key is never overwritten '
+        'by a saved value that arrives later', () {
+      final Map<String, double> fractions = <String, double>{
+        'main': 0.7,
+        'a': 0.3,
+      };
+
+      // Simulates the saved fractions finishing their async load only
+      // after this chart's first build already seeded the defaults above.
+      syncPanelFractions(
+        fractions,
+        <String>['main', 'a'],
+        const <String, double>{'main': 0.4, 'a': 0.6},
+        (String key) => key == 'main' ? 0.7 : 0.3,
+      );
+
+      expect(fractions['main'], 0.7);
+      expect(fractions['a'], 0.3);
+    });
+
+    test(
+        'forceApplySaved overwrites already-seeded keys with the saved '
+        'value - the fix for the load-finishes-after-first-build race', () {
+      final Map<String, double> fractions = <String, double>{
+        'main': 0.7,
+        'a': 0.3,
+      };
+
+      syncPanelFractions(
+        fractions,
+        <String>['main', 'a'],
+        const <String, double>{'main': 0.4, 'a': 0.6},
+        (String key) => key == 'main' ? 0.7 : 0.3,
+        forceApplySaved: true,
+      );
+
+      expect(fractions['main'], 0.4);
+      expect(fractions['a'], 0.6);
+    });
+
+    test(
+        'forceApplySaved leaves a key alone if the saved map has no entry '
+        'for it (e.g. a newly-added panel not yet in storage)', () {
+      final Map<String, double> fractions = <String, double>{'main': 0.5};
+
+      syncPanelFractions(
+        fractions,
+        <String>['main', 'a'],
+        const <String, double>{'main': 0.9}, // no entry for 'a'
+        (String key) => key == 'main' ? 0.7 : 0.3,
+        forceApplySaved: true,
+      );
+
+      // main:a lands at 0.9:0.3 (a fell back to defaultFraction) before
+      // being renormalized to sum to 1.0, i.e. a 3:1 ratio.
+      expect(fractions['main'], closeTo(0.75, 1e-9));
+      expect(fractions['a'], closeTo(0.25, 1e-9));
+    });
+  });
 }

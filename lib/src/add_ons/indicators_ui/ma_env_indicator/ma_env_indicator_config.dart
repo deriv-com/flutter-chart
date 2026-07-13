@@ -35,6 +35,7 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
     this.showChannelFill = true,
     bool showLastIndicator = false,
     super.number,
+    super.configId,
   }) : super(
           period: period,
           movingAverageType: movingAverageType,
@@ -115,6 +116,7 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
     bool? showChannelFill,
     bool? showLastIndicator,
     int? number,
+    String? configId,
     int? pipSize,
     bool? isOverlay,
     int? offset,
@@ -134,5 +136,6 @@ class MAEnvIndicatorConfig extends MAIndicatorConfig {
         showChannelFill: showChannelFill ?? this.showChannelFill,
         showLastIndicator: showLastIndicator ?? this.showLastIndicator,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
       );
 }

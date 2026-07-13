@@ -2,7 +2,7 @@ part of 'chart.dart';
 
 class _ChartStateWeb extends _ChartState {
   String _bottomPanelKey(int index) =>
-      _panelKeyFor(widget.bottomConfigs[index], index);
+      _panelKeyFor(widget.bottomConfigs[index]);
 
   @override
   Widget buildChartsLayout(

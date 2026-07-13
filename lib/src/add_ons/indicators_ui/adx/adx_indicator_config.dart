@@ -33,6 +33,7 @@ class ADXIndicatorConfig extends IndicatorConfig {
     bool showLastIndicator = false,
     String? title,
     super.number,
+    super.configId,
   }) : super(
           isOverlay: false,
           showLastIndicator: showLastIndicator,
@@ -119,6 +120,7 @@ class ADXIndicatorConfig extends IndicatorConfig {
     bool? showLastIndicator,
     String? title,
     int? number,
+    String? configId,
   }) =>
       ADXIndicatorConfig(
         period: period ?? this.period,
@@ -135,5 +137,6 @@ class ADXIndicatorConfig extends IndicatorConfig {
         showLastIndicator: showLastIndicator ?? this.showLastIndicator,
         title: title ?? this.title,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
       );
 }

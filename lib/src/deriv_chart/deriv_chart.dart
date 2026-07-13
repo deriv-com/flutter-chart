@@ -274,14 +274,28 @@ class _DerivChartState extends State<DerivChart> {
         loadSavedIndicatorsAndDrawingTools();
       });
     }
+
+    if (widget.panelSizeRepo == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _loadPanelSizes();
+      });
+    }
+  }
+
+  /// Loads saved panel sizes, if the host app hasn't supplied its own
+  /// [PanelSizeRepository].
+  ///
+  /// Deliberately independent of [loadSavedIndicatorsAndDrawingTools] (and
+  /// its `drawingToolsRepo == null` gating) - a host app can supply its own
+  /// `indicatorsRepo`/`drawingToolsRepo` while still relying on the default
+  /// panel-size persistence, and that shouldn't disable panel-size loading.
+  Future<void> _loadPanelSizes() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    _panelSizeRepo.loadFromPrefs(prefs);
   }
 
   Future<void> loadSavedIndicatorsAndDrawingTools() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    if (widget.panelSizeRepo == null) {
-      _panelSizeRepo.loadFromPrefs(prefs, widget.activeSymbol);
-    }
 
     final List<AddOnsRepository<AddOnConfig>> _stateRepos =
         <AddOnsRepository<AddOnConfig>>[_indicatorsRepo, _drawingToolsRepo];

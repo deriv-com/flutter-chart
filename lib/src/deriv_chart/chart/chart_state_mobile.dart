@@ -28,7 +28,7 @@ class _ChartStateMobile extends _ChartState {
         .toList();
 
     final List<String> visibleIndicatorKeys = visibleBottomRepoIndices
-        .map((int i) => _panelKeyFor(repository!.items[i], i))
+        .map((int i) => _panelKeyFor(repository!.items[i]))
         .toList();
 
     // A single flat, ordered chain covering the main chart and every
@@ -101,7 +101,7 @@ class _ChartStateMobile extends _ChartState {
           continue;
         }
 
-        final String key = _panelKeyFor(config, repoIndex);
+        final String key = _panelKeyFor(config);
 
         // The divider directly above this panel sits between
         // `orderedKeys[visiblePosition]` (main, or the previous indicator)

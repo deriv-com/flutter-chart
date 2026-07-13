@@ -29,6 +29,7 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
     this.rainbowLineStyles,
     bool showLastIndicator = false,
     super.number,
+    super.configId,
   })  : assert(
           rainbowLineStyles == null || rainbowLineStyles.length == bandsCount,
           '''If you provide [rainbowLineStyles] it should have the same length as [bandsCount]. 
@@ -111,6 +112,7 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
     bool? showLastIndicator,
     String? title,
     int? number,
+    String? configId,
     int? bandsCount,
   }) =>
       RainbowIndicatorConfig(
@@ -119,6 +121,7 @@ class RainbowIndicatorConfig extends MAIndicatorConfig {
         fieldType: fieldType ?? this.fieldType,
         showLastIndicator: showLastIndicator ?? this.showLastIndicator,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
         bandsCount: bandsCount ?? this.bandsCount,
         rainbowLineStyles: rainbowLineStyles ?? this.rainbowLineStyles,
       );
