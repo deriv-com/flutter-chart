@@ -118,12 +118,22 @@ class _FullscreenChartState extends State<FullscreenChart> {
   final InteractiveLayerController _interactiveLayerController =
       InteractiveLayerController();
 
+  // Exposed explicitly (instead of relying on DerivChart's own default
+  // repo) so the "Add sample indicators" button below can seed a few
+  // non-overlay indicators with one tap, to quickly try out the resizable
+  // indicator panel dividers. Not persisted across app restarts.
+  final AddOnsRepository<IndicatorConfig> _indicatorsRepo =
+      AddOnsRepository<IndicatorConfig>(
+    createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
+    sharedPrefKey: 'example',
+  );
+
   late PrefServiceCache _prefService;
 
   TradeType _currentTradeType = TradeType.riseFall;
 
   // Dynamic marker duration in milliseconds
-  int _markerDurationMs = 1000 * 5 * 1 * 1;
+  int _markerDurationMs = 1000 * 20 * 1 * 1;
   // PnL label lifetime after marker end in milliseconds
   static const int _pnlLabelLifetimeMs = 4000;
 
@@ -462,6 +472,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
                     is connection_bloc.ConnectionConnectedState,
                 connectionStatus: _buildConnectionStatus(),
                 interactiveLayerController: _interactiveLayerController,
+                indicatorsRepo: _indicatorsRepo,
               ),
             ),
             _ActionButtonsRow(
@@ -471,6 +482,7 @@ class _FullscreenChartState extends State<FullscreenChart> {
               onUp: () => _addMarker(MarkerDirection.up),
               onDown: () => _addMarker(MarkerDirection.down),
               onClearMarkers: () => setState(_clearMarkers),
+              onAddSampleIndicators: _addSampleBottomIndicators,
             ),
             _BarriersControlsRow(
               onAddVerticalBarrier: () => setState(
@@ -616,6 +628,25 @@ class _FullscreenChartState extends State<FullscreenChart> {
     _sampleBarriers.clear();
     _sl = false;
     _tp = false;
+  }
+
+  /// Adds a few sample bottom (non-overlay) indicators, so at least two
+  /// resizable dividers appear between the main chart and the indicator
+  /// panels without having to add indicators one-by-one via the dialog.
+  void _addSampleBottomIndicators() {
+    final Set<String> existingTitles = _indicatorsRepo.items
+        .map((IndicatorConfig config) => config.title)
+        .toSet();
+
+    for (final IndicatorConfig config in const <IndicatorConfig>[
+      RSIIndicatorConfig(),
+      MACDIndicatorConfig(),
+      StochasticOscillatorIndicatorConfig(),
+    ]) {
+      if (!existingTitles.contains(config.title)) {
+        _indicatorsRepo.add(config);
+      }
+    }
   }
 
   Widget _buildConnectionStatus() => ConnectionStatusLabel(
@@ -886,19 +917,6 @@ class _FullscreenChartState extends State<FullscreenChart> {
             markerType: MarkerType.entrySpot,
           ),
           ChartMarker(
-            epoch: (endEpoch - marker.epoch) ~/ 2 + marker.epoch,
-            quote: marker.quote,
-            direction: marker.direction,
-            text: '1',
-            markerType: MarkerType.checkpointLine,
-          ),
-          ChartMarker(
-            epoch: (endEpoch - marker.epoch) ~/ 2 + marker.epoch,
-            quote: marker.quote,
-            direction: marker.direction,
-            markerType: MarkerType.checkpointLineCollapsed,
-          ),
-          ChartMarker(
             epoch: endEpoch,
             quote: marker.quote,
             direction: marker.direction,
@@ -1044,6 +1062,7 @@ class _ChartSection extends StatelessWidget {
     required this.isConnected,
     required this.connectionStatus,
     required this.interactiveLayerController,
+    required this.indicatorsRepo,
   });
 
   final InteractiveLayerBehaviour interactiveLayerBehaviour;
@@ -1060,6 +1079,7 @@ class _ChartSection extends StatelessWidget {
   final bool isConnected;
   final Widget connectionStatus;
   final InteractiveLayerController interactiveLayerController;
+  final Repository<IndicatorConfig> indicatorsRepo;
 
   @override
   Widget build(BuildContext context) {
@@ -1079,6 +1099,7 @@ class _ChartSection extends StatelessWidget {
             isLive: isLive,
             opacity: opacity,
             onVisibleAreaChanged: onVisibleAreaChanged,
+            indicatorsRepo: indicatorsRepo,
           ),
         ),
         if (!isConnected)
@@ -1121,6 +1142,7 @@ class _ActionButtonsRow extends StatelessWidget {
     required this.onUp,
     required this.onDown,
     required this.onClearMarkers,
+    required this.onAddSampleIndicators,
   });
 
   final VoidCallback onSettingsPressed;
@@ -1129,6 +1151,7 @@ class _ActionButtonsRow extends StatelessWidget {
   final VoidCallback onUp;
   final VoidCallback onDown;
   final VoidCallback onClearMarkers;
+  final VoidCallback onAddSampleIndicators;
 
   @override
   Widget build(BuildContext context) {
@@ -1168,6 +1191,11 @@ class _ActionButtonsRow extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: onClearMarkers,
+          ),
+          IconButton(
+            tooltip: 'Add sample indicators (to test resizable panels)',
+            icon: const Icon(Icons.stacked_line_chart),
+            onPressed: onAddSampleIndicators,
           ),
         ],
       ),
