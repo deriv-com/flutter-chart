@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_scale_model.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/mobile_chart_frame_dividers.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/panel_size/panel_size_repository.dart';
@@ -97,17 +99,30 @@ void syncPanelFractions(
 /// third panel can shrink the first panel too, once the second has nothing
 /// left to give) so resizing never gets stuck behind an in-between panel
 /// that's already at its minimum. Returns whether [fractions] was changed.
+///
+/// [usableHeight] converts [Dimens.indicatorTitleBarMinHeight] - the fixed
+/// pixel floor a panel is actually rendered at (see
+/// `_ChartStateMobile.getBottomIndicatorsList`) - into a fraction, so a
+/// donor never gives up more than what its title bar's visible floor
+/// already stopped it from losing on screen. Without this, a donor already
+/// pinned at that pixel floor would keep silently losing fraction as the
+/// drag continued past it - invisibly inflating the recipient without the
+/// donor appearing to shrink any further.
 bool resizeCascadingFractions(
   Map<String, double> fractions,
   List<String> orderedKeys,
   int dividerIndex,
-  double deltaFraction,
-) {
+  double deltaFraction, {
+  double usableHeight = double.infinity,
+}) {
   if (deltaFraction == 0) {
     return false;
   }
 
-  const double minFraction = Dimens.minChartPanelHeightFraction;
+  final double minFraction = math.max(
+    Dimens.minChartPanelHeightFraction,
+    Dimens.indicatorTitleBarMinHeight / usableHeight,
+  );
 
   final String recipientKey;
   final List<String> donorChain;
@@ -424,13 +439,15 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
   void _resizeCascadingPanels(
     List<String> orderedKeys,
     int dividerIndex,
-    double deltaFraction,
-  ) {
+    double deltaFraction, {
+    double usableHeight = double.infinity,
+  }) {
     if (resizeCascadingFractions(
       _panelFractions,
       orderedKeys,
       dividerIndex,
       deltaFraction,
+      usableHeight: usableHeight,
     )) {
       setState(() {});
     }

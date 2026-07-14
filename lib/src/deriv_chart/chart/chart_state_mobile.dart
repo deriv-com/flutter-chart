@@ -23,34 +23,42 @@ class _ChartStateMobile extends _ChartState {
           if (!repository.items[i].isOverlay) i
     ];
 
-    final List<int> visibleBottomRepoIndices = bottomRepoIndices
-        .where((int i) => !repository!.getHiddenStatus(i))
-        .toList();
-
-    final List<String> visibleIndicatorKeys = visibleBottomRepoIndices
+    // Every bottom indicator's key, visible or hidden, in repo order.
+    // Syncing/seeding fractions against this full set (rather than just the
+    // visible ones) is what makes a hidden indicator's fraction survive
+    // hiding it - since [syncPanelFractions] only drops/renormalizes keys
+    // that are absent from the list it's given, a hidden indicator's key
+    // staying in this list keeps its stored fraction untouched until it's
+    // actually removed from the repo, so unhiding it restores the exact
+    // size it had before.
+    final List<String> allBottomIndicatorKeys = bottomRepoIndices
         .map((int i) => _panelKeyFor(repository!.items[i]))
         .toList();
 
-    // A single flat, ordered chain covering the main chart and every
-    // *visible* bottom indicator panel. Keeping this as one chain (rather
-    // than resizing the bottom section as a whole and then splitting it
-    // among indicators independently) is what lets a resize cascade past
-    // an indicator already at its minimum height into the next one that
-    // still has room, no matter which divider is being dragged.
+    // A single flat, ordered chain covering the main chart and every bottom
+    // indicator panel, visible or hidden. Keeping every panel - including
+    // hidden ones - in this chain (rather than resizing the bottom section
+    // as a whole and then splitting it among indicators independently) is
+    // what lets a resize cascade past a panel already at its minimum height
+    // into the next one that still has room, no matter which divider is
+    // being dragged, and lets a hidden panel's divider still resize it even
+    // though its content is collapsed.
     final List<String> orderedKeys = <String>[
       PanelSizeRepository.mainPanelKey,
-      ...visibleIndicatorKeys,
+      ...allBottomIndicatorKeys,
     ];
 
     final double bottomSectionDefaultFraction =
         _getBottomIndicatorsSectionHeightFraction(bottomRepoIndices.length);
 
     _syncPanelFractions(
-      orderedKeys,
+      <String>[PanelSizeRepository.mainPanelKey, ...allBottomIndicatorKeys],
       (String key) => key == PanelSizeRepository.mainPanelKey
           ? 1 - bottomSectionDefaultFraction
           : bottomSectionDefaultFraction /
-              (visibleIndicatorKeys.isEmpty ? 1 : visibleIndicatorKeys.length),
+              (allBottomIndicatorKeys.isEmpty
+                  ? 1
+                  : allBottomIndicatorKeys.length),
     );
 
     List<Widget> getBottomIndicatorsList(
@@ -58,7 +66,7 @@ class _ChartStateMobile extends _ChartState {
       double usableHeight,
     ) {
       final List<Widget> children = <Widget>[];
-      int visiblePosition = 0;
+      int position = 0;
 
       for (final int repoIndex in bottomRepoIndices) {
         final IndicatorConfig config = repository!.items[repoIndex];
@@ -96,18 +104,34 @@ class _ChartStateMobile extends _ChartState {
           showFrame: context.read<ChartConfig>().chartAxisConfig.showFrame,
         );
 
-        if (isHidden) {
-          children.add(bottomChart);
-          continue;
-        }
-
         final String key = _panelKeyFor(config);
 
+        // Every panel - hidden or visible - keeps its own divider and
+        // reserves the exact height its fraction represents, so hiding one
+        // only collapses its *content* down to the title bar; its divider
+        // stays in place and its space keeps being resizable (and cascades
+        // into neighboring panels the same way a visible one would), so
+        // nothing shifts or resizes as a side effect of hiding/unhiding it.
+        //
         // The divider directly above this panel sits between
-        // `orderedKeys[visiblePosition]` (main, or the previous indicator)
-        // and `orderedKeys[visiblePosition + 1]` (this indicator) - i.e.
-        // its divider index within the shared chain is `visiblePosition`.
-        final int dividerIndex = visiblePosition;
+        // `orderedKeys[position]` (main, or the previous indicator) and
+        // `orderedKeys[position + 1]` (this indicator) - i.e. its divider
+        // index within the shared chain is `position`.
+        final int dividerIndex = position;
+
+        // Every panel's title bar (name, hide/unhide, up/down icons) is made
+        // up of fixed-size text and icons rather than freely-scalable chart
+        // content, so its fraction - whether it's the *stored* one kept as-
+        // is while hidden, or one dragged down toward
+        // [Dimens.minChartPanelHeightFraction] while visible - can still
+        // work out to less pixel height than that title bar needs. Flooring
+        // only the rendered height (not the stored fraction) keeps it from
+        // being clipped without affecting the size a hidden panel is
+        // restored to on unhide.
+        final double panelHeight = (_panelFractions[key] ?? 0) * usableHeight;
+        final double renderedHeight =
+            math.max(panelHeight, Dimens.indicatorTitleBarMinHeight);
+
         children
           ..add(
             ResizableChartDivider(
@@ -115,18 +139,19 @@ class _ChartStateMobile extends _ChartState {
                 orderedKeys,
                 dividerIndex,
                 deltaPixels / usableHeight,
+                usableHeight: usableHeight,
               ),
               onDragEnd: _persistPanelFractions,
             ),
           )
           ..add(
             SizedBox(
-              height: (_panelFractions[key] ?? 0) * usableHeight,
+              height: renderedHeight,
               child: bottomChart,
             ),
           );
 
-        visiblePosition++;
+        position++;
       }
 
       return children;
@@ -155,19 +180,13 @@ class _ChartStateMobile extends _ChartState {
       BoxConstraints constraints,
     ) {
       final double availableHeight = constraints.maxHeight;
-      final double mainFraction =
-          _panelFractions[PanelSizeRepository.mainPanelKey] ?? 1.0;
 
       // Each divider takes up real space in the bottom section's Column
       // alongside the indicator panels, so it must be subtracted from the
-      // space panel fractions are applied to - otherwise the panels plus
-      // dividers overflow the section's fixed-height SizedBox below.
-      final double reservedForDividers =
-          visibleIndicatorKeys.length * Dimens.chartPanelDividerHitHeight;
+      // space panel fractions are applied to. Every bottom indicator now
+      // keeps its divider whether hidden or visible, so all of them count.
       final double usableHeight =
-          _usableHeightFor(availableHeight, visibleIndicatorKeys.length);
-      final double bottomSectionHeight =
-          (1 - mainFraction) * usableHeight + reservedForDividers;
+          _usableHeightFor(availableHeight, bottomRepoIndices.length);
 
       final List<Widget> bottomIndicatorsList =
           getBottomIndicatorsList(context, usableHeight);
@@ -223,13 +242,7 @@ class _ChartStateMobile extends _ChartState {
               ],
             ),
           ),
-          if (_isAllBottomIndicatorsHidden)
-            ...bottomIndicatorsList
-          else
-            SizedBox(
-              height: bottomSectionHeight,
-              child: Column(children: bottomIndicatorsList),
-            ),
+          ...bottomIndicatorsList,
         ],
       );
     });
@@ -265,17 +278,6 @@ class _ChartStateMobile extends _ChartState {
 
   double _getBottomIndicatorsSectionHeightFraction(int bottomIndicatorsCount) =>
       1 - (0.65 - 0.125 * (bottomIndicatorsCount - 1));
-
-  bool get _isAllBottomIndicatorsHidden {
-    bool isAllHidden = true;
-    for (int i = 0; i < widget.indicatorsRepo!.items.length; i++) {
-      if (!widget.indicatorsRepo!.items[i].isOverlay &&
-          !(widget.indicatorsRepo?.getHiddenStatus(i) ?? false)) {
-        isAllHidden = false;
-      }
-    }
-    return isAllHidden;
-  }
 
   Widget _buildOverlayIndicatorsLabels() {
     final List<Widget> overlayIndicatorsLabels = <Widget>[];

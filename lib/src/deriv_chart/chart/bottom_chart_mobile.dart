@@ -80,14 +80,9 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
       value: chartConfig,
       child: ClipRect(
         child: widget.isHidden
-            ? Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: _buildCollapsedBottomChart(context),
-                  ),
-                  _buildDivider(),
-                ],
+            ? Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: _buildCollapsedBottomChart(context),
               )
             : Stack(
                 children: <Widget>[
@@ -121,12 +116,6 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
         isHidden: widget.isHidden,
         onHideUnhideToggle: widget.onHideUnhideToggle,
         onSwap: widget.onSwap,
-      );
-
-  Widget _buildDivider() => const Divider(
-        height: 0.5,
-        thickness: 1,
-        color: LegacyLightThemeColors.hover,
       );
 
   Widget _buildCollapsedBottomChart(BuildContext context) => Container(
