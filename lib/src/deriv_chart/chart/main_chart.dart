@@ -217,8 +217,6 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   void didUpdateWidget(MainChart oldChart) {
     super.didUpdateWidget(oldChart);
 
-    didUpdateChartData(oldChart);
-
     if (widget.isLive != oldChart.isLive ||
         widget.showCurrentTickBlinkAnimation !=
             oldChart.showCurrentTickBlinkAnimation) {
@@ -274,8 +272,11 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   }
 
   @override
-  void didUpdateChartData(covariant MainChart oldChart) {
-    super.didUpdateChartData(oldChart);
+  bool didUpdateChartData(covariant MainChart oldChart) {
+    // Whether the main series advanced. super() already plays the current-tick
+    // animation in that case.
+    bool dataUpdated = super.didUpdateChartData(oldChart);
+
     for (final ChartData data in widget.chartDataList.where(
       // Exclude mainSeries, since its didUpdate is already called
       (ChartData d) => d.id != widget.mainSeries.id,
@@ -284,8 +285,26 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         (ChartData d) => d.id == data.id,
       );
 
-      data.didUpdate(oldData);
+      // Annotations (barriers, the accumulator indicator, etc.) animate their
+      // position by lerping previousObject -> new object with the SAME
+      // currentTickPercent as the main series (see _buildAnnotations). Fold
+      // their update flags in so an annotation that moves WITHOUT a new tick
+      // (e.g. the accumulators barrier, which arrives on a separate WS
+      // subscription and is released ~500 ms after the tick) still drives the
+      // shared animation instead of snapping to its new position.
+      if (data.didUpdate(oldData)) {
+        dataUpdated = true;
+      }
     }
+
+    // If only an annotation advanced, super() did not start the animation —
+    // start it here. Harmless when the main series already started it
+    // (playNewTickAnimation is a no-op while an animation is in flight).
+    if (dataUpdated) {
+      playNewTickAnimation();
+    }
+
+    return dataUpdated;
   }
 
   @override

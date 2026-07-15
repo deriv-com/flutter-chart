@@ -163,10 +163,21 @@ class BasicChartState<T extends BasicChart> extends State<T>
     _updateChartPosition();
   }
 
-  /// Whether the chart data did update or not.
-  void didUpdateChartData(BasicChart oldChart) {
+  /// Updates the main series against [oldChart] and, when its data actually
+  /// advanced, plays the current-tick transition animation.
+  ///
+  /// Returns whether the main series' data advanced (a new/changed last entry,
+  /// or a fresh dataset). [DataSeries.didUpdate] returns `false` for rebuilds
+  /// that don't change the data — e.g. when the host app rebuilds the chart
+  /// from tick-independent state (barriers, price proposals, running-contract
+  /// P&L streams). Subclasses combine this with their own data (e.g.
+  /// annotations) to decide whether to drive the shared animation — see
+  /// [MainChart.didUpdateChartData].
+  bool didUpdateChartData(BasicChart oldChart) {
+    // Whether the main series' data actually advanced.
+    bool dataUpdated = false;
     if (widget.mainSeries.id == oldChart.mainSeries.id) {
-      widget.mainSeries.didUpdate(oldChart.mainSeries);
+      dataUpdated = widget.mainSeries.didUpdate(oldChart.mainSeries);
     }
 
     if (widget.currentTickAnimationDuration.inMilliseconds !=
@@ -185,7 +196,17 @@ class BasicChartState<T extends BasicChart> extends State<T>
       _setupBoundsAnimation();
     }
 
-    _playNewTickAnimation();
+    // Only drive the current-tick animation on a genuine data advance.
+    // Without this guard, a consumer that rebuilds the chart frequently from
+    // tick-independent streams starts spurious animation cycles; because the
+    // controller is shared, a real tick arriving mid-cycle is then skipped by
+    // [playNewTickAnimation]'s `_isTickAnimationPlaying` guard and snaps into
+    // place instead of animating smoothly.
+    if (dataUpdated) {
+      playNewTickAnimation();
+    }
+
+    return dataUpdated;
   }
 
   @override
@@ -220,7 +241,12 @@ class BasicChartState<T extends BasicChart> extends State<T>
     return gridLineQuotes!;
   }
 
-  void _playNewTickAnimation() {
+  /// Starts a fresh current-tick transition animation, unless one is already
+  /// in flight (in which case this is a no-op so the running animation is not
+  /// truncated). Protected so subclasses can drive it after evaluating their
+  /// own data — see [MainChart.didUpdateChartData].
+  @protected
+  void playNewTickAnimation() {
     if (!_isTickAnimationPlaying) {
       _currentTickAnimationController
         ..reset()
