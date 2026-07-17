@@ -86,6 +86,10 @@ class SMIIndicatorConfig extends IndicatorConfig {
   final LineStyle? signalLineStyle;
 
   @override
+  String get configSummary =>
+      '$period, $smoothingPeriod, $doubleSmoothingPeriod, $signalPeriod';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => SMISeries(
         indicatorInput,
         smiOptions: SMIOptions(

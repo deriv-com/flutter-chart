@@ -90,7 +90,7 @@ class _ChartStateMobile extends _ChartState {
           pipSize: config.pipSize,
           title:
               '${config.shortTitle} ${config.number > 0 ? config.number : ''}'
-              ' (${config.configSummary})',
+              '${config.configSummary.isEmpty ? '' : ' (${config.configSummary})'}',
           currentTickAnimationDuration: currentTickAnimationDuration,
           quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
           bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
@@ -294,7 +294,7 @@ class _ChartStateMobile extends _ChartState {
             child: IndicatorLabelMobile(
               title:
                   '${config.shortTitle} ${config.number > 0 ? config.number : ''}'
-                  ' (${config.configSummary})',
+                  '${config.configSummary.isEmpty ? '' : ' (${config.configSummary})'}',
               showMoveUpIcon: false,
               showMoveDownIcon: false,
               isHidden: widget.indicatorsRepo?.getHiddenStatus(i) ?? false,

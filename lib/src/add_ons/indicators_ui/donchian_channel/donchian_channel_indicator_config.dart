@@ -71,6 +71,9 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
   final Color fillColor;
 
   @override
+  String get configSummary => '$highPeriod, $lowPeriod';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) =>
       DonchianChannelsSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes['high']!(indicatorInput)

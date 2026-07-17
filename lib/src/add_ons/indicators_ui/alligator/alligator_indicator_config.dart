@@ -84,6 +84,9 @@ class AlligatorIndicatorConfig extends IndicatorConfig {
   final LineStyle lipsLineStyle;
 
   @override
+  String get configSummary => '$jawPeriod, $teethPeriod, $lipsPeriod';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => AlligatorSeries(
         indicatorInput,
         alligatorOptions: AlligatorOptions(

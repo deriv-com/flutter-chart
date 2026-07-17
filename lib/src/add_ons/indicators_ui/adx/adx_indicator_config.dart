@@ -84,6 +84,9 @@ class ADXIndicatorConfig extends IndicatorConfig {
   final BarStyle barStyle;
 
   @override
+  String get configSummary => '$period, $smoothingPeriod';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => ADXSeries(
         indicatorInput,
         config: this,

@@ -66,6 +66,9 @@ class WilliamsRIndicatorConfig extends IndicatorConfig {
   final bool showZones;
 
   @override
+  String get configSummary => '$period';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => WilliamsRSeries(
         indicatorInput,
         WilliamsROptions(

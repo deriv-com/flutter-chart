@@ -90,6 +90,9 @@ class StochasticOscillatorIndicatorConfig extends IndicatorConfig {
   final LineStyle slowLineStyle;
 
   @override
+  String get configSummary => '$period';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => StochasticOscillatorSeries(
       IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput), this,
       stochasticOscillatorOptions: StochasticOscillatorOptions(

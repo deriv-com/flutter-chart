@@ -75,6 +75,10 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
   final LineStyle laggingLineStyle;
 
   @override
+  String get configSummary =>
+      '$conversionLinePeriod, $baseLinePeriod, $spanBPeriod';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) =>
       IchimokuCloudSeries(indicatorInput,
           config: this,

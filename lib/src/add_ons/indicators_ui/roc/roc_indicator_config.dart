@@ -53,6 +53,9 @@ class ROCIndicatorConfig extends IndicatorConfig {
   final LineStyle? lineStyle;
 
   @override
+  String get configSummary => '$period';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => ROCSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes[fieldType]!(indicatorInput),
         rocOptions: ROCOptions(

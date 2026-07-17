@@ -62,6 +62,9 @@ class CCIIndicatorConfig extends IndicatorConfig {
   final bool showZones;
 
   @override
+  String get configSummary => '$period';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => CCISeries(
         indicatorInput,
         CCIOptions(period),

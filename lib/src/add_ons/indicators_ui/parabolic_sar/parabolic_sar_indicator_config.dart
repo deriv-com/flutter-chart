@@ -47,6 +47,9 @@ class ParabolicSARConfig extends IndicatorConfig {
   final ScatterStyle scatterStyle;
 
   @override
+  String get configSummary => '$minAccelerationFactor, $maxAccelerationFactor';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => ParabolicSARSeries(
         indicatorInput,
         ParabolicSAROptions(minAccelerationFactor, maxAccelerationFactor),

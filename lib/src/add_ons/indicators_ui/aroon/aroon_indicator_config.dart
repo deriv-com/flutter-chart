@@ -54,6 +54,9 @@ class AroonIndicatorConfig extends IndicatorConfig {
   final LineStyle downLineStyle;
 
   @override
+  String get configSummary => '$period';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => AroonSeries(
         indicatorInput,
         this,

@@ -68,6 +68,9 @@ class GatorIndicatorConfig extends IndicatorConfig {
   final BarStyle barStyle;
 
   @override
+  String get configSummary => '$jawPeriod, $teethPeriod, $lipsPeriod';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => GatorSeries(
         indicatorInput,
         gatorConfig: this,

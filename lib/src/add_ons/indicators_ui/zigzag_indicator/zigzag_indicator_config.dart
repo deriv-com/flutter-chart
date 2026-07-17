@@ -42,6 +42,9 @@ class ZigZagIndicatorConfig extends IndicatorConfig {
   final LineStyle lineStyle;
 
   @override
+  String get configSummary => '$distance';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => ZigZagSeries(
         indicatorInput,
         distance: distance,
