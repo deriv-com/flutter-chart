@@ -7,6 +7,7 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
 import 'package:deriv_chart/src/add_ons/extensions.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/indicator_label_icons.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/panel_size/panel_size_repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
@@ -72,6 +73,7 @@ class DerivChart extends StatefulWidget {
     this.crosshairVariant = CrosshairVariant.smallScreen,
     this.interactiveLayerBehaviour,
     this.useDrawingToolsV2 = false,
+    this.indicatorLabelIcons,
     Key? key,
   }) : super(key: key);
 
@@ -208,6 +210,13 @@ class DerivChart extends StatefulWidget {
   /// If not set it will be set internally to [InteractiveLayerDesktopBehaviour]
   /// on web and [InteractiveLayerMobileBehaviour] on mobile or other platforms.
   final InteractiveLayerBehaviour? interactiveLayerBehaviour;
+
+  /// Icons used by the on-chart indicator labels (eye, reorder arrows,
+  /// settings, delete and the expand/collapse chevron).
+  ///
+  /// Any icon left unset falls back to its Material default. Currently applied
+  /// on mobile.
+  final IndicatorLabelIcons? indicatorLabelIcons;
 
   @override
   _DerivChartState createState() => _DerivChartState();
@@ -437,6 +446,7 @@ class _DerivChartState extends State<DerivChart> {
                 crosshairVariant: widget.crosshairVariant,
                 interactiveLayerBehaviour: _interactiveLayerBehaviour,
                 useDrawingToolsV2: widget.useDrawingToolsV2,
+                indicatorLabelIcons: widget.indicatorLabelIcons,
               ),
               if (widget.indicatorsRepo == null) _buildIndicatorsIcon(),
               if (widget.drawingToolsRepo == null) _buildDrawingToolsIcon(),

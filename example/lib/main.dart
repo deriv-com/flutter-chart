@@ -18,6 +18,7 @@ import 'package:flutter_deriv_api/api/manually/tick_base.dart';
 import 'package:flutter_deriv_api/api/manually/tick_history_subscription.dart';
 import 'package:flutter_deriv_api/api/response/active_symbols_response_result.dart';
 import 'package:flutter_deriv_api/api/response/ticks_history_response_result.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/connection_information.dart';
 import 'package:flutter_deriv_api/state/connection/connection_cubit.dart'
@@ -149,6 +150,22 @@ class _FullscreenChartState extends State<FullscreenChart> {
             controller: _interactiveLayerController)
         : InteractiveLayerMobileBehaviour(
             controller: _interactiveLayerController);
+
+    // Wire the settings (gear) icon on the on-chart indicator labels to open
+    // the built-in indicators dialog. Set here (rather than in the field
+    // initializer) because it needs a BuildContext at call time.
+    _indicatorsRepo.onEditCallback = (_) => _showIndicatorsDialog();
+  }
+
+  void _showIndicatorsDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) =>
+          ChangeNotifierProvider<Repository<IndicatorConfig>>.value(
+        value: _indicatorsRepo,
+        child: IndicatorsDialog(),
+      ),
+    );
   }
 
   Future<void> _initPrefs() async {

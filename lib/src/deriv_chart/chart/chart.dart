@@ -28,6 +28,7 @@ import '../../theme/chart_theme.dart';
 import '../interactive_layer/interactive_layer_behaviours/interactive_layer_behaviour.dart';
 import 'bottom_chart.dart';
 import 'bottom_chart_mobile.dart';
+import 'indicator_label_icons.dart';
 import 'data_visualization/annotations/chart_annotation.dart';
 import 'data_visualization/chart_data.dart';
 import 'data_visualization/chart_series/data_series.dart';
@@ -200,6 +201,7 @@ class Chart extends StatefulWidget {
     this.loadingAnimationColor,
     this.useDrawingToolsV2 = false,
     this.panelSizeRepo,
+    this.indicatorLabelIcons,
     Key? key,
   }) : super(key: key);
 
@@ -326,6 +328,13 @@ class Chart extends StatefulWidget {
   /// Persists the relative sizes of the main chart and bottom indicator
   /// panels as the user drags [ResizableChartDivider]s between them.
   final PanelSizeRepository? panelSizeRepo;
+
+  /// Icons used by the on-chart indicator labels (eye, reorder arrows,
+  /// settings, delete and the expand/collapse chevron).
+  ///
+  /// Any icon left unset falls back to its Material default. Currently applied
+  /// on mobile.
+  final IndicatorLabelIcons? indicatorLabelIcons;
 
   @override
   State<StatefulWidget> createState() =>
