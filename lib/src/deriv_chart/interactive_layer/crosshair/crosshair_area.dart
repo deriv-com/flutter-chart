@@ -142,6 +142,18 @@ class CrosshairArea extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    // Guard against a tick whose runtime type does not match [mainSeries].
+    // Forwarding it to the series' crosshair methods (getCrosshairHighlightPainter,
+    // getCrossHairInfo) would throw a fatal covariant-generic downcast
+    // TypeError (e.g. 'Tick' is not a subtype of 'Candle'). This mismatch is
+    // transient — it occurs when the crosshair still holds a tick from a
+    // previous series while the active series has already been swapped (chart
+    // type / granularity / symbol change while the crosshair is visible).
+    // Skipping this frame lets the next frame render with a matching tick.
+    if (!mainSeries.isTickCompatible(tick)) {
+      return const SizedBox.shrink();
+    }
+
     final XAxisModel xAxis = context.watch<XAxisModel>();
     final ChartTheme theme = context.read<ChartTheme>();
     return Stack(
