@@ -74,6 +74,63 @@ void main() {
       expect(repo.fractions['main'], 0.6);
     });
 
+    test('loadFromPrefs falls back to empty fractions on malformed JSON',
+        () async {
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        storageKey: 'not-valid-json',
+      });
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      final PanelSizeRepository repo = PanelSizeRepository();
+
+      expect(() => repo.loadFromPrefs(prefs), returnsNormally);
+      expect(repo.fractions, isEmpty);
+      // The corrupt entry is dropped so it won't fail to parse again.
+      expect(prefs.getString(storageKey), isNull);
+    });
+
+    test(
+        'loadFromPrefs falls back to empty fractions when the decoded value '
+        'is not a JSON object (TypeError, not Exception)', () async {
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        storageKey: jsonEncode(123),
+      });
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      final PanelSizeRepository repo = PanelSizeRepository();
+
+      expect(() => repo.loadFromPrefs(prefs), returnsNormally);
+      expect(repo.fractions, isEmpty);
+      expect(prefs.getString(storageKey), isNull);
+    });
+
+    test(
+        'loadFromPrefs falls back to empty fractions when a fraction value '
+        'is not a number (TypeError, not Exception)', () async {
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        storageKey: jsonEncode(<String, Object>{'main': 'abc'}),
+      });
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      final PanelSizeRepository repo = PanelSizeRepository();
+
+      expect(() => repo.loadFromPrefs(prefs), returnsNormally);
+      expect(repo.fractions, isEmpty);
+      expect(prefs.getString(storageKey), isNull);
+    });
+
+    test('loadGeneration bumps even when saved data is corrupt', () async {
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        storageKey: 'not-valid-json',
+      });
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      final PanelSizeRepository repo = PanelSizeRepository();
+      repo.loadFromPrefs(prefs);
+
+      expect(repo.loadGeneration, 1);
+    });
+
     test('loadGeneration starts at 0 and bumps on every loadFromPrefs call',
         () async {
       SharedPreferences.setMockInitialValues(<String, Object>{});

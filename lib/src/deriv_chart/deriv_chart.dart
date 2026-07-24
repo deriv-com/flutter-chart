@@ -262,6 +262,16 @@ class _DerivChartState extends State<DerivChart> {
     }
   }
 
+  @override
+  void dispose() {
+    // Only dispose the repo we created ourselves. When the host app supplies
+    // its own [PanelSizeRepository] it owns that instance's lifecycle.
+    if (widget.panelSizeRepo == null) {
+      _panelSizeRepo.dispose();
+    }
+    super.dispose();
+  }
+
   void _initRepos() {
     _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
       createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),

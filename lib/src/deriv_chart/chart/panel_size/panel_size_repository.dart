@@ -53,23 +53,38 @@ class PanelSizeRepository extends ChangeNotifier {
 
     if (encoded == null) {
       fractions = <String, double>{};
-      _loadGeneration++;
-      notifyListeners();
-      return;
+    } else {
+      try {
+        final Map<String, dynamic> decoded =
+            jsonDecode(encoded) as Map<String, dynamic>;
+
+        fractions = decoded.map(
+          (String key, dynamic value) => MapEntry<String, double>(
+            key,
+            (value as num).toDouble(),
+          ),
+        );
+      } on Exception {
+        // Malformed JSON (e.g. FormatException from jsonDecode) - start fresh.
+        _discardCorruptedPrefs();
+      } on TypeError {
+        // Schema-incompatible data: the decoded value isn't a JSON object, or
+        // a fraction isn't a number (cast failures throw TypeError, an Error
+        // rather than an Exception, so they need their own catch) - start
+        // fresh.
+        _discardCorruptedPrefs();
+      }
     }
-
-    final Map<String, dynamic> decoded =
-        jsonDecode(encoded) as Map<String, dynamic>;
-
-    fractions = decoded.map(
-      (String key, dynamic value) => MapEntry<String, double>(
-        key,
-        (value as num).toDouble(),
-      ),
-    );
 
     _loadGeneration++;
     notifyListeners();
+  }
+
+  /// Resets [fractions] and drops the stale stored entry so the same corrupt
+  /// data doesn't fail to parse again on every subsequent restart.
+  void _discardCorruptedPrefs() {
+    fractions = <String, double>{};
+    _prefs?.remove(_storageKey);
   }
 
   /// Saves [newFractions] and updates [fractions].
