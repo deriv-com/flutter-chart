@@ -31,6 +31,7 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
     bool showLastIndicator = false,
     String? title,
     super.number,
+    super.configId,
     super.pipSize,
   }) : super(
           title: title ?? DonchianChannelIndicatorConfig.name,
@@ -70,6 +71,9 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
   final Color fillColor;
 
   @override
+  String get configSummary => '$highPeriod, $lowPeriod';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) =>
       DonchianChannelsSeries.fromIndicator(
         IndicatorConfig.supportedFieldTypes['high']!(indicatorInput)
@@ -102,6 +106,7 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
     bool? showLastIndicator,
     String? title,
     int? number,
+    String? configId,
     int? pipSize,
   }) =>
       DonchianChannelIndicatorConfig(
@@ -115,6 +120,7 @@ class DonchianChannelIndicatorConfig extends IndicatorConfig {
         showLastIndicator: showLastIndicator ?? this.showLastIndicator,
         title: title ?? this.title,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
         pipSize: pipSize ?? this.pipSize,
       );
 }

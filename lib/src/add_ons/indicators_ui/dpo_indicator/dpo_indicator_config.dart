@@ -29,6 +29,7 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
     bool showLastIndicator = false,
     String? title,
     super.number,
+    super.configId,
   }) : super(
           period: period,
           movingAverageType: movingAverageType,
@@ -89,6 +90,7 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
     bool? showLastIndicator,
     String? title,
     int? number,
+    String? configId,
     int? offset,
     bool? isOverlay,
   }) =>
@@ -102,5 +104,6 @@ class DPOIndicatorConfig extends MAIndicatorConfig {
         showLastIndicator: showLastIndicator ?? this.showLastIndicator,
         title: title ?? this.title,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
       );
 }

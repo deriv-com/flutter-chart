@@ -110,6 +110,9 @@ class LightThemeColors {
   static final Color floatingMenuDragIconColor = LightThemeDesignTokens
       .semanticColorMonochromeTextIconNormalMid; // Hex: #000000 with appropriate opacity
 
+  static const Color panelDividerActiveColor = LightThemeDesignTokens
+      .semanticColorBlueSolidSurfaceNormalHighest; // Hex: #2C9AFF
+
   static const Color lineThicknessDropdownButtonTextColor =
       ComponentDesignTokens
           .componentTextIconNormalProminentLight; // Hex: #000000
@@ -244,6 +247,9 @@ class DarkThemeColors {
   // Floating menu drag icon color
   static final Color floatingMenuDragIconColor = DarkThemeDesignTokens
       .semanticColorMonochromeTextIconNormalMid; // Hex: #000000 with appropriate opacity
+
+  static const Color panelDividerActiveColor = DarkThemeDesignTokens
+      .semanticColorBlueSolidSurfaceNormalHighest; // Hex: #2C9AFF
 
   // Line thickness dropdown colors
   static const Color lineThicknessDropdownButtonTextColor =

@@ -196,16 +196,7 @@ class _BottomChartState extends BasicChartState<BottomChart> {
       child: ClipRect(
         child: Stack(
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                Divider(
-                  height: 0.5,
-                  thickness: 1,
-                  color: theme.base01Color,
-                ),
-                Expanded(child: super.build(context)),
-              ],
-            ),
+            super.build(context),
             // if (kIsWeb) _buildCrosshairAreaWeb(), // TODO(Jim): Address the crosshair area for web indicators.
             _buildBottomChartOptions(context)
           ],

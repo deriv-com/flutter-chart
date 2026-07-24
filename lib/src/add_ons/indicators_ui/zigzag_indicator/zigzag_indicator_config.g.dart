@@ -15,12 +15,14 @@ ZigZagIndicatorConfig _$ZigZagIndicatorConfigFromJson(
           : LineStyle.fromJson(json['lineStyle'] as Map<String, dynamic>),
       title: json['title'] as String?,
       number: json['number'] as int? ?? 0,
+      configId: json['configId'] as String?,
     );
 
 Map<String, dynamic> _$ZigZagIndicatorConfigToJson(
         ZigZagIndicatorConfig instance) =>
     <String, dynamic>{
       'number': instance.number,
+      'configId': instance.configId,
       'title': instance.title,
       'distance': instance.distance,
       'lineStyle': instance.lineStyle,

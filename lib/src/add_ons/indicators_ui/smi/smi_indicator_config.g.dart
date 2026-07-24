@@ -33,11 +33,13 @@ SMIIndicatorConfig _$SMIIndicatorConfigFromJson(Map<String, dynamic> json) =>
       showLastIndicator: json['showLastIndicator'] as bool? ?? false,
       title: json['title'] as String?,
       number: json['number'] as int? ?? 0,
+      configId: json['configId'] as String?,
     );
 
 Map<String, dynamic> _$SMIIndicatorConfigToJson(SMIIndicatorConfig instance) =>
     <String, dynamic>{
       'number': instance.number,
+      'configId': instance.configId,
       'title': instance.title,
       'showLastIndicator': instance.showLastIndicator,
       'pipSize': instance.pipSize,

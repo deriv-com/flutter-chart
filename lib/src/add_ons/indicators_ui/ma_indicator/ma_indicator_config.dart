@@ -28,6 +28,7 @@ class MAIndicatorConfig extends IndicatorConfig {
     bool showLastIndicator = false,
     String? title,
     super.number,
+    super.configId,
   })  : period = period ?? 50,
         movingAverageType = movingAverageType ?? MovingAverageType.simple,
         fieldType = fieldType ?? 'close',
@@ -112,6 +113,7 @@ class MAIndicatorConfig extends IndicatorConfig {
     bool? showLastIndicator,
     String? title,
     int? number,
+    String? configId,
   }) =>
       MAIndicatorConfig(
         period: period ?? this.period,
@@ -124,5 +126,6 @@ class MAIndicatorConfig extends IndicatorConfig {
         showLastIndicator: showLastIndicator ?? this.showLastIndicator,
         title: title ?? this.title,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
       );
 }

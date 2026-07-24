@@ -21,6 +21,7 @@ class ZigZagIndicatorConfig extends IndicatorConfig {
     this.lineStyle = const LineStyle(thickness: 0.9, color: Colors.blue),
     String? title,
     super.number,
+    super.configId,
   }) : super(title: title ?? ZigZagIndicatorConfig.name);
 
   /// Initializes from JSON.
@@ -39,6 +40,9 @@ class ZigZagIndicatorConfig extends IndicatorConfig {
 
   /// ZigZag line style
   final LineStyle lineStyle;
+
+  @override
+  String get configSummary => '$distance';
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => ZigZagSeries(
@@ -64,6 +68,7 @@ class ZigZagIndicatorConfig extends IndicatorConfig {
     LineStyle? lineStyle,
     String? title,
     int? number,
+    String? configId,
     bool? showLastIndicator,
     int? pipSize,
   }) =>
@@ -72,5 +77,6 @@ class ZigZagIndicatorConfig extends IndicatorConfig {
         lineStyle: lineStyle ?? this.lineStyle,
         title: title ?? this.title,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
       );
 }

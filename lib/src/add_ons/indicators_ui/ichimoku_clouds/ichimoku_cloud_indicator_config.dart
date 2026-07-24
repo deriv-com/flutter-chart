@@ -30,6 +30,7 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
     bool showLastIndicator = false,
     String? title,
     super.number,
+    super.configId,
   }) : super(
           showLastIndicator: showLastIndicator,
           title: title ?? IchimokuCloudIndicatorConfig.name,
@@ -74,6 +75,10 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
   final LineStyle laggingLineStyle;
 
   @override
+  String get configSummary =>
+      '$conversionLinePeriod, $baseLinePeriod, $spanBPeriod';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) =>
       IchimokuCloudSeries(indicatorInput,
           config: this,
@@ -109,6 +114,7 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
     bool? showLastIndicator,
     String? title,
     int? number,
+    String? configId,
     int? pipSize,
   }) =>
       IchimokuCloudIndicatorConfig(
@@ -124,5 +130,6 @@ class IchimokuCloudIndicatorConfig extends IndicatorConfig {
         showLastIndicator: showLastIndicator ?? this.showLastIndicator,
         title: title ?? this.title,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
       );
 }

@@ -48,4 +48,38 @@ class Dimens {
 
   /// Large area line thickness 2
   static const double areaLineLargeThickness = 2;
+
+  /// Minimum height a chart panel (main chart or a bottom indicator panel)
+  /// can be resized down to via [ResizableChartDivider], expressed as a
+  /// fraction of the total space shared by all panels in its chain rather
+  /// than a fixed pixel amount. A fixed pixel minimum ends up too large a
+  /// share of the screen on small devices (e.g. with the maximum of 3
+  /// indicators on a short screen); a fixed fraction scales down with the
+  /// screen instead.
+  static const double minChartPanelHeightFraction = 0.1;
+
+  /// Height of the hit area for [ResizableChartDivider]. Sized well above
+  /// its visible line so the drag target stays comfortably tappable on
+  /// touch devices.
+  static const double chartPanelDividerHitHeight = 40;
+
+  /// Width of the touch hit area around [ResizableChartDivider]'s drag
+  /// handle on mobile - wider than the visible handle so it's easy to tap
+  /// and grab without needing pixel-perfect accuracy.
+  static const double chartPanelDividerHandleHitWidth = 64;
+
+  /// Minimum height of a bottom indicator panel's title bar (its name,
+  /// hide/unhide, and up/down icons) - enforced regardless of the panel's
+  /// actual fraction-based height, whether it's hidden (showing only this
+  /// row, collapsed) or visible but dragged down toward
+  /// [minChartPanelHeightFraction].
+  ///
+  /// Unlike a panel's chart content - which can render at any height - this
+  /// row is made up of fixed-size text and icons, so it can't be compressed
+  /// to fit whatever share of the screen its fraction happens to work out
+  /// to (e.g. several indicators added on a short screen before any of them
+  /// have been manually resized, or a visible panel's divider dragged all
+  /// the way to the fraction minimum). Reserving at least this much space
+  /// keeps the row from being clipped by its [ClipRect] in those cases.
+  static const double indicatorTitleBarMinHeight = 44;
 }

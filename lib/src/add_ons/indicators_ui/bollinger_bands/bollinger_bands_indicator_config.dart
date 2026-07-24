@@ -33,6 +33,7 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
     this.showChannelFill = true,
     bool showLastIndicator = false,
     super.number,
+    super.configId,
   }) : super(
           period: period,
           movingAverageType: movingAverageType,
@@ -122,6 +123,7 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
     bool? showChannelFill,
     bool? showLastIndicator,
     int? number,
+    String? configId,
     int? pipSize,
     bool? isOverlay,
     LineStyle? lineStyle,
@@ -140,5 +142,6 @@ class BollingerBandsIndicatorConfig extends MAIndicatorConfig {
         showChannelFill: showChannelFill ?? this.showChannelFill,
         showLastIndicator: showLastIndicator ?? this.showLastIndicator,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
       );
 }

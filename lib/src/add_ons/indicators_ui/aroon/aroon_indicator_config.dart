@@ -25,6 +25,7 @@ class AroonIndicatorConfig extends IndicatorConfig {
     bool showLastIndicator = false,
     String? title,
     super.number,
+    super.configId,
   }) : super(
           isOverlay: false,
           pipSize: pipSize,
@@ -53,6 +54,9 @@ class AroonIndicatorConfig extends IndicatorConfig {
   final LineStyle downLineStyle;
 
   @override
+  String get configSummary => '$period';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => AroonSeries(
         indicatorInput,
         this,
@@ -79,6 +83,7 @@ class AroonIndicatorConfig extends IndicatorConfig {
     bool? showLastIndicator,
     String? title,
     int? number,
+    String? configId,
   }) =>
       AroonIndicatorConfig(
         period: period ?? this.period,
@@ -88,5 +93,6 @@ class AroonIndicatorConfig extends IndicatorConfig {
         showLastIndicator: showLastIndicator ?? this.showLastIndicator,
         title: title ?? this.title,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
       );
 }

@@ -7,7 +7,9 @@ import 'package:deriv_chart/src/add_ons/indicators_ui/indicators_dialog.dart';
 import 'package:deriv_chart/src/add_ons/extensions.dart';
 import 'package:deriv_chart/src/add_ons/repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/chart.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/indicator_label_icons.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/chart_annotation.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/panel_size/panel_size_repository.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_object.dart';
@@ -54,6 +56,7 @@ class DerivChart extends StatefulWidget {
     this.chartAxisConfig = const ChartAxisConfig(),
     this.indicatorsRepo,
     this.drawingToolsRepo,
+    this.panelSizeRepo,
     this.drawingTools,
     this.msPerPx,
     this.minIntervalWidth,
@@ -70,6 +73,7 @@ class DerivChart extends StatefulWidget {
     this.crosshairVariant = CrosshairVariant.smallScreen,
     this.interactiveLayerBehaviour,
     this.useDrawingToolsV2 = false,
+    this.indicatorLabelIcons,
     Key? key,
   }) : super(key: key);
 
@@ -184,6 +188,10 @@ class DerivChart extends StatefulWidget {
   /// Chart's drawings
   final Repository<DrawingToolConfig>? drawingToolsRepo;
 
+  /// Persists the relative sizes of the main chart and bottom indicator
+  /// panels as the user resizes them.
+  final PanelSizeRepository? panelSizeRepo;
+
   /// Drawing tools
   final DrawingTools? drawingTools;
 
@@ -203,6 +211,13 @@ class DerivChart extends StatefulWidget {
   /// on web and [InteractiveLayerMobileBehaviour] on mobile or other platforms.
   final InteractiveLayerBehaviour? interactiveLayerBehaviour;
 
+  /// Icons used by the on-chart indicator labels (eye, reorder arrows,
+  /// settings, delete and the expand/collapse chevron).
+  ///
+  /// Any icon left unset falls back to its Material default. Currently applied
+  /// on mobile.
+  final IndicatorLabelIcons? indicatorLabelIcons;
+
   @override
   _DerivChartState createState() => _DerivChartState();
 }
@@ -211,6 +226,8 @@ class _DerivChartState extends State<DerivChart> {
   late AddOnsRepository<IndicatorConfig> _indicatorsRepo;
 
   late AddOnsRepository<DrawingToolConfig> _drawingToolsRepo;
+
+  final PanelSizeRepository _panelSizeRepo = PanelSizeRepository();
 
   final DrawingTools _drawingTools = DrawingTools();
 
@@ -245,6 +262,16 @@ class _DerivChartState extends State<DerivChart> {
     }
   }
 
+  @override
+  void dispose() {
+    // Only dispose the repo we created ourselves. When the host app supplies
+    // its own [PanelSizeRepository] it owns that instance's lifecycle.
+    if (widget.panelSizeRepo == null) {
+      _panelSizeRepo.dispose();
+    }
+    super.dispose();
+  }
+
   void _initRepos() {
     _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
       createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
@@ -266,10 +293,29 @@ class _DerivChartState extends State<DerivChart> {
         loadSavedIndicatorsAndDrawingTools();
       });
     }
+
+    if (widget.panelSizeRepo == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _loadPanelSizes();
+      });
+    }
+  }
+
+  /// Loads saved panel sizes, if the host app hasn't supplied its own
+  /// [PanelSizeRepository].
+  ///
+  /// Deliberately independent of [loadSavedIndicatorsAndDrawingTools] (and
+  /// its `drawingToolsRepo == null` gating) - a host app can supply its own
+  /// `indicatorsRepo`/`drawingToolsRepo` while still relying on the default
+  /// panel-size persistence, and that shouldn't disable panel-size loading.
+  Future<void> _loadPanelSizes() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    _panelSizeRepo.loadFromPrefs(prefs);
   }
 
   Future<void> loadSavedIndicatorsAndDrawingTools() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+
     final List<AddOnsRepository<AddOnConfig>> _stateRepos =
         <AddOnsRepository<AddOnConfig>>[_indicatorsRepo, _drawingToolsRepo];
 
@@ -390,6 +436,7 @@ class _DerivChartState extends State<DerivChart> {
                 annotations: widget.annotations,
                 showCrosshair: widget.showCrosshair,
                 indicatorsRepo: widget.indicatorsRepo ?? _indicatorsRepo,
+                panelSizeRepo: widget.panelSizeRepo ?? _panelSizeRepo,
                 msPerPx: widget.msPerPx,
                 minIntervalWidth: widget.minIntervalWidth,
                 maxIntervalWidth: widget.maxIntervalWidth,
@@ -409,6 +456,7 @@ class _DerivChartState extends State<DerivChart> {
                 crosshairVariant: widget.crosshairVariant,
                 interactiveLayerBehaviour: _interactiveLayerBehaviour,
                 useDrawingToolsV2: widget.useDrawingToolsV2,
+                indicatorLabelIcons: widget.indicatorLabelIcons,
               ),
               if (widget.indicatorsRepo == null) _buildIndicatorsIcon(),
               if (widget.drawingToolsRepo == null) _buildDrawingToolsIcon(),
