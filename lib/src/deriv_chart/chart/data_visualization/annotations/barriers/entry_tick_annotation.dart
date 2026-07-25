@@ -8,6 +8,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/barr
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_entry_exit_marker.dart';
 import 'package:deriv_chart/src/models/tick.dart';
 import 'package:deriv_chart/src/theme/painting_styles/entry_exit_marker_style.dart';
+import 'package:flutter/rendering.dart';
 
 import '../chart_annotation.dart';
 
@@ -56,5 +57,13 @@ class _EntryTickAnnotationPainter extends SeriesPainter<EntryTickAnnotation> {
       quoteToY(series.tick.quote),
     );
     paintEntryExitMarker(canvas, center, series.style as EntryExitMarkerStyle);
+  }
+
+  @override
+  List<CustomPainterSemantics> buildSemantics(
+      {required Size size,
+      required EpochToX epochToX,
+      required QuoteToY quoteToY}) {
+    return <CustomPainterSemantics>[];
   }
 }

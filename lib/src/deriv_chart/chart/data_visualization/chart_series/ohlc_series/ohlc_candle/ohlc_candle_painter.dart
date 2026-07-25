@@ -1,3 +1,4 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/models/candle.dart';
 import 'package:deriv_chart/src/theme/painting_styles/candle_style.dart';
 import 'package:flutter/material.dart';
@@ -75,5 +76,13 @@ class OhlcCandlePainter extends OhlcPainter {
           ..color = color
           ..strokeWidth = 1.2,
       );
+  }
+
+  @override
+  List<CustomPainterSemantics> buildSemantics(
+      {required Size size,
+      required EpochToX epochToX,
+      required QuoteToY quoteToY}) {
+    return <CustomPainterSemantics>[];
   }
 }

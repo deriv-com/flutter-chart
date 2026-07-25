@@ -158,6 +158,14 @@ class LinePainter extends DataPainter<DataSeries<Tick>> {
 
     return lastVisibleTickPosition;
   }
+
+  @override
+  List<CustomPainterSemantics> buildSemantics(
+      {required ui.Size size,
+      required EpochToX epochToX,
+      required QuoteToY quoteToY}) {
+    return <CustomPainterSemantics>[];
+  }
 }
 
 /// Returns the area paint of the given [Path].
