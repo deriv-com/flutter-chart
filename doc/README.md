@@ -1,0 +1,137 @@
+# Deriv Chart Documentation
+
+<div align="center">
+  <img src="images/deriv-chart.png" alt="Deriv Chart" width="400"/>
+  <p><em>A powerful, customizable Flutter charting library for financial applications</em></p>
+</div>
+
+Welcome to the Deriv Chart documentation! This comprehensive guide will help you understand and use the Deriv Chart library effectively, whether you're a user of the library or a contributor to its development.
+
+## Key Features
+
+- **Multiple Chart Types**: Line, Candlestick, OHLC, and Hollow Candlestick charts
+- **Technical Indicators**: Built-in support for popular indicators (Moving Averages, RSI, MACD, etc.)
+- **Interactive Drawing Tools**: Trend lines, Fibonacci tools, and more for technical analysis
+- **Real-time Updates**: Efficient handling of streaming data
+- **Customizable Themes**: Fully customizable appearance to match your app's design
+- **Responsive Design**: Works across different screen sizes and orientations
+- **High Performance**: Optimized rendering for smooth scrolling and zooming
+
+## Quick Start
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:deriv_chart/deriv_chart.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Deriv Chart Example')),
+        body: Center(
+          child: SizedBox(
+            height: 300,
+            child: Chart(
+              mainSeries: LineSeries([
+                Tick(epoch: DateTime.now().subtract(const Duration(minutes: 5)), quote: 100),
+                Tick(epoch: DateTime.now().subtract(const Duration(minutes: 4)), quote: 120),
+                Tick(epoch: DateTime.now().subtract(const Duration(minutes: 3)), quote: 110),
+                Tick(epoch: DateTime.now().subtract(const Duration(minutes: 2)), quote: 130),
+                Tick(epoch: DateTime.now().subtract(const Duration(minutes: 1)), quote: 125),
+                Tick(epoch: DateTime.now(), quote: 140),
+              ]),
+              pipSize: 2,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+## Table of Contents
+
+- [Getting Started](#getting-started)
+- [Core Concepts](#core-concepts)
+- [Features](#features)
+- [Advanced Usage](#advanced-usage)
+- [API Reference](#api-reference)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [Support](#support)
+
+## Getting Started
+
+If you're new to the Deriv Chart library, start here to learn the basics:
+
+- [Installation](getting_started/installation.md) - How to install and set up the library
+- [Basic Usage](getting_started/basic_usage.md) - Create your first chart
+- [Chart Types](getting_started/chart_types.md) - Learn about different chart types
+- [Configuration](getting_started/configuration.md) - Understand configuration options
+- [Advanced Features](getting_started/advanced_features.md) - Learn about indicators, annotations, markers, and drawing tools
+
+## Core Concepts
+
+Understand the fundamental concepts behind the Deriv Chart library:
+
+- [Architecture](core_concepts/architecture.md) - Overview of the library's architecture
+- [Coordinate System](core_concepts/coordinate_system.md) - How coordinates are managed
+- [Rendering Pipeline](core_concepts/rendering_pipeline.md) - How data is rendered
+
+## Features
+
+Explore the features available in the Deriv Chart library:
+
+### Chart Elements
+
+- [Annotations](features/annotations.md) - Add horizontal and vertical barriers
+- [Markers](features/markers.md) - Highlight specific points
+- [Crosshair](features/crosshair.md) - Inspect data with precision
+
+### Technical Analysis
+
+- [Indicators](features/indicators/overview.md) - Add technical indicators
+
+- [Drawing Tools](features/drawing_tools/overview.md) - Use interactive layer drawing tools
+
+### Interactive Layer
+
+- [Interactive Layer](core_concepts/interactive_layer.md) - Understand the interactive layer architecture
+
+## Advanced Usage
+
+Take your charts to the next level with advanced techniques:
+
+- [Custom Themes guid](advanced_usage/custom_themes.md) - Create custom chart themes
+
+## Showcase App
+
+The `showcase_app` directory contains a complete Flutter application that demonstrates all the features of the Deriv Chart library. You can use this app as a reference for your own implementation.
+
+<div align="center">
+  <img src="images/intro.gif" alt="Showcase App" width="300"/>
+</div>
+
+## Contributing
+
+Learn how to contribute to the Deriv Chart library:
+
+- [Contribution Guidelines](contribution.md) - How to contribute
+
+## Compatibility
+
+- **Flutter**: 3.10.1 or higher
+- **Dart**: 3.0.0 or higher
+- **Platforms**: iOS, Android, Web, macOS, Windows, Linux
+  
+## License
+
+The Deriv Chart library is licensed under the [MIT License](../LICENSE).
