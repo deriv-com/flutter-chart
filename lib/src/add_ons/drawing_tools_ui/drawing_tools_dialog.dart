@@ -53,39 +53,39 @@ class _DrawingToolsDialogState extends State<DrawingToolsDialog> {
               DropdownButton<DrawingToolConfig>(
                 value: _selectedDrawingTool,
                 hint: Text(ChartLocalization.of(context).selectDrawingTool),
-                items: const <DropdownMenuItem<DrawingToolConfig>>[
-                  DropdownMenuItem<DrawingToolConfig>(
+                items: <DropdownMenuItem<DrawingToolConfig>>[
+                  const DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Channel'),
                     value: ChannelDrawingToolConfig(),
                   ),
-                  DropdownMenuItem<DrawingToolConfig>(
+                  const DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Continuous'),
                     value: ContinuousDrawingToolConfig(),
                   ),
                   DropdownMenuItem<DrawingToolConfig>(
-                    child: Text('Fib Fan'),
+                    child: const Text('Fib Fan'),
                     value: FibfanDrawingToolConfig(),
                   ),
-                  DropdownMenuItem<DrawingToolConfig>(
+                  const DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Horizontal'),
                     value: HorizontalDrawingToolConfig(),
                   ),
-                  DropdownMenuItem<DrawingToolConfig>(
+                  const DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Line'),
                     value: LineDrawingToolConfig(),
                   ),
-                  DropdownMenuItem<DrawingToolConfig>(
+                  const DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Ray'),
                     value: RayDrawingToolConfig(),
                   ),
-                  DropdownMenuItem<DrawingToolConfig>(
+                  const DropdownMenuItem<DrawingToolConfig>(
                       child: Text('Rectangle'),
                       value: RectangleDrawingToolConfig()),
-                  DropdownMenuItem<DrawingToolConfig>(
+                  const DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Trend'),
                     value: TrendDrawingToolConfig(),
                   ),
-                  DropdownMenuItem<DrawingToolConfig>(
+                  const DropdownMenuItem<DrawingToolConfig>(
                     child: Text('Vertical'),
                     value: VerticalDrawingToolConfig(),
                   )
