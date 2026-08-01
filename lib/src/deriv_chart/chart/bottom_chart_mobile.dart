@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'basic_chart.dart';
 import 'bottom_chart.dart';
 import 'data_visualization/chart_series/series.dart';
+import 'indicator_label_icons.dart';
 import 'x_axis/x_axis_model.dart';
 
 /// Mobile version of the chart to add the bottom indicators too.
@@ -25,11 +26,16 @@ class BottomChartMobile extends BasicChart {
     int pipSize = 4,
     Key? key,
     this.onHideUnhideToggle,
+    this.onEdit,
+    this.onRemove,
+    this.onExpandToggle,
     this.onSwap,
     this.isHidden = false,
+    this.isExpanded = false,
     this.showMoveUpIcon = false,
     this.showMoveDownIcon = false,
     this.bottomChartTitleMargin,
+    this.icons = const IndicatorLabelIcons(),
     super.currentTickAnimationDuration,
     super.quoteBoundsAnimationDuration,
   }) : super(key: key, mainSeries: series, pipSize: pipSize);
@@ -38,14 +44,27 @@ class BottomChartMobile extends BasicChart {
   /// For ticks: Average ms difference between two consecutive ticks.
   final int granularity;
 
-  /// Called when an indicator is to be expanded.
+  /// Called when the indicator's data is hidden/unhidden (eye icon).
   final VoidCallback? onHideUnhideToggle;
+
+  /// Called when the indicator's settings are to be edited (gear icon).
+  final VoidCallback? onEdit;
+
+  /// Called when the indicator is to be removed (trash icon).
+  final VoidCallback? onRemove;
+
+  /// Called when the indicator's label is expanded/collapsed (chevron icon).
+  final VoidCallback? onExpandToggle;
 
   /// Called when an indicator is to moved up/down.
   final SwapCallback? onSwap;
 
-  /// Whether the indicator is hidden or not.
+  /// Whether the indicator's data is hidden or not.
   final bool isHidden;
+
+  /// Whether the indicator's label is expanded (showing its action buttons)
+  /// or collapsed (showing only its title and a chevron).
+  final bool isExpanded;
 
   /// The title of the bottom chart.
   final String title;
@@ -61,6 +80,9 @@ class BottomChartMobile extends BasicChart {
 
   /// Whether to show the frame or not.
   final bool showFrame;
+
+  /// The icons used by the indicator label. Defaults to Material icons.
+  final IndicatorLabelIcons icons;
 
   @override
   _BottomChartMobileState createState() => _BottomChartMobileState();
@@ -80,25 +102,14 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
       value: chartConfig,
       child: ClipRect(
         child: widget.isHidden
-            ? Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: _buildCollapsedBottomChart(context),
-                  ),
-                  _buildDivider(),
-                ],
+            ? Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: _buildCollapsedBottomChart(context),
               )
             : Stack(
                 children: <Widget>[
                   if (widget.showFrame) _buildChartFrame(context),
-                  if (!widget.isHidden)
-                    Column(
-                      children: <Widget>[
-                        Expanded(child: super.build(context)),
-                        _buildDivider(),
-                      ],
-                    ),
+                  if (!widget.isHidden) super.build(context),
                   Positioned(
                     top: 4,
                     left: widget.bottomChartTitleMargin?.left ?? 10,
@@ -122,17 +133,16 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
 
   Widget _buildIndicatorLabelMobile() => IndicatorLabelMobile(
         title: widget.title,
+        isExpanded: widget.isExpanded,
         showMoveUpIcon: widget.showMoveUpIcon,
         showMoveDownIcon: widget.showMoveDownIcon,
         isHidden: widget.isHidden,
+        icons: widget.icons,
+        onExpandToggle: widget.onExpandToggle,
         onHideUnhideToggle: widget.onHideUnhideToggle,
+        onEdit: widget.onEdit,
+        onRemove: widget.onRemove,
         onSwap: widget.onSwap,
-      );
-
-  Widget _buildDivider() => const Divider(
-        height: 0.5,
-        thickness: 1,
-        color: LegacyLightThemeColors.hover,
       );
 
   Widget _buildCollapsedBottomChart(BuildContext context) => Container(
@@ -156,15 +166,32 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
   }
 }
 
-/// Bottom chart options for mobile.
+/// The on-chart indicator label shown at the top-left of an indicator's panel
+/// (for bottom indicators) or the main chart (for overlay indicators).
+///
+/// It has two states, toggled by the trailing chevron:
+///  * **Collapsed** - shows only the indicator's title and a chevron pointing
+///    right (the expand affordance).
+///  * **Expanded** - additionally reveals the action buttons: hide/unhide
+///    (eye), reorder (up/down, when applicable), settings (gear) and delete
+///    (trash), with the chevron pointing left (the collapse affordance).
+///
+/// Expanding/collapsing only affects which action buttons are shown; it never
+/// hides the indicator's data - that is controlled independently by the eye
+/// (hide/unhide) button.
 class IndicatorLabelMobile extends StatelessWidget {
   /// Initializes a bottom chart indicator label.
   const IndicatorLabelMobile({
     required this.title,
+    required this.isExpanded,
     required this.showMoveUpIcon,
     required this.showMoveDownIcon,
     required this.isHidden,
+    this.icons = const IndicatorLabelIcons(),
+    this.onExpandToggle,
     this.onHideUnhideToggle,
+    this.onEdit,
+    this.onRemove,
     this.onSwap,
     super.key,
   });
@@ -172,20 +199,38 @@ class IndicatorLabelMobile extends StatelessWidget {
   /// The title of the indicator.
   final String title;
 
+  /// The icons rendered in the label. Defaults to Material icons.
+  final IndicatorLabelIcons icons;
+
+  /// Whether the label is expanded (showing its action buttons) or not.
+  final bool isExpanded;
+
   /// Whether to show the move up icon.
   final bool showMoveUpIcon;
 
   /// Whether to show the move down icon.
   final bool showMoveDownIcon;
 
-  /// Whether the indicator is hidden or not.
+  /// Whether the indicator's data is hidden or not.
   final bool isHidden;
 
-  /// Called when an indicator is to be expanded.
+  /// Called when the label is expanded/collapsed (chevron icon).
+  final VoidCallback? onExpandToggle;
+
+  /// Called when the indicator's data is hidden/unhidden (eye icon).
   final VoidCallback? onHideUnhideToggle;
+
+  /// Called when the indicator's settings are to be edited (gear icon).
+  final VoidCallback? onEdit;
+
+  /// Called when the indicator is to be removed (trash icon).
+  final VoidCallback? onRemove;
 
   /// Called when an indicator is to moved up/down.
   final SwapCallback? onSwap;
+
+  /// Duration of the expand/collapse transition.
+  static const Duration _animationDuration = Duration(milliseconds: 200);
 
   @override
   Widget build(BuildContext context) {
@@ -205,19 +250,33 @@ class IndicatorLabelMobile extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              // Different styling for mobile version.
-              BottomIndicatorTitle(
-                title,
-                theme.textStyle(
-                  color: theme.base01Color,
-                  textStyle: theme.textStyle(
-                    textStyle: TextStyles.caption,
+              // Tapping the title toggles expand/collapse, matching the chevron.
+              GestureDetector(
+                onTap: onExpandToggle,
+                behavior: HitTestBehavior.opaque,
+                child: BottomIndicatorTitle(
+                  title,
+                  theme.textStyle(
                     color: theme.base01Color,
+                    textStyle: theme.textStyle(
+                      textStyle: TextStyles.caption,
+                      color: theme.base01Color,
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(width: Dimens.margin08),
-              _buildIcons(context),
+              // The action buttons slide in/out horizontally as the label is
+              // expanded/collapsed. [AnimatedSize] animates (and clips) the
+              // width between the full action row and nothing.
+              AnimatedSize(
+                duration: _animationDuration,
+                curve: Curves.easeInOut,
+                alignment: Alignment.centerLeft,
+                child: isExpanded
+                    ? _buildActions(context)
+                    : const SizedBox.shrink(),
+              ),
+              _buildChevron(context),
             ],
           ),
         ),
@@ -225,12 +284,11 @@ class IndicatorLabelMobile extends StatelessWidget {
     );
   }
 
-  Widget _buildIcons(BuildContext context) => Row(
+  Widget _buildActions(BuildContext context) => Row(
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           _buildIcon(
-            iconData: isHidden
-                ? Icons.visibility_off_outlined
-                : Icons.visibility_outlined,
+            iconData: isHidden ? icons.hide : icons.show,
             context: context,
             onPressed: () {
               onHideUnhideToggle?.call();
@@ -238,7 +296,7 @@ class IndicatorLabelMobile extends StatelessWidget {
           ),
           if (showMoveUpIcon)
             _buildIcon(
-              iconData: Icons.arrow_upward,
+              iconData: icons.moveUp,
               context: context,
               onPressed: () {
                 onSwap?.call(-1);
@@ -246,13 +304,57 @@ class IndicatorLabelMobile extends StatelessWidget {
             ),
           if (showMoveDownIcon)
             _buildIcon(
-              iconData: Icons.arrow_downward,
+              iconData: icons.moveDown,
               context: context,
               onPressed: () {
                 onSwap?.call(1);
               },
             ),
+          if (onEdit != null)
+            _buildIcon(
+              iconData: icons.settings,
+              context: context,
+              onPressed: () {
+                onEdit?.call();
+              },
+            ),
+          if (onRemove != null)
+            _buildIcon(
+              iconData: icons.delete,
+              context: context,
+              onPressed: () {
+                onRemove?.call();
+              },
+            ),
         ],
+      );
+
+  /// The trailing chevron that toggles the expanded/collapsed state. It points
+  /// right when collapsed and rotates to point left when expanded.
+  Widget _buildChevron(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(left: Dimens.margin08),
+        child: Material(
+          type: MaterialType.circle,
+          color: Colors.transparent,
+          clipBehavior: Clip.antiAlias,
+          child: IconButton(
+            style: IconButton.styleFrom(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+            icon: AnimatedRotation(
+              duration: _animationDuration,
+              curve: Curves.easeInOut,
+              turns: isExpanded ? 0.5 : 0.0,
+              child: Icon(
+                icons.expandCollapse,
+                size: 16,
+                color: context.read<ChartTheme>().base01Color,
+              ),
+            ),
+            onPressed: onExpandToggle,
+            padding: const EdgeInsets.all(Dimens.margin04),
+            constraints: const BoxConstraints(),
+          ),
+        ),
       );
 
   Widget _buildIcon({

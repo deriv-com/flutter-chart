@@ -30,6 +30,7 @@ class CCIIndicatorConfig extends IndicatorConfig {
     bool showLastIndicator = false,
     String? title,
     super.number,
+    super.configId,
   }) : super(
           isOverlay: false,
           pipSize: pipSize,
@@ -59,6 +60,9 @@ class CCIIndicatorConfig extends IndicatorConfig {
 
   /// Whether to paint overbought/sold zones fill.
   final bool showZones;
+
+  @override
+  String get configSummary => '$period';
 
   @override
   Series getSeries(IndicatorInput indicatorInput) => CCISeries(
@@ -94,6 +98,7 @@ class CCIIndicatorConfig extends IndicatorConfig {
     bool? showLastIndicator,
     String? title,
     int? number,
+    String? configId,
   }) =>
       CCIIndicatorConfig(
         period: period ?? this.period,
@@ -105,5 +110,6 @@ class CCIIndicatorConfig extends IndicatorConfig {
         showLastIndicator: showLastIndicator ?? this.showLastIndicator,
         title: title ?? this.title,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
       );
 }

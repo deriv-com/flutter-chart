@@ -94,6 +94,10 @@ abstract class ChartTheme {
 
   Color get floatingMenuDragIconColor;
 
+  /// Color of a resizable chart panel divider's line and drag handle while
+  /// it's being dragged.
+  Color get panelDividerActiveColor;
+
   Color get lineThicknessDropdownButtonTextColor;
 
   TextStyle get lineThicknessDropdownButtonTextStyle;

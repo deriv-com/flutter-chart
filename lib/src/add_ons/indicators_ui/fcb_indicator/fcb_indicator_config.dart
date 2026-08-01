@@ -26,6 +26,7 @@ class FractalChaosBandIndicatorConfig extends IndicatorConfig {
     bool showLastIndicator = false,
     String? title,
     super.number,
+    super.configId,
     super.pipSize,
   }) : super(
           showLastIndicator: showLastIndicator,
@@ -81,6 +82,7 @@ class FractalChaosBandIndicatorConfig extends IndicatorConfig {
     bool? showLastIndicator,
     String? title,
     int? number,
+    String? configId,
     int? pipSize,
   }) =>
       FractalChaosBandIndicatorConfig(
@@ -91,6 +93,7 @@ class FractalChaosBandIndicatorConfig extends IndicatorConfig {
         showLastIndicator: showLastIndicator ?? this.showLastIndicator,
         title: title ?? this.title,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
         pipSize: pipSize ?? this.pipSize,
       );
 }

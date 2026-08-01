@@ -28,6 +28,7 @@ class GatorIndicatorConfig extends IndicatorConfig {
     int pipSize = 4,
     String? title,
     super.number,
+    super.configId,
   }) : super(
           isOverlay: false,
           pipSize: pipSize,
@@ -67,6 +68,9 @@ class GatorIndicatorConfig extends IndicatorConfig {
   final BarStyle barStyle;
 
   @override
+  String get configSummary => '$jawPeriod, $teethPeriod, $lipsPeriod';
+
+  @override
   Series getSeries(IndicatorInput indicatorInput) => GatorSeries(
         indicatorInput,
         gatorConfig: this,
@@ -101,6 +105,7 @@ class GatorIndicatorConfig extends IndicatorConfig {
     int? pipSize,
     String? title,
     int? number,
+    String? configId,
     bool? showLastIndicator,
   }) =>
       GatorIndicatorConfig(
@@ -114,5 +119,6 @@ class GatorIndicatorConfig extends IndicatorConfig {
         pipSize: pipSize ?? this.pipSize,
         title: title ?? this.title,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
       );
 }

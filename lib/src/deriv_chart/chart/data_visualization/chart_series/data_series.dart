@@ -363,6 +363,22 @@ abstract class DataSeries<T extends Tick> extends Series {
   Widget getCrossHairInfo(T crossHairTick, int pipSize, ChartTheme theme,
       CrosshairVariant crosshairVariant);
 
+  /// Whether [tick] is compatible with this series' data type [T].
+  ///
+  /// Crosshair-related methods such as [getCrosshairHighlightPainter] and
+  /// [getCrossHairInfo] declare their parameter as `T`. Because Dart generics
+  /// are covariant with a runtime check, invoking them through a
+  /// `DataSeries<Tick>` reference with an argument that is not actually a `T`
+  /// throws a fatal `TypeError` (e.g. `'Tick' is not a subtype of 'Candle'`).
+  ///
+  /// This can happen transiently when the crosshair still holds a tick from a
+  /// previous series while the active series has already been swapped for a
+  /// different type (switching chart type / granularity / symbol while the
+  /// crosshair is visible). Callers should check this before forwarding a tick
+  /// to those methods and skip rendering the crosshair for that frame when it
+  /// returns `false` — the next frame supplies a matching tick.
+  bool isTickCompatible(Tick tick) => tick is T;
+
   /// Returns a CrosshairHighlightPainter for highlighting the element at the crosshair position.
   /// Each series type should implement this to return the appropriate highlight painter.
   ///

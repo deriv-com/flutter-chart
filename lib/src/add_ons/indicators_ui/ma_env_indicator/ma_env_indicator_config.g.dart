@@ -32,12 +32,14 @@ MAEnvIndicatorConfig _$MAEnvIndicatorConfigFromJson(
       showChannelFill: json['showChannelFill'] as bool? ?? true,
       showLastIndicator: json['showLastIndicator'] as bool? ?? false,
       number: json['number'] as int? ?? 0,
+      configId: json['configId'] as String?,
     );
 
 Map<String, dynamic> _$MAEnvIndicatorConfigToJson(
         MAEnvIndicatorConfig instance) =>
     <String, dynamic>{
       'number': instance.number,
+      'configId': instance.configId,
       'showLastIndicator': instance.showLastIndicator,
       'period': instance.period,
       'movingAverageType':

@@ -21,6 +21,7 @@ class AwesomeOscillatorIndicatorConfig extends IndicatorConfig {
     int pipSize = 4,
     String? title,
     super.number,
+    super.configId,
     super.showLastIndicator,
   }) : super(
           isOverlay: false,
@@ -68,6 +69,7 @@ class AwesomeOscillatorIndicatorConfig extends IndicatorConfig {
     bool? showLastIndicator,
     int? pipSize,
     int? number,
+    String? configId,
   }) =>
       AwesomeOscillatorIndicatorConfig(
         barStyle: barStyle ?? this.barStyle,
@@ -75,5 +77,6 @@ class AwesomeOscillatorIndicatorConfig extends IndicatorConfig {
         showLastIndicator: showLastIndicator ?? this.showLastIndicator,
         pipSize: pipSize ?? this.pipSize,
         number: number ?? this.number,
+        configId: configId ?? this.configId,
       );
 }
