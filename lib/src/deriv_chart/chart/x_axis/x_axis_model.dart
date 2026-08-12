@@ -90,6 +90,7 @@ class XAxisModel extends ChangeNotifier {
         _maxCurrentTickOffset;
     _rightBoundEpoch = _shiftEpoch(_maxEpoch, _defaultTickOffset);
     _dataFitMode = startWithDataFitMode;
+    _anchorDataToLeft = startWithDataFitMode;
     _minIntervalWidth = minIntervalWidth ?? 1;
     _maxIntervalWidth = maxIntervalWidth ?? 80;
 
@@ -165,6 +166,15 @@ class XAxisModel extends ChangeNotifier {
   double? _prevScrollAnimationValue;
   bool _autoPanEnabled = true;
   late bool _dataFitMode;
+
+  /// Whether the chart's data stays anchored to the left edge.
+  ///
+  /// Unlike [_dataFitMode], which any scale or pan gesture turns off, this stays
+  /// on for the lifetime of the model. It marks charts that show a bounded data
+  /// window — contract details — where the oldest entry must never drift to the
+  /// right of the position data-fit mode gives it.
+  late bool _anchorDataToLeft;
+
   double _msPerPx = 1000;
   double? _prevMsPerPx;
   late int _granularity;
@@ -191,7 +201,17 @@ class XAxisModel extends ChangeNotifier {
   set rightBoundEpoch(int value) => _rightBoundEpoch = value;
 
   /// Current scrolling lower bound.
-  int get _minRightBoundEpoch => _shiftEpoch(_minEpoch, _maxCurrentTickOffset);
+  ///
+  /// When [_anchorDataToLeft] is set, this is the [rightBoundEpoch] that puts
+  /// the oldest entry exactly where data-fit mode would: [_dataFitPadding.left]
+  /// px from the left edge. Scrolling or zooming may push the oldest entry off
+  /// the left edge, but never further right than that.
+  int get _minRightBoundEpoch {
+    if (_anchorDataToLeft && width != null) {
+      return _shiftEpoch(_minEpoch, width! - _dataFitPadding.left);
+    }
+    return _shiftEpoch(_minEpoch, _maxCurrentTickOffset);
+  }
 
   /// Current scrolling upper bound.
   int get _maxRightBoundEpoch => _shiftEpoch(_maxEpoch, _maxCurrentTickOffset);
@@ -222,6 +242,26 @@ class XAxisModel extends ChangeNotifier {
 
   /// Starting value for [_msPerPx].
   double get _defaultMsPerPx => _granularity / defaultIntervalWidth;
+
+  /// Effective zoom-out limit applied to user-driven scaling.
+  ///
+  /// Charts with [_anchorDataToLeft] never zoom out past the scale at which all
+  /// of the data already fits on screen. Past that point there is nothing left
+  /// to reveal: the data would just shrink into a band at the left edge, and a
+  /// live chart would stop being able to follow the current tick.
+  double get _scaleOutMsPerPxLimit {
+    if (_anchorDataToLeft && width != null && (_entries?.isNotEmpty ?? false)) {
+      final double pxTargetDataWidth = width! - _dataFitPadding.horizontal;
+      if (pxTargetDataWidth > 0) {
+        // Same expression as [_fitData], so the limit lands exactly on the
+        // data-fit scale.
+        final int msDataDuration = _entries!.length * granularity;
+        return (msDataDuration / pxTargetDataWidth)
+            .clamp(_minMsPerPx, _maxMsPerPx);
+      }
+    }
+    return _maxMsPerPx;
+  }
 
   /// Whether data fit mode is enabled.
   /// Doesn't mean it is currently active viewing mode.
@@ -503,7 +543,7 @@ class XAxisModel extends ChangeNotifier {
 
   /// Called to scale the chart
   void scale(double scale) {
-    _msPerPx = (_prevMsPerPx! / scale).clamp(_minMsPerPx, _maxMsPerPx);
+    _msPerPx = (_prevMsPerPx! / scale).clamp(_minMsPerPx, _scaleOutMsPerPxLimit);
     onScale?.call();
     notifyListeners();
   }
@@ -578,6 +618,13 @@ class XAxisModel extends ChangeNotifier {
     if (_minRightBoundEpoch <= _maxRightBoundEpoch) {
       _rightBoundEpoch =
           _rightBoundEpoch.clamp(_minRightBoundEpoch, _maxRightBoundEpoch);
+    } else if (_anchorDataToLeft) {
+      // The data no longer spans the viewport, so "oldest entry no further
+      // right than its data-fit position" and "newest entry within
+      // [_maxCurrentTickOffset] of the right edge" can't both hold. The left
+      // anchor wins — deferring to the upper bound here is what would otherwise
+      // push the oldest entry towards the right edge as the user zooms out.
+      _rightBoundEpoch = _minRightBoundEpoch;
     }
   }
 
