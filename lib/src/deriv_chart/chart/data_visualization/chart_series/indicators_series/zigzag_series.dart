@@ -43,7 +43,17 @@ class ZigZagSeries extends LineSeries {
   VisibleEntries<Tick> getVisibleEntries(int startIndex, int endIndex) {
     int firstIndex = startIndex;
     int lastIndex = endIndex;
-    if (entries == null || startIndex < 0 || endIndex - 1 > entries!.length) {
+    // `startIndex`/`endIndex` are -1 when the visible window falls entirely
+    // outside the data range — e.g. right after a granularity switch, while
+    // the x-axis still holds the previous interval's epochs. The base
+    // implementation treats that as "nothing visible", and so must this one:
+    // the lookups below read `entries![endIndex - 1]`, which would be a
+    // negative index.
+    if (entries == null ||
+        startIndex < 0 ||
+        startIndex >= entries!.length ||
+        endIndex < 1 ||
+        endIndex > entries!.length) {
       return VisibleEntries<Tick>.empty();
     }
     if (entries![startIndex].quote.isNaN) {
