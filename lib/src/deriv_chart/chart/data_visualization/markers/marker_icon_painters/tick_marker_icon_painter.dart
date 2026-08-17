@@ -70,11 +70,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     AnimationInfo animationInfo,
   ) {
     final Map<MarkerType, Offset> points = <MarkerType, Offset>{};
-    // Ensure left padding refers to the left edge of the contract circle.
-    // Use the outer border radius drawn in _drawContractMarker: radius (12*zoom)
-    // plus 1*zoom for the stroke radius.
-    final double _contractOuterRadius =
-        (12 * painterProps.zoom) + (1 * painterProps.zoom);
+    final double contractOuterRadius = _contractOuterRadius(painterProps);
 
     for (final ChartMarker marker in markerGroup.markers) {
       final Offset center;
@@ -82,7 +78,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
       // Special handling for contractMarker - position with left padding
       if (marker.markerType == MarkerType.contractMarker) {
         center = Offset(
-          markerGroup.props.contractMarkerLeftPadding + _contractOuterRadius,
+          markerGroup.props.contractMarkerLeftPadding + contractOuterRadius,
           quoteToY(marker.quote),
         );
       } else {
@@ -118,7 +114,7 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
           (marker.markerType == MarkerType.contractMarker
               ? Offset(
                   markerGroup.props.contractMarkerLeftPadding +
-                      _contractOuterRadius,
+                      contractOuterRadius,
                   quoteToY(marker.quote),
                 )
               : Offset(epochToX(marker.epoch), quoteToY(marker.quote)));
@@ -195,36 +191,54 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     final Color finalLineColor = lineColor.withOpacity(opacity);
 
     YAxisConfig.instance.yAxisClipping(canvas, size, () {
-      // Horizontal dashed line from contractMarker to start time
-      if (_contractMarkerOffset != null && _startCollapsedOffset != null) {
-        final ChartMarker? contractMarker = markerGroup.markers
-            .firstWhereOrNull((m) => m.markerType == MarkerType.contractMarker);
-        final String? contractText = contractMarker?.text;
+      // Horizontal dashed line from the contract marker anchor to start time,
+      // optionally carrying a label (e.g. the tick counter).
+      //
+      // The label rides on the startTimeCollapsed marker rather than on the
+      // contractMarker so that it outlives the contractMarker, which is dropped
+      // once a contract finishes. Without the contractMarker the connector line
+      // is not drawn — it belongs to that marker and goes with it — leaving the
+      // label alone on screen, anchored to the fixed left-edge offset the
+      // contractMarker would have occupied so that it does not move.
+      if (_startCollapsedOffset != null) {
+        final ChartMarker? labelMarker = markerGroup.markers.firstWhereOrNull(
+          (ChartMarker marker) =>
+              marker.markerType == MarkerType.startTimeCollapsed &&
+              (marker.text?.isNotEmpty ?? false),
+        );
 
-        if (contractMarker != null &&
-            contractText != null &&
-            contractText.isNotEmpty) {
-          _paintDashedLineWithText(
-            canvas,
-            _contractMarkerOffset,
-            _startCollapsedOffset,
-            finalLineColor,
-            contractText,
-            contractMarker.textType,
-            theme,
-            opacity,
-          );
-        } else {
-          paintHorizontalDashedLine(
-            canvas,
-            _startCollapsedOffset.dx,
-            _contractMarkerOffset.dx,
-            _contractMarkerOffset.dy,
-            finalLineColor,
-            1,
-            dashWidth: 2,
-            dashSpace: 2,
-          );
+        if (_contractMarkerOffset != null || labelMarker != null) {
+          final Offset lineStart = _contractMarkerOffset ??
+              Offset(
+                markerGroup.props.contractMarkerLeftPadding +
+                    _contractOuterRadius(painterProps),
+                _startCollapsedOffset.dy,
+              );
+
+          if (labelMarker != null) {
+            _paintDashedLineWithText(
+              canvas,
+              lineStart,
+              _startCollapsedOffset,
+              finalLineColor,
+              labelMarker.text!,
+              labelMarker.textType,
+              theme,
+              opacity,
+              paintConnectorLine: _contractMarkerOffset != null,
+            );
+          } else {
+            paintHorizontalDashedLine(
+              canvas,
+              _startCollapsedOffset.dx,
+              lineStart.dx,
+              lineStart.dy,
+              finalLineColor,
+              1,
+              dashWidth: 2,
+              dashSpace: 2,
+            );
+          }
         }
       }
 
@@ -299,11 +313,21 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     });
   }
 
-  /// Draws the dashed connector line with a text label split into it.
+  /// The outer radius of the contract marker circle, including its stroke.
+  ///
+  /// Matches the circle drawn in `_drawContractMarker`: radius (12 * zoom) plus
+  /// 1 * zoom for the stroke. Used so that
+  /// [MarkerProps.contractMarkerLeftPadding] refers to the left edge of the
+  /// circle rather than its centre.
+  double _contractOuterRadius(PainterProps painterProps) =>
+      (12 * painterProps.zoom) + (1 * painterProps.zoom);
+
+  /// Draws a text label, optionally with a dashed connector line split by it.
   ///
   /// The text is positioned near [lineEnd] (the start time collapsed marker)
-  /// with a small padding gap. The dashed line is drawn on both sides of the
-  /// text.
+  /// with a small padding gap. When [paintConnectorLine] is `true` the dashed
+  /// line is drawn on both sides of the text; when it is `false` only the label
+  /// is painted, and [lineStart] is used solely to place the label vertically.
   void _paintDashedLineWithText(
     Canvas canvas,
     Offset lineStart,
@@ -312,8 +336,9 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     String text,
     MarkerTextType textType,
     ChartTheme theme,
-    double opacity,
-  ) {
+    double opacity, {
+    bool paintConnectorLine = true,
+  }) {
     // Distance (in pixels) from the start time marker to the right edge of the text label.
     const double _textPaddingFromStartLine = 16;
 
@@ -340,32 +365,34 @@ class TickMarkerIconPainter extends MarkerGroupIconPainter {
     final double textRight = lineEnd.dx - _textPaddingFromStartLine;
     final double textLeft = textRight - textPainter.width;
 
-    if (lineStart.dx < textLeft - _textGap) {
-      // Left portion of dashed line.
-      paintHorizontalDashedLine(
-        canvas,
-        textLeft - _textGap,
-        lineStart.dx,
-        lineStart.dy,
-        lineColor,
-        1,
-        dashWidth: 2,
-        dashSpace: 2,
-      );
-    }
+    if (paintConnectorLine) {
+      if (lineStart.dx < textLeft - _textGap) {
+        // Left portion of dashed line.
+        paintHorizontalDashedLine(
+          canvas,
+          textLeft - _textGap,
+          lineStart.dx,
+          lineStart.dy,
+          lineColor,
+          1,
+          dashWidth: 2,
+          dashSpace: 2,
+        );
+      }
 
-    // Right portion of dashed line (text to startTimeCollapsed).
-    if (lineStart.dx < lineEnd.dx) {
-      paintHorizontalDashedLine(
-        canvas,
-        textRight + _textGap,
-        lineEnd.dx,
-        lineStart.dy,
-        lineColor,
-        1,
-        dashWidth: 2,
-        dashSpace: 2,
-      );
+      // Right portion of dashed line (text to startTimeCollapsed).
+      if (lineStart.dx < lineEnd.dx) {
+        paintHorizontalDashedLine(
+          canvas,
+          textRight + _textGap,
+          lineEnd.dx,
+          lineStart.dy,
+          lineColor,
+          1,
+          dashWidth: 2,
+          dashSpace: 2,
+        );
+      }
     }
 
     // Draw text centered vertically on the line.
