@@ -2464,8 +2464,11 @@ class CoreDesignTokens {
     stops: const [0.0163, 0.49979999999999997],
   );
 
-  /// coreElevationShadow50 with value: {x: 0, y: 0, blur: 0, spread: 0, color: , type: dropShadow}
-  static const coreElevationShadow50 = BoxShadow(color: Colors.transparent);
+  /// coreElevationShadow50 with value: [{x: 0, y: 0, blur: 0, spread: 0, color: rgba(0, 0, 0, 0%), type: dropShadow}, {x: 0, y: 0, blur: 0, spread: 0, color: rgba(0, 0, 0, 0%), type: dropShadow}]
+  static final coreElevationShadow50 = [
+    const BoxShadow(color: Color.fromRGBO(0, 0, 0, 0)),
+    const BoxShadow(color: Color.fromRGBO(0, 0, 0, 0))
+  ];
 
   /// coreElevationShadow110 with value: [{x: 0, y: -1, blur: 2, spread: 0, color: rgba(0, 0, 0, 6%), type: dropShadow}, {x: 0, y: -1, blur: 2, spread: 0, color: rgba(0, 0, 0, 3%), type: dropShadow}]
   static final coreElevationShadow110 = [
