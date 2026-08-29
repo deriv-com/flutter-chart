@@ -20,6 +20,9 @@ abstract class BaseChartScreenState<T extends BaseChartScreen>
   /// The chart candles.
   late List<Candle> candles;
 
+  /// Whether the controls section is expanded.
+  bool _isControlsExpanded = true;
+
   @override
   void initState() {
     super.initState();
@@ -36,13 +39,39 @@ abstract class BaseChartScreenState<T extends BaseChartScreen>
       appBar: AppBar(
         title: Text(getTitle()),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              _isControlsExpanded ? Icons.expand_less : Icons.expand_more,
+            ),
+            onPressed: () {
+              setState(() {
+                _isControlsExpanded = !_isControlsExpanded;
+              });
+            },
+            tooltip: _isControlsExpanded ? 'Hide Controls' : 'Show Controls',
+          ),
+        ],
       ),
       body: Column(
         children: [
           Expanded(
             child: buildChart(),
           ),
-          buildControls(),
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            height: _isControlsExpanded ? 300 : 0,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 300),
+              opacity: _isControlsExpanded ? 1.0 : 0.0,
+              child: _isControlsExpanded
+                  ? SingleChildScrollView(
+                      child: buildControls(),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ),
         ],
       ),
     );
