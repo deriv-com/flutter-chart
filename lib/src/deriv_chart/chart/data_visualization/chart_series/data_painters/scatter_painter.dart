@@ -43,4 +43,12 @@ class ScatterPainter extends DataPainter<DataSeries<Tick>> {
       }
     }
   }
+
+  @override
+  List<CustomPainterSemantics> buildSemantics(
+      {required Size size,
+      required EpochToX epochToX,
+      required QuoteToY quoteToY}) {
+    return <CustomPainterSemantics>[];
+  }
 }

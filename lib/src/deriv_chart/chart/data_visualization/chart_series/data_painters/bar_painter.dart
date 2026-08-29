@@ -147,4 +147,12 @@ class BarPainter extends DataPainter<DataSeries<Tick>> {
     _negativeBarPaint = Paint()..color = style.negativeColor;
     return isPositiveColor ? _positiveBarPaint : _negativeBarPaint;
   }
+
+  @override
+  List<CustomPainterSemantics> buildSemantics(
+      {required ui.Size size,
+      required EpochToX epochToX,
+      required QuoteToY quoteToY}) {
+    return <CustomPainterSemantics>[];
+  }
 }
