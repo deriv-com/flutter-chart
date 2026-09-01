@@ -768,6 +768,5 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
         _controller.onScrollToLastTick?.call(animate: false);
       }
     }
-
   }
 }

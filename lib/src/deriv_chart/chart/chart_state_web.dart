@@ -200,5 +200,4 @@ class _ChartStateWeb extends _ChartState {
       },
     );
   }
-
 }
