@@ -105,6 +105,15 @@ abstract class ChartDefaultTheme implements ChartTheme {
       Dimens.crosshairInformationBoxContainerGlassBackgroundBlur;
 
   @override
+  double get indicatorLabelIconSize => Dimens.indicatorLabelIconSize;
+
+  @override
+  TextStyle get indicatorLabelTextStyle => textStyle(
+        textStyle: TextStyles.caption,
+        color: base01Color,
+      );
+
+  @override
   TextStyle get crosshairInformationBoxTitleStyle =>
       TextStyles.crosshairInformationBoxTitleStyle;
 

@@ -1,9 +1,6 @@
 part of 'chart.dart';
 
 class _ChartStateWeb extends _ChartState {
-  String _bottomPanelKey(int index) =>
-      _panelKeyFor(widget.bottomConfigs[index]);
-
   @override
   Widget buildChartsLayout(
     BuildContext context,
@@ -16,158 +13,192 @@ class _ChartStateWeb extends _ChartState {
     final Duration quoteBoundsAnimationDuration =
         widget.quoteBoundsAnimationDuration ?? _defaultDuration;
 
-    final bool isExpanded = expandedIndex != null;
-    final int totalBottomCount = widget.bottomConfigs.length;
+    final Repository<IndicatorConfig>? repository = widget.indicatorsRepo;
 
-    // Fractions are tracked for every bottom panel regardless of whether
-    // it's currently visible, so expanding/collapsing one to fullscreen
-    // doesn't discard the custom sizes of the others.
-    final List<String> allPanelKeys = <String>[
-      PanelSizeRepository.mainPanelKey,
-      for (int i = 0; i < totalBottomCount; i++) _bottomPanelKey(i),
+    // Bottom (non-overlay) indicators, in repo order, keeping their true
+    // index within `repository.items` (needed for hidden-status lookups).
+    final List<int> bottomRepoIndices = <int>[
+      if (repository != null)
+        for (int i = 0; i < repository.items.length; i++)
+          if (!repository.items[i].isOverlay) i
     ];
 
+    // Every bottom indicator's key, visible or hidden, in repo order. Keeping
+    // hidden ones in this list is what preserves their stored fraction while
+    // hidden (see [syncPanelFractions]), so unhiding restores the exact size
+    // the panel had before.
+    final List<String> allBottomIndicatorKeys = bottomRepoIndices
+        .map((int i) => _panelKeyFor(repository!.items[i]))
+        .toList();
+
+    // One flat, ordered chain covering the main chart and every bottom panel,
+    // so a resize can cascade past a panel already at its minimum height into
+    // the next one that still has room.
+    final List<String> orderedKeys = <String>[
+      PanelSizeRepository.mainPanelKey,
+      ...allBottomIndicatorKeys,
+    ];
+
+    final int totalBottomCount = allBottomIndicatorKeys.length;
+
     _syncPanelFractions(
-      allPanelKeys,
+      orderedKeys,
       (String key) => key == PanelSizeRepository.mainPanelKey
           ? (totalBottomCount > 0 ? 3 / (3 + totalBottomCount) : 1.0)
           : 1 / (3 + totalBottomCount),
     );
 
-    final double mainFraction =
-        _panelFractions[PanelSizeRepository.mainPanelKey] ?? 1.0;
-
-    // While a single bottom panel is expanded to fullscreen, it takes up
-    // the entire bottom region (instead of its own stored fraction), and
-    // the main chart keeps the fraction it had before expanding.
-    double fractionFor(String key) =>
-        isExpanded ? (1 - mainFraction) : (_panelFractions[key] ?? 0);
+    // Overlay indicators are drawn on the main chart, so a hidden one is
+    // simply left out of the series list; its label stays (see
+    // [_buildOverlayIndicatorsLabels]) so it can be unhidden again.
+    final List<Series> visibleOverlaySeries = <Series>[];
+    if (repository != null) {
+      for (int i = 0; i < repository.items.length; i++) {
+        final IndicatorConfig config = repository.items[i];
+        if (repository.getHiddenStatus(i) || !config.isOverlay) {
+          continue;
+        }
+        visibleOverlaySeries.add(config.getSeries(
+          IndicatorInput(widget.mainSeries.input, widget.granularity),
+        ));
+      }
+    }
 
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
-        final int dividerCount = isExpanded ? 0 : totalBottomCount;
+        // Each divider takes up real space in the same Column as the panels,
+        // so it has to come off the height the fractions are applied to.
         final double usableHeight =
-            _usableHeightFor(constraints.maxHeight, dividerCount);
-
-        Widget panelSizedBox(double fraction, Widget child) => SizedBox(
-              height: fraction * usableHeight,
-              child: child,
-            );
+            _usableHeightFor(constraints.maxHeight, totalBottomCount);
 
         final List<Widget> children = <Widget>[
-          panelSizedBox(
-            mainFraction,
-            MainChart(
-              drawingTools: widget.drawingTools,
-              controller: _controller,
-              mainSeries: widget.mainSeries,
-              overlaySeries: overlaySeries,
-              annotations: widget.annotations,
-              markerSeries: widget.markerSeries,
-              pipSize: widget.pipSize,
-              onCrosshairAppeared: widget.onCrosshairAppeared,
-              onQuoteAreaChanged: widget.onQuoteAreaChanged,
-              isLive: widget.isLive,
-              showLoadingAnimationForHistoricalData: !widget.dataFitEnabled,
-              showDataFitButton:
-                  widget.showDataFitButton ?? widget.dataFitEnabled,
-              showScrollToLastTickButton:
-                  widget.showScrollToLastTickButton ?? true,
-              opacity: widget.opacity,
-              chartAxisConfig: widget.chartAxisConfig,
-              verticalPaddingFraction: widget.verticalPaddingFraction,
-              showCrosshair: widget.showCrosshair,
-              onCrosshairDisappeared: widget.onCrosshairDisappeared,
-              onCrosshairHover: _onCrosshairHover,
-              loadingAnimationColor: widget.loadingAnimationColor,
-              currentTickAnimationDuration: currentTickAnimationDuration,
-              quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
-              showCurrentTickBlinkAnimation:
-                  widget.showCurrentTickBlinkAnimation ?? true,
-              crosshairVariant: widget.crosshairVariant,
-              interactiveLayerBehaviour: widget.interactiveLayerBehaviour,
-              useDrawingToolsV2: widget.useDrawingToolsV2,
+          SizedBox(
+            height: (_panelFractions[PanelSizeRepository.mainPanelKey] ?? 1.0) *
+                usableHeight,
+            child: Stack(
+              children: <Widget>[
+                MainChart(
+                  drawingTools: widget.drawingTools,
+                  controller: _controller,
+                  mainSeries: widget.mainSeries,
+                  overlaySeries: visibleOverlaySeries,
+                  annotations: widget.annotations,
+                  markerSeries: widget.markerSeries,
+                  pipSize: widget.pipSize,
+                  onCrosshairAppeared: widget.onCrosshairAppeared,
+                  onQuoteAreaChanged: widget.onQuoteAreaChanged,
+                  isLive: widget.isLive,
+                  showLoadingAnimationForHistoricalData: !widget.dataFitEnabled,
+                  showDataFitButton:
+                      widget.showDataFitButton ?? widget.dataFitEnabled,
+                  showScrollToLastTickButton:
+                      widget.showScrollToLastTickButton ?? true,
+                  opacity: widget.opacity,
+                  chartAxisConfig: widget.chartAxisConfig,
+                  verticalPaddingFraction: widget.verticalPaddingFraction,
+                  showCrosshair: widget.showCrosshair,
+                  onCrosshairDisappeared: widget.onCrosshairDisappeared,
+                  onCrosshairHover: _onCrosshairHover,
+                  loadingAnimationColor: widget.loadingAnimationColor,
+                  currentTickAnimationDuration: currentTickAnimationDuration,
+                  quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
+                  showCurrentTickBlinkAnimation:
+                      widget.showCurrentTickBlinkAnimation ?? true,
+                  crosshairVariant: widget.crosshairVariant,
+                  interactiveLayerBehaviour: widget.interactiveLayerBehaviour,
+                  useDrawingToolsV2: widget.useDrawingToolsV2,
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: Dimens.margin08,
+                      horizontal: Dimens.margin04,
+                    ),
+                    child: _buildOverlayIndicatorsLabels(),
+                  ),
+                ),
+              ],
             ),
           ),
         ];
 
-        for (int index = 0; index < totalBottomCount; index++) {
-          if (isExpanded && expandedIndex != index) {
-            continue;
-          }
+        int position = 0;
+        for (final int repoIndex in bottomRepoIndices) {
+          final IndicatorConfig config = repository!.items[repoIndex];
+          final bool isHidden = repository.getHiddenStatus(repoIndex);
+          final String key = _panelKeyFor(config);
 
-          final String key = _bottomPanelKey(index);
+          final Series series = config.getSeries(
+            IndicatorInput(widget.mainSeries.input, widget.granularity),
+          );
 
-          // Dragging is only meaningful between panels that are both
-          // visible with independently-tracked fractions; disable it while
-          // a single panel is expanded to fullscreen.
-          if (!isExpanded) {
-            final int dividerIndex = index;
-            children.add(
+          // TODO(Ramin): Use the key (type + number) once it's implemented.
+          final int indexInBottomConfigs =
+              referenceIndexOf(widget.bottomConfigs, config);
+
+          // The divider directly above this panel sits between
+          // `orderedKeys[position]` (main, or the previous indicator) and
+          // `orderedKeys[position + 1]` (this one).
+          final int dividerIndex = position;
+
+          // A panel's label is fixed-size text and icons rather than freely
+          // scalable chart content, so its fraction can work out to less pixel
+          // height than the label needs. Flooring only the rendered height
+          // keeps the label from being clipped without affecting the size a
+          // hidden panel is restored to on unhide.
+          final double panelHeight = (_panelFractions[key] ?? 0) * usableHeight;
+          final double renderedHeight =
+              math.max(panelHeight, Dimens.indicatorTitleBarMinHeight);
+
+          children
+            ..add(
               ResizableChartDivider(
                 onDragUpdate: (double deltaPixels) => _resizeCascadingPanels(
-                  allPanelKeys,
+                  orderedKeys,
                   dividerIndex,
                   deltaPixels / usableHeight,
+                  usableHeight: usableHeight,
                 ),
                 onDragEnd: _persistPanelFractions,
               ),
-            );
-          }
-
-          children.add(
-            panelSizedBox(
-              fractionFor(key),
-              BottomChart(
-                series: bottomSeries![index],
-                granularity: widget.granularity,
-                pipSize: widget.bottomConfigs[index].pipSize,
-                title: widget.bottomConfigs[index].title,
-                currentTickAnimationDuration: currentTickAnimationDuration,
-                quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
-                bottomChartTitleMargin: widget.bottomChartTitleMargin,
-                onRemove: () => _onRemove(widget.bottomConfigs[index]),
-                onEdit: () => _onEdit(widget.bottomConfigs[index]),
-                onExpandToggle: () {
-                  setState(() {
-                    expandedIndex = expandedIndex != index ? index : null;
-                  });
-                },
-                onSwap: (int offset) => _onSwap(widget.bottomConfigs[index],
-                    widget.bottomConfigs[index + offset]),
-                onCrosshairDisappeared: widget.onCrosshairDisappeared,
-                onCrosshairHover: (
-                  Offset globalPosition,
-                  Offset localPosition,
-                  EpochToX epochToX,
-                  QuoteToY quoteToY,
-                  EpochFromX epochFromX,
-                  QuoteFromY quoteFromY,
-                ) =>
-                    widget.onCrosshairHover?.call(
-                  globalPosition,
-                  localPosition,
-                  epochToX,
-                  quoteToY,
-                  epochFromX,
-                  quoteFromY,
-                  widget.bottomConfigs[index],
+            )
+            ..add(
+              SizedBox(
+                height: renderedHeight,
+                child: BottomChartWithLabel(
+                  series: series,
+                  isHidden: isHidden,
+                  isExpanded: _isLabelExpanded(config),
+                  granularity: widget.granularity,
+                  pipSize: config.pipSize,
+                  title: _indicatorLabelTitle(config),
+                  currentTickAnimationDuration: currentTickAnimationDuration,
+                  quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
+                  bottomChartTitleMargin: widget.bottomChartTitleMargin,
+                  icons: _labelIcons,
+                  onExpandToggle: () => _toggleLabelExpanded(config),
+                  onHideUnhideToggle: () =>
+                      _onIndicatorHideToggleTapped(repository, repoIndex),
+                  onEdit: () => _onEdit(config),
+                  onRemove: () => _onRemove(config),
+                  onSwap: (int offset) => _onSwap(config,
+                      widget.bottomConfigs[indexInBottomConfigs + offset]),
+                  showMoveUpIcon:
+                      totalBottomCount > 1 && indexInBottomConfigs != 0,
+                  showMoveDownIcon: totalBottomCount > 1 &&
+                      indexInBottomConfigs != totalBottomCount - 1,
+                  showFrame: false,
                 ),
-                isExpanded: isExpanded,
-                showCrosshair: widget.showCrosshair,
-                showExpandedIcon: totalBottomCount > 1,
-                showMoveUpIcon:
-                    !isExpanded && totalBottomCount > 1 && index != 0,
-                showMoveDownIcon: !isExpanded &&
-                    totalBottomCount > 1 &&
-                    index != totalBottomCount - 1,
               ),
-            ),
-          );
+            );
+
+          position++;
         }
 
         return Column(children: children);
       },
     );
   }
+
 }

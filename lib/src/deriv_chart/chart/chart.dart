@@ -26,8 +26,7 @@ import '../../models/tick.dart';
 import '../../theme/chart_default_dark_theme.dart';
 import '../../theme/chart_theme.dart';
 import '../interactive_layer/interactive_layer_behaviours/interactive_layer_behaviour.dart';
-import 'bottom_chart.dart';
-import 'bottom_chart_mobile.dart';
+import 'bottom_chart_with_label.dart';
 import 'indicator_label_icons.dart';
 import 'data_visualization/annotations/chart_annotation.dart';
 import 'data_visualization/chart_data.dart';
@@ -332,8 +331,7 @@ class Chart extends StatefulWidget {
   /// Icons used by the on-chart indicator labels (eye, reorder arrows,
   /// settings, delete and the expand/collapse chevron).
   ///
-  /// Any icon left unset falls back to its Material default. Currently applied
-  /// on mobile.
+  /// Any icon left unset falls back to its Material default.
   final IndicatorLabelIcons? indicatorLabelIcons;
 
   @override
@@ -348,7 +346,14 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
   late ChartController _controller;
   late ChartTheme _chartTheme;
   late List<Series>? bottomSeries;
-  int? expandedIndex;
+
+  /// Panel keys (see [_panelKeyFor]) of indicator labels currently expanded to
+  /// show their action buttons. Keyed by panel key - rather than held as local
+  /// widget state - so an indicator's expanded/collapsed state follows it
+  /// across reorders, hides and the frequent live-tick rebuilds, and never
+  /// gets attached to the wrong indicator. Labels default to collapsed (absent
+  /// from this set).
+  final Set<String> _expandedLabelKeys = <String>{};
 
   /// Current fraction of the available height occupied by each chart panel,
   /// keyed by [PanelSizeRepository.mainPanelKey] for the main chart and by
@@ -495,6 +500,90 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
       (totalHeight - dividerCount * Dimens.chartPanelDividerHitHeight)
           .clamp(0.0, double.infinity);
 
+  /// Index of [element] within [list] by identity rather than equality -
+  /// indicator configs of the same type with the same settings compare equal,
+  /// so `indexOf` would find the wrong one.
+  int referenceIndexOf(List<dynamic> list, dynamic element) {
+    for (int i = 0; i < list.length; i++) {
+      if (identical(list[i], element)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  /// Whether [config]'s label is currently showing its action buttons.
+  bool _isLabelExpanded(IndicatorConfig config) =>
+      _expandedLabelKeys.contains(_panelKeyFor(config));
+
+  void _toggleLabelExpanded(IndicatorConfig config) {
+    final String key = _panelKeyFor(config);
+    setState(() {
+      if (!_expandedLabelKeys.remove(key)) {
+        _expandedLabelKeys.add(key);
+      }
+    });
+  }
+
+  /// The indicator-label icons supplied by the host app, or Material defaults.
+  IndicatorLabelIcons get _labelIcons =>
+      widget.indicatorLabelIcons ?? const IndicatorLabelIcons();
+
+  void _onIndicatorHideToggleTapped(
+    Repository<IndicatorConfig>? repository,
+    int index,
+  ) {
+    repository?.updateHiddenStatus(
+      index: index,
+      hidden: !repository.getHiddenStatus(index),
+    );
+  }
+
+  /// The title shown on an indicator's label - its short name, the instance
+  /// number once there is more than one of a type, and its settings summary.
+  String _indicatorLabelTitle(IndicatorConfig config) =>
+      '${config.shortTitle} ${config.number > 0 ? config.number : ''}'
+      '${config.configSummary.isEmpty ? '' : ' (${config.configSummary})'}';
+
+  /// Labels for the overlay indicators drawn on the main chart, stacked at its
+  /// top-left. Bottom indicators carry their own label inside their panel.
+  Widget _buildOverlayIndicatorsLabels() {
+    final List<Widget> overlayIndicatorsLabels = <Widget>[];
+    if (widget.indicatorsRepo != null) {
+      for (int i = 0; i < widget.indicatorsRepo!.items.length; i++) {
+        final IndicatorConfig config = widget.indicatorsRepo!.items[i];
+        if (!config.isOverlay) {
+          continue;
+        }
+
+        overlayIndicatorsLabels.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom: Dimens.margin04),
+            child: IndicatorLabel(
+              title: _indicatorLabelTitle(config),
+              isExpanded: _isLabelExpanded(config),
+              showMoveUpIcon: false,
+              showMoveDownIcon: false,
+              isHidden: widget.indicatorsRepo?.getHiddenStatus(i) ?? false,
+              icons: _labelIcons,
+              onExpandToggle: () => _toggleLabelExpanded(config),
+              onHideUnhideToggle: () {
+                _onIndicatorHideToggleTapped(widget.indicatorsRepo, i);
+              },
+              onEdit: () => _onEdit(config),
+              onRemove: () => _onRemove(config),
+            ),
+          ),
+        );
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: overlayIndicatorsLabels,
+    );
+  }
+
   void _onCrosshairHover(
     Offset globalPosition,
     Offset localPosition,
@@ -599,8 +688,6 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
   }
 
   void _onRemove(IndicatorConfig config) {
-    expandedIndex = null;
-
     if (widget.indicatorsRepo != null) {
       final int index = widget.indicatorsRepo!.items.indexOf(config);
       widget.indicatorsRepo!.removeAt(index);
@@ -682,15 +769,5 @@ abstract class _ChartState extends State<Chart> with WidgetsBindingObserver {
       }
     }
 
-    // Check if the the expanded bottom indicator is moved/removed.
-    if (expandedIndex != null &&
-        oldWidget.bottomConfigs.length != widget.bottomConfigs.length &&
-        expandedIndex! < (oldWidget.bottomConfigs.length)) {
-      final int? newIndex =
-          widget.bottomConfigs.indexOf(oldWidget.bottomConfigs[expandedIndex!]);
-      if (newIndex != expandedIndex) {
-        expandedIndex = newIndex == -1 ? null : newIndex;
-      }
-    }
   }
 }

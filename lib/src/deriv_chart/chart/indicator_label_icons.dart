@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// The set of icons used by the on-chart indicator label
-/// (`IndicatorLabelMobile`) - the eye (hide/unhide), reorder arrows, settings
+/// (`IndicatorLabel`) - the eye (hide/unhide), reorder arrows, settings
 /// (gear), delete (trash) and expand/collapse chevron.
 ///
 /// Every icon is an [IconData] and defaults to a Material icon, so the library

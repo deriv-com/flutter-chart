@@ -8,6 +8,8 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_series/data_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/marker_series.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/chart_object.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/indicator_label_icons.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/panel_size/panel_size_repository.dart';
 import 'package:deriv_chart/src/deriv_chart/drawing_tool_chart/drawing_tools.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_controller.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/crosshair/crosshair_variant.dart';
@@ -19,6 +21,7 @@ import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'interactive_layer/interactive_layer_behaviours/interactive_layer_behaviour.dart';
 import 'interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
@@ -66,11 +69,26 @@ class DerivChart extends StatefulWidget {
     this.crosshairVariant = CrosshairVariant.smallScreen,
     this.interactiveLayerBehaviour,
     this.useDrawingToolsV2 = false,
+    this.panelSizeRepo,
+    this.indicatorLabelIcons,
     Key? key,
   }) : super(key: key);
 
   /// Whether to use the new drawing tools v2 or not.
   final bool useDrawingToolsV2;
+
+  /// Persists the relative sizes of the main chart and bottom indicator
+  /// panels as the user drags the dividers between them.
+  ///
+  /// When omitted this widget creates and owns one, backed by
+  /// `SharedPreferences`, so panel sizes survive a reload out of the box.
+  final PanelSizeRepository? panelSizeRepo;
+
+  /// Icons used by the on-chart indicator labels (eye, reorder arrows,
+  /// settings, delete and the expand/collapse chevron).
+  ///
+  /// Any icon left unset falls back to its Material default.
+  final IndicatorLabelIcons? indicatorLabelIcons;
 
   /// Chart's main data series
   final DataSeries<Tick> mainSeries;
@@ -208,6 +226,8 @@ class _DerivChartState extends State<DerivChart> {
 
   late AddOnsRepository<DrawingToolConfig> _drawingToolsRepo;
 
+  final PanelSizeRepository _panelSizeRepo = PanelSizeRepository();
+
   final DrawingTools _drawingTools = DrawingTools();
 
   late final InteractiveLayerBehaviour _interactiveLayerBehaviour;
@@ -226,6 +246,23 @@ class _DerivChartState extends State<DerivChart> {
     _initRepos();
   }
 
+  @override
+  void dispose() {
+    // Only dispose the repo we created ourselves. When the host app supplies
+    // its own [PanelSizeRepository] it owns that instance's lifecycle.
+    if (widget.panelSizeRepo == null) {
+      _panelSizeRepo.dispose();
+    }
+    super.dispose();
+  }
+
+  /// Loads saved panel sizes, if the host app hasn't supplied its own
+  /// [PanelSizeRepository].
+  Future<void> _loadPanelSizes() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    _panelSizeRepo.loadFromPrefs(prefs);
+  }
+
   void _initRepos() {
     _indicatorsRepo = AddOnsRepository<IndicatorConfig>(
       createAddOn: (Map<String, dynamic> map) => IndicatorConfig.fromJson(map),
@@ -239,6 +276,12 @@ class _DerivChartState extends State<DerivChart> {
       onEditCallback: (_) {},
       sharedPrefKey: widget.activeSymbol,
     );
+
+    if (widget.panelSizeRepo == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _loadPanelSizes();
+      });
+    }
   }
 
   @override
@@ -283,6 +326,8 @@ class _DerivChartState extends State<DerivChart> {
                 annotations: widget.annotations,
                 showCrosshair: widget.showCrosshair,
                 indicatorsRepo: widget.indicatorsRepo ?? _indicatorsRepo,
+                panelSizeRepo: widget.panelSizeRepo ?? _panelSizeRepo,
+                indicatorLabelIcons: widget.indicatorLabelIcons,
                 msPerPx: widget.msPerPx,
                 minIntervalWidth: widget.minIntervalWidth,
                 maxIntervalWidth: widget.maxIntervalWidth,
