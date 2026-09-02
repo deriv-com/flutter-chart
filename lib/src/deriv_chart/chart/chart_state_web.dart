@@ -15,21 +15,32 @@ class _ChartStateWeb extends _ChartState {
 
     final Repository<IndicatorConfig>? repository = widget.indicatorsRepo;
 
-    // Bottom (non-overlay) indicators, in repo order, keeping their true
-    // index within `repository.items` (needed for hidden-status lookups).
+    // The repository is the source of truth whenever the host supplies one -
+    // it is what carries hidden status. `Chart` also accepts plain
+    // `overlayConfigs`/`bottomConfigs` with no repository at all, and those
+    // hosts still get their indicators drawn; they simply have nowhere to
+    // record a hidden state, so nothing is hidden.
+    final List<IndicatorConfig> bottomPanelConfigs = repository != null
+        ? <IndicatorConfig>[
+            for (final IndicatorConfig config in repository.items)
+              if (!config.isOverlay) config
+          ]
+        : widget.bottomConfigs;
+
+    // Each panel's true index within `repository.items`, for hidden-status
+    // lookups. Empty when there is no repository.
     final List<int> bottomRepoIndices = <int>[
       if (repository != null)
         for (int i = 0; i < repository.items.length; i++)
           if (!repository.items[i].isOverlay) i
     ];
 
-    // Every bottom indicator's key, visible or hidden, in repo order. Keeping
+    // Every bottom indicator's key, visible or hidden, in order. Keeping
     // hidden ones in this list is what preserves their stored fraction while
     // hidden (see [syncPanelFractions]), so unhiding restores the exact size
     // the panel had before.
-    final List<String> allBottomIndicatorKeys = bottomRepoIndices
-        .map((int i) => _panelKeyFor(repository!.items[i]))
-        .toList();
+    final List<String> allBottomIndicatorKeys =
+        bottomPanelConfigs.map(_panelKeyFor).toList();
 
     // One flat, ordered chain covering the main chart and every bottom panel,
     // so a resize can cascade past a panel already at its minimum height into
@@ -51,6 +62,11 @@ class _ChartStateWeb extends _ChartState {
     // Overlay indicators are drawn on the main chart, so a hidden one is
     // simply left out of the series list; its label stays (see
     // [_buildOverlayIndicatorsLabels]) so it can be unhidden again.
+    //
+    // Without a repository the series already built from `overlayConfigs` are
+    // used as they are. The two sources are deliberately never merged:
+    // `DerivChart` derives `overlayConfigs` *from* the repository it also
+    // passes, so combining them would draw every overlay twice.
     final List<Series> visibleOverlaySeries = <Series>[];
     if (repository != null) {
       for (int i = 0; i < repository.items.length; i++) {
@@ -62,6 +78,8 @@ class _ChartStateWeb extends _ChartState {
           IndicatorInput(widget.mainSeries.input, widget.granularity),
         ));
       }
+    } else {
+      visibleOverlaySeries.addAll(overlaySeries ?? const <Series>[]);
     }
 
     return LayoutBuilder(
@@ -123,10 +141,14 @@ class _ChartStateWeb extends _ChartState {
           ),
         ];
 
-        int position = 0;
-        for (final int repoIndex in bottomRepoIndices) {
-          final IndicatorConfig config = repository!.items[repoIndex];
-          final bool isHidden = repository.getHiddenStatus(repoIndex);
+        for (int position = 0;
+            position < bottomPanelConfigs.length;
+            position++) {
+          final IndicatorConfig config = bottomPanelConfigs[position];
+          final int repoIndex =
+              repository != null ? bottomRepoIndices[position] : -1;
+          final bool isHidden =
+              repository != null && repository.getHiddenStatus(repoIndex);
           final String key = _panelKeyFor(config);
 
           final Series series = config.getSeries(
@@ -192,8 +214,6 @@ class _ChartStateWeb extends _ChartState {
                 ),
               ),
             );
-
-          position++;
         }
 
         return Column(children: children);

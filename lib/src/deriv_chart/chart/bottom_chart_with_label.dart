@@ -14,9 +14,11 @@ import 'data_visualization/chart_series/series.dart';
 import 'indicator_label_icons.dart';
 import 'x_axis/x_axis_model.dart';
 
-/// Mobile version of the chart to add the bottom indicators too.
+/// A bottom indicator's panel, rendered together with its [IndicatorLabel].
+///
+/// Used by both platforms - the label and its actions are identical on each.
 class BottomChartWithLabel extends BasicChart {
-  /// Initializes a bottom chart mobile.
+  /// Initializes a bottom indicator panel with its label.
   const BottomChartWithLabel({
     required Series series,
     required this.granularity,

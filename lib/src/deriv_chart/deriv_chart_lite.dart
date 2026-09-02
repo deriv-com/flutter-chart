@@ -27,9 +27,13 @@ import 'interactive_layer/interactive_layer_behaviours/interactive_layer_behavio
 import 'interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import 'interactive_layer/interactive_layer_behaviours/interactive_layer_mobile_behaviour.dart';
 
-/// A lite version of [DerivChart] that does not import dialog or
-/// shared_preferences dependencies, keeping the web bundle smaller for
-/// consumers that manage their own [indicatorsRepo] and [drawingToolsRepo].
+/// A lite version of [DerivChart] that does not import dialog dependencies,
+/// keeping the web bundle smaller for consumers that manage their own
+/// [indicatorsRepo] and [drawingToolsRepo].
+///
+/// Panel-size persistence is the one exception: leaving [panelSizeRepo] unset
+/// makes this widget create its own repository backed by `shared_preferences`.
+/// Supply a [panelSizeRepo] to control that yourself.
 class DerivChart extends StatefulWidget {
   /// Initializes
   const DerivChart({
