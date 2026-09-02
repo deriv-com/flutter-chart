@@ -1,30 +1,6 @@
 part of 'chart.dart';
 
 class _ChartStateMobile extends _ChartState {
-  /// Panel keys (see [_panelKeyFor]) of indicator labels currently expanded to
-  /// show their action buttons. Keyed by panel key - rather than held as local
-  /// widget state - so an indicator's expanded/collapsed state follows it
-  /// across reorders, hides and the frequent live-tick rebuilds, and never
-  /// gets attached to the wrong indicator. Labels default to collapsed (absent
-  /// from this set).
-  final Set<String> _expandedLabelKeys = <String>{};
-
-  bool _isLabelExpanded(IndicatorConfig config) =>
-      _expandedLabelKeys.contains(_panelKeyFor(config));
-
-  void _toggleLabelExpanded(IndicatorConfig config) {
-    final String key = _panelKeyFor(config);
-    setState(() {
-      if (!_expandedLabelKeys.remove(key)) {
-        _expandedLabelKeys.add(key);
-      }
-    });
-  }
-
-  /// The indicator-label icons supplied by the host app, or Material defaults.
-  IndicatorLabelIcons get _labelIcons =>
-      widget.indicatorLabelIcons ?? const IndicatorLabelIcons();
-
   @override
   Widget buildChartsLayout(
     BuildContext context,
@@ -107,15 +83,13 @@ class _ChartStateMobile extends _ChartState {
         final int indexInBottomConfigs =
             referenceIndexOf(widget.bottomConfigs, config);
 
-        final Widget bottomChart = BottomChartMobile(
+        final Widget bottomChart = BottomChartWithLabel(
           series: series,
           isHidden: isHidden,
           isExpanded: _isLabelExpanded(config),
           granularity: widget.granularity,
           pipSize: config.pipSize,
-          title:
-              '${config.shortTitle} ${config.number > 0 ? config.number : ''}'
-              '${config.configSummary.isEmpty ? '' : ' (${config.configSummary})'}',
+          title: _indicatorLabelTitle(config),
           currentTickAnimationDuration: currentTickAnimationDuration,
           quoteBoundsAnimationDuration: quoteBoundsAnimationDuration,
           bottomChartTitleMargin: const EdgeInsets.only(left: Dimens.margin04),
@@ -286,64 +260,6 @@ class _ChartStateMobile extends _ChartState {
         ),
       );
 
-  int referenceIndexOf(List<dynamic> list, dynamic element) {
-    for (int i = 0; i < list.length; i++) {
-      if (identical(list[i], element)) {
-        return i;
-      }
-    }
-    return -1;
-  }
-
-  void _onIndicatorHideToggleTapped(
-    Repository<IndicatorConfig>? repository,
-    int index,
-  ) {
-    repository?.updateHiddenStatus(
-      index: index,
-      hidden: !repository.getHiddenStatus(index),
-    );
-  }
-
   double _getBottomIndicatorsSectionHeightFraction(int bottomIndicatorsCount) =>
       1 - (0.65 - 0.125 * (bottomIndicatorsCount - 1));
-
-  Widget _buildOverlayIndicatorsLabels() {
-    final List<Widget> overlayIndicatorsLabels = <Widget>[];
-    if (widget.indicatorsRepo != null) {
-      for (int i = 0; i < widget.indicatorsRepo!.items.length; i++) {
-        final IndicatorConfig config = widget.indicatorsRepo!.items[i];
-        if (!config.isOverlay) {
-          continue;
-        }
-
-        overlayIndicatorsLabels.add(
-          Padding(
-            padding: const EdgeInsets.only(bottom: Dimens.margin04),
-            child: IndicatorLabelMobile(
-              title:
-                  '${config.shortTitle} ${config.number > 0 ? config.number : ''}'
-                  '${config.configSummary.isEmpty ? '' : ' (${config.configSummary})'}',
-              isExpanded: _isLabelExpanded(config),
-              showMoveUpIcon: false,
-              showMoveDownIcon: false,
-              isHidden: widget.indicatorsRepo?.getHiddenStatus(i) ?? false,
-              icons: _labelIcons,
-              onExpandToggle: () => _toggleLabelExpanded(config),
-              onHideUnhideToggle: () {
-                _onIndicatorHideToggleTapped(widget.indicatorsRepo, i);
-              },
-              onEdit: () => _onEdit(config),
-              onRemove: () => _onRemove(config),
-            ),
-          ),
-        );
-      }
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: overlayIndicatorsLabels,
-    );
-  }
 }

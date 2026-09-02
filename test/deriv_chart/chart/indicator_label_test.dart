@@ -1,4 +1,4 @@
-import 'package:deriv_chart/src/deriv_chart/chart/bottom_chart_mobile.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/bottom_chart_with_label.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/indicator_label_icons.dart';
 import 'package:deriv_chart/src/theme/chart_default_light_theme.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
@@ -15,12 +15,12 @@ void main() {
         ),
       );
 
-  group('IndicatorLabelMobile', () {
+  group('IndicatorLabel', () {
     testWidgets('collapsed shows only the title and a chevron, no actions',
         (WidgetTester tester) async {
       await tester.pumpWidget(
         wrap(
-          const IndicatorLabelMobile(
+          const IndicatorLabel(
             title: 'RSI (14, C, Y)',
             isExpanded: false,
             showMoveUpIcon: false,
@@ -44,7 +44,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         wrap(
-          IndicatorLabelMobile(
+          IndicatorLabel(
             title: 'MA (50, C, MA, 0)',
             isExpanded: true,
             showMoveUpIcon: false,
@@ -67,7 +67,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         wrap(
-          IndicatorLabelMobile(
+          IndicatorLabel(
             title: 'MACD (12, 26, 9)',
             isExpanded: true,
             showMoveUpIcon: true,
@@ -87,7 +87,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         wrap(
-          IndicatorLabelMobile(
+          IndicatorLabel(
             title: 'RSI',
             isExpanded: true,
             showMoveUpIcon: false,
@@ -108,7 +108,7 @@ void main() {
       int toggles = 0;
       await tester.pumpWidget(
         wrap(
-          IndicatorLabelMobile(
+          IndicatorLabel(
             title: 'RSI',
             isExpanded: false,
             showMoveUpIcon: false,
@@ -129,7 +129,7 @@ void main() {
       int toggles = 0;
       await tester.pumpWidget(
         wrap(
-          IndicatorLabelMobile(
+          IndicatorLabel(
             title: 'RSI',
             isExpanded: false,
             showMoveUpIcon: false,
@@ -157,7 +157,7 @@ void main() {
 
       await tester.pumpWidget(
         wrap(
-          IndicatorLabelMobile(
+          IndicatorLabel(
             title: 'MA',
             isExpanded: true,
             showMoveUpIcon: false,
@@ -188,7 +188,7 @@ void main() {
         (WidgetTester tester) async {
       await tester.pumpWidget(
         wrap(
-          IndicatorLabelMobile(
+          IndicatorLabel(
             title: 'MA',
             isExpanded: true,
             showMoveUpIcon: false,
@@ -212,7 +212,7 @@ void main() {
       int remove = 0;
       await tester.pumpWidget(
         wrap(
-          IndicatorLabelMobile(
+          IndicatorLabel(
             title: 'MA',
             isExpanded: true,
             showMoveUpIcon: false,

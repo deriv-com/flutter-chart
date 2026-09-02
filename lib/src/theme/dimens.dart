@@ -82,4 +82,10 @@ class Dimens {
   /// the way to the fraction minimum). Reserving at least this much space
   /// keeps the row from being clipped by its [ClipRect] in those cases.
   static const double indicatorTitleBarMinHeight = 44;
+
+  /// Default size of the action icons in an on-chart indicator label.
+  ///
+  /// Tuned against a phone-sized chart; a host rendering on a wider canvas
+  /// overrides `ChartTheme.indicatorLabelIconSize` rather than this.
+  static const double indicatorLabelIconSize = 16;
 }
