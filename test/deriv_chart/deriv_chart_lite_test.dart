@@ -53,7 +53,8 @@ void main() {
     final PanelSizeRepository repo = PanelSizeRepository();
     addTearDown(repo.dispose);
 
-    final Chart chart = await pumpAndFindChart(tester, app(panelSizeRepo: repo));
+    final Chart chart =
+        await pumpAndFindChart(tester, app(panelSizeRepo: repo));
 
     expect(chart.panelSizeRepo, same(repo));
   });
