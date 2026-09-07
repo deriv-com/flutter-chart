@@ -53,6 +53,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
     this.hasLine = true,
     this.labelShapeBackgroundColor = const Color(0xFF000000),
     this.lineColor = const Color(0xFF000000),
+    this.lastDigitTextStyle,
     TextStyle textStyle = const TextStyle(
       fontSize: 10,
       height: 1.3,
@@ -110,6 +111,18 @@ class HorizontalBarrierStyle extends BarrierStyle {
   /// Color of the line.
   final Color lineColor;
 
+  /// Style of the final character of the barrier's value label, when it should
+  /// be emphasised.
+  ///
+  /// Null — the default — leaves the whole value in [textStyle]. Setting it
+  /// splits the label into two runs: everything but the last character in
+  /// [textStyle], and the last character in this style, centred on the others
+  /// rather than sharing their baseline.
+  ///
+  /// Used for the current spot on digit contracts (Matches/Differs,
+  /// Over/Under, Even/Odd), whose outcome is decided by that digit alone.
+  final TextStyle? lastDigitTextStyle;
+
   /// Creates a copy of this object.
   HorizontalBarrierStyle copyWith({
     LabelShape? labelShape,
@@ -126,6 +139,7 @@ class HorizontalBarrierStyle extends BarrierStyle {
     bool? hasLine,
     Color? labelShapeBackgroundColor,
     Color? lineColor,
+    TextStyle? lastDigitTextStyle,
   }) =>
       HorizontalBarrierStyle(
         labelShape: labelShape ?? this.labelShape,
@@ -145,11 +159,13 @@ class HorizontalBarrierStyle extends BarrierStyle {
         labelShapeBackgroundColor:
             labelShapeBackgroundColor ?? this.labelShapeBackgroundColor,
         lineColor: lineColor ?? this.lineColor,
+        lastDigitTextStyle: lastDigitTextStyle ?? this.lastDigitTextStyle,
       );
 
   @override
   String toString() =>
-      '${super.toString()}, $hasBlinkingDot $labelShape $labelShapeBackgroundColor $lineColor';
+      '${super.toString()}, $hasBlinkingDot $labelShape $labelShapeBackgroundColor $lineColor '
+      '${lastDigitTextStyle?.toStringShort()}';
 }
 
 /// Vertical barrier style.

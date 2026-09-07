@@ -16,6 +16,10 @@ abstract class ChartTheme {
 
   TextStyle get currentSpotTextStyle;
 
+  /// Style of the current spot's last digit when it is emphasised.
+  /// See [currentSpotWithEmphasizedLastDigitStyle].
+  TextStyle get currentSpotLastDigitTextStyle;
+
   Color get gridLineColor;
 
   Color get gridTextColor;
@@ -126,6 +130,12 @@ abstract class ChartTheme {
 
   /// The style of the current tick indicator.
   HorizontalBarrierStyle get currentSpotStyle;
+
+  /// [currentSpotStyle] with the label's final digit emphasised.
+  ///
+  /// For digit contracts (Matches/Differs, Over/Under, Even/Odd), whose
+  /// outcome is decided by that digit alone.
+  HorizontalBarrierStyle get currentSpotWithEmphasizedLastDigitStyle;
 
   String get fontFamily;
 
