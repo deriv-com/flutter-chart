@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/callbacks.dart';
 import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactable_drawings/interactable_drawing.dart';
@@ -124,11 +126,18 @@ class _SelectedDrawingFloatingMenuState
               context.findRenderObject()?.parent as RenderBox?;
           final Size parentSize = ancestorBox?.size ?? screenSize;
 
-          // Constrain the position to keep the menu within the parent boundaries
-          final constrainedX =
-              newPosition.dx.clamp(0.0, parentSize.width - _menuSize.width);
-          final constrainedY =
-              newPosition.dy.clamp(0.0, parentSize.height - _menuSize.height);
+          // Constrain the position to keep the menu within the parent boundaries.
+          //
+          // The upper bounds must never drop below the lower bound (0.0):
+          // `num.clamp` throws an ArgumentError when `lower > upper`, which is
+          // exactly what happens when the parent is smaller than the menu on
+          // an axis (a keyboard squeezing the chart, split-screen / pop-up
+          // view, very small charts). In that case the menu cannot fit, so it
+          // is pinned to the parent's origin instead.
+          final double maxX = math.max(0, parentSize.width - _menuSize.width);
+          final double maxY = math.max(0, parentSize.height - _menuSize.height);
+          final constrainedX = newPosition.dx.clamp(0.0, maxX);
+          final constrainedY = newPosition.dy.clamp(0.0, maxY);
 
           final constrainedPosition = Offset(constrainedX, constrainedY);
 
