@@ -26,6 +26,13 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
   /// Right margin.
   static const double rightMargin = 4;
 
+  /// Gap between the value label and its emphasised last character, when
+  /// [HorizontalBarrierStyle.lastDigitTextStyle] is set.
+  ///
+  /// Public so that width measurements of the label — see
+  /// `calculateCurrentTickWidth` — stay in step with what is painted.
+  static const double lastDigitGap = 1;
+
   /// Distance between title area and label area.
   static const double _distanceBetweenTitleAndLabel = 16;
 
@@ -117,9 +124,11 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
       });
     }
 
-    final TextPainter valuePainter = makeTextPainter(
+    final DigitLabelTextPainter valuePainter = DigitLabelTextPainter(
       animatedValue.toStringAsFixed(chartConfig.pipSize),
-      style.textStyle,
+      style: style.textStyle,
+      trailingStyle: style.lastDigitTextStyle,
+      trailingGap: lastDigitGap,
     );
     final Rect labelArea = Rect.fromCenter(
       center: Offset(
@@ -184,11 +193,7 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
     // Label.
     paintLabelBackground(canvas, labelArea, style.labelShape, _paint,
         labelBackgroundColor: style.labelShapeBackgroundColor);
-    paintWithTextPainter(
-      canvas,
-      painter: valuePainter,
-      anchor: labelArea.center,
-    );
+    valuePainter.paint(canvas, center: labelArea.center);
 
     // Arrows.
     if (style.hasArrow) {

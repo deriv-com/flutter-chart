@@ -124,6 +124,29 @@ class TextStyles {
     height: 1.67, // lineHeight (20px) / fontSize (12px) = ~1.67
   );
 
+  /// The last digit of the current spot's price, when it is emphasised.
+  ///
+  /// Digit contracts (Matches/Differs, Over/Under, Even/Odd) settle on the
+  /// final digit of the quote, so the current spot's label renders that digit
+  /// larger and heavier than the rest of the price. Opted into per barrier via
+  /// [HorizontalBarrierStyle.lastDigitTextStyle]; the label leaves the rest of
+  /// the price in [currentSpotTextStyle].
+  ///
+  /// `height` does not affect where the digit lands — it is positioned by cap
+  /// height so that it reads as centred on the smaller digits rather than
+  /// hanging above their shared baseline.
+  static const TextStyle currentSpotLastDigitTextStyle = TextStyle(
+    fontFeatures: <FontFeature>[
+      FontFeature.liningFigures(),
+      FontFeature.tabularFigures(),
+    ],
+    fontFamily: appFontFamily,
+    fontSize: 16,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.w700,
+    height: 1.25, // lineHeight (20px) / fontSize (16px) = 1.25
+  );
+
   static const TextStyle crosshairInformationBoxTitleStyle = TextStyle(
     fontFeatures: <FontFeature>[
       FontFeature.liningFigures(),
