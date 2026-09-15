@@ -47,17 +47,28 @@ double calculateYAxisWidth(List<Tick> ticks, ChartTheme theme, int pipSize) {
 ///        The last tick in the list is used for the calculation.
 /// @param textStyle The text style to apply to the price label, which affects its width.
 /// @param pipSize The number of decimal places to display for price values.
+/// @param lastDigitTextStyle The style of the label's final digit when it is
+///        emphasised, mirroring [HorizontalBarrierStyle.lastDigitTextStyle].
+///        Null — the default — measures the whole price in [textStyle].
 /// @return The calculated width for the current tick's price label in logical pixels.
 double calculateCurrentTickWidth(
-    List<Tick> ticks, TextStyle textStyle, int pipSize) {
+  List<Tick> ticks,
+  TextStyle textStyle,
+  int pipSize, {
+  TextStyle? lastDigitTextStyle,
+}) {
   if (ticks.isEmpty) {
     return 60;
   } else {
-    final double width = labelWidth(
-      ticks.last.close,
-      textStyle,
-      pipSize,
-    );
+    // Laid out the same way `HorizontalBarrierPainter` lays out the label, so
+    // an emphasised last digit is measured with its own size and gap rather
+    // than under-reported at the price's own text style.
+    final double width = DigitLabelTextPainter(
+      ticks.last.close.toStringAsFixed(pipSize),
+      style: textStyle,
+      trailingStyle: lastDigitTextStyle,
+      trailingGap: HorizontalBarrierPainter.lastDigitGap,
+    ).width;
 
     return width + 4 * 2 + 3;
   }

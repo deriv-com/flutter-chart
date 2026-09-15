@@ -16,6 +16,10 @@ abstract class ChartTheme {
 
   TextStyle get currentSpotTextStyle;
 
+  /// Style of the current spot's last digit when it is emphasised.
+  /// See [currentSpotWithEmphasizedLastDigitStyle].
+  TextStyle get currentSpotLastDigitTextStyle;
+
   Color get gridLineColor;
 
   Color get gridTextColor;
@@ -82,6 +86,16 @@ abstract class ChartTheme {
 
   double get crosshairInformationBoxContainerGlassBackgroundBlur;
 
+  /// Size of the action icons in the on-chart indicator labels.
+  ///
+  /// The default suits a phone-sized chart; a wider canvas makes the same
+  /// absolute size read as much smaller against its surroundings, so a host
+  /// rendering on one will usually want to raise this.
+  double get indicatorLabelIconSize;
+
+  /// Text style of the title in the on-chart indicator labels.
+  TextStyle get indicatorLabelTextStyle;
+
   TextStyle get crosshairInformationBoxTitleStyle;
 
   TextStyle get crosshairInformationBoxQuoteStyle;
@@ -116,6 +130,12 @@ abstract class ChartTheme {
 
   /// The style of the current tick indicator.
   HorizontalBarrierStyle get currentSpotStyle;
+
+  /// [currentSpotStyle] with the label's final digit emphasised.
+  ///
+  /// For digit contracts (Matches/Differs, Over/Under, Even/Odd), whose
+  /// outcome is decided by that digit alone.
+  HorizontalBarrierStyle get currentSpotWithEmphasizedLastDigitStyle;
 
   String get fontFamily;
 

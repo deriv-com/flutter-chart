@@ -18,6 +18,22 @@ abstract class ChartDefaultTheme implements ChartTheme {
   TextStyle get currentSpotTextStyle => TextStyles.currentSpotTextStyle;
 
   @override
+  TextStyle get currentSpotLastDigitTextStyle =>
+      TextStyles.currentSpotLastDigitTextStyle;
+
+  // Derived from `currentSpotStyle` rather than rebuilt, so the two cannot
+  // drift: the emphasised variant differs only in the extra text style, and
+  // takes its colour from the same token as the rest of the label.
+  @override
+  HorizontalBarrierStyle get currentSpotWithEmphasizedLastDigitStyle =>
+      currentSpotStyle.copyWith(
+        lastDigitTextStyle: textStyle(
+          textStyle: currentSpotLastDigitTextStyle,
+          color: currentSpotTextColor,
+        ),
+      );
+
+  @override
   TextStyle get gridTextStyle => TextStyles.gridTextStyle;
 
   @override
@@ -103,6 +119,15 @@ abstract class ChartDefaultTheme implements ChartTheme {
   @override
   double get crosshairInformationBoxContainerGlassBackgroundBlur =>
       Dimens.crosshairInformationBoxContainerGlassBackgroundBlur;
+
+  @override
+  double get indicatorLabelIconSize => Dimens.indicatorLabelIconSize;
+
+  @override
+  TextStyle get indicatorLabelTextStyle => textStyle(
+        textStyle: TextStyles.caption,
+        color: base01Color,
+      );
 
   @override
   TextStyle get crosshairInformationBoxTitleStyle =>

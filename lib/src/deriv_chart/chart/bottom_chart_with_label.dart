@@ -5,7 +5,6 @@ import 'package:deriv_chart/src/models/chart_config.dart';
 import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/colors.dart';
 import 'package:deriv_chart/src/theme/dimens.dart';
-import 'package:deriv_chart/src/theme/text_styles.dart';
 import 'package:deriv_chart/src/widgets/bottom_indicator_title.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,10 +14,12 @@ import 'data_visualization/chart_series/series.dart';
 import 'indicator_label_icons.dart';
 import 'x_axis/x_axis_model.dart';
 
-/// Mobile version of the chart to add the bottom indicators too.
-class BottomChartMobile extends BasicChart {
-  /// Initializes a bottom chart mobile.
-  const BottomChartMobile({
+/// A bottom indicator's panel, rendered together with its [IndicatorLabel].
+///
+/// Used by both platforms - the label and its actions are identical on each.
+class BottomChartWithLabel extends BasicChart {
+  /// Initializes a bottom indicator panel with its label.
+  const BottomChartWithLabel({
     required Series series,
     required this.granularity,
     required this.title,
@@ -85,10 +86,10 @@ class BottomChartMobile extends BasicChart {
   final IndicatorLabelIcons icons;
 
   @override
-  _BottomChartMobileState createState() => _BottomChartMobileState();
+  _BottomChartWithLabelState createState() => _BottomChartWithLabelState();
 }
 
-class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
+class _BottomChartWithLabelState extends BasicChartState<BottomChartWithLabel> {
   ChartTheme get theme => context.read<ChartTheme>();
 
   @override
@@ -113,7 +114,7 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
                   Positioned(
                     top: 4,
                     left: widget.bottomChartTitleMargin?.left ?? 10,
-                    child: _buildIndicatorLabelMobile(),
+                    child: _buildIndicatorLabel(),
                   )
                 ],
               ),
@@ -131,7 +132,7 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
         ),
       );
 
-  Widget _buildIndicatorLabelMobile() => IndicatorLabelMobile(
+  Widget _buildIndicatorLabel() => IndicatorLabel(
         title: widget.title,
         isExpanded: widget.isExpanded,
         showMoveUpIcon: widget.showMoveUpIcon,
@@ -151,12 +152,12 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
           padding: EdgeInsets.only(
             left: widget.bottomChartTitleMargin?.left ?? 10,
           ),
-          child: _buildIndicatorLabelMobile(),
+          child: _buildIndicatorLabel(),
         ),
       );
 
   @override
-  void didUpdateWidget(BottomChartMobile oldChart) {
+  void didUpdateWidget(BottomChartWithLabel oldChart) {
     super.didUpdateWidget(oldChart);
 
     xAxis.update(
@@ -179,9 +180,9 @@ class _BottomChartMobileState extends BasicChartState<BottomChartMobile> {
 /// Expanding/collapsing only affects which action buttons are shown; it never
 /// hides the indicator's data - that is controlled independently by the eye
 /// (hide/unhide) button.
-class IndicatorLabelMobile extends StatelessWidget {
+class IndicatorLabel extends StatelessWidget {
   /// Initializes a bottom chart indicator label.
-  const IndicatorLabelMobile({
+  const IndicatorLabel({
     required this.title,
     required this.isExpanded,
     required this.showMoveUpIcon,
@@ -256,13 +257,7 @@ class IndicatorLabelMobile extends StatelessWidget {
                 behavior: HitTestBehavior.opaque,
                 child: BottomIndicatorTitle(
                   title,
-                  theme.textStyle(
-                    color: theme.base01Color,
-                    textStyle: theme.textStyle(
-                      textStyle: TextStyles.caption,
-                      color: theme.base01Color,
-                    ),
-                  ),
+                  theme.indicatorLabelTextStyle,
                 ),
               ),
               // The action buttons slide in/out horizontally as the label is
@@ -346,7 +341,7 @@ class IndicatorLabelMobile extends StatelessWidget {
               turns: isExpanded ? 0.5 : 0.0,
               child: Icon(
                 icons.expandCollapse,
-                size: 16,
+                size: context.read<ChartTheme>().indicatorLabelIconSize,
                 color: context.read<ChartTheme>().base01Color,
               ),
             ),
@@ -373,7 +368,7 @@ class IndicatorLabelMobile extends StatelessWidget {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap),
             icon: Icon(
               iconData,
-              size: 16,
+              size: context.read<ChartTheme>().indicatorLabelIconSize,
               color: context.read<ChartTheme>().base01Color,
             ),
             onPressed: onPressed,
