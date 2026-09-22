@@ -14,6 +14,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../drawing_tool_chart/drawing_tool_chart.dart';
@@ -22,6 +23,9 @@ import '../interactive_layer/interactive_layer_behaviours/interactive_layer_beha
 import '../interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import 'basic_chart.dart';
 import 'multiple_animated_builder.dart';
+import 'data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_drag_controller.dart';
+import 'data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_drag_overlay.dart';
+import 'data_visualization/annotations/barriers/accumulators_barriers/accumulators_indicator.dart';
 import 'data_visualization/annotations/chart_annotation.dart';
 import 'data_visualization/chart_data.dart';
 import 'data_visualization/chart_series/data_series.dart';
@@ -178,6 +182,18 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
 
   late final InteractiveLayerBehaviour _interactiveLayerBehaviour;
 
+  /// X-scroll blocking state to restore when a barrier drag ends — a consumer
+  /// may own it, so it must not be blindly reset to false.
+  bool _xScrollBlockedBeforeBarrierDrag = false;
+
+  /// The accumulators annotation the user is allowed to drag, if any.
+  AccumulatorIndicator? get _draggableAccumulator =>
+      widget.annotations?.whereType<AccumulatorIndicator>().firstWhereOrNull(
+            (AccumulatorIndicator indicator) =>
+                (indicator.dragController?.enabled ?? false) &&
+                indicator.activeContract == null,
+          );
+
   @override
   double get verticalPadding {
     if (canvasSize == null) {
@@ -295,6 +311,20 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
       if (data.didUpdate(oldData)) {
         dataUpdated = true;
       }
+    }
+
+    // A barrier drag latches its preview past the drag end so the band does
+    // not rubber-band back to the pre-drag width while the consumer's commit
+    // is in flight. Release it as soon as the model has actually moved.
+    final AccumulatorIndicator? accumulator = _draggableAccumulator;
+    if (accumulator?.dragController?.releaseLatchIfModelMoved(
+          highBarrier: accumulator.highBarrier,
+          lowBarrier: accumulator.lowBarrier,
+        ) ??
+        false) {
+      // Without this the just-released preview re-exposes the stale
+      // previousObject lerp, and the rubber-band comes back for one frame.
+      completeCurrentTickAnimation();
     }
 
     // If only an annotation advanced, super() did not start the animation —
@@ -456,6 +486,10 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                   _buildInteractiveLayer(context, xAxis)
                 else if (widget.drawingTools != null)
                   _buildDrawingToolChart(widget.drawingTools!),
+                if (_draggableAccumulator != null)
+                  _buildAccumulatorBarrierDragOverlay(
+                    _draggableAccumulator!.dragController!,
+                  ),
                 if (widget.showScrollToLastTickButton &&
                     _isScrollToLastTickAvailable)
                   Positioned(
@@ -528,6 +562,35 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
             ? xAxis.width!
             : xAxis.xFromEpoch(widget._mainSeries.input.first.epoch),
         loadingAnimationColor: widget.loadingAnimationColor,
+      );
+
+  Widget _buildAccumulatorBarrierDragOverlay(
+    AccumulatorBarrierDragController controller,
+  ) =>
+      AccumulatorBarrierDragOverlay(
+        controller: controller,
+        quoteFromCanvasY: chartQuoteFromCanvasY,
+        graphAreaWidth: xAxis.graphAreaWidth,
+        // A full setState is the right lever here: it re-runs
+        // updateVisibleData() -> recalculateMinMax() and
+        // _updateQuoteBoundTargets() so the Y bounds follow the preview.
+        // Rebuilding only the annotations' AnimatedBuilder would skip both.
+        // The preview snaps, so this fires a handful of times per drag.
+        onInteractionChanged: () {
+          if (mounted) {
+            setState(() {});
+          }
+        },
+        onDragBegin: () {
+          crosshairController.onExit(const PointerExitEvent());
+          _xScrollBlockedBeforeBarrierDrag = xAxis.isScrollBlocked;
+          // A second finger opens a new gesture arena the barrier recognizer
+          // does not join, so the chart's scale recognizer could still pan.
+          xAxis.isScrollBlocked = true;
+          completeCurrentTickAnimation();
+        },
+        onDragFinish: () =>
+            xAxis.isScrollBlocked = _xScrollBlockedBeforeBarrierDrag,
       );
 
   Widget _buildAnnotations() => LayoutBuilder(
