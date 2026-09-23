@@ -30,6 +30,7 @@ AccumulatorIndicator _buildIndicator({
     );
 
 void main() {
+  _placementTests();
   _ladderTests();
   _transitionTests();
 
@@ -189,7 +190,7 @@ void main() {
     test('hits a grip', () {
       expect(
         geometry.hitTest(
-          const Offset(150, 100),
+          const Offset(260, 100),
           lineTolerance: 2,
           minTouchTarget: Size.zero,
         ),
@@ -197,7 +198,7 @@ void main() {
       );
       expect(
         geometry.hitTest(
-          const Offset(150, 200),
+          const Offset(260, 200),
           lineTolerance: 2,
           minTouchTarget: Size.zero,
         ),
@@ -236,7 +237,7 @@ void main() {
     });
 
     test('inflates small grips to the minimum touch target', () {
-      const Offset justBelowTheGrip = Offset(150, 115);
+      const Offset justBelowTheGrip = Offset(260, 118);
 
       expect(
         geometry.hitTest(
@@ -321,8 +322,8 @@ AccumulatorBarrierGeometry _geometry({double committedSpotDistance = 3}) =>
       rightEdgeX: 300,
       highBarrierY: 100,
       lowBarrierY: 200,
-      highGripRect: const Rect.fromLTWH(135, 94, 31, 12),
-      lowGripRect: const Rect.fromLTWH(135, 194, 31, 12),
+      highGripRect: const Rect.fromLTWH(232, 91, 56, 18),
+      lowGripRect: const Rect.fromLTWH(232, 191, 56, 18),
       bandCenterQuote: 100,
       committedBarrierSpotDistance: committedSpotDistance,
     );
@@ -336,6 +337,65 @@ const List<AccumulatorGrowthRateStep> _tightLadder =
   AccumulatorGrowthRateStep(growthRate: 0.03, barrierSpotDistance: 0.5484),
   AccumulatorGrowthRateStep(growthRate: 0.05, barrierSpotDistance: 0.4966),
 ];
+
+void _placementTests() {
+  group('AccumulatorBarrierGeometry.gripCenterX', () {
+    const AccumulatorBarrierGripStyle style = AccumulatorBarrierGripStyle();
+
+    test('pins the grip against the right of the plotting area', () {
+      // 56 wide, 12 from the edge: centre sits 40 in from 400.
+      expect(
+        AccumulatorBarrierGeometry.gripCenterX(
+          barrierX: 100,
+          rightEdgeX: 400,
+          style: style,
+        ),
+        360,
+      );
+    });
+
+    test('ignores where the band starts while there is room', () {
+      expect(
+        AccumulatorBarrierGeometry.gripCenterX(
+          barrierX: 200,
+          rightEdgeX: 400,
+          style: style,
+        ),
+        AccumulatorBarrierGeometry.gripCenterX(
+          barrierX: 10,
+          rightEdgeX: 400,
+          style: style,
+        ),
+      );
+    });
+
+    test('keeps the grip inside a band too narrow to hold it', () {
+      // Band starts at 360, so right-aligning would push the grip out its left
+      // edge; it is held at the band's start instead.
+      expect(
+        AccumulatorBarrierGeometry.gripCenterX(
+          barrierX: 360,
+          rightEdgeX: 400,
+          style: style,
+        ),
+        388,
+      );
+    });
+
+    test('follows the plotting area, not the full canvas', () {
+      // The Y-axis label strip is excluded, so a narrower plotting area moves
+      // the grip left with it.
+      expect(
+        AccumulatorBarrierGeometry.gripCenterX(
+          barrierX: 100,
+          rightEdgeX: 300,
+          style: style,
+        ),
+        260,
+      );
+    });
+  });
+}
 
 void _transitionTests() {
   group('AccumulatorBarrierDragController preview transition', () {

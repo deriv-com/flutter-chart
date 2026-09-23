@@ -260,6 +260,11 @@ class _AccumulatorBarrierDragOverlayState
 
   @override
   Widget build(BuildContext context) {
+    // The painter needs this to place the grips against the Y axis, and this is
+    // the only place the chart hands it over. Safe to do here: every build of
+    // this widget precedes the frame's paint.
+    widget.controller.publishGraphAreaWidth(widget.graphAreaWidth);
+
     _recognizer.updateCallbacks(
       hitTest: _hitTest,
       onBarrierDragStart: _handleDragStart,

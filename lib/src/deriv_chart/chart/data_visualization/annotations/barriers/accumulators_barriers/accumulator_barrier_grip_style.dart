@@ -10,13 +10,14 @@ import 'package:flutter/material.dart';
 class AccumulatorBarrierGripStyle {
   /// Initializes the style of the barrier grips.
   const AccumulatorBarrierGripStyle({
-    this.size = const Size(31, 12),
+    this.size = const Size(56, 18),
     this.borderRadius = 8,
-    this.fillColor = const Color(0xFFF6F7F8),
+    this.fillColor,
+    this.rightMargin = 12,
     this.borderWidth = 1,
     this.innerLineCount = 2,
-    this.innerLineInset = 4,
-    this.innerLineSpacing = 3,
+    this.innerLineInset = 9,
+    this.innerLineSpacing = 5,
     this.lineWidth = 1,
     this.highlightLineWidth = 2,
     this.bandOpacity = 0.08,
@@ -36,7 +37,17 @@ class AccumulatorBarrierGripStyle {
   final double borderRadius;
 
   /// Grip background colour.
-  final Color fillColor;
+  ///
+  /// Defaults to the chart's own background, so the grip reads as a cutout in
+  /// the band and follows the theme without the consumer having to say anything.
+  final Color? fillColor;
+
+  /// Gap between the grip's right edge and the right edge of the plotting area.
+  ///
+  /// The grips sit against the Y axis rather than in the middle of the band so
+  /// that the finger dragging them is nowhere near the barrier values it is
+  /// changing.
+  final double rightMargin;
 
   /// Stroke width of the grip outline. The colour follows the barrier colour.
   final double borderWidth;
@@ -96,6 +107,7 @@ class AccumulatorBarrierGripStyle {
     Size? size,
     double? borderRadius,
     Color? fillColor,
+    double? rightMargin,
     double? borderWidth,
     int? innerLineCount,
     double? innerLineInset,
@@ -115,6 +127,7 @@ class AccumulatorBarrierGripStyle {
         size: size ?? this.size,
         borderRadius: borderRadius ?? this.borderRadius,
         fillColor: fillColor ?? this.fillColor,
+        rightMargin: rightMargin ?? this.rightMargin,
         borderWidth: borderWidth ?? this.borderWidth,
         innerLineCount: innerLineCount ?? this.innerLineCount,
         innerLineInset: innerLineInset ?? this.innerLineInset,

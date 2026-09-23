@@ -1,5 +1,8 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
+import 'accumulator_barrier_grip_style.dart';
 import 'accumulator_barrier_side.dart';
 
 /// The on-canvas geometry of the Accumulators barriers, as resolved by
@@ -96,6 +99,21 @@ class AccumulatorBarrierGeometry {
 
     return null;
   }
+
+  /// Horizontal centre of a grip.
+  ///
+  /// Pinned near the right of the plotting area so a finger on a grip never
+  /// covers the barrier value it is changing, and pushed back inside the band
+  /// when the band is too narrow to hold the grip at that position.
+  static double gripCenterX({
+    required double barrierX,
+    required double rightEdgeX,
+    required AccumulatorBarrierGripStyle style,
+  }) =>
+      math.max(
+        barrierX + style.size.width / 2,
+        rightEdgeX - style.rightMargin - style.size.width / 2,
+      );
 
   AccumulatorBarrierSide _nearest(Offset offset) =>
       (offset.dy - highBarrierY).abs() <= (offset.dy - lowBarrierY).abs()

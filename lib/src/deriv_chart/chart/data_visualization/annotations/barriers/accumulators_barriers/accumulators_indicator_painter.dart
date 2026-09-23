@@ -435,7 +435,17 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
     );
 
     // Drag grips, and the geometry the drag overlay hit-tests against.
-    final double gripCenterX = (barrierX + labelArea.left) / 2;
+    //
+    // Pinned to the right of the plotting area rather than centred in the band,
+    // so a finger on a grip never covers the barrier value it is changing. The
+    // Y-axis label strip is excluded, and the grip is kept from spilling past
+    // the left edge of a very narrow band.
+    final double rightEdgeX = drag?.graphAreaWidth ?? size.width;
+    final double gripCenterX = AccumulatorBarrierGeometry.gripCenterX(
+      barrierX: barrierX,
+      rightEdgeX: rightEdgeX,
+      style: gripStyle,
+    );
     final Rect highGripRect = Rect.fromCenter(
       center: Offset(gripCenterX, highBarrierPosition.dy),
       width: gripStyle.size.width,
@@ -452,6 +462,7 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
         canvas,
         rect: highGripRect,
         color: color,
+        fillColor: gripStyle.fillColor ?? theme.backgroundColor,
         style: gripStyle,
         isEmphasized: drag!.hoveredSide == AccumulatorBarrierSide.high ||
             drag.draggedSide == AccumulatorBarrierSide.high,
@@ -460,6 +471,7 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
         canvas,
         rect: lowGripRect,
         color: color,
+        fillColor: gripStyle.fillColor ?? theme.backgroundColor,
         style: gripStyle,
         isEmphasized: drag.hoveredSide == AccumulatorBarrierSide.low ||
             drag.draggedSide == AccumulatorBarrierSide.low,
@@ -492,6 +504,7 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
     Canvas canvas, {
     required Rect rect,
     required Color color,
+    required Color fillColor,
     required AccumulatorBarrierGripStyle style,
     required bool isEmphasized,
   }) {
@@ -504,7 +517,7 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
       ..drawRRect(
         body,
         Paint()
-          ..color = style.fillColor
+          ..color = fillColor
           ..style = PaintingStyle.fill,
       )
       ..drawRRect(

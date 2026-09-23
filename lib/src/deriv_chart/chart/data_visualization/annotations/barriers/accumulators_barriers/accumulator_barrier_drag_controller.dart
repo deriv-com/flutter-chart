@@ -76,6 +76,9 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
   double? _previewTransitionFrom;
   double? _lastRenderedPreviewDistance;
 
+  /// Canvas width excluding the Y-axis labels, published by the drag overlay.
+  double? _graphAreaWidth;
+
   /// The ladder of growth rates the drag snaps to.
   ///
   /// Order does not matter; the nearest step by barrier distance always wins.
@@ -236,6 +239,19 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
   /// The geometry of the last painted frame, or `null` before the first paint.
   @internal
   AccumulatorBarrierGeometry? get geometry => _geometry;
+
+  /// Where the plotting area ends, so the grips can sit against the Y axis
+  /// rather than in the middle of the band. `null` until the overlay is built,
+  /// in which case the painter falls back to the full canvas width.
+  @internal
+  double? get graphAreaWidth => _graphAreaWidth;
+
+  /// Published by the overlay, which is the only part of this that the chart
+  /// hands a width to. Never notifies — it is read during the same frame's
+  /// paint.
+  @internal
+  // ignore: use_setters_to_change_properties
+  void publishGraphAreaWidth(double? width) => _graphAreaWidth = width;
 
   /// Records the geometry the painter just resolved.
   ///
