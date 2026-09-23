@@ -24,6 +24,8 @@ class AccumulatorBarrierGripStyle {
     this.mouseHitTolerance = 6,
     this.touchHitTolerance = 12,
     this.minTouchTarget = const Size(44, 44),
+    this.ladderTravel = 160,
+    this.maxDragGain = 20,
     this.cursor = SystemMouseCursors.resizeRow,
   });
 
@@ -72,6 +74,20 @@ class AccumulatorBarrierGripStyle {
   /// reachable on touch devices.
   final Size minTouchTarget;
 
+  /// Pointer travel, in logical pixels, that should cover the whole ladder.
+  ///
+  /// Real barrier distances can sit very close together — the accumulators
+  /// ladder spans only ~26% from its tightest rung to its widest — so mapping
+  /// the pointer straight onto the barrier would put every growth rate within a
+  /// few pixels of travel. The drag is scaled so the full ladder takes roughly
+  /// this much movement instead; the band still paints at the true barrier
+  /// positions, so the grip no longer tracks the finger exactly.
+  final double ladderTravel;
+
+  /// Upper bound on that scaling, so a degenerately tight ladder cannot make the
+  /// drag effectively unresponsive.
+  final double maxDragGain;
+
   /// Cursor shown while a barrier or grip is hovered.
   final MouseCursor cursor;
 
@@ -91,6 +107,8 @@ class AccumulatorBarrierGripStyle {
     double? mouseHitTolerance,
     double? touchHitTolerance,
     Size? minTouchTarget,
+    double? ladderTravel,
+    double? maxDragGain,
     MouseCursor? cursor,
   }) =>
       AccumulatorBarrierGripStyle(
@@ -108,6 +126,8 @@ class AccumulatorBarrierGripStyle {
         mouseHitTolerance: mouseHitTolerance ?? this.mouseHitTolerance,
         touchHitTolerance: touchHitTolerance ?? this.touchHitTolerance,
         minTouchTarget: minTouchTarget ?? this.minTouchTarget,
+        ladderTravel: ladderTravel ?? this.ladderTravel,
+        maxDragGain: maxDragGain ?? this.maxDragGain,
         cursor: cursor ?? this.cursor,
       );
 }

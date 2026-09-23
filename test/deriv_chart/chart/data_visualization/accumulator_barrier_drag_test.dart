@@ -30,6 +30,9 @@ AccumulatorIndicator _buildIndicator({
     );
 
 void main() {
+  _ladderTests();
+  _transitionTests();
+
   group('AccumulatorBarrierDragController.nearestStep', () {
     late AccumulatorBarrierDragController controller;
 
@@ -323,3 +326,166 @@ AccumulatorBarrierGeometry _geometry({double committedSpotDistance = 3}) =>
       bandCenterQuote: 100,
       committedBarrierSpotDistance: committedSpotDistance,
     );
+
+/// A realistic ladder: the accumulators barrier offsets the API returns are
+/// nearly flat across growth rates, so the rungs sit ~6% apart rather than the
+/// 2x-per-rate spread a naive model would assume.
+const List<AccumulatorGrowthRateStep> _tightLadder =
+    <AccumulatorGrowthRateStep>[
+  AccumulatorGrowthRateStep(growthRate: 0.01, barrierSpotDistance: 0.6256),
+  AccumulatorGrowthRateStep(growthRate: 0.03, barrierSpotDistance: 0.5484),
+  AccumulatorGrowthRateStep(growthRate: 0.05, barrierSpotDistance: 0.4966),
+];
+
+void _transitionTests() {
+  group('AccumulatorBarrierDragController preview transition', () {
+    late AccumulatorBarrierDragController controller;
+
+    setUp(() {
+      controller = AccumulatorBarrierDragController(steps: _ladder)
+        ..publishGeometry(_geometry(committedSpotDistance: 3))
+        ..beginDrag(AccumulatorBarrierSide.high);
+    });
+
+    tearDown(() => controller.dispose());
+
+    test('nothing to glide from before the first rung change', () {
+      expect(controller.previewTransitionFrom, isNull);
+    });
+
+    test('the first rung change glides from the committed band', () {
+      controller.updateDrag(_ladder[1]);
+
+      expect(controller.previewTransitionFrom, 3);
+    });
+
+    test('a settled rung change glides from the previous rung', () {
+      controller
+        ..updateDrag(_ladder[1])
+        // Painter reports the glide finished on the rung it was heading to.
+        ..publishRenderedPreviewDistance(_ladder[1].barrierSpotDistance)
+        ..updateDrag(_ladder[0]);
+
+      expect(controller.previewTransitionFrom, _ladder[1].barrierSpotDistance);
+    });
+
+    test('a rung change mid-glide carries on from where the band is', () {
+      controller
+        ..updateDrag(_ladder[1])
+        // Halfway between the committed 3 and the 4 it was heading to.
+        ..publishRenderedPreviewDistance(3.5)
+        ..updateDrag(_ladder[0]);
+
+      // Not the rung it was leaving, and not the one it was heading to.
+      expect(controller.previewTransitionFrom, 3.5);
+    });
+
+    test('exposes what was drawn so the commit can glide on from it', () {
+      controller
+        ..updateDrag(_ladder[0])
+        ..publishRenderedPreviewDistance(4.8);
+
+      expect(controller.renderedPreviewDistance, 4.8);
+    });
+
+    test('clearing the preview forgets the transition', () {
+      controller
+        ..updateDrag(_ladder[0])
+        ..publishRenderedPreviewDistance(4.8)
+        ..clearPreview();
+
+      expect(controller.previewTransitionFrom, isNull);
+      expect(controller.renderedPreviewDistance, isNull);
+    });
+  });
+}
+
+void _ladderTests() {
+  group('AccumulatorBarrierDragController.ladderSpan', () {
+    test('spans the tightest to the widest rung', () {
+      final AccumulatorBarrierDragController controller =
+          AccumulatorBarrierDragController(steps: _tightLadder);
+
+      expect(controller.ladderSpan, closeTo(0.6256 - 0.4966, 1e-9));
+
+      controller.dispose();
+    });
+
+    test('is zero when there is nothing to span', () {
+      final AccumulatorBarrierDragController empty =
+          AccumulatorBarrierDragController();
+      final AccumulatorBarrierDragController single =
+          AccumulatorBarrierDragController(steps: <AccumulatorGrowthRateStep>[
+        _tightLadder.first,
+      ]);
+
+      expect(empty.ladderSpan, 0);
+      expect(single.ladderSpan, 0);
+
+      empty.dispose();
+      single.dispose();
+    });
+  });
+
+  group('AccumulatorBarrierDragController ladder updates', () {
+    test('applies a new ladder immediately when idle', () {
+      final AccumulatorBarrierDragController controller =
+          AccumulatorBarrierDragController(steps: _ladder)
+            ..steps = _tightLadder;
+
+      expect(controller.steps, _tightLadder);
+
+      controller.dispose();
+    });
+
+    test('holds a ladder that arrives mid-drag until the drag ends', () {
+      int notifications = 0;
+      final AccumulatorBarrierDragController controller =
+          AccumulatorBarrierDragController(steps: _ladder)
+            ..publishGeometry(_geometry())
+            ..addListener(() => notifications++)
+            ..beginDrag(AccumulatorBarrierSide.high);
+
+      notifications = 0;
+      controller.steps = _tightLadder;
+
+      // Snap targets must not move under the finger.
+      expect(controller.steps, _ladder);
+      expect(notifications, 0);
+
+      controller.endDrag(commit: false);
+      expect(controller.steps, _tightLadder);
+
+      controller.dispose();
+    });
+
+    test('keeps only the newest ladder held back during a drag', () {
+      final AccumulatorBarrierDragController controller =
+          AccumulatorBarrierDragController(steps: _ladder)
+            ..beginDrag(AccumulatorBarrierSide.low)
+            ..steps = _tightLadder
+            ..steps = const <AccumulatorGrowthRateStep>[]
+            ..endDrag(commit: false);
+
+      expect(controller.steps, isEmpty);
+
+      controller.dispose();
+    });
+
+    test('a committed drag still picks up the held-back ladder', () {
+      final AccumulatorBarrierDragController controller =
+          AccumulatorBarrierDragController(steps: _ladder)
+            ..publishGeometry(_geometry())
+            ..beginDrag(AccumulatorBarrierSide.high)
+            ..updateDrag(_ladder[0])
+            ..steps = _tightLadder
+            ..endDrag(commit: true);
+
+      expect(controller.steps, _tightLadder);
+      // The preview is still latched waiting for the host's commit.
+      expect(controller.previewStep, _ladder[0]);
+
+      controller.dispose();
+    });
+  });
+}

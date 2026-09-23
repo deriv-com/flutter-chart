@@ -53,6 +53,9 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
   List<AccumulatorGrowthRateStep> _steps;
   bool _enabled;
 
+  /// Ladder handed over while a drag was in progress, applied once it ends.
+  List<AccumulatorGrowthRateStep>? _pendingSteps;
+
   AccumulatorBarrierSide? _hoveredSide;
   AccumulatorBarrierSide? _draggedSide;
   AccumulatorGrowthRateStep? _previewStep;
@@ -64,17 +67,62 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
   double? _latchedCommittedDistance;
   Timer? _commitTimer;
 
+  /// Barrier distance the current transition started from, and the distance the
+  /// painter last actually drew.
+  ///
+  /// The painter reports back what it drew so a rung change mid-glide can carry
+  /// on from where the band visually is, rather than snapping back to the rung
+  /// it was heading away from.
+  double? _previewTransitionFrom;
+  double? _lastRenderedPreviewDistance;
+
   /// The ladder of growth rates the drag snaps to.
   ///
   /// Order does not matter; the nearest step by barrier distance always wins.
   List<AccumulatorGrowthRateStep> get steps => _steps;
 
+  /// Updates to the ladder are held back for the duration of a drag.
+  ///
+  /// Barrier distances move with the spot, so a ladder that refreshed on every
+  /// tick would shift the snap targets under the user's finger — and the rungs
+  /// sit close enough together that a rung could change without the pointer
+  /// moving at all. The newest ladder is applied as soon as the drag ends.
   set steps(List<AccumulatorGrowthRateStep> value) {
+    if (isDragging) {
+      _pendingSteps = value;
+      return;
+    }
+    _applySteps(value);
+  }
+
+  void _applySteps(List<AccumulatorGrowthRateStep> value) {
     if (listEquals(_steps, value)) {
       return;
     }
     _steps = value;
     notifyListeners();
+  }
+
+  /// Distance in quote units between the tightest and widest rung, or 0 when
+  /// there is nothing to span. Used to scale the drag.
+  double get ladderSpan {
+    if (_steps.length < 2) {
+      return 0;
+    }
+
+    double min = _steps.first.barrierSpotDistance;
+    double max = min;
+
+    for (final AccumulatorGrowthRateStep step in _steps.skip(1)) {
+      if (step.barrierSpotDistance < min) {
+        min = step.barrierSpotDistance;
+      }
+      if (step.barrierSpotDistance > max) {
+        max = step.barrierSpotDistance;
+      }
+    }
+
+    return max - min;
   }
 
   /// Whether the barriers can currently be dragged.
@@ -113,6 +161,16 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
   /// Whether the barriers should be drawn in their emphasised state.
   bool get isHighlighted => _hoveredSide != null || isDragging;
 
+  /// Barrier distance the band is gliding away from, or `null` when there is
+  /// nothing to glide from and the preview should be drawn outright.
+  double? get previewTransitionFrom => _previewTransitionFrom;
+
+  /// Barrier distance the painter last drew for the preview, so the chart can
+  /// glide on from the band the user was actually looking at once the real
+  /// barriers replace it.
+  @internal
+  double? get renderedPreviewDistance => _lastRenderedPreviewDistance;
+
   /// The step nearest to the currently committed band, or `null` when the
   /// ladder is empty or the barriers have not been painted yet.
   AccumulatorGrowthRateStep? get committedStep {
@@ -131,6 +189,8 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
     _commitTimer?.cancel();
     _commitTimer = null;
     _latchedCommittedDistance = null;
+    _previewTransitionFrom = null;
+    _lastRenderedPreviewDistance = null;
     if (_previewStep == null) {
       return;
     }
@@ -213,10 +273,24 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
     if (step == null || _previewStep == step) {
       return;
     }
+    // Glide from wherever the band currently is: the last painted distance
+    // mid-transition, the previous rung once it has settled, or the committed
+    // band on the first move of a drag.
+    _previewTransitionFrom = _lastRenderedPreviewDistance ??
+        _previewStep?.barrierSpotDistance ??
+        _geometry?.committedBarrierSpotDistance;
     _previewStep = step;
     notifyListeners();
     onDragUpdate?.call(step);
   }
+
+  /// Records the barrier distance the painter just drew.
+  ///
+  /// Called from `paint`, so it must never notify listeners.
+  @internal
+  // ignore: use_setters_to_change_properties
+  void publishRenderedPreviewDistance(double? distance) =>
+      _lastRenderedPreviewDistance = distance;
 
   /// Ends the drag.
   ///
@@ -234,12 +308,14 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
     final AccumulatorGrowthRateStep? settled = _previewStep;
     if (!commit || settled == null) {
       _previewStep = null;
+      _flushPendingSteps();
       notifyListeners();
       return;
     }
 
     _latchedCommittedDistance = _geometry?.committedBarrierSpotDistance;
     _commitTimer = Timer(commitTimeout, clearPreview);
+    _flushPendingSteps();
     notifyListeners();
     onDragEnd?.call(settled);
   }
@@ -269,10 +345,24 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
     return true;
   }
 
+  /// Applies a ladder that arrived mid-drag. Assigns directly rather than going
+  /// through [_applySteps], because the caller notifies once for the whole
+  /// drag-end transition.
+  void _flushPendingSteps() {
+    final List<AccumulatorGrowthRateStep>? pending = _pendingSteps;
+    _pendingSteps = null;
+    if (pending != null && !listEquals(_steps, pending)) {
+      _steps = pending;
+    }
+  }
+
   void _resetInteraction() {
     _commitTimer?.cancel();
     _commitTimer = null;
+    _flushPendingSteps();
     _latchedCommittedDistance = null;
+    _previewTransitionFrom = null;
+    _lastRenderedPreviewDistance = null;
     _previewStep = null;
     _hoveredSide = null;
     _draggedSide = null;

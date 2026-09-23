@@ -169,8 +169,25 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
     }
 
     if (previewStep != null) {
-      hBarrierQuote = committedCenterQuote + previewStep.barrierSpotDistance;
-      lBarrierQuote = committedCenterQuote - previewStep.barrierSpotDistance;
+      // Glide between rungs rather than stepping, matching how the band already
+      // moves when the growth rate is changed from the trade params.
+      final double? from = drag?.previewTransitionFrom;
+      final double previewDistance = from == null
+          ? previewStep.barrierSpotDistance
+          : ui.lerpDouble(
+                from,
+                previewStep.barrierSpotDistance,
+                animationInfo.accumulatorPreviewPercent,
+              ) ??
+              previewStep.barrierSpotDistance;
+
+      hBarrierQuote = committedCenterQuote + previewDistance;
+      lBarrierQuote = committedCenterQuote - previewDistance;
+
+      // Lets the next rung change pick up from where the band actually is.
+      drag?.publishRenderedPreviewDistance(previewDistance);
+    } else {
+      drag?.publishRenderedPreviewDistance(null);
     }
 
     final Offset highBarrierPosition = Offset(

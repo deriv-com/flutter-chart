@@ -1,6 +1,7 @@
 import 'package:deriv_chart/deriv_chart.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_drag_overlay.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_geometry.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -43,6 +44,7 @@ void main() {
   late List<double> commits;
   late int beginCount;
   late int finishCount;
+  late int interactionChanges;
 
   Future<void> pumpOverlay(
     WidgetTester tester, {
@@ -62,7 +64,7 @@ void main() {
                   controller: controller,
                   quoteFromCanvasY: _quoteFromY,
                   graphAreaWidth: graphAreaWidth,
-                  onInteractionChanged: () {},
+                  onInteractionChanged: () => interactionChanges++,
                   onDragBegin: () => beginCount++,
                   onDragFinish: () => finishCount++,
                 ),
@@ -79,6 +81,7 @@ void main() {
     commits = <double>[];
     beginCount = 0;
     finishCount = 0;
+    interactionChanges = 0;
     controller = AccumulatorBarrierDragController(
       steps: _ladder,
       onDragUpdate: (AccumulatorGrowthRateStep step) =>
@@ -94,8 +97,9 @@ void main() {
       (WidgetTester tester) async {
     await pumpOverlay(tester);
 
-    // Grab the high grip (y=50) and pull it up to y=10 — 90 quote units from
-    // the band centre, nearest the 100-distance rung.
+    // Ladder span is 80 quote units over a 160px target travel, so the drag is
+    // scaled 2x: pulling the high grip up 80px moves the band 40 quote units,
+    // from the committed 50 to 90 — nearest the 100-distance rung.
     final Offset grip = tester.getTopLeft(
           find.byType(AccumulatorBarrierDragOverlay),
         ) +
@@ -105,7 +109,7 @@ void main() {
     expect(controller.isDragging, isTrue);
     expect(beginCount, 1);
 
-    await gesture.moveBy(const Offset(0, -40));
+    await gesture.moveBy(const Offset(0, -80));
     await tester.pump();
 
     expect(controller.previewStep?.growthRate, 0.01);
@@ -133,8 +137,9 @@ void main() {
         const Offset(200, 150);
 
     final TestGesture gesture = await tester.startGesture(grip);
-    // Up 30px: the low barrier moves to y=120, i.e. 20 from the centre.
-    await gesture.moveBy(const Offset(0, -30));
+    // Up 50px at 2x scaling narrows the band by 25, from 50 to 25 — nearest the
+    // 20-distance rung.
+    await gesture.moveBy(const Offset(0, -50));
     await tester.pump();
 
     expect(controller.previewStep?.growthRate, 0.05);
@@ -184,7 +189,7 @@ void main() {
         const Offset(200, 50);
 
     final TestGesture gesture = await tester.startGesture(grip);
-    await gesture.moveBy(const Offset(0, -40));
+    await gesture.moveBy(const Offset(0, -80));
     await tester.pump();
     await gesture.up();
     await tester.pump();
@@ -204,6 +209,95 @@ void main() {
 
     expect(panEvents, isNotEmpty);
 
+    await _letTheCommitTimeOut(tester, controller);
+  });
+
+  testWidgets('a ladder wider than the target travel is dragged 1:1',
+      (WidgetTester tester) async {
+    // Rungs 50 / 100 / 250 span 200 quote units, already past the 160px target,
+    // so no scaling is applied — reducing sensitivity would only hurt.
+    controller.steps = const <AccumulatorGrowthRateStep>[
+      AccumulatorGrowthRateStep(growthRate: 0.01, barrierSpotDistance: 250),
+      AccumulatorGrowthRateStep(growthRate: 0.03, barrierSpotDistance: 100),
+      AccumulatorGrowthRateStep(growthRate: 0.05, barrierSpotDistance: 50),
+    ];
+    await pumpOverlay(tester);
+
+    final TestGesture gesture = await tester.startGesture(
+      tester.getTopLeft(find.byType(AccumulatorBarrierDragOverlay)) +
+          const Offset(200, 50),
+    );
+    // 40px up from the committed 50 lands on 90 unscaled, nearest the 100 rung.
+    // Under the 2x scaling of the tighter ladder it would have stopped at 70,
+    // which is nearer 50.
+    await gesture.moveBy(const Offset(0, -40));
+    await tester.pump();
+
+    expect(controller.previewStep?.growthRate, 0.03);
+
+    await gesture.up();
+    await tester.pump();
+    await _letTheCommitTimeOut(tester, controller);
+  });
+
+  testWidgets('hovering restyles the barriers without re-measuring the chart',
+      (WidgetTester tester) async {
+    await pumpOverlay(tester);
+
+    final Offset origin =
+        tester.getTopLeft(find.byType(AccumulatorBarrierDragOverlay));
+    final TestGesture mouse =
+        await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await mouse.addPointer(location: Offset.zero);
+    addTearDown(mouse.removePointer);
+
+    MouseCursor cursor() => tester
+        .widget<MouseRegion>(
+          find
+              .descendant(
+                of: find.byType(AccumulatorBarrierDragOverlay),
+                matching: find.byType(MouseRegion),
+              )
+              .first,
+        )
+        .cursor;
+
+    await mouse.moveTo(origin + const Offset(200, 50));
+    await tester.pump();
+
+    expect(controller.hoveredSide, AccumulatorBarrierSide.high);
+    expect(cursor(), controller.gripStyle.cursor);
+
+    await mouse.moveTo(origin + const Offset(200, 100));
+    await tester.pump();
+
+    expect(controller.hoveredSide, isNull);
+    expect(cursor(), MouseCursor.defer);
+
+    // The band never moved, so the chart was never asked to recompute its quote
+    // bounds — that rebuild walks every series and annotation, and running it on
+    // each hover showed up as a CPU spike.
+    expect(interactionChanges, 0);
+  });
+
+  testWidgets('a moved band does ask the chart to re-measure',
+      (WidgetTester tester) async {
+    await pumpOverlay(tester);
+
+    final TestGesture gesture = await tester.startGesture(
+      tester.getTopLeft(find.byType(AccumulatorBarrierDragOverlay)) +
+          const Offset(200, 50),
+    );
+    expect(interactionChanges, 0);
+
+    await gesture.moveBy(const Offset(0, -80));
+    await tester.pump();
+
+    expect(controller.previewStep?.growthRate, 0.01);
+    expect(interactionChanges, 1);
+
+    await gesture.up();
+    await tester.pump();
     await _letTheCommitTimeOut(tester, controller);
   });
 

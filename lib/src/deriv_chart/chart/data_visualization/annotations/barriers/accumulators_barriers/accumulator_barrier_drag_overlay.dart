@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'accumulator_barrier_drag_controller.dart';
 import 'accumulator_barrier_geometry.dart';
 import 'accumulator_barrier_gesture_recognizer.dart';
+import 'accumulator_barrier_grip_style.dart';
 import 'accumulator_barrier_side.dart';
+import 'accumulator_growth_rate_step.dart';
 
 /// Transparent layer that turns the Accumulators barriers into a control.
 ///
@@ -38,7 +40,13 @@ class AccumulatorBarrierDragOverlay extends StatefulWidget {
   /// pointer there would take vertical scaling away from the user.
   final double? graphAreaWidth;
 
-  /// Called whenever the interaction state changes and the chart must repaint.
+  /// Called when the previewed band moves, so the chart can recompute the quote
+  /// bounds it has to fit.
+  ///
+  /// Deliberately not called for hover: that only restyles the barriers, which
+  /// the annotation layer repaints on its own, and this callback is expensive
+  /// enough to show up on a CPU profile if it runs every time the pointer
+  /// crosses a barrier.
   final VoidCallback onInteractionChanged;
 
   /// Called when a drag starts, so the chart can suspend competing behaviour.
@@ -69,29 +77,62 @@ class _AccumulatorBarrierDragOverlayState
   /// user's finger is down.
   double? _dragCenterQuote;
 
-  /// How far apart two steps must be, in quote units, before the preview is
-  /// allowed to switch away from the current one.
+  /// Barrier distance the band was committed to when the drag began, and the
+  /// factor pointer travel is divided by. Both are fixed for the whole gesture
+  /// so the mapping cannot shift under the user's finger.
+  double? _dragStartDistance;
+  double _dragGain = 1;
+
+  /// How far the pointer must travel, in logical pixels, before the preview is
+  /// allowed to switch away from the current step.
   static const double _hysteresisInPixels = 2;
+
+  /// Preview the chart was last told about, so hover-only notifications can be
+  /// told apart from ones that actually move the band.
+  AccumulatorGrowthRateStep? _lastReportedPreview;
 
   @override
   void initState() {
     super.initState();
-    widget.controller.addListener(widget.onInteractionChanged);
+    _lastReportedPreview = widget.controller.previewStep;
+    widget.controller.addListener(_handleControllerChanged);
   }
 
   @override
   void didUpdateWidget(covariant AccumulatorBarrierDragOverlay oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.controller != widget.controller ||
-        oldWidget.onInteractionChanged != widget.onInteractionChanged) {
-      oldWidget.controller.removeListener(oldWidget.onInteractionChanged);
-      widget.controller.addListener(widget.onInteractionChanged);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller.removeListener(_handleControllerChanged);
+      widget.controller.addListener(_handleControllerChanged);
+      _lastReportedPreview = widget.controller.previewStep;
+    }
+  }
+
+  /// Splits a controller change into the cheap part and the expensive one.
+  ///
+  /// Hover and drag state both change what this widget renders — the cursor —
+  /// so it always rebuilds itself, which costs a `MouseRegion` and a
+  /// `SizedBox`. Only a change of previewed step moves the band, and only that
+  /// needs the chart to re-measure its quote bounds.
+  void _handleControllerChanged() {
+    if (!mounted) {
+      return;
+    }
+
+    final AccumulatorGrowthRateStep? preview = widget.controller.previewStep;
+    final bool previewChanged = preview != _lastReportedPreview;
+    _lastReportedPreview = preview;
+
+    setState(() {});
+
+    if (previewChanged) {
+      widget.onInteractionChanged();
     }
   }
 
   @override
   void dispose() {
-    widget.controller.removeListener(widget.onInteractionChanged);
+    widget.controller.removeListener(_handleControllerChanged);
     if (widget.controller.isDragging) {
       widget.controller.endDrag(commit: false);
       widget.onDragFinish?.call();
@@ -135,9 +176,41 @@ class _AccumulatorBarrierDragOverlayState
   }
 
   void _handleDragStart(AccumulatorBarrierSide side, Offset local) {
-    _dragCenterQuote = widget.controller.geometry?.bandCenterQuote;
+    final AccumulatorBarrierGeometry? geometry = widget.controller.geometry;
+    _dragCenterQuote = geometry?.bandCenterQuote;
+    // Anchor on what the band is actually showing, which is the latched preview
+    // when a previous commit is still in flight — anchoring on the committed
+    // distance instead would make the band jump on touch-down.
+    _dragStartDistance = widget.controller.previewStep?.barrierSpotDistance ??
+        geometry?.committedBarrierSpotDistance;
+    _dragGain = _resolveDragGain();
     widget.controller.beginDrag(side);
     widget.onDragBegin?.call();
+  }
+
+  /// How much pointer travel to trade for a unit of barrier movement.
+  ///
+  /// Barrier distances across the ladder can be only a handful of pixels apart,
+  /// which would put every growth rate within a flick of each other. Scaling the
+  /// drag so the whole ladder takes [AccumulatorBarrierGripStyle.ladderTravel]
+  /// pixels keeps the gesture usable; a ladder already wider than that is left
+  /// alone, since reducing sensitivity would only make it worse.
+  double _resolveDragGain() {
+    final AccumulatorBarrierGripStyle style = widget.controller.gripStyle;
+    final double quotesPerPixel = _quotesPerPixel();
+    final double ladderSpan = widget.controller.ladderSpan;
+
+    if (quotesPerPixel <= 0 || ladderSpan <= 0) {
+      return 1;
+    }
+
+    final double ladderSpanInPixels = ladderSpan / quotesPerPixel;
+    if (ladderSpanInPixels >= style.ladderTravel) {
+      return 1;
+    }
+
+    return (style.ladderTravel / ladderSpanInPixels)
+        .clamp(1, style.maxDragGain);
   }
 
   void _handleDragUpdate(Offset local) {
@@ -147,27 +220,37 @@ class _AccumulatorBarrierDragOverlayState
     }
 
     final double pointerQuote = widget.quoteFromCanvasY(local.dy);
-    final double signedDistance =
+    final double pointerDistance =
         widget.controller.draggedSide == AccumulatorBarrierSide.high
             ? pointerQuote - centerQuote
             : centerQuote - pointerQuote;
 
+    // Scale the pointer's travel down onto the ladder, around wherever the band
+    // was when the drag started.
+    final double startDistance = _dragStartDistance ?? pointerDistance;
+    final double distance =
+        startDistance + (pointerDistance - startDistance) / _dragGain;
+
     widget.controller.updateDrag(
       widget.controller.nearestStep(
-        signedDistance < 0 ? 0 : signedDistance,
-        hysteresis: _quotesPerPixel() * _hysteresisInPixels,
+        distance < 0 ? 0 : distance,
+        // Expressed in pointer pixels, so the slack feels the same whatever
+        // the gain works out to be.
+        hysteresis: _quotesPerPixel() * _hysteresisInPixels / _dragGain,
       ),
     );
   }
 
   void _handleDragEnd() {
     _dragCenterQuote = null;
+    _dragStartDistance = null;
     widget.controller.endDrag(commit: true);
     widget.onDragFinish?.call();
   }
 
   void _handleDragCancel() {
     _dragCenterQuote = null;
+    _dragStartDistance = null;
     widget.controller.endDrag(commit: false);
     widget.onDragFinish?.call();
   }
