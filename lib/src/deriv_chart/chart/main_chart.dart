@@ -14,6 +14,7 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../drawing_tool_chart/drawing_tool_chart.dart';
@@ -22,6 +23,10 @@ import '../interactive_layer/interactive_layer_behaviours/interactive_layer_beha
 import '../interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import 'basic_chart.dart';
 import 'multiple_animated_builder.dart';
+import 'data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_drag_controller.dart';
+import 'data_visualization/models/accumulator_object.dart';
+import 'data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_drag_overlay.dart';
+import 'data_visualization/annotations/barriers/accumulators_barriers/accumulators_indicator.dart';
 import 'data_visualization/annotations/chart_annotation.dart';
 import 'data_visualization/chart_data.dart';
 import 'data_visualization/chart_series/data_series.dart';
@@ -178,6 +183,28 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
 
   late final InteractiveLayerBehaviour _interactiveLayerBehaviour;
 
+  /// X-scroll blocking state to restore when a barrier drag ends — a consumer
+  /// may own it, so it must not be blindly reset to false.
+  bool _xScrollBlockedBeforeBarrierDrag = false;
+
+  /// Glides the accumulators band from one growth rate to the next while it is
+  /// being dragged.
+  ///
+  /// Deliberately not the shared current-tick controller, even though it uses
+  /// the same duration and curve: [playNewTickAnimation] is a no-op while an
+  /// animation is already running, and rungs are crossed far faster than that
+  /// animation runs, so most transitions would be skipped.
+  late AnimationController _accumulatorPreviewController;
+  late Animation<double> _accumulatorPreviewAnimation;
+
+  /// The accumulators annotation the user is allowed to drag, if any.
+  AccumulatorIndicator? get _draggableAccumulator =>
+      widget.annotations?.whereType<AccumulatorIndicator>().firstWhereOrNull(
+            (AccumulatorIndicator indicator) =>
+                (indicator.dragController?.enabled ?? false) &&
+                indicator.activeContract == null,
+          );
+
   @override
   double get verticalPadding {
     if (canvasSize == null) {
@@ -297,6 +324,39 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
       }
     }
 
+    // A barrier drag latches its preview past the drag end so the band does
+    // not rubber-band back to the pre-drag width while the consumer's commit
+    // is in flight. Release it as soon as the model has actually moved.
+    final AccumulatorIndicator? accumulator = _draggableAccumulator;
+    final AccumulatorBarrierDragController? dragController =
+        accumulator?.dragController;
+
+    // Captured before the release, which clears them.
+    final double? previewDistance = dragController?.renderedPreviewDistance;
+    final double? previewCenter = dragController?.geometry?.bandCenterQuote;
+
+    if (dragController?.releaseLatchIfModelMoved(
+          highBarrier: accumulator!.highBarrier,
+          lowBarrier: accumulator.lowBarrier,
+        ) ??
+        false) {
+      if (previewDistance != null && previewCenter != null) {
+        // Glide from the band the user was shown to the barriers that actually
+        // arrived. Left alone, previousObject still holds the pre-drag band and
+        // the lerp would rubber-band through it.
+        accumulator!.previousObject = AccumulatorObject(
+          tick: accumulator.tick,
+          barrierEpoch: accumulator.barrierEpoch,
+          lowBarrier: previewCenter - previewDistance,
+          highBarrier: previewCenter + previewDistance,
+          profit: accumulator.activeContract?.profit,
+        );
+      } else {
+        // Nothing to glide from, so skip the stale lerp outright.
+        completeCurrentTickAnimation();
+      }
+    }
+
     // If only an annotation advanced, super() did not start the animation —
     // start it here. Harmless when the main series already started it
     // (playNewTickAnimation is a no-op while an animation is in flight).
@@ -311,6 +371,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   void dispose() {
     _currentTickBlinkingController.dispose();
     crosshairZoomOutAnimationController.dispose();
+    _accumulatorPreviewController.dispose();
     super.dispose();
   }
 
@@ -319,6 +380,19 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     super.setupAnimations();
     _setupBlinkingAnimation();
     _setupCrosshairZoomOutAnimation();
+    _setupAccumulatorPreviewAnimation();
+  }
+
+  void _setupAccumulatorPreviewAnimation() {
+    _accumulatorPreviewController = AnimationController(
+      vsync: this,
+      duration: widget.currentTickAnimationDuration,
+      value: 1,
+    );
+    _accumulatorPreviewAnimation = CurvedAnimation(
+      parent: _accumulatorPreviewController,
+      curve: Curves.easeOut,
+    );
   }
 
   void _setupController() {
@@ -456,6 +530,10 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                   _buildInteractiveLayer(context, xAxis)
                 else if (widget.drawingTools != null)
                   _buildDrawingToolChart(widget.drawingTools!),
+                if (_draggableAccumulator != null)
+                  _buildAccumulatorBarrierDragOverlay(
+                    _draggableAccumulator!.dragController!,
+                  ),
                 if (widget.showScrollToLastTickButton &&
                     _isScrollToLastTickAvailable)
                   Positioned(
@@ -530,15 +608,56 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         loadingAnimationColor: widget.loadingAnimationColor,
       );
 
+  Widget _buildAccumulatorBarrierDragOverlay(
+    AccumulatorBarrierDragController controller,
+  ) =>
+      AccumulatorBarrierDragOverlay(
+        controller: controller,
+        quoteFromCanvasY: chartQuoteFromCanvasY,
+        graphAreaWidth: xAxis.graphAreaWidth,
+        // A full setState is the right lever here: it re-runs
+        // updateVisibleData() -> recalculateMinMax() and
+        // _updateQuoteBoundTargets() so the Y bounds follow the preview.
+        // Rebuilding only the annotations' AnimatedBuilder would skip both.
+        // The preview snaps, so this fires a handful of times per drag.
+        onInteractionChanged: () {
+          if (!mounted) {
+            return;
+          }
+          // Only ever called when the previewed rung changed, so this is the
+          // right moment to start the band gliding to it.
+          _accumulatorPreviewController
+            ..reset()
+            ..forward();
+          setState(() {});
+        },
+        onDragBegin: () {
+          crosshairController.onExit(const PointerExitEvent());
+          _xScrollBlockedBeforeBarrierDrag = xAxis.isScrollBlocked;
+          // A second finger opens a new gesture arena the barrier recognizer
+          // does not join, so the chart's scale recognizer could still pan.
+          xAxis.isScrollBlocked = true;
+          completeCurrentTickAnimation();
+        },
+        onDragFinish: () =>
+            xAxis.isScrollBlocked = _xScrollBlockedBeforeBarrierDrag,
+      );
+
   Widget _buildAnnotations() => LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           final XAxisModel xAxisModel = context.watch<XAxisModel>();
           return MultipleAnimatedBuilder(
-            animations: <Listenable>[
+            animations: <Listenable?>[
               currentTickAnimation,
               _currentTickBlinkAnimation,
               topBoundQuoteAnimationController,
               bottomBoundQuoteAnimationController,
+              // Hovering a draggable barrier restyles it but moves nothing, so
+              // it repaints here instead of rebuilding the whole chart. The
+              // glide between rungs repaints here for the same reason — at
+              // 60fps, rebuilding the chart would be far too expensive.
+              _draggableAccumulator?.dragController,
+              _accumulatorPreviewController,
             ],
             builder: (BuildContext context, _) =>
                 Stack(fit: StackFit.expand, children: <Widget>[
@@ -552,6 +671,8 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                             animationInfo: AnimationInfo(
                               currentTickPercent: currentTickAnimation.value,
                               blinkingPercent: _currentTickBlinkAnimation.value,
+                              accumulatorPreviewPercent:
+                                  _accumulatorPreviewAnimation.value,
                             ),
                             chartData: annotation,
                             chartConfig: context.watch<ChartConfig>(),
