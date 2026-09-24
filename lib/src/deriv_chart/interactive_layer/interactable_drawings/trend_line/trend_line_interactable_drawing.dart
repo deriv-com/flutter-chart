@@ -386,39 +386,50 @@ class TrendLineInteractableDrawing
     ChartTheme chartTheme,
     GetDrawingState getDrawingState,
   ) {
-    if (getDrawingState(this).contains(DrawingToolState.selected)) {
-      // Draw value label for start point
-      if (startPoint != null) {
-        drawValueLabel(
-          canvas: canvas,
-          quoteToY: quoteToY,
-          value: startPoint!.quote,
-          pipSize: chartConfig.pipSize,
-          animationProgress: animationInfo.stateChangePercent,
-          size: size,
-          textStyle: config.labelStyle,
-          color: config.lineStyle.color,
-          backgroundColor: chartTheme.backgroundColor,
-        );
-      }
+    drawLabelsWithZIndex(
+      canvas: canvas,
+      size: size,
+      animationInfo: animationInfo,
+      chartConfig: chartConfig,
+      chartTheme: chartTheme,
+      getDrawingState: getDrawingState,
+      drawing: this,
+      isDraggingStartPoint: isDraggingStartPoint == true,
+      isDraggingEndPoint: isDraggingStartPoint == false,
+      drawStartPointLabel: () {
+        if (startPoint != null) {
+          drawValueLabel(
+            canvas: canvas,
+            quoteToY: quoteToY,
+            value: startPoint!.quote,
+            pipSize: chartConfig.pipSize,
+            animationProgress: animationInfo.stateChangePercent,
+            size: size,
+            textStyle: config.labelStyle,
+            color: config.lineStyle.color,
+            backgroundColor: chartTheme.backgroundColor,
+          );
+        }
+      },
+      drawEndPointLabel: () {
+        if (endPoint != null &&
+            startPoint != null &&
+            endPoint!.quote != startPoint!.quote) {
+          drawValueLabel(
+            canvas: canvas,
+            quoteToY: quoteToY,
+            value: endPoint!.quote,
+            pipSize: chartConfig.pipSize,
+            animationProgress: animationInfo.stateChangePercent,
+            size: size,
+            textStyle: config.labelStyle,
+            color: config.lineStyle.color,
+            backgroundColor: chartTheme.backgroundColor,
+          );
+        }
+      },
+    );
 
-      // Draw value label for end point (offset slightly to avoid overlap)
-      if (endPoint != null &&
-          startPoint != null &&
-          endPoint!.quote != startPoint!.quote) {
-        drawValueLabel(
-          canvas: canvas,
-          quoteToY: quoteToY,
-          value: endPoint!.quote,
-          pipSize: chartConfig.pipSize,
-          animationProgress: animationInfo.stateChangePercent,
-          size: size,
-          textStyle: config.labelStyle,
-          color: config.lineStyle.color,
-          backgroundColor: chartTheme.backgroundColor,
-        );
-      }
-    }
     // Paint X-axis labels when selected
     paintXAxisLabels(
       canvas,
@@ -443,37 +454,47 @@ class TrendLineInteractableDrawing
     ChartTheme chartTheme,
     GetDrawingState getDrawingState,
   ) {
-    if (getDrawingState(this).contains(DrawingToolState.selected)) {
-      // Draw epoch label for start point
-      if (startPoint != null) {
-        drawEpochLabel(
-          canvas: canvas,
-          epochToX: epochToX,
-          epoch: startPoint!.epoch,
-          size: size,
-          textStyle: config.labelStyle,
-          animationProgress: animationInfo.stateChangePercent,
-          color: config.lineStyle.color,
-          backgroundColor: chartTheme.backgroundColor,
-        );
-      }
-
-      // Draw epoch label for end point (only if different from start point to avoid overlap)
-      if (endPoint != null &&
-          startPoint != null &&
-          endPoint!.epoch != startPoint!.epoch) {
-        drawEpochLabel(
-          canvas: canvas,
-          epochToX: epochToX,
-          epoch: endPoint!.epoch,
-          size: size,
-          textStyle: config.labelStyle,
-          animationProgress: animationInfo.stateChangePercent,
-          color: config.lineStyle.color,
-          backgroundColor: chartTheme.backgroundColor,
-        );
-      }
-    }
+    drawLabelsWithZIndex(
+      canvas: canvas,
+      size: size,
+      animationInfo: animationInfo,
+      chartConfig: chartConfig,
+      chartTheme: chartTheme,
+      getDrawingState: getDrawingState,
+      drawing: this,
+      isDraggingStartPoint: isDraggingStartPoint == true,
+      isDraggingEndPoint: isDraggingStartPoint == false,
+      drawStartPointLabel: () {
+        if (startPoint != null) {
+          drawEpochLabel(
+            canvas: canvas,
+            epochToX: epochToX,
+            epoch: startPoint!.epoch,
+            size: size,
+            textStyle: config.labelStyle,
+            animationProgress: animationInfo.stateChangePercent,
+            color: config.lineStyle.color,
+            backgroundColor: chartTheme.backgroundColor,
+          );
+        }
+      },
+      drawEndPointLabel: () {
+        if (endPoint != null &&
+            startPoint != null &&
+            endPoint!.epoch != startPoint!.epoch) {
+          drawEpochLabel(
+            canvas: canvas,
+            epochToX: epochToX,
+            epoch: endPoint!.epoch,
+            size: size,
+            textStyle: config.labelStyle,
+            animationProgress: animationInfo.stateChangePercent,
+            color: config.lineStyle.color,
+            backgroundColor: chartTheme.backgroundColor,
+          );
+        }
+      },
+    );
   }
 
   @override

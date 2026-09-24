@@ -1,11 +1,19 @@
 import 'dart:ui';
 
+import 'package:deriv_chart/src/add_ons/drawing_tools_ui/drawing_tool_config.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/drawing_paint_style.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/drawing_tools/data_model/edge_point.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/models/animation_info.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/helpers/chart_date_utils.dart';
+import 'package:deriv_chart/src/deriv_chart/interactive_layer/interactive_layer_export.dart';
+import 'package:deriv_chart/src/models/chart_config.dart';
+import 'package:deriv_chart/src/theme/chart_theme.dart';
 import 'package:deriv_chart/src/theme/painting_styles/line_style.dart';
 import 'package:flutter/material.dart';
+
+import '../enums/drawing_tool_state.dart';
+import 'types.dart';
 
 /// Draws alignment guides (horizontal and vertical lines) for a single point
 void drawPointAlignmentGuides(Canvas canvas, Size size, Offset pointOffset,
@@ -202,7 +210,7 @@ void drawValueLabel({
   final TextPainter textPainter = _getTextPainter(
     formattedValue,
     textStyle: textStyle.copyWith(
-      color: textStyle.color?.withOpacity(animationProgress),
+      color: color.withOpacity(animationProgress),
     ),
   )..layout();
 
@@ -288,7 +296,7 @@ void drawEpochLabel({
   final TextPainter textPainter = _getTextPainter(
     formattedTime,
     textStyle: textStyle.copyWith(
-      color: textStyle.color?.withOpacity(animationProgress),
+      color: color.withOpacity(animationProgress),
     ),
   )..layout();
 
@@ -342,6 +350,65 @@ void drawEpochLabel({
       rect.top + (rectHeight - textPainter.height) / 2,
     ),
   );
+}
+
+/// Helper method to draw labels with proper z-index based on drag state.
+///
+/// This method handles the logic for drawing labels in the correct order
+/// to ensure the dragged point's labels appear on top of the non-dragged point's labels.
+///
+/// **Parameters:**
+/// - [canvas]: The canvas to draw on
+/// - [size]: The size of the drawing area
+/// - [animationInfo]: Animation information for state changes
+/// - [chartConfig]: Chart configuration
+/// - [chartTheme]: Chart theme
+/// - [getDrawingState]: Function to get the current drawing state
+/// - [drawStartPointLabel]: Callback function to draw the start point label
+/// - [drawEndPointLabel]: Callback function to draw the end point label
+/// - [isDraggingStartPoint]: Whether the start point is currently being dragged
+/// - [isDraggingEndPoint]: Whether the end point is currently being dragged
+///
+/// **Usage:**
+/// This function is designed to be reusable across different drawing tools that have
+/// two edge points and need proper z-index handling during drag operations.
+void drawLabelsWithZIndex<T extends DrawingToolConfig>({
+  required Canvas canvas,
+  required Size size,
+  required AnimationInfo animationInfo,
+  required ChartConfig chartConfig,
+  required ChartTheme chartTheme,
+  required GetDrawingState getDrawingState,
+  required InteractableDrawing<T> drawing,
+  required void Function() drawStartPointLabel,
+  required void Function() drawEndPointLabel,
+  required bool isDraggingStartPoint,
+  required bool isDraggingEndPoint,
+}) {
+  if (!getDrawingState(drawing).contains(DrawingToolState.selected)) {
+    return;
+  }
+
+  // When dragging individual points, draw the non-dragged point first (lower z-index)
+  // and the dragged point last (higher z-index)
+  if (getDrawingState(drawing).contains(DrawingToolState.dragging) &&
+      (isDraggingStartPoint || isDraggingEndPoint)) {
+    if (isDraggingStartPoint) {
+      // Start point is being dragged, so draw end point first (lower z-index)
+      drawEndPointLabel();
+      // Then draw start point (higher z-index)
+      drawStartPointLabel();
+    } else {
+      // End point is being dragged, so draw start point first (lower z-index)
+      drawStartPointLabel();
+      // Then draw end point (higher z-index)
+      drawEndPointLabel();
+    }
+  } else {
+    // Default behavior when not dragging individual points
+    drawStartPointLabel();
+    drawEndPointLabel();
+  }
 }
 
 /// Returns a [TextPainter] for the given formatted value and color.
