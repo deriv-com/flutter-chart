@@ -82,10 +82,11 @@ void main() {
       final AccumulatorBarrierDragController controller =
           AccumulatorBarrierDragController(
         steps: _ladder,
-        onDragStart: () => starts++,
-        onDragUpdate: (AccumulatorGrowthRateStep step) =>
-            updates.add(step.growthRate),
-        onDragEnd: (AccumulatorGrowthRateStep step) =>
+        onDragStart: (AccumulatorBarrierSide _) => starts++,
+        onDragUpdate:
+            (AccumulatorGrowthRateStep step, AccumulatorBarrierSide _) =>
+                updates.add(step.growthRate),
+        onDragEnd: (AccumulatorGrowthRateStep step, AccumulatorBarrierSide _) =>
             settled = step.growthRate,
       )
             ..beginDrag(AccumulatorBarrierSide.low)
@@ -110,7 +111,8 @@ void main() {
       final AccumulatorBarrierDragController controller =
           AccumulatorBarrierDragController(
         steps: _ladder,
-        onDragEnd: (AccumulatorGrowthRateStep _) => committed = true,
+        onDragEnd: (AccumulatorGrowthRateStep _, AccumulatorBarrierSide __) =>
+            committed = true,
       )
             ..beginDrag(AccumulatorBarrierSide.high)
             ..updateDrag(_ladder[4])
@@ -118,6 +120,62 @@ void main() {
 
       expect(committed, isFalse);
       expect(controller.previewStep, isNull);
+
+      controller.dispose();
+    });
+
+    test('reports which grip is in hand, on every phase', () {
+      final List<String> seen = <String>[];
+
+      final AccumulatorBarrierDragController controller =
+          AccumulatorBarrierDragController(
+        steps: _ladder,
+        onDragStart: (AccumulatorBarrierSide side) =>
+            seen.add('start:${side.name}'),
+        onDragUpdate:
+            (AccumulatorGrowthRateStep _, AccumulatorBarrierSide side) =>
+                seen.add('update:${side.name}'),
+        onDragEnd: (AccumulatorGrowthRateStep _, AccumulatorBarrierSide side) =>
+            seen.add('end:${side.name}'),
+      )
+            ..publishGeometry(_geometry())
+            ..beginDrag(AccumulatorBarrierSide.low)
+            ..updateDrag(_ladder[0])
+            ..endDrag(commit: true);
+
+      // Which grip is held decides which way the user must drag to leave the
+      // end of the ladder, so it has to survive to drag end.
+      expect(seen, <String>['start:low', 'update:low', 'end:low']);
+
+      controller.dispose();
+    });
+
+    test('a ladder with nothing to drag to is not draggable', () {
+      final AccumulatorBarrierDragController single =
+          AccumulatorBarrierDragController(
+        steps: <AccumulatorGrowthRateStep>[_ladder.first],
+      );
+      final AccumulatorBarrierDragController none =
+          AccumulatorBarrierDragController();
+
+      // Grips the user cannot move are worse than no grips.
+      expect(single.enabled, isFalse);
+      expect(none.enabled, isFalse);
+
+      single.dispose();
+      none.dispose();
+    });
+
+    test('becomes draggable once a real ladder arrives', () {
+      final AccumulatorBarrierDragController controller =
+          AccumulatorBarrierDragController(
+        steps: <AccumulatorGrowthRateStep>[_ladder.first],
+      );
+
+      expect(controller.enabled, isFalse);
+
+      controller.steps = _ladder;
+      expect(controller.enabled, isTrue);
 
       controller.dispose();
     });

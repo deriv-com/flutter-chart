@@ -84,9 +84,10 @@ void main() {
     interactionChanges = 0;
     controller = AccumulatorBarrierDragController(
       steps: _ladder,
-      onDragUpdate: (AccumulatorGrowthRateStep step) =>
-          updates.add(step.growthRate),
-      onDragEnd: (AccumulatorGrowthRateStep step) =>
+      onDragUpdate:
+          (AccumulatorGrowthRateStep step, AccumulatorBarrierSide _) =>
+              updates.add(step.growthRate),
+      onDragEnd: (AccumulatorGrowthRateStep step, AccumulatorBarrierSide _) =>
           commits.add(step.growthRate),
     )..publishGeometry(_geometry());
   });

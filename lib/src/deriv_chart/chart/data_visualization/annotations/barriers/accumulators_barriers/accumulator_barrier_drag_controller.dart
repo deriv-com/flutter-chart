@@ -41,14 +41,20 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
   /// shown again.
   final Duration commitTimeout;
 
-  /// Called once when a drag begins.
-  VoidCallback? onDragStart;
+  /// Called once when a drag begins, with the grip that was grabbed.
+  void Function(AccumulatorBarrierSide side)? onDragStart;
 
   /// Called every time the drag snaps to a different step.
-  void Function(AccumulatorGrowthRateStep step)? onDragUpdate;
+  void Function(AccumulatorGrowthRateStep step, AccumulatorBarrierSide side)?
+      onDragUpdate;
 
   /// Called once when the drag ends, with the step the user settled on.
-  void Function(AccumulatorGrowthRateStep step)? onDragEnd;
+  ///
+  /// The side is reported alongside because which grip is in hand decides
+  /// which way the user has to drag to leave a ladder's end — at the tightest
+  /// band the top grip goes up and the bottom one goes down.
+  void Function(AccumulatorGrowthRateStep step, AccumulatorBarrierSide side)?
+      onDragEnd;
 
   List<AccumulatorGrowthRateStep> _steps;
   bool _enabled;
@@ -133,7 +139,11 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
   /// The consumer owns every business rule behind this (pre-purchase only,
   /// market open, params unlocked, …). When `false` no grips are drawn and the
   /// chart does not mount its drag overlay.
-  bool get enabled => _enabled;
+  ///
+  /// A ladder with fewer than two rungs is never draggable whatever the
+  /// consumer says: there is nowhere to drag to, and grips the user cannot move
+  /// are worse than none.
+  bool get enabled => _enabled && _steps.length > 1;
 
   set enabled(bool value) {
     if (_enabled == value) {
@@ -280,13 +290,14 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
     _draggedSide = side;
     _hoveredSide = side;
     notifyListeners();
-    onDragStart?.call();
+    onDragStart?.call(side);
   }
 
   /// Moves the preview to [step], if it differs from the current one.
   @internal
   void updateDrag(AccumulatorGrowthRateStep? step) {
-    if (step == null || _previewStep == step) {
+    final AccumulatorBarrierSide? side = _draggedSide;
+    if (step == null || side == null || _previewStep == step) {
       return;
     }
     // Glide from wherever the band currently is: the last painted distance
@@ -297,7 +308,7 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
         _geometry?.committedBarrierSpotDistance;
     _previewStep = step;
     notifyListeners();
-    onDragUpdate?.call(step);
+    onDragUpdate?.call(step, side);
   }
 
   /// Records the barrier distance the painter just drew.
@@ -333,7 +344,7 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
     _commitTimer = Timer(commitTimeout, clearPreview);
     _flushPendingSteps();
     notifyListeners();
-    onDragEnd?.call(settled);
+    onDragEnd?.call(settled, side);
   }
 
   /// Releases a latched preview once the model has moved in response to the
