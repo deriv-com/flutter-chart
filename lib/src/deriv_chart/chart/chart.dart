@@ -297,7 +297,16 @@ class Chart extends StatefulWidget {
   final bool? showCurrentTickBlinkAnimation;
 
   /// Fraction of the chart's height taken by top or bottom padding.
-  /// Quote scaling (drag on quote area) is controlled by this variable.
+  ///
+  /// This is the vertical zoom: less padding stretches the visible quote range
+  /// over more pixels. Clamped to
+  /// [BasicChartState.minVerticalPaddingFraction] (most zoomed in) and
+  /// [BasicChartState.maxVerticalPaddingFraction] (most zoomed out), the same
+  /// range a drag on the quote labels covers.
+  ///
+  /// Sets the scale rather than fixing it: the user can still drag away from
+  /// it. Changing the value re-applies it, so a consumer can re-scale on, say,
+  /// a trade-type switch without recreating the chart.
   final double? verticalPaddingFraction;
 
   /// Specifies the margin to prevent overlap.

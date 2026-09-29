@@ -135,7 +135,16 @@ class MainChart extends BasicChart {
   final bool showCrosshair;
 
   /// Fraction of the chart's height taken by top or bottom padding.
-  /// Quote scaling (drag on quote area) is controlled by this variable.
+  ///
+  /// This is the vertical zoom: less padding stretches the visible quote range
+  /// over more pixels. Clamped to
+  /// [BasicChartState.minVerticalPaddingFraction] (most zoomed in) and
+  /// [BasicChartState.maxVerticalPaddingFraction] (most zoomed out), the same
+  /// range a drag on the quote labels covers.
+  ///
+  /// Sets the scale rather than fixing it: the user can still drag away from
+  /// it. Changing the value re-applies it, so a consumer can re-scale on, say,
+  /// a trade-type switch without recreating the chart.
   final double? verticalPaddingFraction;
 
   /// The color of the loading animation.
@@ -232,17 +241,38 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     _interactiveLayerBehaviour =
         widget.interactiveLayerBehaviour ?? InteractiveLayerDesktopBehaviour();
 
-    if (widget.verticalPaddingFraction != null) {
-      verticalPaddingFraction = widget.verticalPaddingFraction!;
-    }
+    _applyVerticalPaddingFraction();
 
     _setupController();
     _setupCrosshairController();
   }
 
+  /// Takes the consumer's vertical scale, if it supplied one.
+  ///
+  /// Clamped to what a drag on the quote labels can reach, so a consumer cannot
+  /// ask for a scale the user would be unable to return to.
+  void _applyVerticalPaddingFraction() {
+    final double? fraction = widget.verticalPaddingFraction;
+    if (fraction == null) {
+      return;
+    }
+    verticalPaddingFraction = fraction.clamp(
+      BasicChartState.minVerticalPaddingFraction,
+      BasicChartState.maxVerticalPaddingFraction,
+    );
+  }
+
   @override
   void didUpdateWidget(MainChart oldChart) {
     super.didUpdateWidget(oldChart);
+
+    // Only when the consumer asks for a *different* scale. The value the user
+    // has dragged to lives in the same field, so re-applying on every rebuild
+    // would fight their gesture; re-applying on a change is what lets the
+    // consumer re-scale on, say, a trade-type switch.
+    if (widget.verticalPaddingFraction != oldChart.verticalPaddingFraction) {
+      _applyVerticalPaddingFraction();
+    }
 
     if (widget.isLive != oldChart.isLive ||
         widget.showCurrentTickBlinkAnimation !=
