@@ -321,8 +321,11 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
 
   /// Ends the drag.
   ///
-  /// When [commit] is true the preview is latched until the model catches up,
-  /// and [onDragEnd] fires with the settled step.
+  /// [onDragEnd] fires on every release, so a consumer that put something on
+  /// screen at [onDragStart] always hears the gesture finish. When [commit] is
+  /// true and a step was previewed it reports that step and latches the preview
+  /// until the model catches up; otherwise it reports the rung the band is
+  /// already on, which is what a release that previewed nothing settled on.
   @internal
   void endDrag({required bool commit}) {
     final AccumulatorBarrierSide? side = _draggedSide;
@@ -334,9 +337,18 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
 
     final AccumulatorGrowthRateStep? settled = _previewStep;
     if (!commit || settled == null) {
+      // A tap that never moved the band, or a cancelled gesture. Nothing was
+      // chosen, so there is nothing to latch or time out — but the consumer
+      // still has to hear the release, or whatever it showed on drag start is
+      // left on screen with nothing to take it down.
       _previewStep = null;
       _flushPendingSteps();
       notifyListeners();
+
+      final AccumulatorGrowthRateStep? current = committedStep;
+      if (current != null) {
+        onDragEnd?.call(current, side);
+      }
       return;
     }
 

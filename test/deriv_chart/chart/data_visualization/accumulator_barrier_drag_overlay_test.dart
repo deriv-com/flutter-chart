@@ -128,6 +128,87 @@ void main() {
     await _letTheCommitTimeOut(tester, controller);
   });
 
+  testWidgets(
+      'a tap that moves nothing still reports the release, on the rung it is on',
+      (WidgetTester tester) async {
+    await pumpOverlay(tester);
+
+    final Offset grip = tester.getTopLeft(
+          find.byType(AccumulatorBarrierDragOverlay),
+        ) +
+        const Offset(200, 50);
+
+    final TestGesture gesture = await tester.startGesture(grip);
+    await gesture.up();
+    await tester.pump();
+
+    // The consumer showed a readout on drag start, so it has to hear the
+    // release or that readout is stranded. Nothing moved, so the rung reported
+    // is the one the band was already on.
+    expect(commits, <double>[0.03]);
+    expect(finishCount, 1);
+    // Nothing was chosen, so there is no preview to latch and nothing to time
+    // out waiting for.
+    expect(controller.previewStep, isNull);
+    expect(controller.isHighlighted, isFalse);
+  });
+
+  testWidgets('a cancelled drag reports the release too',
+      (WidgetTester tester) async {
+    await pumpOverlay(tester);
+
+    final Offset grip = tester.getTopLeft(
+          find.byType(AccumulatorBarrierDragOverlay),
+        ) +
+        const Offset(200, 50);
+
+    final TestGesture gesture = await tester.startGesture(grip);
+    await gesture.moveBy(const Offset(0, -80));
+    await tester.pump();
+    expect(controller.previewStep?.growthRate, 0.01);
+
+    await gesture.cancel();
+    await tester.pump();
+
+    // The previewed rung is dropped rather than committed, but the consumer is
+    // told the gesture is over so it can drop its readout with it.
+    expect(controller.previewStep, isNull);
+    expect(commits, <double>[0.03]);
+    expect(controller.isHighlighted, isFalse);
+  });
+
+  testWidgets('a hover where the pointer was released does not re-highlight',
+      (WidgetTester tester) async {
+    await pumpOverlay(tester);
+
+    final Offset grip = tester.getTopLeft(
+          find.byType(AccumulatorBarrierDragOverlay),
+        ) +
+        const Offset(200, 50);
+
+    final TestGesture gesture = await tester.startGesture(grip);
+    await gesture.up();
+    await tester.pump();
+    expect(controller.isHighlighted, isFalse);
+
+    // Letting go does not move the pointer, so the browser's first hover after
+    // a release lands on the barrier the user just let go of — on touch too,
+    // via the synthetic mouse event that follows a tap.
+    final TestGesture pointer =
+        await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await pointer.addPointer(location: grip);
+    addTearDown(pointer.removePointer);
+    await tester.pump();
+
+    expect(controller.isHighlighted, isFalse);
+
+    // A real move wakes hover back up.
+    await pointer.moveTo(grip + const Offset(0, 2));
+    await tester.pump();
+
+    expect(controller.hoveredSide, AccumulatorBarrierSide.high);
+  });
+
   testWidgets('dragging the low grip inward snaps to a higher growth rate',
       (WidgetTester tester) async {
     await pumpOverlay(tester);

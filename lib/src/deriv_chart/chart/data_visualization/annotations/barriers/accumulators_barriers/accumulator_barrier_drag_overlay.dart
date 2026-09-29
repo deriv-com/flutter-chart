@@ -91,6 +91,22 @@ class _AccumulatorBarrierDragOverlayState
   /// told apart from ones that actually move the band.
   AccumulatorGrowthRateStep? _lastReportedPreview;
 
+  /// Where the pointer was through the gesture, so a release knows the spot to
+  /// stop hovering.
+  Offset? _pointerPosition;
+
+  /// Where the last gesture ended, while hover is still being ignored there.
+  ///
+  /// Letting go does not move the pointer, so the first hover after a release
+  /// arrives at the same spot and would immediately re-highlight the barrier
+  /// the user just let go of — on touch as well, because the browser follows a
+  /// tap with a synthetic mouse event. Hover wakes up again as soon as the
+  /// pointer genuinely moves.
+  Offset? _hoverMutedAt;
+
+  /// How far the pointer must move from a release before hover counts again.
+  static const double _hoverWakeDistance = 1;
+
   @override
   void initState() {
     super.initState();
@@ -166,8 +182,17 @@ class _AccumulatorBarrierDragOverlayState
     );
   }
 
-  void _handleHover(PointerHoverEvent event) =>
-      widget.controller.setHovered(_hitTest(event.localPosition, event.kind));
+  void _handleHover(PointerHoverEvent event) {
+    final Offset? mutedAt = _hoverMutedAt;
+    if (mutedAt != null) {
+      if ((event.localPosition - mutedAt).distance <= _hoverWakeDistance) {
+        return;
+      }
+      _hoverMutedAt = null;
+    }
+
+    widget.controller.setHovered(_hitTest(event.localPosition, event.kind));
+  }
 
   void _handleExit(PointerExitEvent event) {
     if (!widget.controller.isDragging) {
@@ -176,6 +201,9 @@ class _AccumulatorBarrierDragOverlayState
   }
 
   void _handleDragStart(AccumulatorBarrierSide side, Offset local) {
+    _pointerPosition = local;
+    // A fresh press is a deliberate act wherever it lands, so it always counts.
+    _hoverMutedAt = null;
     final AccumulatorBarrierGeometry? geometry = widget.controller.geometry;
     _dragCenterQuote = geometry?.bandCenterQuote;
     // Anchor on what the band is actually showing, which is the latched preview
@@ -214,6 +242,7 @@ class _AccumulatorBarrierDragOverlayState
   }
 
   void _handleDragUpdate(Offset local) {
+    _pointerPosition = local;
     final double? centerQuote = _dragCenterQuote;
     if (centerQuote == null) {
       return;
@@ -241,17 +270,18 @@ class _AccumulatorBarrierDragOverlayState
     );
   }
 
-  void _handleDragEnd() {
-    _dragCenterQuote = null;
-    _dragStartDistance = null;
-    widget.controller.endDrag(commit: true);
-    widget.onDragFinish?.call();
-  }
+  void _handleDragEnd() => _finishDrag(commit: true);
 
-  void _handleDragCancel() {
+  void _handleDragCancel() => _finishDrag(commit: false);
+
+  void _finishDrag({required bool commit}) {
     _dragCenterQuote = null;
     _dragStartDistance = null;
-    widget.controller.endDrag(commit: false);
+    // Set before ending the drag, so the highlight `endDrag` clears cannot be
+    // put straight back by a hover at the spot the pointer was released.
+    _hoverMutedAt = _pointerPosition;
+    _pointerPosition = null;
+    widget.controller.endDrag(commit: commit);
     widget.onDragFinish?.call();
   }
 
