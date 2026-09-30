@@ -80,8 +80,21 @@ abstract class ChartAnnotation<T extends ChartObject> extends Series {
   }
 
   @override
-  void onUpdate(int leftEpoch, int rightEpoch) =>
-      isOnRange = annotationObject.isOnEpochRange(leftEpoch, rightEpoch);
+  void onUpdate(int leftEpoch, int rightEpoch) {
+    isOnRange = annotationObject.isOnEpochRange(leftEpoch, rightEpoch);
+
+    // An annotation animates from where it last was, so a previous position
+    // that has scrolled out of view turns the transition into a sweep across
+    // the whole chart instead of a step.
+    //
+    // That is what coming back from the background looks like: frames stop
+    // while the app is away, so the position left behind is as old as the
+    // absence and the whole backlog arrives in one rebuild. Nothing to ease
+    // from — jump to where the annotation belongs.
+    if (previousObject?.isOnEpochRange(leftEpoch, rightEpoch) == false) {
+      previousObject = null;
+    }
+  }
 
   @override
   List<double> recalculateMinMax() => isOnRange
