@@ -8,6 +8,7 @@ class AnimationInfo {
     this.blinkingPercent = 1,
     this.stateChangePercent = 1,
     this.accumulatorPreviewPercent = 1,
+    this.accumulatorLabelEmphasis = 0,
   });
 
   /// Animation percent of current tick.
@@ -25,4 +26,11 @@ class AnimationInfo {
   /// Separate from [currentTickPercent] because rungs are crossed far faster
   /// than a tick animation runs, so this one has to be restartable mid-flight.
   final double accumulatorPreviewPercent;
+
+  /// How emphasised the Accumulators barrier labels are, 0 at rest and 1 while
+  /// the growth rate is being changed.
+  ///
+  /// The labels are the values the change is actually moving, so they grow and
+  /// thicken while it is in flight to say so.
+  final double accumulatorLabelEmphasis;
 }

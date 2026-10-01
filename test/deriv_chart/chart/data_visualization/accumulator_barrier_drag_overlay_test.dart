@@ -84,6 +84,9 @@ void main() {
     interactionChanges = 0;
     controller = AccumulatorBarrierDragController(
       steps: _ladder,
+      // These cover the drag path, which is off by default now that the band is
+      // a tap target for consumers.
+      dragEnabled: true,
       onDragUpdate:
           (AccumulatorGrowthRateStep step, AccumulatorBarrierSide _) =>
               updates.add(step.growthRate),

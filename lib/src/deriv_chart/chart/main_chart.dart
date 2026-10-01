@@ -206,6 +206,14 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   late AnimationController _accumulatorPreviewController;
   late Animation<double> _accumulatorPreviewAnimation;
 
+  /// Emphasis on the barrier labels while the growth rate is being changed.
+  ///
+  /// Held for as long as a preview is on screen rather than pulsed per rung:
+  /// the labels are what the change is moving, so they stay prominent until it
+  /// settles.
+  late AnimationController _accumulatorEmphasisController;
+  late Animation<double> _accumulatorEmphasisAnimation;
+
   /// The accumulators annotation the user is allowed to drag, if any.
   AccumulatorIndicator? get _draggableAccumulator =>
       widget.annotations?.whereType<AccumulatorIndicator>().firstWhereOrNull(
@@ -402,6 +410,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     _currentTickBlinkingController.dispose();
     crosshairZoomOutAnimationController.dispose();
     _accumulatorPreviewController.dispose();
+    _accumulatorEmphasisController.dispose();
     super.dispose();
   }
 
@@ -411,6 +420,18 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     _setupBlinkingAnimation();
     _setupCrosshairZoomOutAnimation();
     _setupAccumulatorPreviewAnimation();
+    _setupAccumulatorEmphasisAnimation();
+  }
+
+  void _setupAccumulatorEmphasisAnimation() {
+    _accumulatorEmphasisController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+    _accumulatorEmphasisAnimation = CurvedAnimation(
+      parent: _accumulatorEmphasisController,
+      curve: Curves.easeOut,
+    );
   }
 
   void _setupAccumulatorPreviewAnimation() {
@@ -656,9 +677,16 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
           }
           // Only ever called when the previewed rung changed, so this is the
           // right moment to start the band gliding to it.
-          _accumulatorPreviewController
-            ..reset()
-            ..forward();
+          if (_draggableAccumulator?.dragController?.previewStep == null) {
+            // Settled back onto the model's own barriers: let the labels calm
+            // down, and leave the glide where it is rather than restarting it.
+            _accumulatorEmphasisController.reverse();
+          } else {
+            _accumulatorPreviewController
+              ..reset()
+              ..forward();
+            _accumulatorEmphasisController.forward();
+          }
           setState(() {});
         },
         onDragBegin: () {
@@ -688,6 +716,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
               // 60fps, rebuilding the chart would be far too expensive.
               _draggableAccumulator?.dragController,
               _accumulatorPreviewController,
+              _accumulatorEmphasisController,
             ],
             builder: (BuildContext context, _) =>
                 Stack(fit: StackFit.expand, children: <Widget>[
@@ -703,6 +732,8 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                               blinkingPercent: _currentTickBlinkAnimation.value,
                               accumulatorPreviewPercent:
                                   _accumulatorPreviewAnimation.value,
+                              accumulatorLabelEmphasis:
+                                  _accumulatorEmphasisAnimation.value,
                             ),
                             chartData: annotation,
                             chartConfig: context.watch<ChartConfig>(),

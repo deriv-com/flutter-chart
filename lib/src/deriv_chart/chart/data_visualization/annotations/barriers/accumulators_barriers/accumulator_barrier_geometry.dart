@@ -54,6 +54,26 @@ class AccumulatorBarrierGeometry {
   /// Used to detect that the model has moved in response to a commit.
   final double committedBarrierSpotDistance;
 
+  /// Whether [offset] falls on the band: anywhere between the two barriers,
+  /// plus [tolerance] beyond each line so the edges stay easy to hit.
+  ///
+  /// This is the tap target. Unlike [hitTest] it does not care which barrier is
+  /// nearer — a tap opens the consumer's control, which is what moves the band.
+  bool containsBand(Offset offset, {required double tolerance}) {
+    final bool withinX =
+        offset.dx >= barrierX - tolerance && offset.dx <= rightEdgeX;
+    if (!withinX) {
+      return false;
+    }
+
+    // Not assumed to be ordered: the painter resolves them from quotes, and a
+    // flipped pair would otherwise make the band untappable.
+    final double top = math.min(highBarrierY, lowBarrierY) - tolerance;
+    final double bottom = math.max(highBarrierY, lowBarrierY) + tolerance;
+
+    return offset.dy >= top && offset.dy <= bottom;
+  }
+
   /// Returns the barrier [offset] falls on, or `null` when it falls on neither.
   ///
   /// Grips win over lines, and the nearer barrier wins when both match.
@@ -114,6 +134,9 @@ class AccumulatorBarrierGeometry {
         barrierX + style.size.width / 2,
         rightEdgeX - style.rightMargin - style.size.width / 2,
       );
+
+  /// The barrier [offset] sits closest to.
+  AccumulatorBarrierSide nearestSide(Offset offset) => _nearest(offset);
 
   AccumulatorBarrierSide _nearest(Offset offset) =>
       (offset.dy - highBarrierY).abs() <= (offset.dy - lowBarrierY).abs()

@@ -20,6 +20,57 @@ import 'accumulator_barrier_grip_style.dart';
 import 'accumulator_barrier_side.dart';
 import 'accumulator_growth_rate_step.dart';
 
+/// Size of a barrier's ± label at rest.
+const double _restingLabelFontSize = 12;
+
+/// Size it grows to while the growth rate is being changed.
+///
+/// Well clear of the resting size — the two numbers the user is choosing
+/// between should be the loudest thing on the chart while they scroll, and a
+/// few points of growth read as a rendering wobble rather than as the values
+/// responding — but short of double, which crowds the band on a phone.
+const double _emphasisedLabelFontSize = 22;
+
+/// Where to draw a barrier's ± label so that emphasising it moves it away from
+/// its own barrier line.
+///
+/// [restingCenter] is where the label sits when nothing is emphasised, so with
+/// [painter] still at the resting size this returns exactly what centring the
+/// text there would. What differs is where the extra size goes once [painter]
+/// is larger: centring spends half the growth walking the text onto the barrier
+/// it labels, and half of it leftwards over the band. Here the two edges facing
+/// the chart's empty space are the ones that move.
+///
+/// [growsUpwards] says which side of its barrier the label is on — `+` sits
+/// above the high barrier, `-` below the low one — so whichever edge faces the
+/// line is the one pinned.
+@visibleForTesting
+Offset barrierLabelTopLeft({
+  required TextPainter resting,
+  required TextPainter painter,
+  required Offset restingCenter,
+  required bool growsUpwards,
+}) {
+  final double restingTop = restingCenter.dy - resting.height / 2;
+
+  final double top;
+  if (growsUpwards) {
+    // The baseline, not the box's bottom edge. A larger font has a deeper
+    // descender, and these values are all digits, so pinning the box would
+    // visibly lift the numerals away from the line as they grew.
+    final double restingBaseline = restingTop +
+        resting.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+    top = restingBaseline -
+        painter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+  } else {
+    // Below its barrier, so it is the top edge that faces the line.
+    top = restingTop;
+  }
+
+  // Left edge pinned either way, so the growth runs right into the empty chart.
+  return Offset(restingCenter.dx - resting.width / 2, top);
+}
+
 /// Accumulator barriers painter.
 class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
   /// Initializes [AccumulatorIndicatorPainter].
@@ -420,18 +471,43 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
         previewStep?.barrierSpotDistanceDisplay ??
             indicator.barrierSpotDistance;
 
-    paintText(
-      canvas,
-      text: '-$spotDistanceDisplay',
-      anchor: lowBarrierPosition + const Offset(30, 10),
-      style: TextStyle(color: color, fontSize: 12),
+    // These two are the values a growth-rate change actually moves, so they
+    // grow and thicken while one is in flight and settle back afterwards.
+    final double emphasis = animationInfo.accumulatorLabelEmphasis;
+    final TextStyle restingLabelStyle = TextStyle(
+      color: color,
+      fontSize: _restingLabelFontSize,
+    );
+    final TextStyle barrierLabelStyle = TextStyle(
+      color: color,
+      fontSize: ui.lerpDouble(
+        _restingLabelFontSize,
+        _emphasisedLabelFontSize,
+        emphasis,
+      ),
+      fontWeight: FontWeight.lerp(
+        FontWeight.normal,
+        FontWeight.bold,
+        emphasis,
+      ),
     );
 
-    paintText(
+    _paintBarrierLabel(
+      canvas,
+      text: '-$spotDistanceDisplay',
+      restingCenter: lowBarrierPosition + const Offset(30, 10),
+      restingStyle: restingLabelStyle,
+      style: barrierLabelStyle,
+      growsUpwards: false,
+    );
+
+    _paintBarrierLabel(
       canvas,
       text: '+$spotDistanceDisplay',
-      anchor: highBarrierPosition + const Offset(30, -10),
-      style: TextStyle(color: color, fontSize: 12),
+      restingCenter: highBarrierPosition + const Offset(30, -10),
+      restingStyle: restingLabelStyle,
+      style: barrierLabelStyle,
+      growsUpwards: true,
     );
 
     // Drag grips, and the geometry the drag overlay hit-tests against.
@@ -457,14 +533,14 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
       height: gripStyle.size.height,
     );
 
-    if (isInteractive) {
+    if (isInteractive && drag!.dragEnabled) {
       _paintGrip(
         canvas,
         rect: highGripRect,
         color: color,
         fillColor: gripStyle.fillColor ?? theme.backgroundColor,
         style: gripStyle,
-        isEmphasized: drag!.hoveredSide == AccumulatorBarrierSide.high ||
+        isEmphasized: drag.hoveredSide == AccumulatorBarrierSide.high ||
             drag.draggedSide == AccumulatorBarrierSide.high,
       );
       _paintGrip(
@@ -495,6 +571,36 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
       canvas,
       painter: valuePainter,
       anchor: labelArea.center,
+    );
+  }
+
+  /// Paints a barrier's ± value, growing it away from its own barrier line.
+  ///
+  /// See [barrierLabelTopLeft] for where it lands and why.
+  void _paintBarrierLabel(
+    Canvas canvas, {
+    required String text,
+    required Offset restingCenter,
+    required TextStyle restingStyle,
+    required TextStyle style,
+    required bool growsUpwards,
+  }) {
+    final TextPainter resting = makeTextPainter(text, restingStyle);
+    // Reused rather than laid out twice: at rest the two styles are equal, and
+    // this runs on every frame of every tick, not just while emphasised.
+    final TextPainter painter =
+        style == restingStyle ? resting : makeTextPainter(text, style);
+
+    paintWithTextPainter(
+      canvas,
+      painter: painter,
+      anchor: barrierLabelTopLeft(
+        resting: resting,
+        painter: painter,
+        restingCenter: restingCenter,
+        growsUpwards: growsUpwards,
+      ),
+      anchorAlignment: Alignment.topLeft,
     );
   }
 

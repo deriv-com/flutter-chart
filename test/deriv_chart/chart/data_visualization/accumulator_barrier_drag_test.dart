@@ -180,6 +180,78 @@ void main() {
       controller.dispose();
     });
 
+    group('previewGrowthRate', () {
+      test('shows the band at a rate the consumer picked', () {
+        final AccumulatorBarrierDragController controller =
+            AccumulatorBarrierDragController(steps: _ladder)
+              ..publishGeometry(_geometry())
+              ..previewGrowthRate(0.05);
+
+        // The consumer owns the control now, so this is how the band keeps up
+        // with it instead of waiting for the proposal to land.
+        expect(controller.previewStep?.growthRate, 0.05);
+
+        controller.dispose();
+      });
+
+      test('hands the band back to the model when passed null', () {
+        final AccumulatorBarrierDragController controller =
+            AccumulatorBarrierDragController(steps: _ladder)
+              ..publishGeometry(_geometry())
+              ..previewGrowthRate(0.05)
+              ..previewGrowthRate(null);
+
+        expect(controller.previewStep, isNull);
+
+        controller.dispose();
+      });
+
+      test('ignores a rate the ladder does not hold', () {
+        final AccumulatorBarrierDragController controller =
+            AccumulatorBarrierDragController(steps: _ladder)
+              ..publishGeometry(_geometry())
+              ..previewGrowthRate(0.05)
+              ..previewGrowthRate(0.99);
+
+        // Nothing to show, so the model's own barriers take over rather than
+        // the band being left on a rate that is no longer selectable.
+        expect(controller.previewStep, isNull);
+
+        controller.dispose();
+      });
+
+      test('does not fight a drag already in flight', () {
+        final AccumulatorBarrierDragController controller =
+            AccumulatorBarrierDragController(steps: _ladder, dragEnabled: true)
+              ..publishGeometry(_geometry())
+              ..beginDrag(AccumulatorBarrierSide.high)
+              ..updateDrag(_ladder[0])
+              ..previewGrowthRate(0.05);
+
+        expect(controller.previewStep?.growthRate, _ladder[0].growthRate);
+
+        controller
+          ..endDrag(commit: false)
+          ..dispose();
+      });
+
+      test('notifies once per change, so the band glides rather than jumps',
+          () {
+        int notifications = 0;
+        final AccumulatorBarrierDragController controller =
+            AccumulatorBarrierDragController(steps: _ladder)
+              ..publishGeometry(_geometry())
+              ..addListener(() => notifications++)
+              ..previewGrowthRate(0.05)
+              // Same rate again: nothing moved, so nothing to announce.
+              ..previewGrowthRate(0.05);
+
+        expect(notifications, 1);
+
+        controller.dispose();
+      });
+    });
+
     test('disabling clears any in-flight interaction', () {
       final AccumulatorBarrierDragController controller =
           AccumulatorBarrierDragController(steps: _ladder)

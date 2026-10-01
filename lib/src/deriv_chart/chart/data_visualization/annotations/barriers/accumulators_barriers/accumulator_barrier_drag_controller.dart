@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 
@@ -8,28 +9,60 @@ import 'accumulator_barrier_grip_style.dart';
 import 'accumulator_barrier_side.dart';
 import 'accumulator_growth_rate_step.dart';
 
-/// Makes the Accumulators barriers draggable.
+/// Makes the Accumulators barriers interactive.
 ///
-/// A consumer that wants draggable barriers creates one of these, keeps it
+/// A consumer that wants interactive barriers creates one of these, keeps it
 /// alive for as long as the chart is mounted, feeds it the ladder of selectable
 /// growth rates, and passes it to every [AccumulatorIndicator] it builds. The
-/// chart mounts its drag overlay as soon as it sees an enabled controller on an
-/// annotation.
+/// chart mounts its interaction overlay as soon as it sees an enabled
+/// controller on an annotation.
+///
+/// There are two ways to drive it, and [dragEnabled] picks between them:
+///
+/// * **Tapping** (the default). The band is a tap target: it highlights on
+///   hover and reports [onTap], and the consumer drives the band with
+///   [previewGrowthRate] from whatever control it puts on screen.
+/// * **Dragging**. The barriers carry grips and the chart snaps the band
+///   through the ladder itself, reporting each rung as the user drags.
 ///
 /// The controller owns the transient interaction state (hover, drag, preview)
 /// so it survives the annotation being rebuilt on every tick.
 class AccumulatorBarrierDragController extends ChangeNotifier {
-  /// Initializes a controller for draggable Accumulators barriers.
+  /// Initializes a controller for interactive Accumulators barriers.
   AccumulatorBarrierDragController({
     List<AccumulatorGrowthRateStep> steps = const <AccumulatorGrowthRateStep>[],
     bool enabled = true,
+    this.dragEnabled = false,
     this.gripStyle = const AccumulatorBarrierGripStyle(),
     this.commitTimeout = const Duration(seconds: 5),
+    this.onTap,
+    this.onPressStart,
     this.onDragStart,
     this.onDragUpdate,
     this.onDragEnd,
   })  : _steps = steps,
         _enabled = enabled;
+
+  /// Whether the user can drag the barriers through the ladder.
+  ///
+  /// When false — the default — the band is a tap target instead: no grips are
+  /// drawn, no drag is recognised, and the consumer moves the band itself with
+  /// [previewGrowthRate]. [onDragStart], [onDragUpdate] and [onDragEnd] never
+  /// fire.
+  final bool dragEnabled;
+
+  /// Called when the band is tapped. Only fires while [dragEnabled] is false.
+  VoidCallback? onTap;
+
+  /// Called the moment a press lands on the band, before it is known whether it
+  /// will become a tap or a pan. Only fires while [dragEnabled] is false.
+  ///
+  /// This is how a consumer tells its own gestures apart from the chart's. A
+  /// host listening on the document in the capture phase decides what a gesture
+  /// means before the chart ever sees it, so being told at [onTap] is too late
+  /// — by then a tap-anywhere handler has already acted on it. This fires early
+  /// enough to be read on the pointer-up that follows.
+  VoidCallback? onPressStart;
 
   /// Painting and hit-testing style of the grips.
   final AccumulatorBarrierGripStyle gripStyle;
@@ -192,6 +225,44 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
       return null;
     }
     return nearestStep(geometry.committedBarrierSpotDistance);
+  }
+
+  /// Shows the band at [growthRate] without waiting for the real barriers.
+  ///
+  /// This is how a consumer that owns the control — a picker of its own rather
+  /// than the chart's grips — keeps the band with it: the band follows the
+  /// selection immediately, and the model's own barriers take over once the
+  /// proposal for the committed rate arrives. Pass null to hand the band back
+  /// to the model at once.
+  ///
+  /// Ignored while a drag is in flight, so a late consumer update cannot fight
+  /// the user's finger. A rate the ladder does not hold clears the preview.
+  void previewGrowthRate(double? growthRate) {
+    if (isDragging) {
+      return;
+    }
+
+    if (growthRate == null) {
+      clearPreview();
+      return;
+    }
+
+    final AccumulatorGrowthRateStep? step = _steps.firstWhereOrNull(
+        (AccumulatorGrowthRateStep s) => s.growthRate == growthRate);
+
+    if (step == null) {
+      clearPreview();
+      return;
+    }
+    if (_previewStep == step) {
+      return;
+    }
+
+    // Glide from wherever the band currently is, the same way a drag does.
+    _previewTransitionFrom =
+        _lastRenderedPreviewDistance ?? _geometry?.committedBarrierSpotDistance;
+    _previewStep = step;
+    notifyListeners();
   }
 
   /// Drops any preview and stops waiting for a commit.

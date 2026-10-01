@@ -157,7 +157,9 @@ class _AccumulatorBarrierDragOverlayState
     super.dispose();
   }
 
-  AccumulatorBarrierSide? _hitTest(Offset local, PointerDeviceKind kind) {
+  /// The geometry to hit-test against, or null when the barriers are not
+  /// interactive or the pointer is over the quote labels.
+  AccumulatorBarrierGeometry? _hittableGeometry(Offset local) {
     final AccumulatorBarrierGeometry? geometry = widget.controller.geometry;
     if (geometry == null || !widget.controller.enabled) {
       return null;
@@ -168,18 +170,48 @@ class _AccumulatorBarrierDragOverlayState
       return null;
     }
 
-    final bool isPrecise = kind == PointerDeviceKind.mouse ||
-        kind == PointerDeviceKind.stylus ||
-        kind == PointerDeviceKind.trackpad;
+    return geometry;
+  }
 
-    return geometry.hitTest(
-      local,
-      lineTolerance: isPrecise
-          ? widget.controller.gripStyle.mouseHitTolerance
-          : widget.controller.gripStyle.touchHitTolerance,
-      minTouchTarget:
-          isPrecise ? Size.zero : widget.controller.gripStyle.minTouchTarget,
-    );
+  bool _isPrecise(PointerDeviceKind kind) =>
+      kind == PointerDeviceKind.mouse ||
+      kind == PointerDeviceKind.stylus ||
+      kind == PointerDeviceKind.trackpad;
+
+  double _tolerance(PointerDeviceKind kind) => _isPrecise(kind)
+      ? widget.controller.gripStyle.mouseHitTolerance
+      : widget.controller.gripStyle.touchHitTolerance;
+
+  /// Whether [local] falls on the band, which is the tap target.
+  bool _onBand(Offset local, PointerDeviceKind kind) =>
+      _hittableGeometry(local)
+          ?.containsBand(local, tolerance: _tolerance(kind)) ??
+      false;
+
+  AccumulatorBarrierSide? _hitTest(Offset local, PointerDeviceKind kind) =>
+      _hittableGeometry(local)?.hitTest(
+        local,
+        lineTolerance: _tolerance(kind),
+        minTouchTarget: _isPrecise(kind)
+            ? Size.zero
+            : widget.controller.gripStyle.minTouchTarget,
+      );
+
+  /// Which barrier, if any, the pointer is interacting with.
+  ///
+  /// With dragging off the band is one target rather than two, so hover and the
+  /// tap report the nearer barrier purely to drive the highlight — nothing
+  /// downstream reads the side in that mode.
+  AccumulatorBarrierSide? _interactionTarget(
+    Offset local,
+    PointerDeviceKind kind,
+  ) {
+    if (widget.controller.dragEnabled) {
+      return _hitTest(local, kind);
+    }
+    return _onBand(local, kind)
+        ? _hittableGeometry(local)?.nearestSide(local)
+        : null;
   }
 
   void _handleHover(PointerHoverEvent event) {
@@ -191,7 +223,8 @@ class _AccumulatorBarrierDragOverlayState
       _hoverMutedAt = null;
     }
 
-    widget.controller.setHovered(_hitTest(event.localPosition, event.kind));
+    widget.controller
+        .setHovered(_interactionTarget(event.localPosition, event.kind));
   }
 
   void _handleExit(PointerExitEvent event) {
@@ -199,6 +232,10 @@ class _AccumulatorBarrierDragOverlayState
       widget.controller.setHovered(null);
     }
   }
+
+  void _handleTap() => widget.controller.onTap?.call();
+
+  void _handlePress() => widget.controller.onPressStart?.call();
 
   void _handleDragStart(AccumulatorBarrierSide side, Offset local) {
     _pointerPosition = local;
@@ -301,6 +338,10 @@ class _AccumulatorBarrierDragOverlayState
       onBarrierDragUpdate: _handleDragUpdate,
       onBarrierDragEnd: _handleDragEnd,
       onBarrierDragCancel: _handleDragCancel,
+      tapOnly: !widget.controller.dragEnabled,
+      bandHitTest: _onBand,
+      onBandTap: _handleTap,
+      onBandPress: _handlePress,
     );
 
     return MouseRegion(
