@@ -162,6 +162,13 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
     double hBarrierQuote = indicator.highBarrier;
     double lBarrierQuote = indicator.lowBarrier;
 
+    /// Where the band sits right now, as opposed to where the model settles it.
+    ///
+    /// A preview owns the band's *width*, never its position: the spot keeps
+    /// moving while the growth rate is being picked, and the band has to follow
+    /// it as smoothly as it does the rest of the time.
+    double animatedCenterQuote = committedCenterQuote;
+
     double tickX = epochToX(indicator.tick.epoch);
     double tickQuote = indicator.tick.quote;
 
@@ -177,8 +184,19 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
           ) ??
           barrierX;
 
-      // Skipped while previewing: the preview is authoritative and lerping
-      // towards the stale model would drag the band away from the finger.
+      // Animated whether or not a rung is being previewed. Only the two
+      // barriers below are the preview's to own; the centre tracks the spot,
+      // and leaving it on the incoming model made the band jump a whole tick
+      // vertically while `barrierX` glided beside it.
+      animatedCenterQuote = ui.lerpDouble(
+            (previousIndicator.highBarrier + previousIndicator.lowBarrier) / 2,
+            committedCenterQuote,
+            animationInfo.currentTickPercent,
+          ) ??
+          animatedCenterQuote;
+
+      // Skipped while previewing: the preview is authoritative on width, and
+      // lerping towards the stale model would fight it.
       if (previewStep == null) {
         hBarrierQuote = ui.lerpDouble(
               previousIndicator.highBarrier,
@@ -233,8 +251,8 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
               ) ??
               previewStep.barrierSpotDistance;
 
-      hBarrierQuote = committedCenterQuote + previewDistance;
-      lBarrierQuote = committedCenterQuote - previewDistance;
+      hBarrierQuote = animatedCenterQuote + previewDistance;
+      lBarrierQuote = animatedCenterQuote - previewDistance;
 
       // Lets the next rung change pick up from where the band actually is.
       drag?.publishRenderedPreviewDistance(previewDistance);
