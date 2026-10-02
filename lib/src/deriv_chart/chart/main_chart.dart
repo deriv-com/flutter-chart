@@ -214,6 +214,13 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   late AnimationController _accumulatorEmphasisController;
   late Animation<double> _accumulatorEmphasisAnimation;
 
+  /// Drives the one-time hint that the Accumulators band can be tapped.
+  ///
+  /// Repeats rather than running to a target, and is stopped whenever no hint
+  /// is up: it would otherwise repaint the annotation layer every frame for
+  /// the whole session, for nothing.
+  late AnimationController _accumulatorGuideController;
+
   /// The accumulators annotation the user is allowed to drag, if any.
   AccumulatorIndicator? get _draggableAccumulator =>
       widget.annotations?.whereType<AccumulatorIndicator>().firstWhereOrNull(
@@ -287,6 +294,10 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
             oldChart.showCurrentTickBlinkAnimation) {
       _updateBlinkingAnimationStatus();
     }
+
+    // The annotations are rebuilt on every tick, so the controller this reads
+    // can arrive, change or go away without any interaction at all.
+    _updateTapGuideAnimationStatus();
 
     // Update the crosshair controller when showCrosshair changes
     if (widget.showCrosshair != oldChart.showCrosshair) {
@@ -411,6 +422,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     crosshairZoomOutAnimationController.dispose();
     _accumulatorPreviewController.dispose();
     _accumulatorEmphasisController.dispose();
+    _accumulatorGuideController.dispose();
     super.dispose();
   }
 
@@ -421,6 +433,34 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     _setupCrosshairZoomOutAnimation();
     _setupAccumulatorPreviewAnimation();
     _setupAccumulatorEmphasisAnimation();
+    _setupAccumulatorGuideAnimation();
+  }
+
+  void _setupAccumulatorGuideAnimation() {
+    _accumulatorGuideController = AnimationController(
+      vsync: this,
+      // One ping a second: two rings half a cycle apart over two seconds. Fast
+      // enough to read as alive, slow enough not to nag.
+      duration: const Duration(milliseconds: 2000),
+    );
+    _updateTapGuideAnimationStatus();
+  }
+
+  /// Runs the hint's loop only while a hint is actually on screen.
+  void _updateTapGuideAnimationStatus() {
+    final bool showing =
+        _draggableAccumulator?.dragController?.showTapGuide ?? false;
+
+    if (showing == _accumulatorGuideController.isAnimating) {
+      return;
+    }
+    if (showing) {
+      _accumulatorGuideController.repeat();
+    } else {
+      _accumulatorGuideController
+        ..reset()
+        ..stop();
+    }
   }
 
   void _setupAccumulatorEmphasisAnimation() {
@@ -687,6 +727,8 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
               ..forward();
             _accumulatorEmphasisController.forward();
           }
+          // The tap that retires the hint is reported through here too.
+          _updateTapGuideAnimationStatus();
           setState(() {});
         },
         onDragBegin: () {
@@ -717,6 +759,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
               _draggableAccumulator?.dragController,
               _accumulatorPreviewController,
               _accumulatorEmphasisController,
+              _accumulatorGuideController,
             ],
             builder: (BuildContext context, _) =>
                 Stack(fit: StackFit.expand, children: <Widget>[
@@ -734,6 +777,8 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                                   _accumulatorPreviewAnimation.value,
                               accumulatorLabelEmphasis:
                                   _accumulatorEmphasisAnimation.value,
+                              accumulatorGuidePulse:
+                                  _accumulatorGuideController.value,
                             ),
                             chartData: annotation,
                             chartConfig: context.watch<ChartConfig>(),

@@ -9,6 +9,7 @@ class AnimationInfo {
     this.stateChangePercent = 1,
     this.accumulatorPreviewPercent = 1,
     this.accumulatorLabelEmphasis = 0,
+    this.accumulatorGuidePulse = 0,
   });
 
   /// Animation percent of current tick.
@@ -33,4 +34,10 @@ class AnimationInfo {
   /// The labels are the values the change is actually moving, so they grow and
   /// thicken while it is in flight to say so.
   final double accumulatorLabelEmphasis;
+
+  /// Where the Accumulators tap hint is in its loop, 0 to 1.
+  ///
+  /// Unlike the others this one does not run towards anything: it repeats for
+  /// as long as the hint is up, and the hint's shape is derived from it.
+  final double accumulatorGuidePulse;
 }

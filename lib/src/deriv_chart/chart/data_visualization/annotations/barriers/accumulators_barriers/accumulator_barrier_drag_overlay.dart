@@ -233,7 +233,13 @@ class _AccumulatorBarrierDragOverlayState
     }
   }
 
-  void _handleTap() => widget.controller.onTap?.call();
+  void _handleTap() {
+    // Dropped here, on the tap it was asking for, rather than waiting for the
+    // consumer's flag to come back a round-trip later — by which time the hint
+    // would be sitting over the control it just opened.
+    widget.controller.retireTapGuide();
+    widget.controller.onTap?.call();
+  }
 
   void _handlePress() => widget.controller.onPressStart?.call();
 

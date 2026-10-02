@@ -35,13 +35,15 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
     this.dragEnabled = false,
     this.gripStyle = const AccumulatorBarrierGripStyle(),
     this.commitTimeout = const Duration(seconds: 5),
+    bool showTapGuide = false,
     this.onTap,
     this.onPressStart,
     this.onDragStart,
     this.onDragUpdate,
     this.onDragEnd,
   })  : _steps = steps,
-        _enabled = enabled;
+        _enabled = enabled,
+        _showTapGuide = showTapGuide;
 
   /// Whether the user can drag the barriers through the ladder.
   ///
@@ -206,6 +208,48 @@ class AccumulatorBarrierDragController extends ChangeNotifier {
 
   /// Whether the barriers should be drawn in their emphasised state.
   bool get isHighlighted => _hoveredSide != null || isDragging;
+
+  bool _showTapGuide;
+
+  /// Set once a tap has answered the hint. See [retireTapGuide].
+  bool _tapRetiredGuide = false;
+
+  /// Whether to show the one-time hint that the band can be tapped.
+  ///
+  /// Never true while [dragEnabled]: the hint says "tap", and a consumer that
+  /// has turned dragging back on has grips instead of a tap target. Whether
+  /// the hint ever returns is the consumer's to remember.
+  bool get showTapGuide => _showTapGuide && !dragEnabled;
+
+  set showTapGuide(bool value) {
+    // A consumer goes on sending the old value for the frame or two before its
+    // own state catches up with the tap, and the band republishes on every
+    // tick, so without the latch the hint flicks back on over the control the
+    // tap just opened. Sending false clears it, which is also how a consumer
+    // that wants the hint back later asks for it.
+    if (value && _tapRetiredGuide) {
+      return;
+    }
+    if (!value) {
+      _tapRetiredGuide = false;
+    }
+    if (_showTapGuide == value) {
+      return;
+    }
+    _showTapGuide = value;
+    notifyListeners();
+  }
+
+  /// Drops the hint because the band was tapped, which is what it was asking
+  /// for, rather than waiting for the consumer's flag to come back.
+  void retireTapGuide() {
+    _tapRetiredGuide = true;
+    if (!_showTapGuide) {
+      return;
+    }
+    _showTapGuide = false;
+    notifyListeners();
+  }
 
   /// Barrier distance the band is gliding away from, or `null` when there is
   /// nothing to glide from and the preview should be drawn outright.

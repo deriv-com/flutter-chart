@@ -18,6 +18,7 @@ import 'accumulator_barrier_drag_controller.dart';
 import 'accumulator_barrier_geometry.dart';
 import 'accumulator_barrier_grip_style.dart';
 import 'accumulator_barrier_side.dart';
+import 'accumulator_barrier_tap_guide.dart';
 import 'accumulator_growth_rate_step.dart';
 
 /// Size of a barrier's ± label at rest.
@@ -551,6 +552,22 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
         style: gripStyle,
         isEmphasized: drag.hoveredSide == AccumulatorBarrierSide.low ||
             drag.draggedSide == AccumulatorBarrierSide.low,
+      );
+    }
+
+    // Painted after the grips and before the geometry is published, so it sits
+    // over the band without taking part in hit-testing — the whole band is the
+    // target, and the hint only says so.
+    if (isInteractive && drag!.showTapGuide) {
+      paintAccumulatorTapGuide(
+        canvas,
+        center: accumulatorTapGuideCenter(
+          bandLeft: barrierX,
+          bandTop: highBarrierPosition.dy,
+          bandBottom: lowBarrierPosition.dy,
+        ),
+        color: color,
+        pulse: animationInfo.accumulatorGuidePulse,
       );
     }
 
