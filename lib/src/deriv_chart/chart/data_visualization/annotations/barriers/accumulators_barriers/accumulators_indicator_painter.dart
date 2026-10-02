@@ -14,6 +14,64 @@ import 'package:deriv_chart/src/theme/colors.dart';
 import 'package:deriv_chart/src/theme/painting_styles/barrier_style.dart';
 import 'package:flutter/material.dart';
 
+import 'accumulator_barrier_drag_controller.dart';
+import 'accumulator_barrier_geometry.dart';
+import 'accumulator_barrier_grip_style.dart';
+import 'accumulator_barrier_side.dart';
+import 'accumulator_barrier_tap_guide.dart';
+import 'accumulator_growth_rate_step.dart';
+
+/// Size of a barrier's ± label at rest.
+const double _restingLabelFontSize = 12;
+
+/// Size it grows to while the growth rate is being changed.
+///
+/// Well clear of the resting size — the two numbers the user is choosing
+/// between should be the loudest thing on the chart while they scroll, and a
+/// few points of growth read as a rendering wobble rather than as the values
+/// responding — but short of double, which crowds the band on a phone.
+const double _emphasisedLabelFontSize = 22;
+
+/// Where to draw a barrier's ± label so that emphasising it moves it away from
+/// its own barrier line.
+///
+/// [restingCenter] is where the label sits when nothing is emphasised, so with
+/// [painter] still at the resting size this returns exactly what centring the
+/// text there would. What differs is where the extra size goes once [painter]
+/// is larger: centring spends half the growth walking the text onto the barrier
+/// it labels, and half of it leftwards over the band. Here the two edges facing
+/// the chart's empty space are the ones that move.
+///
+/// [growsUpwards] says which side of its barrier the label is on — `+` sits
+/// above the high barrier, `-` below the low one — so whichever edge faces the
+/// line is the one pinned.
+@visibleForTesting
+Offset barrierLabelTopLeft({
+  required TextPainter resting,
+  required TextPainter painter,
+  required Offset restingCenter,
+  required bool growsUpwards,
+}) {
+  final double restingTop = restingCenter.dy - resting.height / 2;
+
+  final double top;
+  if (growsUpwards) {
+    // The baseline, not the box's bottom edge. A larger font has a deeper
+    // descender, and these values are all digits, so pinning the box would
+    // visibly lift the numerals away from the line as they grew.
+    final double restingBaseline = restingTop +
+        resting.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+    top = restingBaseline -
+        painter.computeDistanceToActualBaseline(TextBaseline.alphabetic);
+  } else {
+    // Below its barrier, so it is the top edge that faces the line.
+    top = restingTop;
+  }
+
+  // Left edge pinned either way, so the growth runs right into the empty chart.
+  return Offset(restingCenter.dx - resting.width / 2, top);
+}
+
 /// Accumulator barriers painter.
 class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
   /// Initializes [AccumulatorIndicatorPainter].
@@ -73,15 +131,43 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
         series.tick.quote < series.lowBarrier) {
       color = LegacyLightThemeColors.accentRed;
     }
-    _linePaint.color = color;
+    final AccumulatorBarrierDragController? drag = series.dragController;
+    final bool isInteractive =
+        (drag?.enabled ?? false) && series.activeContract == null;
+    final AccumulatorBarrierGripStyle gripStyle =
+        drag?.gripStyle ?? const AccumulatorBarrierGripStyle();
+    final bool isHighlighted = isInteractive && drag!.isHighlighted;
+
+    _linePaint
+      ..color = color
+      ..strokeWidth =
+          isHighlighted ? gripStyle.highlightLineWidth : gripStyle.lineWidth;
     _linePaintFill.color = color;
-    _rectPaint.color = color.withOpacity(0.08);
+    _rectPaint.color = color.withOpacity(
+      isHighlighted ? gripStyle.highlightBandOpacity : gripStyle.bandOpacity,
+    );
 
     final AccumulatorIndicator indicator = series;
+
+    // The band the model currently commits to, independent of any drag
+    // preview. The drag maps pointer positions to a distance from this centre,
+    // and the commit latch compares incoming barriers against this distance.
+    final double committedCenterQuote =
+        (indicator.highBarrier + indicator.lowBarrier) / 2;
+    final double committedSpotDistance =
+        (indicator.highBarrier - indicator.lowBarrier).abs() / 2;
+    final AccumulatorGrowthRateStep? previewStep = indicator.previewStep;
 
     double barrierX = epochToX(indicator.barrierEpoch);
     double hBarrierQuote = indicator.highBarrier;
     double lBarrierQuote = indicator.lowBarrier;
+
+    /// Where the band sits right now, as opposed to where the model settles it.
+    ///
+    /// A preview owns the band's *width*, never its position: the spot keeps
+    /// moving while the growth rate is being picked, and the band has to follow
+    /// it as smoothly as it does the rest of the time.
+    double animatedCenterQuote = committedCenterQuote;
 
     double tickX = epochToX(indicator.tick.epoch);
     double tickQuote = indicator.tick.quote;
@@ -98,19 +184,34 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
           ) ??
           barrierX;
 
-      hBarrierQuote = ui.lerpDouble(
-            previousIndicator.highBarrier,
-            indicator.highBarrier,
+      // Animated whether or not a rung is being previewed. Only the two
+      // barriers below are the preview's to own; the centre tracks the spot,
+      // and leaving it on the incoming model made the band jump a whole tick
+      // vertically while `barrierX` glided beside it.
+      animatedCenterQuote = ui.lerpDouble(
+            (previousIndicator.highBarrier + previousIndicator.lowBarrier) / 2,
+            committedCenterQuote,
             animationInfo.currentTickPercent,
           ) ??
-          hBarrierQuote;
+          animatedCenterQuote;
 
-      lBarrierQuote = ui.lerpDouble(
-            previousIndicator.lowBarrier,
-            indicator.lowBarrier,
-            animationInfo.currentTickPercent,
-          ) ??
-          lBarrierQuote;
+      // Skipped while previewing: the preview is authoritative on width, and
+      // lerping towards the stale model would fight it.
+      if (previewStep == null) {
+        hBarrierQuote = ui.lerpDouble(
+              previousIndicator.highBarrier,
+              indicator.highBarrier,
+              animationInfo.currentTickPercent,
+            ) ??
+            hBarrierQuote;
+
+        lBarrierQuote = ui.lerpDouble(
+              previousIndicator.lowBarrier,
+              indicator.lowBarrier,
+              animationInfo.currentTickPercent,
+            ) ??
+            lBarrierQuote;
+      }
 
       tickX = ui.lerpDouble(
             epochToX(previousIndicator.tick.epoch),
@@ -135,6 +236,28 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
             ) ??
             animatedProfit;
       }
+    }
+
+    if (previewStep != null) {
+      // Glide between rungs rather than stepping, matching how the band already
+      // moves when the growth rate is changed from the trade params.
+      final double? from = drag?.previewTransitionFrom;
+      final double previewDistance = from == null
+          ? previewStep.barrierSpotDistance
+          : ui.lerpDouble(
+                from,
+                previewStep.barrierSpotDistance,
+                animationInfo.accumulatorPreviewPercent,
+              ) ??
+              previewStep.barrierSpotDistance;
+
+      hBarrierQuote = animatedCenterQuote + previewDistance;
+      lBarrierQuote = animatedCenterQuote - previewDistance;
+
+      // Lets the next rung change pick up from where the band actually is.
+      drag?.publishRenderedPreviewDistance(previewDistance);
+    } else {
+      drag?.publishRenderedPreviewDistance(null);
     }
 
     final Offset highBarrierPosition = Offset(
@@ -363,19 +486,119 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
       ..drawPath(upperTrianglePath, _linePaintFill)
       ..drawPath(lowerTrianglePath, _linePaintFill);
 
-    paintText(
-      canvas,
-      text: '-${indicator.barrierSpotDistance}',
-      anchor: lowBarrierPosition + const Offset(30, 10),
-      style: TextStyle(color: color, fontSize: 12),
+    final String spotDistanceDisplay =
+        previewStep?.barrierSpotDistanceDisplay ??
+            indicator.barrierSpotDistance;
+
+    // These two are the values a growth-rate change actually moves, so they
+    // grow and thicken while one is in flight and settle back afterwards.
+    final double emphasis = animationInfo.accumulatorLabelEmphasis;
+    final TextStyle restingLabelStyle = TextStyle(
+      color: color,
+      fontSize: _restingLabelFontSize,
+    );
+    final TextStyle barrierLabelStyle = TextStyle(
+      color: color,
+      fontSize: ui.lerpDouble(
+        _restingLabelFontSize,
+        _emphasisedLabelFontSize,
+        emphasis,
+      ),
+      fontWeight: FontWeight.lerp(
+        FontWeight.normal,
+        FontWeight.bold,
+        emphasis,
+      ),
     );
 
-    paintText(
+    _paintBarrierLabel(
       canvas,
-      text: '+${indicator.barrierSpotDistance}',
-      anchor: highBarrierPosition + const Offset(30, -10),
-      style: TextStyle(color: color, fontSize: 12),
+      text: '-$spotDistanceDisplay',
+      restingCenter: lowBarrierPosition + const Offset(30, 10),
+      restingStyle: restingLabelStyle,
+      style: barrierLabelStyle,
+      growsUpwards: false,
     );
+
+    _paintBarrierLabel(
+      canvas,
+      text: '+$spotDistanceDisplay',
+      restingCenter: highBarrierPosition + const Offset(30, -10),
+      restingStyle: restingLabelStyle,
+      style: barrierLabelStyle,
+      growsUpwards: true,
+    );
+
+    // Drag grips, and the geometry the drag overlay hit-tests against.
+    //
+    // Pinned to the right of the plotting area rather than centred in the band,
+    // so a finger on a grip never covers the barrier value it is changing. The
+    // Y-axis label strip is excluded, and the grip is kept from spilling past
+    // the left edge of a very narrow band.
+    final double rightEdgeX = drag?.graphAreaWidth ?? size.width;
+    final double gripCenterX = AccumulatorBarrierGeometry.gripCenterX(
+      barrierX: barrierX,
+      rightEdgeX: rightEdgeX,
+      style: gripStyle,
+    );
+    final Rect highGripRect = Rect.fromCenter(
+      center: Offset(gripCenterX, highBarrierPosition.dy),
+      width: gripStyle.size.width,
+      height: gripStyle.size.height,
+    );
+    final Rect lowGripRect = Rect.fromCenter(
+      center: Offset(gripCenterX, lowBarrierPosition.dy),
+      width: gripStyle.size.width,
+      height: gripStyle.size.height,
+    );
+
+    if (isInteractive && drag!.dragEnabled) {
+      _paintGrip(
+        canvas,
+        rect: highGripRect,
+        color: color,
+        fillColor: gripStyle.fillColor ?? theme.backgroundColor,
+        style: gripStyle,
+        isEmphasized: drag.hoveredSide == AccumulatorBarrierSide.high ||
+            drag.draggedSide == AccumulatorBarrierSide.high,
+      );
+      _paintGrip(
+        canvas,
+        rect: lowGripRect,
+        color: color,
+        fillColor: gripStyle.fillColor ?? theme.backgroundColor,
+        style: gripStyle,
+        isEmphasized: drag.hoveredSide == AccumulatorBarrierSide.low ||
+            drag.draggedSide == AccumulatorBarrierSide.low,
+      );
+    }
+
+    // Painted after the grips and before the geometry is published, so it sits
+    // over the band without taking part in hit-testing — the whole band is the
+    // target, and the hint only says so.
+    if (isInteractive && drag!.showTapGuide) {
+      paintAccumulatorTapGuide(
+        canvas,
+        center: accumulatorTapGuideCenter(
+          bandLeft: barrierX,
+          bandTop: highBarrierPosition.dy,
+          bandBottom: lowBarrierPosition.dy,
+        ),
+        color: color,
+        pulse: animationInfo.accumulatorGuidePulse,
+      );
+    }
+
+    drag?.publishGeometry(AccumulatorBarrierGeometry(
+      barrierX: barrierX,
+      rightEdgeX: size.width,
+      highBarrierY: highBarrierPosition.dy,
+      lowBarrierY: lowBarrierPosition.dy,
+      highGripRect: highGripRect,
+      lowGripRect: lowGripRect,
+      bandCenterQuote: committedCenterQuote,
+      committedBarrierSpotDistance: committedSpotDistance,
+    ));
 
     // Label.
     paintLabelBackground(canvas, labelArea, style.labelShape, _paint);
@@ -384,6 +607,85 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
       painter: valuePainter,
       anchor: labelArea.center,
     );
+  }
+
+  /// Paints a barrier's ± value, growing it away from its own barrier line.
+  ///
+  /// See [barrierLabelTopLeft] for where it lands and why.
+  void _paintBarrierLabel(
+    Canvas canvas, {
+    required String text,
+    required Offset restingCenter,
+    required TextStyle restingStyle,
+    required TextStyle style,
+    required bool growsUpwards,
+  }) {
+    final TextPainter resting = makeTextPainter(text, restingStyle);
+    // Reused rather than laid out twice: at rest the two styles are equal, and
+    // this runs on every frame of every tick, not just while emphasised.
+    final TextPainter painter =
+        style == restingStyle ? resting : makeTextPainter(text, style);
+
+    paintWithTextPainter(
+      canvas,
+      painter: painter,
+      anchor: barrierLabelTopLeft(
+        resting: resting,
+        painter: painter,
+        restingCenter: restingCenter,
+        growsUpwards: growsUpwards,
+      ),
+      anchorAlignment: Alignment.topLeft,
+    );
+  }
+
+  /// Paints one drag grip: a rounded pill straddling the barrier line, with a
+  /// few horizontal rules inside it to read as a grab handle.
+  void _paintGrip(
+    Canvas canvas, {
+    required Rect rect,
+    required Color color,
+    required Color fillColor,
+    required AccumulatorBarrierGripStyle style,
+    required bool isEmphasized,
+  }) {
+    final RRect body = RRect.fromRectAndRadius(
+      rect,
+      Radius.circular(style.borderRadius),
+    );
+
+    canvas
+      ..drawRRect(
+        body,
+        Paint()
+          ..color = fillColor
+          ..style = PaintingStyle.fill,
+      )
+      ..drawRRect(
+        body,
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth =
+              isEmphasized ? style.borderWidth * 2 : style.borderWidth,
+      );
+
+    final Paint innerLinePaint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = style.borderWidth;
+
+    final double span = style.innerLineSpacing * (style.innerLineCount - 1);
+    double lineY = rect.center.dy - span / 2;
+
+    for (int i = 0; i < style.innerLineCount; i++) {
+      canvas.drawLine(
+        Offset(rect.left + style.innerLineInset, lineY),
+        Offset(rect.right - style.innerLineInset, lineY),
+        innerLinePaint,
+      );
+      lineY += style.innerLineSpacing;
+    }
   }
 
   void _paintBlinkingGlow(

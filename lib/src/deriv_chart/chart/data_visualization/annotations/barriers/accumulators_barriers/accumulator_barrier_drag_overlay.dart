@@ -1,0 +1,378 @@
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/chart_data.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+
+import 'accumulator_barrier_drag_controller.dart';
+import 'accumulator_barrier_geometry.dart';
+import 'accumulator_barrier_gesture_recognizer.dart';
+import 'accumulator_barrier_grip_style.dart';
+import 'accumulator_barrier_side.dart';
+import 'accumulator_growth_rate_step.dart';
+
+/// Transparent layer that turns the Accumulators barriers into a control.
+///
+/// It captures hover and drag over the barrier lines and their grips, and
+/// writes the resulting interaction state onto the controller. It never paints
+/// anything — `AccumulatorIndicatorPainter` renders both the idle and the
+/// previewed band, so there is exactly one source of truth for the pixels.
+class AccumulatorBarrierDragOverlay extends StatefulWidget {
+  /// Initializes the drag layer for the Accumulators barriers.
+  const AccumulatorBarrierDragOverlay({
+    required this.controller,
+    required this.quoteFromCanvasY,
+    required this.onInteractionChanged,
+    this.graphAreaWidth,
+    this.onDragBegin,
+    this.onDragFinish,
+    super.key,
+  });
+
+  /// The controller the chart found on the accumulators annotation.
+  final AccumulatorBarrierDragController controller;
+
+  /// Converts a canvas Y coordinate back into a quote.
+  final QuoteFromY quoteFromCanvasY;
+
+  /// Width of the plotting area, i.e. everything left of the quote labels.
+  ///
+  /// The barrier lines are painted all the way to the canvas edge, but the
+  /// strip under the labels belongs to the Y-axis scale gesture — claiming a
+  /// pointer there would take vertical scaling away from the user.
+  final double? graphAreaWidth;
+
+  /// Called when the previewed band moves, so the chart can recompute the quote
+  /// bounds it has to fit.
+  ///
+  /// Deliberately not called for hover: that only restyles the barriers, which
+  /// the annotation layer repaints on its own, and this callback is expensive
+  /// enough to show up on a CPU profile if it runs every time the pointer
+  /// crosses a barrier.
+  final VoidCallback onInteractionChanged;
+
+  /// Called when a drag starts, so the chart can suspend competing behaviour.
+  final VoidCallback? onDragBegin;
+
+  /// Called when a drag ends or is cancelled.
+  final VoidCallback? onDragFinish;
+
+  @override
+  State<AccumulatorBarrierDragOverlay> createState() =>
+      _AccumulatorBarrierDragOverlayState();
+}
+
+class _AccumulatorBarrierDragOverlayState
+    extends State<AccumulatorBarrierDragOverlay> {
+  late final AccumulatorBarrierGestureRecognizer _recognizer =
+      AccumulatorBarrierGestureRecognizer(
+    hitTest: _hitTest,
+    onBarrierDragStart: _handleDragStart,
+    onBarrierDragUpdate: _handleDragUpdate,
+    onBarrierDragEnd: _handleDragEnd,
+    onBarrierDragCancel: _handleDragCancel,
+    debugOwner: this,
+  );
+
+  /// Quote at the vertical centre of the band, captured once per drag so the
+  /// mapping from pointer position to barrier distance cannot drift while the
+  /// user's finger is down.
+  double? _dragCenterQuote;
+
+  /// Barrier distance the band was committed to when the drag began, and the
+  /// factor pointer travel is divided by. Both are fixed for the whole gesture
+  /// so the mapping cannot shift under the user's finger.
+  double? _dragStartDistance;
+  double _dragGain = 1;
+
+  /// How far the pointer must travel, in logical pixels, before the preview is
+  /// allowed to switch away from the current step.
+  static const double _hysteresisInPixels = 2;
+
+  /// Preview the chart was last told about, so hover-only notifications can be
+  /// told apart from ones that actually move the band.
+  AccumulatorGrowthRateStep? _lastReportedPreview;
+
+  /// Where the pointer was through the gesture, so a release knows the spot to
+  /// stop hovering.
+  Offset? _pointerPosition;
+
+  /// Where the last gesture ended, while hover is still being ignored there.
+  ///
+  /// Letting go does not move the pointer, so the first hover after a release
+  /// arrives at the same spot and would immediately re-highlight the barrier
+  /// the user just let go of — on touch as well, because the browser follows a
+  /// tap with a synthetic mouse event. Hover wakes up again as soon as the
+  /// pointer genuinely moves.
+  Offset? _hoverMutedAt;
+
+  /// How far the pointer must move from a release before hover counts again.
+  static const double _hoverWakeDistance = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _lastReportedPreview = widget.controller.previewStep;
+    widget.controller.addListener(_handleControllerChanged);
+  }
+
+  @override
+  void didUpdateWidget(covariant AccumulatorBarrierDragOverlay oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller.removeListener(_handleControllerChanged);
+      widget.controller.addListener(_handleControllerChanged);
+      _lastReportedPreview = widget.controller.previewStep;
+    }
+  }
+
+  /// Splits a controller change into the cheap part and the expensive one.
+  ///
+  /// Hover and drag state both change what this widget renders — the cursor —
+  /// so it always rebuilds itself, which costs a `MouseRegion` and a
+  /// `SizedBox`. Only a change of previewed step moves the band, and only that
+  /// needs the chart to re-measure its quote bounds.
+  void _handleControllerChanged() {
+    if (!mounted) {
+      return;
+    }
+
+    final AccumulatorGrowthRateStep? preview = widget.controller.previewStep;
+    final bool previewChanged = preview != _lastReportedPreview;
+    _lastReportedPreview = preview;
+
+    setState(() {});
+
+    if (previewChanged) {
+      widget.onInteractionChanged();
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_handleControllerChanged);
+    if (widget.controller.isDragging) {
+      widget.controller.endDrag(commit: false);
+      widget.onDragFinish?.call();
+    }
+    _recognizer.dispose();
+    super.dispose();
+  }
+
+  /// The geometry to hit-test against, or null when the barriers are not
+  /// interactive or the pointer is over the quote labels.
+  AccumulatorBarrierGeometry? _hittableGeometry(Offset local) {
+    final AccumulatorBarrierGeometry? geometry = widget.controller.geometry;
+    if (geometry == null || !widget.controller.enabled) {
+      return null;
+    }
+
+    final double? graphAreaWidth = widget.graphAreaWidth;
+    if (graphAreaWidth != null && local.dx > graphAreaWidth) {
+      return null;
+    }
+
+    return geometry;
+  }
+
+  bool _isPrecise(PointerDeviceKind kind) =>
+      kind == PointerDeviceKind.mouse ||
+      kind == PointerDeviceKind.stylus ||
+      kind == PointerDeviceKind.trackpad;
+
+  double _tolerance(PointerDeviceKind kind) => _isPrecise(kind)
+      ? widget.controller.gripStyle.mouseHitTolerance
+      : widget.controller.gripStyle.touchHitTolerance;
+
+  /// Whether [local] falls on the band, which is the tap target.
+  bool _onBand(Offset local, PointerDeviceKind kind) =>
+      _hittableGeometry(local)
+          ?.containsBand(local, tolerance: _tolerance(kind)) ??
+      false;
+
+  AccumulatorBarrierSide? _hitTest(Offset local, PointerDeviceKind kind) =>
+      _hittableGeometry(local)?.hitTest(
+        local,
+        lineTolerance: _tolerance(kind),
+        minTouchTarget: _isPrecise(kind)
+            ? Size.zero
+            : widget.controller.gripStyle.minTouchTarget,
+      );
+
+  /// Which barrier, if any, the pointer is interacting with.
+  ///
+  /// With dragging off the band is one target rather than two, so hover and the
+  /// tap report the nearer barrier purely to drive the highlight — nothing
+  /// downstream reads the side in that mode.
+  AccumulatorBarrierSide? _interactionTarget(
+    Offset local,
+    PointerDeviceKind kind,
+  ) {
+    if (widget.controller.dragEnabled) {
+      return _hitTest(local, kind);
+    }
+    return _onBand(local, kind)
+        ? _hittableGeometry(local)?.nearestSide(local)
+        : null;
+  }
+
+  void _handleHover(PointerHoverEvent event) {
+    final Offset? mutedAt = _hoverMutedAt;
+    if (mutedAt != null) {
+      if ((event.localPosition - mutedAt).distance <= _hoverWakeDistance) {
+        return;
+      }
+      _hoverMutedAt = null;
+    }
+
+    widget.controller
+        .setHovered(_interactionTarget(event.localPosition, event.kind));
+  }
+
+  void _handleExit(PointerExitEvent event) {
+    if (!widget.controller.isDragging) {
+      widget.controller.setHovered(null);
+    }
+  }
+
+  void _handleTap() {
+    // Dropped here, on the tap it was asking for, rather than waiting for the
+    // consumer's flag to come back a round-trip later — by which time the hint
+    // would be sitting over the control it just opened.
+    widget.controller.retireTapGuide();
+    widget.controller.onTap?.call();
+  }
+
+  void _handlePress() => widget.controller.onPressStart?.call();
+
+  void _handleDragStart(AccumulatorBarrierSide side, Offset local) {
+    _pointerPosition = local;
+    // A fresh press is a deliberate act wherever it lands, so it always counts.
+    _hoverMutedAt = null;
+    final AccumulatorBarrierGeometry? geometry = widget.controller.geometry;
+    _dragCenterQuote = geometry?.bandCenterQuote;
+    // Anchor on what the band is actually showing, which is the latched preview
+    // when a previous commit is still in flight — anchoring on the committed
+    // distance instead would make the band jump on touch-down.
+    _dragStartDistance = widget.controller.previewStep?.barrierSpotDistance ??
+        geometry?.committedBarrierSpotDistance;
+    _dragGain = _resolveDragGain();
+    widget.controller.beginDrag(side);
+    widget.onDragBegin?.call();
+  }
+
+  /// How much pointer travel to trade for a unit of barrier movement.
+  ///
+  /// Barrier distances across the ladder can be only a handful of pixels apart,
+  /// which would put every growth rate within a flick of each other. Scaling the
+  /// drag so the whole ladder takes [AccumulatorBarrierGripStyle.ladderTravel]
+  /// pixels keeps the gesture usable; a ladder already wider than that is left
+  /// alone, since reducing sensitivity would only make it worse.
+  double _resolveDragGain() {
+    final AccumulatorBarrierGripStyle style = widget.controller.gripStyle;
+    final double quotesPerPixel = _quotesPerPixel();
+    final double ladderSpan = widget.controller.ladderSpan;
+
+    if (quotesPerPixel <= 0 || ladderSpan <= 0) {
+      return 1;
+    }
+
+    final double ladderSpanInPixels = ladderSpan / quotesPerPixel;
+    if (ladderSpanInPixels >= style.ladderTravel) {
+      return 1;
+    }
+
+    return (style.ladderTravel / ladderSpanInPixels)
+        .clamp(1, style.maxDragGain);
+  }
+
+  void _handleDragUpdate(Offset local) {
+    _pointerPosition = local;
+    final double? centerQuote = _dragCenterQuote;
+    if (centerQuote == null) {
+      return;
+    }
+
+    final double pointerQuote = widget.quoteFromCanvasY(local.dy);
+    final double pointerDistance =
+        widget.controller.draggedSide == AccumulatorBarrierSide.high
+            ? pointerQuote - centerQuote
+            : centerQuote - pointerQuote;
+
+    // Scale the pointer's travel down onto the ladder, around wherever the band
+    // was when the drag started.
+    final double startDistance = _dragStartDistance ?? pointerDistance;
+    final double distance =
+        startDistance + (pointerDistance - startDistance) / _dragGain;
+
+    widget.controller.updateDrag(
+      widget.controller.nearestStep(
+        distance < 0 ? 0 : distance,
+        // Expressed in pointer pixels, so the slack feels the same whatever
+        // the gain works out to be.
+        hysteresis: _quotesPerPixel() * _hysteresisInPixels / _dragGain,
+      ),
+    );
+  }
+
+  void _handleDragEnd() => _finishDrag(commit: true);
+
+  void _handleDragCancel() => _finishDrag(commit: false);
+
+  void _finishDrag({required bool commit}) {
+    _dragCenterQuote = null;
+    _dragStartDistance = null;
+    // Set before ending the drag, so the highlight `endDrag` clears cannot be
+    // put straight back by a hover at the spot the pointer was released.
+    _hoverMutedAt = _pointerPosition;
+    _pointerPosition = null;
+    widget.controller.endDrag(commit: commit);
+    widget.onDragFinish?.call();
+  }
+
+  double _quotesPerPixel() =>
+      (widget.quoteFromCanvasY(0) - widget.quoteFromCanvasY(1)).abs();
+
+  @override
+  Widget build(BuildContext context) {
+    // The painter needs this to place the grips against the Y axis, and this is
+    // the only place the chart hands it over. Safe to do here: every build of
+    // this widget precedes the frame's paint.
+    widget.controller.publishGraphAreaWidth(widget.graphAreaWidth);
+
+    _recognizer.updateCallbacks(
+      hitTest: _hitTest,
+      onBarrierDragStart: _handleDragStart,
+      onBarrierDragUpdate: _handleDragUpdate,
+      onBarrierDragEnd: _handleDragEnd,
+      onBarrierDragCancel: _handleDragCancel,
+      tapOnly: !widget.controller.dragEnabled,
+      bandHitTest: _onBand,
+      onBandTap: _handleTap,
+      onBandPress: _handlePress,
+    );
+
+    return MouseRegion(
+      opaque: false,
+      hitTestBehavior: HitTestBehavior.translucent,
+      cursor: widget.controller.hoveredSide != null
+          ? widget.controller.gripStyle.cursor
+          : MouseCursor.defer,
+      onHover: _handleHover,
+      onExit: _handleExit,
+      child: RawGestureDetector(
+        // Must stay translucent: `RenderStack` stops hit-testing at the first
+        // child that reports a hit, and the interactive layer below this one
+        // is opaque.
+        behavior: HitTestBehavior.translucent,
+        gestures: <Type, GestureRecognizerFactory<GestureRecognizer>>{
+          AccumulatorBarrierGestureRecognizer:
+              GestureRecognizerFactoryWithHandlers<
+                  AccumulatorBarrierGestureRecognizer>(
+            () => _recognizer,
+            (AccumulatorBarrierGestureRecognizer instance) {},
+          ),
+        },
+        child: const SizedBox.expand(),
+      ),
+    );
+  }
+}
