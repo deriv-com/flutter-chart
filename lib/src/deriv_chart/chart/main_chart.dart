@@ -22,6 +22,9 @@ import '../interactive_layer/interactive_layer_behaviours/interactive_layer_beha
 import '../interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import 'basic_chart.dart';
 import 'multiple_animated_builder.dart';
+import 'data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_controller.dart';
+import 'data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_overlay.dart';
+import 'data_visualization/annotations/barriers/accumulators_barriers/accumulators_indicator.dart';
 import 'data_visualization/annotations/chart_annotation.dart';
 import 'data_visualization/chart_data.dart';
 import 'data_visualization/chart_series/data_series.dart';
@@ -130,7 +133,16 @@ class MainChart extends BasicChart {
   final bool showCrosshair;
 
   /// Fraction of the chart's height taken by top or bottom padding.
-  /// Quote scaling (drag on quote area) is controlled by this variable.
+  ///
+  /// This is the vertical zoom: less padding stretches the visible quote range
+  /// over more pixels. Clamped to
+  /// [BasicChartState.minVerticalPaddingFraction] (most zoomed in) and
+  /// [BasicChartState.maxVerticalPaddingFraction] (most zoomed out), the same
+  /// range a drag on the quote labels covers.
+  ///
+  /// Sets the scale rather than fixing it: the user can still drag away from
+  /// it. Changing the value re-applies it, so a consumer can re-scale on, say,
+  /// a trade-type switch without recreating the chart.
   final double? verticalPaddingFraction;
 
   /// The color of the loading animation.
@@ -178,6 +190,42 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
 
   late final InteractiveLayerBehaviour _interactiveLayerBehaviour;
 
+  /// X-scroll blocking state to restore when a barrier drag ends — a consumer
+  /// may own it, so it must not be blindly reset to false.
+
+  /// Glides the accumulators band from one growth rate to the next while it is
+  /// being dragged.
+  ///
+  /// Deliberately not the shared current-tick controller, even though it uses
+  /// the same duration and curve: [playNewTickAnimation] is a no-op while an
+  /// animation is already running, and rungs are crossed far faster than that
+  /// animation runs, so most transitions would be skipped.
+  late AnimationController _accumulatorPreviewController;
+  late Animation<double> _accumulatorPreviewAnimation;
+
+  /// Emphasis on the barrier labels while the growth rate is being changed.
+  ///
+  /// Held for as long as a preview is on screen rather than pulsed per rung:
+  /// the labels are what the change is moving, so they stay prominent until it
+  /// settles.
+  late AnimationController _accumulatorEmphasisController;
+  late Animation<double> _accumulatorEmphasisAnimation;
+
+  /// Drives the one-time hint that the Accumulators band can be tapped.
+  ///
+  /// Repeats rather than running to a target, and is stopped whenever no hint
+  /// is up: it would otherwise repaint the annotation layer every frame for
+  /// the whole session, for nothing.
+  late AnimationController _accumulatorGuideController;
+
+  /// The accumulators annotation the user can interact with, if any.
+  AccumulatorIndicator? get _interactiveAccumulator =>
+      widget.annotations?.whereType<AccumulatorIndicator>().firstWhereOrNull(
+            (AccumulatorIndicator indicator) =>
+                (indicator.controller?.enabled ?? false) &&
+                indicator.activeContract == null,
+          );
+
   @override
   double get verticalPadding {
     if (canvasSize == null) {
@@ -205,23 +253,48 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     _interactiveLayerBehaviour =
         widget.interactiveLayerBehaviour ?? InteractiveLayerDesktopBehaviour();
 
-    if (widget.verticalPaddingFraction != null) {
-      verticalPaddingFraction = widget.verticalPaddingFraction!;
-    }
+    _applyVerticalPaddingFraction();
 
     _setupController();
     _setupCrosshairController();
+  }
+
+  /// Takes the consumer's vertical scale, if it supplied one.
+  ///
+  /// Clamped to what a drag on the quote labels can reach, so a consumer cannot
+  /// ask for a scale the user would be unable to return to.
+  void _applyVerticalPaddingFraction() {
+    final double? fraction = widget.verticalPaddingFraction;
+    if (fraction == null) {
+      return;
+    }
+    verticalPaddingFraction = fraction.clamp(
+      BasicChartState.minVerticalPaddingFraction,
+      BasicChartState.maxVerticalPaddingFraction,
+    );
   }
 
   @override
   void didUpdateWidget(MainChart oldChart) {
     super.didUpdateWidget(oldChart);
 
+    // Only when the consumer asks for a *different* scale. The value the user
+    // has dragged to lives in the same field, so re-applying on every rebuild
+    // would fight their gesture; re-applying on a change is what lets the
+    // consumer re-scale on, say, a trade-type switch.
+    if (widget.verticalPaddingFraction != oldChart.verticalPaddingFraction) {
+      _applyVerticalPaddingFraction();
+    }
+
     if (widget.isLive != oldChart.isLive ||
         widget.showCurrentTickBlinkAnimation !=
             oldChart.showCurrentTickBlinkAnimation) {
       _updateBlinkingAnimationStatus();
     }
+
+    // The annotations are rebuilt on every tick, so the controller this reads
+    // can arrive, change or go away without any interaction at all.
+    _updateTapGuideAnimationStatus();
 
     // Update the crosshair controller when showCrosshair changes
     if (widget.showCrosshair != oldChart.showCrosshair) {
@@ -311,6 +384,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   void dispose() {
     _currentTickBlinkingController.dispose();
     crosshairZoomOutAnimationController.dispose();
+    _accumulatorPreviewController.dispose();
+    _accumulatorEmphasisController.dispose();
+    _accumulatorGuideController.dispose();
     super.dispose();
   }
 
@@ -319,6 +395,59 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
     super.setupAnimations();
     _setupBlinkingAnimation();
     _setupCrosshairZoomOutAnimation();
+    _setupAccumulatorPreviewAnimation();
+    _setupAccumulatorEmphasisAnimation();
+    _setupAccumulatorGuideAnimation();
+  }
+
+  void _setupAccumulatorGuideAnimation() {
+    _accumulatorGuideController = AnimationController(
+      vsync: this,
+      // One ping a second: two rings half a cycle apart over two seconds. Fast
+      // enough to read as alive, slow enough not to nag.
+      duration: const Duration(milliseconds: 2000),
+    );
+    _updateTapGuideAnimationStatus();
+  }
+
+  /// Runs the hint's loop only while a hint is actually on screen.
+  void _updateTapGuideAnimationStatus() {
+    final bool showing =
+        _interactiveAccumulator?.controller?.showTapGuide ?? false;
+
+    if (showing == _accumulatorGuideController.isAnimating) {
+      return;
+    }
+    if (showing) {
+      _accumulatorGuideController.repeat();
+    } else {
+      _accumulatorGuideController
+        ..reset()
+        ..stop();
+    }
+  }
+
+  void _setupAccumulatorEmphasisAnimation() {
+    _accumulatorEmphasisController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+    _accumulatorEmphasisAnimation = CurvedAnimation(
+      parent: _accumulatorEmphasisController,
+      curve: Curves.easeOut,
+    );
+  }
+
+  void _setupAccumulatorPreviewAnimation() {
+    _accumulatorPreviewController = AnimationController(
+      vsync: this,
+      duration: widget.currentTickAnimationDuration,
+      value: 1,
+    );
+    _accumulatorPreviewAnimation = CurvedAnimation(
+      parent: _accumulatorPreviewController,
+      curve: Curves.easeOut,
+    );
   }
 
   void _setupController() {
@@ -456,6 +585,10 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                   _buildInteractiveLayer(context, xAxis)
                 else if (widget.drawingTools != null)
                   _buildDrawingToolChart(widget.drawingTools!),
+                if (_interactiveAccumulator != null)
+                  _buildAccumulatorBarrierOverlay(
+                    _interactiveAccumulator!.controller!,
+                  ),
                 if (widget.showScrollToLastTickButton &&
                     _isScrollToLastTickAvailable)
                   Positioned(
@@ -530,15 +663,56 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         loadingAnimationColor: widget.loadingAnimationColor,
       );
 
+  Widget _buildAccumulatorBarrierOverlay(
+    AccumulatorBarrierController controller,
+  ) =>
+      AccumulatorBarrierOverlay(
+        controller: controller,
+        graphAreaWidth: xAxis.graphAreaWidth,
+        // A full setState is the right lever here: it re-runs
+        // updateVisibleData() -> recalculateMinMax() and
+        // _updateQuoteBoundTargets() so the Y bounds follow the preview.
+        // Rebuilding only the annotations' AnimatedBuilder would skip both.
+        // The preview snaps, so this fires once per rung the consumer picks.
+        onInteractionChanged: () {
+          if (!mounted) {
+            return;
+          }
+          // Only ever called when the previewed rung changed, so this is the
+          // right moment to start the band gliding to it.
+          if (_interactiveAccumulator?.controller?.previewStep == null) {
+            // Settled back onto the model's own barriers: let the labels calm
+            // down, and leave the glide where it is rather than restarting it.
+            _accumulatorEmphasisController.reverse();
+          } else {
+            _accumulatorPreviewController
+              ..reset()
+              ..forward();
+            _accumulatorEmphasisController.forward();
+          }
+          // The tap that retires the hint is reported through here too.
+          _updateTapGuideAnimationStatus();
+          setState(() {});
+        },
+      );
+
   Widget _buildAnnotations() => LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           final XAxisModel xAxisModel = context.watch<XAxisModel>();
           return MultipleAnimatedBuilder(
-            animations: <Listenable>[
+            animations: <Listenable?>[
               currentTickAnimation,
               _currentTickBlinkAnimation,
               topBoundQuoteAnimationController,
               bottomBoundQuoteAnimationController,
+              // Hovering the band restyles it but moves nothing, so it
+              // repaints here instead of rebuilding the whole chart. The
+              // glide between rungs repaints here for the same reason — at
+              // 60fps, rebuilding the chart would be far too expensive.
+              _interactiveAccumulator?.controller,
+              _accumulatorPreviewController,
+              _accumulatorEmphasisController,
+              _accumulatorGuideController,
             ],
             builder: (BuildContext context, _) =>
                 Stack(fit: StackFit.expand, children: <Widget>[
@@ -552,6 +726,12 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                             animationInfo: AnimationInfo(
                               currentTickPercent: currentTickAnimation.value,
                               blinkingPercent: _currentTickBlinkAnimation.value,
+                              accumulatorPreviewPercent:
+                                  _accumulatorPreviewAnimation.value,
+                              accumulatorLabelEmphasis:
+                                  _accumulatorEmphasisAnimation.value,
+                              accumulatorGuidePulse:
+                                  _accumulatorGuideController.value,
                             ),
                             chartData: annotation,
                             chartConfig: context.watch<ChartConfig>(),
