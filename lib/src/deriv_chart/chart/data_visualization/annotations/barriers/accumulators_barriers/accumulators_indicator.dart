@@ -15,7 +15,7 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
     required this.barrierSpotDistance,
     required this.barrierEpoch,
     this.activeContract,
-    this.dragController,
+    this.controller,
     String? id,
     HorizontalBarrierStyle? style =
         const HorizontalBarrierStyle(labelShape: LabelShape.pentagon),
@@ -57,13 +57,13 @@ class AccumulatorIndicator extends ChartAnnotation<AccumulatorObject> {
   /// Supply a controller (kept alive across rebuilds by the consumer) to let
   /// the user drag either barrier through a ladder of growth rates. When it is
   /// `null` — or disabled — the barriers render exactly as before.
-  final AccumulatorBarrierDragController? dragController;
+  final AccumulatorBarrierController? controller;
 
   /// The step the barriers are currently previewing, if a drag is in progress
   /// or a commit is still pending.
   AccumulatorGrowthRateStep? get previewStep =>
-      (dragController?.enabled ?? false) && activeContract == null
-          ? dragController?.previewStep
+      (controller?.enabled ?? false) && activeContract == null
+          ? controller?.previewStep
           : null;
 
   @override

@@ -14,7 +14,6 @@ import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/markers/mar
 import 'package:deriv_chart/src/deriv_chart/chart/loading_animation.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/x_axis/x_axis_model.dart';
 import 'package:deriv_chart/src/models/chart_config.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../drawing_tool_chart/drawing_tool_chart.dart';
@@ -23,9 +22,8 @@ import '../interactive_layer/interactive_layer_behaviours/interactive_layer_beha
 import '../interactive_layer/interactive_layer_behaviours/interactive_layer_desktop_behaviour.dart';
 import 'basic_chart.dart';
 import 'multiple_animated_builder.dart';
-import 'data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_drag_controller.dart';
-import 'data_visualization/models/accumulator_object.dart';
-import 'data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_drag_overlay.dart';
+import 'data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_controller.dart';
+import 'data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_overlay.dart';
 import 'data_visualization/annotations/barriers/accumulators_barriers/accumulators_indicator.dart';
 import 'data_visualization/annotations/chart_annotation.dart';
 import 'data_visualization/chart_data.dart';
@@ -194,7 +192,6 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
 
   /// X-scroll blocking state to restore when a barrier drag ends — a consumer
   /// may own it, so it must not be blindly reset to false.
-  bool _xScrollBlockedBeforeBarrierDrag = false;
 
   /// Glides the accumulators band from one growth rate to the next while it is
   /// being dragged.
@@ -221,11 +218,11 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   /// the whole session, for nothing.
   late AnimationController _accumulatorGuideController;
 
-  /// The accumulators annotation the user is allowed to drag, if any.
-  AccumulatorIndicator? get _draggableAccumulator =>
+  /// The accumulators annotation the user can interact with, if any.
+  AccumulatorIndicator? get _interactiveAccumulator =>
       widget.annotations?.whereType<AccumulatorIndicator>().firstWhereOrNull(
             (AccumulatorIndicator indicator) =>
-                (indicator.dragController?.enabled ?? false) &&
+                (indicator.controller?.enabled ?? false) &&
                 indicator.activeContract == null,
           );
 
@@ -373,39 +370,6 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
       }
     }
 
-    // A barrier drag latches its preview past the drag end so the band does
-    // not rubber-band back to the pre-drag width while the consumer's commit
-    // is in flight. Release it as soon as the model has actually moved.
-    final AccumulatorIndicator? accumulator = _draggableAccumulator;
-    final AccumulatorBarrierDragController? dragController =
-        accumulator?.dragController;
-
-    // Captured before the release, which clears them.
-    final double? previewDistance = dragController?.renderedPreviewDistance;
-    final double? previewCenter = dragController?.geometry?.bandCenterQuote;
-
-    if (dragController?.releaseLatchIfModelMoved(
-          highBarrier: accumulator!.highBarrier,
-          lowBarrier: accumulator.lowBarrier,
-        ) ??
-        false) {
-      if (previewDistance != null && previewCenter != null) {
-        // Glide from the band the user was shown to the barriers that actually
-        // arrived. Left alone, previousObject still holds the pre-drag band and
-        // the lerp would rubber-band through it.
-        accumulator!.previousObject = AccumulatorObject(
-          tick: accumulator.tick,
-          barrierEpoch: accumulator.barrierEpoch,
-          lowBarrier: previewCenter - previewDistance,
-          highBarrier: previewCenter + previewDistance,
-          profit: accumulator.activeContract?.profit,
-        );
-      } else {
-        // Nothing to glide from, so skip the stale lerp outright.
-        completeCurrentTickAnimation();
-      }
-    }
-
     // If only an annotation advanced, super() did not start the animation —
     // start it here. Harmless when the main series already started it
     // (playNewTickAnimation is a no-op while an animation is in flight).
@@ -449,7 +413,7 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
   /// Runs the hint's loop only while a hint is actually on screen.
   void _updateTapGuideAnimationStatus() {
     final bool showing =
-        _draggableAccumulator?.dragController?.showTapGuide ?? false;
+        _interactiveAccumulator?.controller?.showTapGuide ?? false;
 
     if (showing == _accumulatorGuideController.isAnimating) {
       return;
@@ -621,9 +585,9 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
                   _buildInteractiveLayer(context, xAxis)
                 else if (widget.drawingTools != null)
                   _buildDrawingToolChart(widget.drawingTools!),
-                if (_draggableAccumulator != null)
-                  _buildAccumulatorBarrierDragOverlay(
-                    _draggableAccumulator!.dragController!,
+                if (_interactiveAccumulator != null)
+                  _buildAccumulatorBarrierOverlay(
+                    _interactiveAccumulator!.controller!,
                   ),
                 if (widget.showScrollToLastTickButton &&
                     _isScrollToLastTickAvailable)
@@ -699,25 +663,24 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
         loadingAnimationColor: widget.loadingAnimationColor,
       );
 
-  Widget _buildAccumulatorBarrierDragOverlay(
-    AccumulatorBarrierDragController controller,
+  Widget _buildAccumulatorBarrierOverlay(
+    AccumulatorBarrierController controller,
   ) =>
-      AccumulatorBarrierDragOverlay(
+      AccumulatorBarrierOverlay(
         controller: controller,
-        quoteFromCanvasY: chartQuoteFromCanvasY,
         graphAreaWidth: xAxis.graphAreaWidth,
         // A full setState is the right lever here: it re-runs
         // updateVisibleData() -> recalculateMinMax() and
         // _updateQuoteBoundTargets() so the Y bounds follow the preview.
         // Rebuilding only the annotations' AnimatedBuilder would skip both.
-        // The preview snaps, so this fires a handful of times per drag.
+        // The preview snaps, so this fires once per rung the consumer picks.
         onInteractionChanged: () {
           if (!mounted) {
             return;
           }
           // Only ever called when the previewed rung changed, so this is the
           // right moment to start the band gliding to it.
-          if (_draggableAccumulator?.dragController?.previewStep == null) {
+          if (_interactiveAccumulator?.controller?.previewStep == null) {
             // Settled back onto the model's own barriers: let the labels calm
             // down, and leave the glide where it is rather than restarting it.
             _accumulatorEmphasisController.reverse();
@@ -731,16 +694,6 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
           _updateTapGuideAnimationStatus();
           setState(() {});
         },
-        onDragBegin: () {
-          crosshairController.onExit(const PointerExitEvent());
-          _xScrollBlockedBeforeBarrierDrag = xAxis.isScrollBlocked;
-          // A second finger opens a new gesture arena the barrier recognizer
-          // does not join, so the chart's scale recognizer could still pan.
-          xAxis.isScrollBlocked = true;
-          completeCurrentTickAnimation();
-        },
-        onDragFinish: () =>
-            xAxis.isScrollBlocked = _xScrollBlockedBeforeBarrierDrag,
       );
 
   Widget _buildAnnotations() => LayoutBuilder(
@@ -752,11 +705,11 @@ class _ChartImplementationState extends BasicChartState<MainChart> {
               _currentTickBlinkAnimation,
               topBoundQuoteAnimationController,
               bottomBoundQuoteAnimationController,
-              // Hovering a draggable barrier restyles it but moves nothing, so
-              // it repaints here instead of rebuilding the whole chart. The
+              // Hovering the band restyles it but moves nothing, so it
+              // repaints here instead of rebuilding the whole chart. The
               // glide between rungs repaints here for the same reason — at
               // 60fps, rebuilding the chart would be far too expensive.
-              _draggableAccumulator?.dragController,
+              _interactiveAccumulator?.controller,
               _accumulatorPreviewController,
               _accumulatorEmphasisController,
               _accumulatorGuideController,

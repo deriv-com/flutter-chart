@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_drag_overlay.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_overlay.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_geometry.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_tap_guide.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +13,6 @@ import 'package:flutter_test/flutter_test.dart';
 const double _canvasSize = 400;
 
 const Color _barrierColor = Color(0xFF2C9AFF);
-
-double _quoteFromY(double y) => 200 - y;
 
 const List<AccumulatorGrowthRateStep> _ladder = <AccumulatorGrowthRateStep>[
   AccumulatorGrowthRateStep(growthRate: 0.01, barrierSpotDistance: 100),
@@ -27,9 +25,6 @@ AccumulatorBarrierGeometry _geometry() => AccumulatorBarrierGeometry(
       rightEdgeX: 400,
       highBarrierY: 50,
       lowBarrierY: 150,
-      highGripRect: const Rect.fromLTWH(185, 44, 31, 12),
-      lowGripRect: const Rect.fromLTWH(185, 144, 31, 12),
-      bandCenterQuote: 100,
       committedBarrierSpotDistance: 50,
     );
 
@@ -73,26 +68,13 @@ void main() {
 
   group('when it shows', () {
     test('is off by default, so a consumer opts in', () {
-      expect(AccumulatorBarrierDragController(steps: _ladder).showTapGuide,
-          isFalse);
-    });
-
-    test('is never shown to a consumer that drags instead of tapping', () {
-      final AccumulatorBarrierDragController controller =
-          AccumulatorBarrierDragController(
-        steps: _ladder,
-        dragEnabled: true,
-        showTapGuide: true,
-      );
-      addTearDown(controller.dispose);
-
-      // The hint says "tap"; grips are not a tap target.
-      expect(controller.showTapGuide, isFalse);
+      expect(
+          AccumulatorBarrierController(steps: _ladder).showTapGuide, isFalse);
     });
 
     test('repaints when it is turned on and off', () {
-      final AccumulatorBarrierDragController controller =
-          AccumulatorBarrierDragController(steps: _ladder);
+      final AccumulatorBarrierController controller =
+          AccumulatorBarrierController(steps: _ladder);
       addTearDown(controller.dispose);
 
       int notifications = 0;
@@ -108,8 +90,8 @@ void main() {
     });
 
     test('a consumer cannot bring it back after the tap that answered it', () {
-      final AccumulatorBarrierDragController controller =
-          AccumulatorBarrierDragController(
+      final AccumulatorBarrierController controller =
+          AccumulatorBarrierController(
         steps: _ladder,
         showTapGuide: true,
       );
@@ -125,8 +107,8 @@ void main() {
     });
 
     test('a consumer that sends false can show it again later', () {
-      final AccumulatorBarrierDragController controller =
-          AccumulatorBarrierDragController(steps: _ladder, showTapGuide: true);
+      final AccumulatorBarrierController controller =
+          AccumulatorBarrierController(steps: _ladder, showTapGuide: true);
       addTearDown(controller.dispose);
 
       controller
@@ -243,8 +225,8 @@ void main() {
   testWidgets('a tap retires the hint without waiting for the consumer',
       (WidgetTester tester) async {
     int taps = 0;
-    final AccumulatorBarrierDragController controller =
-        AccumulatorBarrierDragController(
+    final AccumulatorBarrierController controller =
+        AccumulatorBarrierController(
       steps: _ladder,
       showTapGuide: true,
       onTap: () => taps++,
@@ -257,9 +239,8 @@ void main() {
           child: SizedBox(
             width: _canvasSize,
             height: _canvasSize,
-            child: AccumulatorBarrierDragOverlay(
+            child: AccumulatorBarrierOverlay(
               controller: controller,
-              quoteFromCanvasY: _quoteFromY,
               onInteractionChanged: () {},
             ),
           ),
@@ -268,7 +249,7 @@ void main() {
     );
 
     final Offset origin =
-        tester.getTopLeft(find.byType(AccumulatorBarrierDragOverlay));
+        tester.getTopLeft(find.byType(AccumulatorBarrierOverlay));
     await tester.tapAt(origin + const Offset(250, 100));
     await tester.pump();
 

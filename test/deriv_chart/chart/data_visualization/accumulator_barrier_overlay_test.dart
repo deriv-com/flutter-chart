@@ -1,18 +1,13 @@
 import 'package:deriv_chart/deriv_chart.dart';
-import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_drag_overlay.dart';
 import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_geometry.dart';
+import 'package:deriv_chart/src/deriv_chart/chart/data_visualization/annotations/barriers/accumulators_barriers/accumulator_barrier_overlay.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-/// The band as a tap target, which is what a consumer gets by default: no
-/// grips, no dragging, and the control lives in the consumer's own UI.
-///
-/// The band covers a large part of the chart, so the one thing it must not do
-/// is take the pointer away from panning.
+/// The band as a tap target: the consumer's own control is what moves it, so
+/// the one thing the band must not do is take the pointer away from panning.
 const double _canvasSize = 400;
-
-double _quoteFromY(double y) => 200 - y;
 
 const List<AccumulatorGrowthRateStep> _ladder = <AccumulatorGrowthRateStep>[
   AccumulatorGrowthRateStep(growthRate: 0.01, barrierSpotDistance: 100),
@@ -21,24 +16,26 @@ const List<AccumulatorGrowthRateStep> _ladder = <AccumulatorGrowthRateStep>[
 ];
 
 /// Band centred on quote 100 (y = 100), barriers 50 away: y=50 and y=150.
-AccumulatorBarrierGeometry _geometry() => AccumulatorBarrierGeometry(
+AccumulatorBarrierGeometry _geometry() => const AccumulatorBarrierGeometry(
       barrierX: 100,
       rightEdgeX: 400,
       highBarrierY: 50,
       lowBarrierY: 150,
-      highGripRect: const Rect.fromLTWH(185, 44, 31, 12),
-      lowGripRect: const Rect.fromLTWH(185, 144, 31, 12),
-      bandCenterQuote: 100,
       committedBarrierSpotDistance: 50,
     );
 
 void main() {
-  late AccumulatorBarrierDragController controller;
+  late AccumulatorBarrierController controller;
   late int taps;
   late int presses;
+  late int interactionChanges;
   late List<String> panLog;
 
-  Future<void> pumpOverlay(WidgetTester tester) async {
+  Future<void> pumpOverlay(
+    WidgetTester tester, {
+    double? graphAreaWidth,
+    bool withPanBelow = false,
+  }) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Center(
@@ -48,17 +45,18 @@ void main() {
             child: Stack(
               children: <Widget>[
                 // Stands in for the chart's own pan, underneath the overlay.
-                Positioned.fill(
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onPanStart: (_) => panLog.add('start'),
-                    onPanUpdate: (_) => panLog.add('update'),
+                if (withPanBelow)
+                  Positioned.fill(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onPanStart: (_) => panLog.add('start'),
+                      onPanUpdate: (_) => panLog.add('update'),
+                    ),
                   ),
-                ),
-                AccumulatorBarrierDragOverlay(
+                AccumulatorBarrierOverlay(
                   controller: controller,
-                  quoteFromCanvasY: _quoteFromY,
-                  onInteractionChanged: () {},
+                  graphAreaWidth: graphAreaWidth,
+                  onInteractionChanged: () => interactionChanges++,
                 ),
               ],
             ),
@@ -69,13 +67,14 @@ void main() {
   }
 
   Offset at(WidgetTester tester, Offset local) =>
-      tester.getTopLeft(find.byType(AccumulatorBarrierDragOverlay)) + local;
+      tester.getTopLeft(find.byType(AccumulatorBarrierOverlay)) + local;
 
   setUp(() {
     taps = 0;
     presses = 0;
+    interactionChanges = 0;
     panLog = <String>[];
-    controller = AccumulatorBarrierDragController(
+    controller = AccumulatorBarrierController(
       steps: _ladder,
       onTap: () => taps++,
       onPressStart: () => presses++,
@@ -167,7 +166,7 @@ void main() {
 
   testWidgets('a press that becomes a drag pans the chart instead',
       (WidgetTester tester) async {
-    await pumpOverlay(tester);
+    await pumpOverlay(tester, withPanBelow: true);
 
     // Starting inside the band must not cost the user the pan: the band is far
     // too big to swallow every gesture that begins on it.
@@ -182,38 +181,78 @@ void main() {
     expect(taps, 0);
   });
 
-  testWidgets('nothing is dragged, whatever the pointer does',
+  testWidgets('presses over the quote-label strip are left to the Y axis',
       (WidgetTester tester) async {
-    await pumpOverlay(tester);
+    await pumpOverlay(tester, graphAreaWidth: 150);
 
-    final TestGesture gesture =
-        await tester.startGesture(at(tester, const Offset(250, 50)));
-    await gesture.moveBy(const Offset(0, -60));
+    // On the band, but to the right of the plotting area.
+    await tester.tapAt(at(tester, const Offset(300, 100)));
     await tester.pump();
 
-    expect(controller.isDragging, isFalse);
-    expect(controller.previewStep, isNull);
-
-    await gesture.up();
-    await tester.pump();
+    expect(presses, 0);
+    expect(taps, 0);
   });
 
-  testWidgets('hovering the band highlights it', (WidgetTester tester) async {
+  testWidgets('a disabled controller ignores the band entirely',
+      (WidgetTester tester) async {
+    controller.enabled = false;
     await pumpOverlay(tester);
 
-    final TestGesture pointer =
-        await tester.createGesture(kind: PointerDeviceKind.mouse);
-    await pointer.addPointer(location: Offset.zero);
-    addTearDown(pointer.removePointer);
-
-    await pointer.moveTo(at(tester, const Offset(250, 100)));
+    await tester.tapAt(at(tester, const Offset(250, 100)));
     await tester.pump();
 
-    expect(controller.isHighlighted, isTrue);
+    expect(presses, 0);
+    expect(taps, 0);
+  });
 
-    await pointer.moveTo(at(tester, const Offset(250, 300)));
-    await tester.pump();
+  group('hover', () {
+    MouseCursor cursorOf(WidgetTester tester) => tester
+        .widget<MouseRegion>(
+          find
+              .descendant(
+                of: find.byType(AccumulatorBarrierOverlay),
+                matching: find.byType(MouseRegion),
+              )
+              .first,
+        )
+        .cursor;
 
-    expect(controller.isHighlighted, isFalse);
+    testWidgets('highlights the band without re-measuring the chart',
+        (WidgetTester tester) async {
+      await pumpOverlay(tester);
+
+      final TestGesture pointer =
+          await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await pointer.addPointer(location: Offset.zero);
+      addTearDown(pointer.removePointer);
+
+      await pointer.moveTo(at(tester, const Offset(250, 100)));
+      await tester.pump();
+
+      expect(controller.isHighlighted, isTrue);
+      expect(cursorOf(tester), controller.style.cursor);
+
+      await pointer.moveTo(at(tester, const Offset(250, 300)));
+      await tester.pump();
+
+      expect(controller.isHighlighted, isFalse);
+      expect(cursorOf(tester), MouseCursor.defer);
+
+      // The band never moved, so the chart was never asked to recompute its
+      // quote bounds — that rebuild walks every series and annotation, and
+      // running it on each hover showed up as a CPU spike.
+      expect(interactionChanges, 0);
+    });
+
+    testWidgets('a moved band does ask the chart to re-measure',
+        (WidgetTester tester) async {
+      await pumpOverlay(tester);
+      expect(interactionChanges, 0);
+
+      controller.previewGrowthRate(0.01);
+      await tester.pump();
+
+      expect(interactionChanges, 1);
+    });
   });
 }

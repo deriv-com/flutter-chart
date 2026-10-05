@@ -28,7 +28,7 @@ double _epochToX(int epoch) => epoch.toDouble();
 AccumulatorIndicator _bandAt(
   double quote, {
   double distance = 1,
-  AccumulatorBarrierDragController? controller,
+  AccumulatorBarrierController? controller,
 }) =>
     AccumulatorIndicator(
       Tick(epoch: 1000, quote: quote),
@@ -38,13 +38,13 @@ AccumulatorIndicator _bandAt(
       highBarrierDisplay: '${quote + distance}',
       barrierSpotDistance: '$distance',
       barrierEpoch: 1000,
-      dragController: controller,
+      controller: controller,
     );
 
 /// Paints one frame and reports the band it actually rendered.
 ({double center, double height}) _render(
   AccumulatorIndicator band,
-  AccumulatorBarrierDragController controller,
+  AccumulatorBarrierController controller,
   double tickPercent,
 ) {
   AccumulatorIndicatorPainter(band).paint(
@@ -77,10 +77,10 @@ AccumulatorIndicator _advance(
 }
 
 void main() {
-  late AccumulatorBarrierDragController controller;
+  late AccumulatorBarrierController controller;
 
   setUp(() {
-    controller = AccumulatorBarrierDragController(steps: _ladder);
+    controller = AccumulatorBarrierController(steps: _ladder);
   });
 
   tearDown(() => controller.dispose());
