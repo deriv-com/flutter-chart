@@ -17,6 +17,12 @@ class AccumulatorBarrierStyle {
     this.mouseHitTolerance = 6,
     this.touchHitTolerance = 12,
     this.cursor = SystemMouseCursors.click,
+    this.tapGuideLabelBackgroundColor = const Color(0xFF383D4A),
+    this.tapGuideLabelStyle = const TextStyle(
+      color: Colors.white,
+      fontSize: 12,
+      fontWeight: FontWeight.w400,
+    ),
   });
 
   /// Stroke width of the barrier lines when idle.
@@ -41,6 +47,21 @@ class AccumulatorBarrierStyle {
   /// Cursor shown while the band is hovered.
   final MouseCursor cursor;
 
+  /// Fill behind the tap hint's label.
+  ///
+  /// A fixed slate rather than the barrier's own colour: the label is a chip
+  /// over the chart, and tinting it with the band would leave it competing with
+  /// the band for the same reading.
+  final Color tapGuideLabelBackgroundColor;
+
+  /// Type for the tap hint's label.
+  ///
+  /// Deliberately without a `height`: the font's own metrics leave the glyphs
+  /// room for their ascenders and descenders, and a forced line height would
+  /// either clip the `j` in "adjust" or pad the pill by an amount the padding
+  /// constants cannot see.
+  final TextStyle tapGuideLabelStyle;
+
   /// Creates a copy of this style with the given fields replaced.
   AccumulatorBarrierStyle copyWith({
     double? lineWidth,
@@ -50,6 +71,8 @@ class AccumulatorBarrierStyle {
     double? mouseHitTolerance,
     double? touchHitTolerance,
     MouseCursor? cursor,
+    Color? tapGuideLabelBackgroundColor,
+    TextStyle? tapGuideLabelStyle,
   }) =>
       AccumulatorBarrierStyle(
         lineWidth: lineWidth ?? this.lineWidth,
@@ -59,5 +82,8 @@ class AccumulatorBarrierStyle {
         mouseHitTolerance: mouseHitTolerance ?? this.mouseHitTolerance,
         touchHitTolerance: touchHitTolerance ?? this.touchHitTolerance,
         cursor: cursor ?? this.cursor,
+        tapGuideLabelBackgroundColor:
+            tapGuideLabelBackgroundColor ?? this.tapGuideLabelBackgroundColor,
+        tapGuideLabelStyle: tapGuideLabelStyle ?? this.tapGuideLabelStyle,
       );
 }

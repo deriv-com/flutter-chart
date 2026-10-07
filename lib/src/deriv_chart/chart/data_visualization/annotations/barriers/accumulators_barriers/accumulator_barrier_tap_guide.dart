@@ -4,8 +4,17 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
+import 'package:deriv_chart/src/deriv_chart/chart/helpers/paint_functions/paint_text.dart';
+
 /// Outer size of the guide badge, the halo at its widest included.
 const double accumulatorTapGuideSize = 32;
+
+/// Gap between the pulsing badge and the label beside it.
+const double _labelGap = 4;
+
+/// Padding inside the label's pill.
+const double _labelPaddingX = 8;
+const double _labelPaddingY = 4;
 
 /// Gap between the band's top-left corner and the badge's box.
 const double accumulatorTapGuideInset = 8;
@@ -65,17 +74,25 @@ Offset accumulatorTapGuideCenter({
 
 /// Paints the one-time hint that the Accumulators band can be tapped.
 ///
-/// A hand on a disc, with halo rings pinging off it. [pulse] is a 0..1 value
-/// that repeats for as long as the hint is up; everything here is derived from
-/// it, so the caller owns the tempo and this owns the shape.
+/// A hand on a disc, with halo rings pinging off it, and [label] on a pill
+/// beside it. [pulse] is a 0..1 value that repeats for as long as the hint is
+/// up; everything here is derived from it, so the caller owns the tempo and
+/// this owns the shape.
 ///
 /// Two rings are in flight half a cycle apart. One ring alone leaves a visible
 /// dead beat between pings, which reads as a glitch rather than a rhythm.
+///
+/// [label] is the consumer's to supply and to translate — the chart has no
+/// locale of its own, so copy it invented would ship in English everywhere. A
+/// null or empty one paints the badge alone.
 void paintAccumulatorTapGuide(
   Canvas canvas, {
   required Offset center,
   required Color color,
   required double pulse,
+  required Color labelBackgroundColor,
+  required TextStyle labelStyle,
+  String? label,
 }) {
   final Paint ringPaint = Paint()..style = PaintingStyle.stroke;
 
@@ -113,6 +130,51 @@ void paintAccumulatorTapGuide(
       _handPath.transform(_handTransform(center, coreRadius / _coreRadius)),
       Paint()..color = Colors.white,
     );
+
+  _paintLabel(canvas,
+      center: center,
+      label: label,
+      background: labelBackgroundColor,
+      style: labelStyle);
+}
+
+/// The pill that says what the hand is asking for.
+///
+/// Anchored to the badge's outer edge rather than the disc's, so it does not
+/// shift as the halo pings or the core swells — a label that breathed with the
+/// badge would read as two things moving, not one thing beating.
+void _paintLabel(
+  Canvas canvas, {
+  required Offset center,
+  required String? label,
+  required Color background,
+  required TextStyle style,
+}) {
+  if (label == null || label.isEmpty) {
+    return;
+  }
+
+  final TextPainter painter = makeTextPainter(label, style);
+  final double height = painter.height + _labelPaddingY * 2;
+  final double left = center.dx + accumulatorTapGuideSize / 2 + _labelGap;
+  final Rect pill = Rect.fromLTWH(
+    left,
+    center.dy - height / 2,
+    painter.width + _labelPaddingX * 2,
+    height,
+  );
+
+  canvas.drawRRect(
+    // Fully rounded: the design's 100px radius on a pill this short is a stadium.
+    RRect.fromRectAndRadius(pill, Radius.circular(height / 2)),
+    Paint()..color = background,
+  );
+  paintWithTextPainter(
+    canvas,
+    painter: painter,
+    anchor: Offset(pill.left + _labelPaddingX, pill.top + _labelPaddingY),
+    anchorAlignment: Alignment.topLeft,
+  );
 }
 
 /// Scales the authored hand to [_handHeight] (times the disc's own swell, so it
