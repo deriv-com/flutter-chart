@@ -27,11 +27,20 @@ class AccumulatorBarrierController extends ChangeNotifier {
     bool enabled = true,
     this.style = const AccumulatorBarrierStyle(),
     bool showTapGuide = false,
+    this.tapGuideLabel,
     this.onTap,
     this.onPressStart,
   })  : _steps = steps,
         _enabled = enabled,
         _showTapGuide = showTapGuide;
+
+  /// Copy for the tap hint's label, or null to show the badge alone.
+  ///
+  /// The consumer's to supply and to translate: the chart has no locale of its
+  /// own, so a string it invented would ship in English everywhere. Read at
+  /// paint time, so it needs no notification of its own — set it alongside
+  /// [showTapGuide], which does notify.
+  String? tapGuideLabel;
 
   /// Called when the band is tapped.
   VoidCallback? onTap;

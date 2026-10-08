@@ -540,6 +540,9 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
         ),
         color: color,
         pulse: animationInfo.accumulatorGuidePulse,
+        label: interaction.tapGuideLabel,
+        labelBackgroundColor: interaction.style.tapGuideLabelBackgroundColor,
+        labelStyle: interaction.style.tapGuideLabelStyle,
       );
     }
 

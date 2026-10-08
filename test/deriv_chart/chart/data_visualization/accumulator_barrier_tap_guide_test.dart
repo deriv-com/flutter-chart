@@ -124,8 +124,15 @@ void main() {
 
   group('what it draws', () {
     /// Paints one frame of the hint and reads the pixels back.
-    Future<Color> Function(Offset) painted(double pulse) {
-      const Size size = Size(80, 80);
+    ///
+    /// The style comes from the real default rather than a literal, so these
+    /// read what the chart actually draws.
+    Future<Color> Function(Offset) painted(
+      double pulse, {
+      String? label,
+      Size size = const Size(80, 80),
+    }) {
+      const AccumulatorBarrierStyle style = AccumulatorBarrierStyle();
       final ui.PictureRecorder recorder = ui.PictureRecorder();
 
       paintAccumulatorTapGuide(
@@ -133,6 +140,9 @@ void main() {
         center: const Offset(40, 40),
         color: _barrierColor,
         pulse: pulse,
+        label: label,
+        labelBackgroundColor: style.tapGuideLabelBackgroundColor,
+        labelStyle: style.tapGuideLabelStyle,
       );
 
       final Future<ByteData?> pixels = recorder
@@ -219,6 +229,77 @@ void main() {
 
     test('fades a ring as it goes, so it never outshines the disc', () async {
       expect((await halo(0.5)).every((int alpha) => alpha < 0xFF), isTrue);
+    });
+
+    test('paints no label when the consumer supplies none', () async {
+      // The chart has no copy of its own, so without one it draws the badge
+      // alone rather than inventing a string it cannot translate.
+      final Future<Color> Function(Offset) pixel =
+          painted(0, size: const Size(200, 80));
+
+      for (double x = 57; x < 200; x++) {
+        expect((await pixel(Offset(x, 40))).alpha, 0,
+            reason: 'nothing should sit beside the badge at x=$x');
+      }
+    });
+
+    test('puts the label on a pill beside the badge', () async {
+      const AccumulatorBarrierStyle style = AccumulatorBarrierStyle();
+      final Future<Color> Function(Offset) pixel =
+          painted(0, label: 'Tap to adjust', size: const Size(200, 80));
+
+      // Clear of the badge's 32px box, which ends at x=56, plus the 4px gap.
+      expect(await pixel(const Offset(62, 40)),
+          isNot(equals(const Color(0x00000000))));
+
+      // Counted rather than probed: the text sits on the pill, so a single
+      // point can land on a glyph instead of the fill.
+      int fill = 0;
+      for (double x = 61; x < 110; x++) {
+        if (await pixel(Offset(x, 34)) == style.tapGuideLabelBackgroundColor) {
+          fill++;
+        }
+      }
+      expect(fill, greaterThan(20), reason: 'the pill should be drawn');
+    });
+
+    test('keeps the text clear of the pill it sits on', () async {
+      const AccumulatorBarrierStyle style = AccumulatorBarrierStyle();
+      final Future<Color> Function(Offset) pixel =
+          painted(0, label: 'Tap to adjust', size: const Size(200, 80));
+
+      // Counted from the first pixel of fill rather than from a computed edge:
+      // the pill's cap is a curve, so its outermost column is antialiased and
+      // never matches the fill exactly.
+      int padding = 0;
+      bool inside = false;
+      for (double x = 58; x < 110; x++) {
+        if (await pixel(Offset(x, 40)) == style.tapGuideLabelBackgroundColor) {
+          inside = true;
+          padding++;
+        } else if (inside) {
+          break;
+        }
+      }
+
+      // Enough that the first glyph is not pressed against the edge. The design's
+      // own 4px read as cramped on screen at this size.
+      expect(padding, greaterThanOrEqualTo(6),
+          reason: 'the label should have room on either side of it');
+    });
+
+    test('leaves the badge itself alone', () async {
+      // The label is a sibling, not a decoration on the disc: whatever it does,
+      // the hand and its halo must look the same.
+      final Future<Color> Function(Offset) bare =
+          painted(0, size: const Size(200, 80));
+      final Future<Color> Function(Offset) labelled =
+          painted(0, label: 'Tap to adjust', size: const Size(200, 80));
+
+      for (double x = 24; x <= 56; x++) {
+        expect(await labelled(Offset(x, 40)), await bare(Offset(x, 40)),
+            reason: 'the badge should be unchanged at x=$x');
+      }
     });
   });
 
