@@ -6,14 +6,16 @@ on:
 
 jobs:
   claude-review:
-    uses: deriv-com/shared-actions/.github/workflows/claude-pr-review.yml@master
+    uses: deriv-com/shared-actions/.github/workflows/ai-pr-review.yml@master
     permissions:
       contents: read
       pull-requests: write
       issues: write
       id-token: write
       actions: write
+    with:
+      engine: anthropic   # must be explicit; the default is kimi
     secrets:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      LLM_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       AGENT_METRICS_API_URL: ${{ secrets.AGENT_METRICS_API_URL }}
       AGENT_METRICS_API_KEY: ${{ secrets.AGENT_METRICS_API_KEY }}

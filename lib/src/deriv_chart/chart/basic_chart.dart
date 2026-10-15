@@ -89,6 +89,15 @@ class BasicChartState<T extends BasicChart> extends State<T>
   /// Padding should be at least half of barrier label height.
   static const double minPadding = 10;
 
+  /// The most the chart will zoom in vertically: the smallest share of the
+  /// canvas it will give up to padding, so the quote range is stretched over as
+  /// many pixels as possible.
+  static const double minVerticalPaddingFraction = 0.05;
+
+  /// The most the chart will zoom out vertically. Just under half, so the two
+  /// paddings can never meet and leave no room for the data.
+  static const double maxVerticalPaddingFraction = 0.49;
+
   /// Top quote bound target for animated transition.
   double topBoundQuoteTarget = 60;
 
@@ -570,8 +579,8 @@ class BasicChartState<T extends BasicChart> extends State<T>
 
   void _scaleVertically(double dy) {
     setState(() {
-      verticalPaddingFraction =
-          ((verticalPadding + dy) / canvasSize!.height).clamp(0.05, 0.49);
+      verticalPaddingFraction = ((verticalPadding + dy) / canvasSize!.height)
+          .clamp(minVerticalPaddingFraction, maxVerticalPaddingFraction);
     });
     _onScaleYAxis();
   }
