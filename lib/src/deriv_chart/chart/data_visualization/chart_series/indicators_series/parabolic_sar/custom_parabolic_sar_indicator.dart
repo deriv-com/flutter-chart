@@ -29,7 +29,17 @@ class CustomParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
           accelerationStart: accelerationStart,
           maxAcceleration: maxAcceleration,
           accelerationIncrement: accelerationIncrement,
-        );
+        ) {
+    // [ParabolicSarIndicator] declares its trend state as `late` and only
+    // assigns it while calculating the second index. With fewer than three
+    // entries we back that state up (or copy it into the next indicator)
+    // before it's ever assigned, so give it placeholder values up front.
+    // Calculating the second index replaces them with the real trend.
+    isUptrend = false;
+    currentExtremePoint = double.nan;
+    minMaxExtremePoint = double.nan;
+    _backupState();
+  }
 
   // Backup for PSAR internal variables.
   late double _backupAccelerationFactor;
@@ -41,23 +51,29 @@ class CustomParabolicSarIndicator extends ParabolicSarIndicator<Tick> {
   @override
   Tick calculate(int index) {
     if (index == entries.length - 1) {
-      _backupAccelerationFactor = accelerationFactor;
-      _backupIsUptrend = isUptrend;
-      _backupStartTrendIndex = startTrendIndex;
-      _backupCurrentExtremePoint = currentExtremePoint;
-      _backupMinMaxExtremePoint = minMaxExtremePoint;
-
+      _backupState();
       final Tick result = super.calculate(index);
-
-      accelerationFactor = _backupAccelerationFactor;
-      isUptrend = _backupIsUptrend;
-      startTrendIndex = _backupStartTrendIndex;
-      currentExtremePoint = _backupCurrentExtremePoint;
-      minMaxExtremePoint = _backupMinMaxExtremePoint;
+      _restoreState();
       return result;
     }
 
     return super.calculate(index);
+  }
+
+  void _backupState() {
+    _backupAccelerationFactor = accelerationFactor;
+    _backupIsUptrend = isUptrend;
+    _backupStartTrendIndex = startTrendIndex;
+    _backupCurrentExtremePoint = currentExtremePoint;
+    _backupMinMaxExtremePoint = minMaxExtremePoint;
+  }
+
+  void _restoreState() {
+    accelerationFactor = _backupAccelerationFactor;
+    isUptrend = _backupIsUptrend;
+    startTrendIndex = _backupStartTrendIndex;
+    currentExtremePoint = _backupCurrentExtremePoint;
+    minMaxExtremePoint = _backupMinMaxExtremePoint;
   }
 
   @override
