@@ -200,4 +200,12 @@ class AccumulatorsClosedIndicatorPainter
     // Draw exit tick position.
     paintDotWithGlow(canvas, exitTickPosition, color: color);
   }
+
+  @override
+  List<CustomPainterSemantics> buildSemantics(
+      {required Size size,
+      required EpochToX epochToX,
+      required QuoteToY quoteToY}) {
+    return <CustomPainterSemantics>[];
+  }
 }

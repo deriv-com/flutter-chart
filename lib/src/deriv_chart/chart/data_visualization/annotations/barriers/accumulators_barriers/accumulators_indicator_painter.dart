@@ -728,4 +728,12 @@ class AccumulatorIndicatorPainter extends SeriesPainter<AccumulatorIndicator> {
           Offset(mainLineStartX, y), Offset(mainLineEndX, y), _paint);
     }
   }
+
+  @override
+  List<CustomPainterSemantics> buildSemantics(
+      {required ui.Size size,
+      required EpochToX epochToX,
+      required QuoteToY quoteToY}) {
+    return <CustomPainterSemantics>[];
+  }
 }

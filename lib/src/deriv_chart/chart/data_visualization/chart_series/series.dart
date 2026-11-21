@@ -87,4 +87,17 @@ abstract class Series implements ChartData {
         theme: theme,
         chartScaleModel: chartScaleModel,
       );
+
+  @override
+  List<CustomPainterSemantics> buildSemantics(
+    Size size,
+    EpochToX epochToX,
+    QuoteToY quoteToY,
+  ) =>
+      seriesPainter?.buildSemantics(
+        size: size,
+        epochToX: epochToX,
+        quoteToY: quoteToY,
+      ) ??
+      <CustomPainterSemantics>[];
 }

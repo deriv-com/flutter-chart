@@ -336,6 +336,15 @@ class HorizontalBarrierPainter<T extends HorizontalBarrier>
           ),
           arrowPaint..color = _paint.color.withOpacity(0.32));
   }
+
+  @override
+  List<CustomPainterSemantics> buildSemantics({
+    required Size size,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+  }) {
+    return <CustomPainterSemantics>[];
+  }
 }
 
 /// The painter for the [IconTickIndicator] which paints the icon on the
@@ -396,5 +405,14 @@ class IconBarrierPainter extends HorizontalBarrierPainter<IconTickIndicator> {
         canvas,
         _barrierPosition! - Offset(innerIconSize / 2, innerIconSize / 2),
       );
+  }
+
+  @override
+  List<CustomPainterSemantics> buildSemantics({
+    required Size size,
+    required EpochToX epochToX,
+    required QuoteToY quoteToY,
+  }) {
+    return <CustomPainterSemantics>[];
   }
 }
