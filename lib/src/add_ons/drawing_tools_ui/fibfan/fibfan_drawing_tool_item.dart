@@ -10,15 +10,15 @@ import '../callbacks.dart';
 /// Fibfan drawing tool item in the list of drawing tools
 class FibfanDrawingToolItem extends DrawingToolItem {
   /// Initializes
-  const FibfanDrawingToolItem({
+  FibfanDrawingToolItem({
     required UpdateDrawingTool updateDrawingTool,
     required VoidCallback deleteDrawingTool,
     Key? key,
-    FibfanDrawingToolConfig config = const FibfanDrawingToolConfig(),
+    FibfanDrawingToolConfig? config,
   }) : super(
           key: key,
           title: 'Fib fan',
-          config: config,
+          config: config ?? FibfanDrawingToolConfig(),
           updateDrawingTool: updateDrawingTool,
           deleteDrawingTool: deleteDrawingTool,
         );
