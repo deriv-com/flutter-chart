@@ -227,7 +227,7 @@ This architecture provides a clean separation of concerns and makes it easy to a
 
 The following diagram illustrates the architecture and flow of the Interactive Layer, including the relationships between InteractiveStates, InteractiveLayerBehaviour, and DrawingAddingPreview:
 
-![Interactive Layer Architecture Diagram](diagrams/interactive_layer_architecture.svg)
+![Interactive Layer Architecture Diagram](../diagrams/interactive_layer_architecture.svg)
 
 ### Flow Explanation:
 
@@ -273,7 +273,7 @@ To illustrate how the Interactive Layer components work together in practice, le
 
 ### Sequence Diagram
 
-![Horizontal Line Adding Sequence Diagram](diagrams/horizontal_line_sequence.svg)
+![Horizontal Line Adding Sequence Diagram](../diagrams/horizontal_line_sequence.svg)
 
 ### Flow Explanation
 
